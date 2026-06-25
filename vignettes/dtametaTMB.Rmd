@@ -1,0 +1,440 @@
+---
+title: "Introduction to dtametaTMB"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to dtametaTMB}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette introduces the main functionality of the
+`dtametaTMB` package for meta-analysis of diagnostic test
+accuracy (DTA) studies. We demonstrate how to fit three
+commonly used models:
+
+- the Reitsma bivariate model
+- the Rutter and Gatsonis (HSROC) model
+- the Hoyer model for multiple thresholds
+
+using real datasets included in the package.
+
+## How do I load the package?
+
+```{r setup}
+#| echo: TRUE
+library(dtametaTMB)
+```
+
+
+## Which model should I use?
+
+The Reitsma and Rutter-and-Gatsonis models are appropriate when a single threshold per study is reported. 
+
+  -   The Reitsma model is most appropriate when the studies report true negatives, true positives, false negatives and false positives using the same or similar thresholds, 
+  -   whereas the Rutter and Gatsonis model is most appropriate when the studies use different thresholds. 
+
+The Hoyer model allows for multiple thresholds within studies.
+
+
+## How do I perform a diagnostic test meta-analysis using the bivariate binomial-model of Reitsma?
+
+Unlike the mada package, dtametaTMB uses the binomial likelihood to model the within study distribution as recommended by The Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
+
+For sensitivity in study $i$, we have the number of diseased individuals testing positive: $y_{Ai} \sim \mathcal{B}(n_{Ai},\pi_{Ai})$.
+
+Similarly for specificity, we have the number of non-diseased individuals testing negative: $y_{Bi} \sim \mathcal{B}(n_{Bi},\pi_{Bi})$.
+
+At the study level, we have
+
+$$ 
+\begin{pmatrix}
+\operatorname{logit}(\pi_{Ai}) \\
+\operatorname{logit}(\pi_{Bi})
+\end{pmatrix}
+=
+\begin{pmatrix}
+\mu_{Ai} \\
+\mu_{Bi}
+\end{pmatrix}
+\sim \mathcal{N}
+\left(
+\begin{pmatrix}
+\mu_A \\
+\mu_B
+\end{pmatrix},
+\;
+\Sigma
+\right),
+\quad \text{with} \quad
+\Sigma =
+\begin{pmatrix}
+\sigma_A^2 & \sigma_{AB} \\
+\sigma_{AB} & \sigma_B^2
+\end{pmatrix}.$$
+
+```{r}
+#| echo: TRUE
+data("anticcp")
+reitsma <- fitReitsma(data=anticcp,
+                      TP=TP,
+                      FP=FP,
+                      FN=FN,
+                      TN=TN,
+                      study=study)
+reitsma
+summary(reitsma)
+```
+
+## How do I get a summary plot of the Reitsma model?
+
+```{r}
+#| fig.height: 8
+#| fig.width: 8
+#| echo: TRUE
+plot(reitsma)
+plot(reitsma,scale=0.01)
+```
+
+## How do I get a coupled forest plot?
+
+```{r}
+#| fig.height: 11
+#| fig.width: 13
+#| echo: TRUE
+forest(reitsma)
+```
+
+## How do I perform a diagnostic test meta-analysis using the Rutter and Gatsonis model?
+
+The number of diseased individuals from study $i$ who test positive is denoted by $y_{i1} \sim \mathcal{B}(n_{i1},\pi_{i1})$.
+
+Similarly, the number of non-diseased individuals who test positive is $y_{i2} \sim \mathcal{B}(n_{i2},\pi_{i2})$.
+
+At the study level, we have
+
+$$\operatorname{logit}(\pi_{ij}) =
+\left( \theta_i + \alpha_i x_{ij} \right)
+\exp(-\beta x_{ij}), \quad \quad \quad
+\alpha_i \sim \mathcal{N}(\Lambda, \sigma_\alpha^2),
+\qquad
+\theta_i \sim \mathcal{N}(\Theta, \sigma_\theta^2),$$
+
+where $$x_{ij} =
+\begin{cases}
+-0.5 & \text{for non-diseased individuals}, \\
+\phantom{-}0.5 & \text{for diseased individuals}.
+\end{cases}$$
+
+```{r}
+#| echo: TRUE
+#| results: 'hide'
+data("RF")
+ruttergatsonis <- fitRutterGatsonis(data=RF,
+                                    TP=TP,
+                                    FP=FP,
+                                    FN=FN,
+                                    TN=TN,
+                                    study=study)
+```
+
+```{r}
+#| echo: TRUE
+ruttergatsonis
+summary(ruttergatsonis)
+```
+
+## How do I get a summary plot of the Rutter and Gatsonis model?
+
+```{r}
+#| fig.height: 8
+#| fig.width: 8
+#| echo: TRUE
+plot(ruttergatsonis)
+plot(ruttergatsonis,size="se",scale=0.01)
+```
+
+## How do I get a coupled forest plot?
+
+```{r}
+#| fig.height: 14
+#| fig.width: 13
+#| echo: TRUE
+forest(ruttergatsonis)
+```
+
+## How do I perform a diagnostic test accuracy meta-analysis with multiple thresholds per study using the Hoyer method?
+
+The Hoyer model assumes that the diagnostic test measurement arises from a latent continuous variable $Y_{j}$, with $j=0$ for the non-diseased individuals and $j=1$ for the diseased, which follows a parametric survival distribution. The observed test results correspond to interval-censored observations of this latent variable due to the use of thresholds.
+
+### Which distributions does `dtametaTMB` support?
+
+The latent variable $Y_{j}$ is assumed to follow a location–scale family:
+
+$$Y_{j} \sim F(\mu_{j}, \phi_j),$$
+
+where:
+
+- $\mu_j$ is a study-specific location parameter
+- $\phi_j$ is a scale parameter
+
+Common choices for $F$ include:
+
+#### Weibull distribution
+
+$$f(y; \mu_j, \phi_j) = \mu_j \phi_j y^{\phi_j - 1} \exp(-\mu_j y^{\phi_j})$$
+
+#### Log-normal distribution
+
+$$f(y; \mu_j, \phi_j) =
+\frac{1}{\phi_j y}
+\phi\!\left(\frac{\log(y) - \mu_j}{\phi_j}\right)$$
+
+#### Log-logistic distribution
+
+$$f(y; \mu_j, \phi_j) =
+\frac{\mu_j \phi_j y^{\phi_j - 1}}{\left(1 + \mu_j y^{\phi_j}\right)^2}$$
+
+### Random effects structure
+
+To account for between-study heterogeneity and the correlation between diseased and non-diseased groups, we introduce study-specific random effects:
+
+$$\log(y_{0}) = \beta_{0} + \varepsilon_0 + u_{0i}, \quad
+\log(y_{1}) = \beta_{1} + \varepsilon_1 + u_{1i},$$
+
+with
+
+$$\begin{pmatrix}
+u_{0i} \\
+u_{1i}
+\end{pmatrix}
+\sim
+\mathcal{N}
+\left(
+\begin{pmatrix}
+0 \\
+0
+\end{pmatrix},
+\begin{pmatrix}
+\sigma_0^2 & \rho \sigma_0 \sigma_1 \\
+\rho \sigma_0 \sigma_1 & \sigma_1^2
+\end{pmatrix}
+\right).$$
+
+## Censoring mechanism
+
+Because only thresholded outcomes (TN,TP,FN,FP) are observed, the latent variable $Y_{j}$ is subject to censoring.
+
+- Left censoring: $(-\infty,y_k^R]$
+- Interval censoring between adjacent thresholds
+- Right censoring: $(y_k^L, +\infty)$
+
+where $y_k^L$ and $y_k^R$ denote finite threshold values. 
+
+### How do I compute sensitivities and specificities?
+
+We can model the ROC curve by predicting sensitivities and specificities (1 - false positive rates) at several threshold values $y$.
+
+#### Weibull distribution
+$$S_1(y) = \exp(-(y\,\exp(-\beta_1))^{1/\lambda_1}), \quad \text{with} \quad \beta_1=-\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
+$$S_0(y) = \exp(-(y\,\exp(-\beta_0))^{1/\lambda_0}), \quad \text{with} \quad \beta_0=-\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
+
+#### Log-normal distribution
+$$
+S_1(y) = 1-\Phi\left(\frac{1}{\lambda_1} ( \log(y) - \beta_1 )  \right), \quad \text{with} \quad \beta_1=\mu_1, \quad \lambda_1 = \phi_1,
+$$
+$$
+S_0(y) = 1-\Phi\left(\frac{1}{\lambda_0} ( \log(y) - \beta_0 )  \right), \quad \text{with} \quad \beta_0=\mu_0, \quad \lambda_0 = \phi_0.
+$$
+
+#### Log-logistic distribution
+
+$$S_1(y) = 1/\left(1 + \exp(-\beta_1/\lambda_1 )\,y^{1/\lambda_1} \right), \quad \text{with} \quad \beta_1=-\phi^{-1}\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
+$$S_0(y) = 1/\left(1 + \exp(-\beta_0/\lambda_0 )\,y^{1/\lambda_0} \right), \quad \text{with} \quad \beta_0=-\phi^{-1}\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
+
+#### How do we interpret test direction?
+
+For tests where larger values indicate disease (`testdirection = "greater"`):
+
+- $S_1(y)$ corresponds to **sensitivity** at threshold y
+- $S_0(y)$ corresponds to the **false positive rate (FPR) = 1 - specificity**
+
+For tests where smaller values indicate disease (`testdirection = "less"`):
+
+- $S_1(y)$ corresponds to the **false negative rate (FNR) = 1 - sensitivity**
+- $S_0(y)$ corresponds to **specificity**
+
+## In a nutshell
+
+By modelling the diagnostic marker as a latent continuous outcome, the Hoyer model:
+
+- naturally accommodates **multiple thresholds per study**
+- provides a unified framework for **interval-censored diagnostic data**
+- preserves the correlation between sensitivity and specificity
+
+The following parameters have to be estimated: $\beta_{0},\; \beta_{1},\; \lambda_0,\; \lambda_1,\; \sigma_0^2,\; \sigma_1^2,\; \text{and } \rho$, where $\lambda_0$ and $\lambda_1$ are transformations of $\phi_0$ and $\phi_1$.
+
+To obtain initial values, it is necessary to specify a smallest (\<\< $\min y$) and largest (\>\> $\max y$) value across all studies, essentially replacing negative and positive infinity for the left and right censored intervals.
+
+## How do I fit the Hoyer model?
+
+```{r}
+#| echo: TRUE
+data("diabetes")
+head(diabetes)
+summary(diabetes$threshold)
+```
+
+The argument `eval_threshold` specifies the values at which sensitivities
+and specificities are evaluated after model fitting.
+
+```{r}
+#| echo: TRUE
+#| results: 'hide'
+hoyer <- fitHoyer(data=diabetes,
+                  TP=TP,
+                  FP=FP,
+                  FN=FN,
+                  TN=TN,
+                  threshold=threshold,
+                  study=study,
+                  dist="loglogistic",
+                  testdirection="greater",
+                  eval_threshold=c(5.0,5.5,6.0,6.5,7.0,7.5),
+                  smallest=2,
+                  largest=10)
+```
+
+```{r}
+#| echo: TRUE
+hoyer
+summary(hoyer)
+```
+
+## How do we get a summary ROC plot?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 8
+plot(hoyer)
+plot(hoyer,size="sampsize",scale=0.025)
+plot(hoyer,size="se",scale=0.025)
+```
+
+## How does `testdirection="less"` work?
+
+We use the synthetic anaemia data set. Smaller values in haemoglobin indicate disease.
+
+```{r}
+#| echo: TRUE
+data("anaemia")
+summary(anaemia$threshold)
+```
+```{r}
+#| echo: TRUE
+#| results: 'hide'
+less <-  fitHoyer(data=anaemia,
+                  TP=TP,
+                  FP=FP,
+                  FN=FN,
+                  TN=TN,
+                  threshold=threshold,
+                  study=study,
+                  dist="loglogistic",
+                  testdirection="less",
+                  eval_threshold=c(8,9,10,11,12,13),
+                  smallest=5,
+                  largest=17)
+```
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 8
+less
+summary(less)
+plot(less)
+```
+
+## How does `fitHoyer` work internally?
+
+
+### Step 1: How do we restructure the data set?
+
+```{r}
+#| echo: TRUE
+res <- restructure(
+    data = diabetes,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    threshold = threshold,
+    testdirection = "greater",
+    smallest = 2,
+    largest = 10)
+res
+```
+
+
+### Step 2: How do we get initial values?
+
+```{r}
+#| echo: TRUE
+init <- getInitParms(res$restructured,
+                     dist="loglogistic")
+init
+```
+
+### Step 3: How do we fit the model?
+
+```{r}
+#| echo: TRUE
+#| results: 'hide'
+hoyerAFT <- fitHoyerAFT(data=res,
+                        init=init,
+                        threshold=c(5.0,5.5,6.0,6.5,7.0,7.5))
+```
+
+```{r}
+#| echo: TRUE
+hoyerAFT
+summary(hoyerAFT)
+```
+
+
+## References
+
+Reitsma, J. B., et al. (2005).
+Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews.
+*Journal of Clinical Epidemiology*, 58(10), 982–990.
+
+Rutter, C. M., & Gatsonis, C. A. (2001).
+A hierarchical regression approach to meta-analysis of diagnostic test accuracy evaluations.
+*Statistics in Medicine*, 20(19), 2865–2884.
+
+Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
+A unification of models for meta-analysis of diagnostic accuracy studies.
+*Biostatistics*, 8(2), 239–251.
+
+Riley, R. D., Ensor, J., Jackson, D., & Burke, D. L. (2018).
+Deriving percentage study weights in multi-parameter meta-analysis models.
+*Statistical Methods in Medical Research*, 27(10), 2885–2905.
+
+Hoyer, A., Hirt, S., Kuss, O. (2018).
+Meta-analysis of full ROC curves using bivariate time-to-event models for interval-censored data.
+*Research Synthesis Methods*, 9(1).
+
+Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y. (editors) (2023).
+Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
+Version 2.0 (updated July 2023). Cochrane.
+Available from <https://training.cochrane.org/handbook-diagnostic-test-accuracy/current>
+
+

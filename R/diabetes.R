@@ -1,0 +1,22 @@
+#' Diabetes dataset
+#'
+#' This is the diabetes data set as given by the supplementary material in Hoyer (2018).
+#'
+#' @format A data frame with 124 rows and 9 variables
+#' \describe{
+#'   \item{study}{Study identifier}
+#'   \item{threshold}{Threshold HbA1c used to derive TP, FN, FP, TN}
+#'   \item{TP}{Number of true positives}
+#'   \item{TN}{Number of true negatives}
+#'   \item{FP}{Number of false positives}
+#'   \item{FN}{Number of false negatives}
+#'   \item{D}{Number of diseased individuals}
+#'   \item{H}{Number of healthy individuals}
+#'   \item{originally_published}{Whether the data threshold/row was used in the original publication (1=yes, 0=no)}
+#'
+#' }
+#' @source Hoyer, A., Hirt, S., Kuss, O. (2018).
+#' *Meta-analysis of full ROC curves using bivariate time-to-event models for interval-censored data*.
+#' Research Synthesis Methods, 9(1), 1759-2879.
+#' \doi{10.1002/jrsm.1273}
+"diabetes"
