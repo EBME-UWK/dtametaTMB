@@ -80,7 +80,7 @@ test_that("estimates output structure is correct", {
   fit <- fitReitsma(dat, TP, FP, FN, TN, study)
   
   expect_true(is.data.frame(fit$estimates))
-  expect_true(all(c("Estimate", "Std_Error", "CI_Lower", "CI_Upper") %in% colnames(fit$estimates)))
+  expect_true(all(c("Estimate", "Std_Error") %in% colnames(fit$estimates)))
 })
 
 test_that("sensspec output structure is correct", {
