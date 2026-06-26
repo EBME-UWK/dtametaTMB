@@ -23,6 +23,10 @@
 #'    \item{"sampsize"}{Size proportional to sample size}
 #'    \item{"se"}{Size proportional to precision on the logit scale}
 #'  }
+#'  
+#' @param main Character string giving the main title of the plot.
+#'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
+#'   
 #' @param ... Additional graphical arguments (currently unused).
 #'
 #' @return
@@ -53,21 +57,15 @@
 #' @examples
 #' \dontrun{
 #' data("diabetes")
-#' res <- restructure(
-#'   data = diabetes,
-#'   TP = TP,
-#'   FP = FP,
-#'   FN = FN,
-#'   TN = TN,
-#'   threshold = threshold,
-#'   study = study,
-#'   smallest = 2,
-#'   largest = 10
-#' )
-#'
-#' init <- getInitParms(res$restructured)
-#'
-#' fit <- fitHoyerAFT(res, init)
+#' fit <- fitHoyer(data=diabetes,
+#'                 TP=TP,
+#'                 FP=FP,
+#'                 FN=FN,
+#'                 TN=TN,
+#'                 threshold=threshold,
+#'                 study=study,
+#'                 smallest=2,
+#'                 largest=10)
 #'
 #' plot(fit)
 #' }
@@ -77,7 +75,8 @@
 #' @method plot HoyerAFT
 #' @importFrom stats pnorm plogis
 #' @export
-plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"), ...) {
+plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
+                          main="Diagnostic Test Accuracy Meta-Analysis",...) {
   size    <- match.arg(size)
   HH      <- x$data
   testdir <- unique(x$data$testdirection)
@@ -136,37 +135,27 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"), ...) {
                      length.out = 1000))
   if(x$distcode==1 & testdir=="greater"){
     roc_points <- data.frame(fpr =exp(-(xx*exp(-(beta0)))**(1/lambda0)),
-                             sens=exp(-(xx*exp(-(beta1)))**(1/lambda1)))
-    title(main="Diagnostic Accuracy Meta-Analysis\nWeibull Model",
-          xlab="Specificity", ylab="Sensitivity")}
+                             sens=exp(-(xx*exp(-(beta1)))**(1/lambda1)))}
+
   if(x$distcode==2 & testdir=="greater"){
     roc_points <- data.frame(fpr =1-pnorm((log(xx)-beta0)/lambda0),
-                             sens=1-pnorm((log(xx)-beta1)/lambda1))
-    title(main="Diagnostic Accuracy Meta-Analysis\nLognormal Model",
-          xlab="Specificity", ylab="Sensitivity")}
+                             sens=1-pnorm((log(xx)-beta1)/lambda1))}
   if(x$distcode==3 & testdir=="greater"){
     roc_points <- data.frame(fpr =plogis((beta0-log(xx))/lambda0),
-                             sens=plogis((beta1-log(xx))/lambda1))
-    title(main="Diagnostic Accuracy Meta-Analysis\nLoglogistic Model",
-          xlab="Specificity", ylab="Sensitivity")}
+                             sens=plogis((beta1-log(xx))/lambda1))}
   #############
   #############
   if(x$distcode==1 & testdir=="less"){
     roc_points <- data.frame(fpr =1-exp(-(xx*exp(-(beta0)))**(1/lambda0)),
-                             sens=1-exp(-(xx*exp(-(beta1)))**(1/lambda1)))
-    title(main="Diagnostic Accuracy Meta-Analysis\nWeibull Model",
-          xlab="Specificity", ylab="Sensitivity")}
+                             sens=1-exp(-(xx*exp(-(beta1)))**(1/lambda1)))}
   if(x$distcode==2 & testdir=="less"){
     roc_points <- data.frame(fpr =pnorm((log(xx)-beta0)/lambda0),
-                             sens=pnorm((log(xx)-beta1)/lambda1))
-    title(main="Diagnostic Accuracy Meta-Analysis\nLognormal Model",
-          xlab="Specificity", ylab="Sensitivity")}
+                             sens=pnorm((log(xx)-beta1)/lambda1))}
   if(x$distcode==3 & testdir=="less"){
     roc_points <- data.frame(fpr =1-plogis((beta0-log(xx))/lambda0),
-                             sens=1-plogis((beta1-log(xx))/lambda1))
-    title(main="Diagnostic Accuracy Meta-Analysis\nLoglogistic Model",
-          xlab="Specificity", ylab="Sensitivity")}
+                             sens=1-plogis((beta1-log(xx))/lambda1))}
   ##########
+  title(main=main,xlab="Specificity", ylab="Sensitivity")
   points(roc_points, type="l", lwd=2,ann=F)###
   # Add summary point
   # Add the legend

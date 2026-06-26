@@ -14,7 +14,6 @@ Provides functions to fit the hierarchical summary receiver operating characteri
 Authors:
 \itemize{
   \item Claus Nowak \email{claus.nowak@donau-uni.ac.at}
-  \item Annika Hoyer \email{annika.hoyer@uni-bielfeld.de}
 }
 
 }

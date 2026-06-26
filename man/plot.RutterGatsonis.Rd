@@ -4,7 +4,13 @@
 \alias{plot.RutterGatsonis}
 \title{Plot Results from a Rutter and Gatsonis Diagnostic Test Accuracy Model}
 \usage{
-\method{plot}{RutterGatsonis}(x, scale = 0.02, size = c("equal", "sampsize", "se"), ...)
+\method{plot}{RutterGatsonis}(
+  x,
+  scale = 0.02,
+  size = c("equal", "sampsize", "se"),
+  main = "Diagnostic Test Accuracy Meta-Analysis",
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{"RutterGatsonis"}, as returned by
@@ -19,6 +25,9 @@ rectangles representing study weights. Default is \code{0.02}.}
 \item{"sampsize"}{Size proportional to sample size}
 \item{"se"}{Size proportional to precision on the logit scale}
 }}
+
+\item{main}{Character string giving the main title of the plot.
+Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }

@@ -8,6 +8,7 @@
   x,
   scale = 0.02,
   size = c("fisher", "equal", "sampsize", "se"),
+  main = "Diagnostic Test Accuracy Meta-Analysis",
   HSROC = FALSE,
   conflevel = 0.95,
   predlevel = 0.95,
@@ -28,6 +29,9 @@ rectangles representing study weights. Default is \code{0.02}.}
 \item{"sampsize"}{Size proportional to sample size}
 \item{"se"}{Size proportional to precision on the logit scale}
 }}
+
+\item{main}{Character string giving the main title of the plot.
+Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{HSROC}{Logical; if \code{TRUE}, the HSROC curve is added to the plot.
 Default is \code{FALSE}.}

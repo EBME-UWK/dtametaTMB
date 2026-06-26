@@ -19,6 +19,8 @@
 #'  }  
 #' @param HSROC Logical; if \code{TRUE}, the HSROC curve is added to the plot.
 #'   Default is \code{FALSE}.
+#' @param main Character string giving the main title of the plot.
+#'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
 #' 
 #' @param conflevel Numeric. Confidence level for the confidence region
 #'   of the summary estimate. Must be between 0 and 1. Default is \code{0.95}.
@@ -81,6 +83,7 @@
 
 plot.Reitsma <- function(x, scale=0.02, 
                             size=c("fisher","equal","sampsize","se"), 
+                            main="Diagnostic Test Accuracy Meta-Analysis",
                             HSROC=FALSE, 
                             conflevel=0.95,
                             predlevel=0.95, ...) {
@@ -231,7 +234,7 @@ plot.Reitsma <- function(x, scale=0.02,
   abline(h=(seq(0,1,0.2)), col="lightgray", lty="dotted")
   lines(c(0,1),c(0,1),col="lightgray",lty="dotted")
   # Add titles
-  title(main="Diagnostic Accuracy Meta-Analysis", xlab="Specificity", ylab="Sensitivity")
+  title(main=main, xlab="Specificity", ylab="Sensitivity")
   # Plot study level estimates 
   symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pctsp,pctse)*scale,inches=F,add=T,fg="darkgray")
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)

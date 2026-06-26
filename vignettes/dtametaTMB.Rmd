@@ -323,9 +323,9 @@ summary(hoyer)
 #| echo: TRUE
 #| fig.height: 8
 #| fig.width: 8
-plot(hoyer)
-plot(hoyer,size="sampsize",scale=0.025)
-plot(hoyer,size="se",scale=0.025)
+plot(hoyer,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
+plot(hoyer,size="sampsize",scale=0.025,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
+plot(hoyer,size="se",scale=0.025,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 ```
 
 ## How does `testdirection="less"` work?
@@ -359,11 +359,10 @@ less <-  fitHoyer(data=anaemia,
 #| fig.width: 8
 less
 summary(less)
-plot(less)
+plot(less,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 ```
 
 ## How does `fitHoyer` work internally?
-
 
 ### Step 1: How do we restructure the data set?
 

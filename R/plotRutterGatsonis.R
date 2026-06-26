@@ -15,6 +15,11 @@
 #'    \item{"sampsize"}{Size proportional to sample size}
 #'    \item{"se"}{Size proportional to precision on the logit scale}
 #'  }
+#'  
+#'  
+#' @param main Character string giving the main title of the plot.
+#'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
+#'   
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
 #' @details
@@ -47,7 +52,8 @@
 #' @method plot RutterGatsonis
 #' @export
 
-plot.RutterGatsonis <- function(x, scale=0.02,size=c("equal","sampsize","se"), ...) {
+plot.RutterGatsonis <- function(x, scale=0.02,size=c("equal","sampsize","se"), 
+                                main="Diagnostic Test Accuracy Meta-Analysis", ...) {
   size    <- match.arg(size)
   Lambda  <- x$sdreport2["Lambda", "Estimate"]
   beta    <- x$sdreport2["beta","Estimate"]
@@ -88,7 +94,7 @@ plot.RutterGatsonis <- function(x, scale=0.02,size=c("equal","sampsize","se"), .
   abline(h=(seq(0,1,0.2)), col="lightgray", lty="dotted")
   lines(c(0,1),c(0,1),col="lightgray",lty="dotted")
   # Add titles
-  title(main="Diagnostic Accuracy Meta-Analysis", xlab="Specificity", ylab="Sensitivity")
+  title(main=main, xlab="Specificity", ylab="Sensitivity")
   # Plot study level estimates 
   if(size=="equal"){
     pctse <- rep(1,nrow(x$data))

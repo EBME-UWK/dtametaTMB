@@ -4,7 +4,13 @@
 \alias{plot.HoyerAFT}
 \title{Plot HSROC Curve for Hoyer AFT Model}
 \usage{
-\method{plot}{HoyerAFT}(x, scale = 0.02, size = c("equal", "sampsize", "se"), ...)
+\method{plot}{HoyerAFT}(
+  x,
+  scale = 0.02,
+  size = c("equal", "sampsize", "se"),
+  main = "Diagnostic Test Accuracy Meta-Analysis",
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{"HoyerAFT"} as returned by
@@ -26,6 +32,9 @@ rectangles representing study weights. Default is \code{0.02}.}
 \item{"sampsize"}{Size proportional to sample size}
 \item{"se"}{Size proportional to precision on the logit scale}
 }}
+
+\item{main}{Character string giving the main title of the plot.
+Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{...}{Additional graphical arguments (currently unused).}
 }
@@ -62,21 +71,15 @@ and specificity on the x-axis (displayed as 1 − false positive rate on a rever
 \examples{
 \dontrun{
 data("diabetes")
-res <- restructure(
-  data = diabetes,
-  TP = TP,
-  FP = FP,
-  FN = FN,
-  TN = TN,
-  threshold = threshold,
-  study = study,
-  smallest = 2,
-  largest = 10
-)
-
-init <- getInitParms(res$restructured)
-
-fit <- fitHoyerAFT(res, init)
+fit <- fitHoyer(data=diabetes,
+                TP=TP,
+                FP=FP,
+                FN=FN,
+                TN=TN,
+                threshold=threshold,
+                study=study,
+                smallest=2,
+                largest=10)
 
 plot(fit)
 }
