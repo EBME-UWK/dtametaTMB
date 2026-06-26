@@ -1,6 +1,8 @@
 ---
 title: "Introduction to dtametaTMB"
-output: rmarkdown::html_vignette
+output: 
+  #rmarkdown::html_vignette: default
+  pdf_document: default
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{knitr::rmarkdown}
@@ -259,6 +261,7 @@ $$S_1(y) = 1/\left(1 + \exp(-\beta_1/\lambda_1 )\,y^{1/\lambda_1} \right), \quad
 $$S_0(y) = 1/\left(1 + \exp(-\beta_0/\lambda_0 )\,y^{1/\lambda_0} \right), \quad \text{with} \quad \beta_0=-\phi^{-1}\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
 
 #### How do we interpret test direction?
+
 
 For tests where larger values indicate disease (`testdirection = "greater"`):
 

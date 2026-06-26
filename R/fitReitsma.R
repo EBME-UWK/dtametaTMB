@@ -182,8 +182,8 @@ fitReitsma <- function(data,
   V_g  = J %*% V_full %*% t(J)
   # How do I get standard errors for all estimates?
   rep <- data.frame("Estimate"=g,"Std_Error"=sqrt(diag(V_g)))
-  rep$CI_Lower <- with(rep,Estimate-qq*Std_Error)
-  rep$CI_Upper <- with(rep,Estimate+qq*Std_Error)
+  #rep$CI_Lower <- with(rep,Estimate-qq*Std_Error)
+  #rep$CI_Upper <- with(rep,Estimate+qq*Std_Error)
   rep
   # How do I get estimates and confidence limits for the 
   # diagnostic odds ratio, the positive and negative
