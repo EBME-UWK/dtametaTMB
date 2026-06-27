@@ -7,7 +7,7 @@
 \method{forest}{Cochrane}(x, ...)
 }
 \arguments{
-\item{x}{Object of class \code{"Cochrane"} such as \code{"GutterRatsonis"}, \code{"Reitsma"} and \code{"HoyerAFT"}}
+\item{x}{Object of class \code{"Cochrane"} such as \code{"GutterRatsonis"}, \code{"Reitsma"} or \code{"HoyerAFT"}}
 
 \item{...}{Additional graphical arguments (not currently in use)}
 }

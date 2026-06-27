@@ -22,7 +22,7 @@ A data frame with 124 rows and 9 variables
 \source{
 Hoyer, A., Hirt, S., Kuss, O. (2018).
 \emph{Meta-analysis of full ROC curves using bivariate time-to-event models for interval-censored data}.
-Research Synthesis Methods, 9(1), 1759-2879.
+Research Synthesis Methods, 9(1), 62-72.
 \doi{10.1002/jrsm.1273}
 }
 \usage{

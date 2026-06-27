@@ -27,6 +27,8 @@ commonly used models:
 
 using real datasets included in the package.
 
+*Note:* Rendering forest plots via `forest` may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
 ## How do I load the package?
 
 ```{r setup}
@@ -37,17 +39,17 @@ library(dtametaTMB)
 
 ## Which model should I use?
 
-The Reitsma and Rutter-and-Gatsonis models are appropriate when a single threshold per study is reported. 
+   -  **Reitsma model:** single threshold per study: use when studies apply similar thresholds.
+   -  **HSROC model:** single threshold per study: use when thresholds vary between studies or in small and extreme data sets
+   -  **Hoyer model:** multiple thresholds per study
 
-  -   The Reitsma model is most appropriate when the studies report true negatives, true positives, false negatives and false positives using the same or similar thresholds, 
-  -   whereas the Rutter and Gatsonis model is most appropriate when the studies use different thresholds.
-  -   In very small or extreme datasets, convergence issues may arise. In such cases, the Rutter–Gatsonis model may provide more stable estimates.
+## Validation
 
-The Hoyer model allows for multiple thresholds within studies.
+The implementations reproduce benchmark results from the Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy (including parameter estimates, standard errors, and graphical outputs) for standard datasets such as the Anti‑CCP and RF examples.
 
 ## How do I perform a diagnostic test meta-analysis using the bivariate binomial-model of Reitsma?
 
-Unlike the mada package, dtametaTMB uses the binomial likelihood to model the within study distribution as recommended by The Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
+Unlike the `mada` package, `dtametaTMB` uses the binomial likelihood to model the within study distribution as recommended by The Cochrane Handbook.
 
 For sensitivity in study $i$, we have the number of diseased individuals testing positive: $y_{Ai} \sim \mathcal{B}(n_{Ai},\pi_{Ai})$.
 
@@ -106,6 +108,8 @@ plot(reitsma,scale=0.01)
 
 ## How do I get a coupled forest plot?
 
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
 ```{r}
 #| fig.height: 11
 #| fig.width: 13
@@ -163,6 +167,8 @@ plot(ruttergatsonis,size="se",scale=0.01)
 ```
 
 ## How do I get a coupled forest plot?
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
 ```{r}
 #| fig.height: 14
@@ -334,6 +340,8 @@ plot(hoyer,size="se",scale=0.025,main="Diagnostic Test Accuracy Meta-Analysis\nL
 
 ## How do I get a coupled forest plot?
 
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
 ```{r}
 #| fig.height: 34
 #| fig.width: 13
@@ -442,7 +450,7 @@ Deriving percentage study weights in multi-parameter meta-analysis models.
 
 Hoyer, A., Hirt, S., Kuss, O. (2018).
 Meta-analysis of full ROC curves using bivariate time-to-event models for interval-censored data.
-*Research Synthesis Methods*, 9(1).
+*Research Synthesis Methods*, 9(1), 62-72.
 
 Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y. (editors) (2023).
 Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.

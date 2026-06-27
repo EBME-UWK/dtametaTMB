@@ -1,6 +1,6 @@
 #' Coupled Forest plot for diagnostic test accuracy meta-analysis
 #'
-#' @param x Object of class \code{"Cochrane"} such as \code{"GutterRatsonis"}, \code{"Reitsma"} and \code{"HoyerAFT"}
+#' @param x Object of class \code{"Cochrane"} such as \code{"GutterRatsonis"}, \code{"Reitsma"} or \code{"HoyerAFT"}
 #' @param ... Additional graphical arguments (not currently in use)
 #'
 #' @method forest Cochrane

@@ -30,5 +30,5 @@ estimation of complex hierarchical models.
 ```r
 # Install from GitHub (development version)
 install.packages("devtools")
-devtools::install_github("yourusername/dtametaTMB")
+devtools::install_github("EBME-UWK/dtametaTMB")
 ```
