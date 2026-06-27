@@ -40,10 +40,10 @@ library(dtametaTMB)
 The Reitsma and Rutter-and-Gatsonis models are appropriate when a single threshold per study is reported. 
 
   -   The Reitsma model is most appropriate when the studies report true negatives, true positives, false negatives and false positives using the same or similar thresholds, 
-  -   whereas the Rutter and Gatsonis model is most appropriate when the studies use different thresholds. 
+  -   whereas the Rutter and Gatsonis model is most appropriate when the studies use different thresholds.
+  -   In very small or extreme datasets, convergence issues may arise. In such cases, the Rutter–Gatsonis model may provide more stable estimates.
 
 The Hoyer model allows for multiple thresholds within studies.
-
 
 ## How do I perform a diagnostic test meta-analysis using the bivariate binomial-model of Reitsma?
 
@@ -329,6 +329,16 @@ summary(hoyer)
 plot(hoyer,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 plot(hoyer,size="sampsize",scale=0.025,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 plot(hoyer,size="se",scale=0.025,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
+```
+
+
+## How do I get a coupled forest plot?
+
+```{r}
+#| fig.height: 34
+#| fig.width: 13
+#| echo: TRUE
+forest(hoyer)
 ```
 
 ## How does `testdirection="less"` work?

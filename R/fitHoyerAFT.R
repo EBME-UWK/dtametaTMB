@@ -237,7 +237,7 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA) {
   )
 
   # Assign class
-  class(res) <- "HoyerAFT"
+  class(res) <- c("HoyerAFT","Cochrane")
 
   return(res)
 }
