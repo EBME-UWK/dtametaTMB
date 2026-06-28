@@ -9,14 +9,14 @@
 #' and false positive rate for \code{testdirection = "greater"}, and to false 
 #' negative rate and specificity for \code{testdirection = "less"}.
 #'
-#' @param data A list as produced by \code{\link{restructure}}, containing:
+#' @param data A list as produced by \code{\link{restructure_data}}, containing:
 #'   \describe{
 #'     \item{restructured}{Interval-formatted data}
 #'     \item{original}{Processed original data with derived quantities}
 #'   }
 #'
 #' @param init A data frame of initial parameter values as produced by
-#'   \code{\link{getInitParms}}.
+#'   \code{\link{initHoyerAFT}}.
 #'
 #' @param conflevel Confidence level for confidence intervals for sensitivities
 #'   and specificities at the chosen thresholds. Defaults to \code{0.95}.
@@ -25,6 +25,7 @@
 #'   threshold(s) at which sensitivity and specificity should be evaluated.
 #'   If \code{NA} (default), the median threshold from the original data
 #'   is used.
+#' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).
 #'
 #' @return An object of class \code{"HoyerAFT"} containing:
 #' \describe{
@@ -40,7 +41,7 @@
 #' @examples
 #' \dontrun{
 #' data("diabetes")
-#' res <- restructure(
+#' res <- restructure_data(
 #'   data = diabetes,
 #'   TP = TP,
 #'   FP = FP,
@@ -52,7 +53,7 @@
 #'   largest = 10
 #' )
 #'
-#' init <- getInitParms(res$restructured)
+#' init <- initHoyerAFT(res$restructured)
 #'
 #' fit <- fitHoyerAFT(res, init)
 #'
@@ -76,7 +77,7 @@
 #'
 #' @note Requires a compiled TMB model named \code{"Hoyer"}.
 #' @export
-fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA) {
+fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA, verbose=FALSE) {
 
   # Extract components
   datao   <- data$original
@@ -91,7 +92,7 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA) {
                 "coru0u1_init", "distcode")
 
   if (!is.data.frame(init) || any(!required %in% names(init))) {
-    stop("'init' must be a valid output from getInitParms().")
+    stop("'init' must be a valid output from initHoyerAFT().")
   }
 
   if (!all(is.na(threshold))) {
@@ -137,20 +138,28 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA) {
     u1 = rep(0, dat2$nstudy)
   )
   
-  # TMB objective
   dat2$model <- "Hoyer"
+
+  # TMB objective
   obj <- TMB::MakeADFun(data=dat2,
                         parameters,
                         random = c("u0", "u1"),
+                        silent = !verbose,
                         DLL = "dtametaTMB_TMBExports")
-
   # Optimization
-  fit <- stats::nlminb(
-    obj$par,
-    obj$fn,
-    obj$gr
-  )
-
+  fit <- stats::nlminb(obj$par,
+                       obj$fn,
+                       obj$gr)
+  
+  # Convergence warning.
+  if (fit$convergence != 0) {
+    warning(
+      "TMB optimization did not converge. ",
+      "Estimates may be unreliable. ",
+      "Consider checking starting values, model specification, or data quality."
+    )
+  }
+  
   # Reports
   rep  <- TMB::sdreport(obj)
   rep2 <- summary(rep, select = "report")

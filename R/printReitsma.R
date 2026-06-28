@@ -17,32 +17,35 @@
 #' @export
 print.Reitsma <- function(x, digits = 3, ...) {
   
-  cat("\nReitsma Bivariate Random-Effects Model\n")
-  cat(strrep("-", 45), "\n")
+  cat("\n", "Reitsma Model", "\n", sep = "")
+  cat(strrep("-", nchar("Reitsma Model")), "\n\n", sep = "")
   
-  # Number of studies
+  
   n_study <- nrow(x$data)
-  cat("Number of studies:", n_study, "\n")
   
-  # Convergence (glmmTMB)
-  conv <- tryCatch({
-    x$glmmTMB$sdr$pdHess
-  }, error = function(e) NA)
+  converged <- tryCatch({
+    isTRUE(x$glmmTMB$sdr$pdHess)
+  }, error = function(e) FALSE)
   
-  conv_msg <- if (isTRUE(conv)) {
-    "Converged (positive definite Hessian)"
-  } else {
-    "Potential convergence issues"
+  # logLik extraction (if available)
+  loglik <- tryCatch({
+    -2 * as.numeric(stats::logLik(x$glmmTMB))
+  }, error = function(e) NULL)
+  
+  
+  cat("Number of studies :", n_study, "\n")
+  cat("Model fit         :", if (converged) "Converged" else "Not converged", "\n")
+  if (!is.null(loglik)) {
+    cat("-2 log likelihood :", round(loglik, 3), "\n")
   }
+  cat("\n")
   
-  cat("Model fit:", conv_msg, "\n\n")
-  
-  # Key fixed effects (logit scale)
   est <- x$estimates
   
-  cat("Key parameters (logit scale):\n")
-  cat("  mu_A (sens):", round(est["mu_A.sens","Estimate"], digits), "\n")
-  cat("  mu_B (spec):", round(est["mu_B.spec","Estimate"], digits), "\n")
+  cat("mu_A (sens)       :", round(est["mu_A.sens","Estimate"], 3), "\n")
+  cat("mu_B (spec)       :", round(est["mu_B.spec","Estimate"], 3), "\n")
   
+  cat("\nUse summary() for parameter estimates.\n")
+
   invisible(x)
 }

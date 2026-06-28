@@ -9,7 +9,7 @@ valid_base <- data.frame(
 
 test_that("restructure works with default testdirection (greater)", {
   
-  res <- restructure(
+  res <- restructure_data(
     valid_base,
     TP=TP, FP=FP, FN=FN, TN=TN,
     threshold=threshold,
@@ -34,7 +34,7 @@ test_that("restructure works for testdirection = 'less'", {
     TN = c(95,90,80)    # decreasing
   )
   
-  res <- restructure(
+  res <- restructure_data(
     dat_less,
     TP=TP, FP=FP, FN=FN, TN=TN,
     threshold=threshold,
@@ -61,7 +61,7 @@ test_that("less direction correctly swaps TP/FN and FP/TN internally", {
     TN = c(95,90,80)
   )
   
-  res <- restructure(
+  res <- restructure_data(
     dat_less,
     TP=TP, FP=FP, FN=FN, TN=TN,
     threshold=threshold,
@@ -91,7 +91,7 @@ test_that("data valid for less fails for greater", {
   )
   
   expect_error(
-    restructure(
+    restructure_data(
       dat_less,
       TP=TP, FP=FP, FN=FN, TN=TN,
       threshold=threshold,
@@ -105,7 +105,7 @@ test_that("data valid for less fails for greater", {
 
 test_that("greater and less preserve totals", {
   
-  res1 <- restructure(
+  res1 <- restructure_data(
     valid_base,
     TP=TP, FP=FP, FN=FN, TN=TN,
     threshold=threshold,
@@ -125,7 +125,7 @@ test_that("greater and less preserve totals", {
   dat_less$FN <- tmp_TP
   dat_less$TN <- tmp_FP
   
-  res2 <- restructure(
+  res2 <- restructure_data(
     dat_less,
     TP=TP, FP=FP, FN=FN, TN=TN,
     threshold=threshold,

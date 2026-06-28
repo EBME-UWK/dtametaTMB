@@ -4,12 +4,10 @@
 \alias{print.RutterGatsonis}
 \title{Print Method for RutterGatsonis Objects}
 \usage{
-\method{print}{RutterGatsonis}(x, digits = 3, ...)
+\method{print}{RutterGatsonis}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{"RutterGatsonis"}.}
-
-\item{digits}{Number of digits to print (default: 3).}
 
 \item{...}{Additional arguments (unused).}
 }

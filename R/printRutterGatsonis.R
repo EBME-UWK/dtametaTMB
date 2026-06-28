@@ -4,7 +4,6 @@
 #' including number of studies, convergence status, and key estimates.
 #'
 #' @param x An object of class \code{"RutterGatsonis"}.
-#' @param digits Number of digits to print (default: 3).
 #' @param ... Additional arguments (unused).
 #'
 #' @return
@@ -14,27 +13,31 @@
 #'
 #' @method print RutterGatsonis
 #' @export
-print.RutterGatsonis <- function(x, digits = 3, ...) {
+print.RutterGatsonis <- function(x, ...) {
   
-  cat("\nRutter & Gatsonis HSROC Model\n")
-  cat(strrep("-", 40), "\n")
+  cat("\n", "Rutter & Gatsonis Model", "\n", sep = "")
+  cat(strrep("-", nchar("Rutter & Gatsonis Model")), "\n\n", sep = "")
   
-  # Number of studies
   n_study <- nrow(x$data)
-  cat("Number of studies:", n_study, "\n")
+  converged <- x$fit$convergence == 0
+  loglik <- if (!is.null(x$fit$objective)) 2 * x$fit$objective else NULL
   
-  # Convergence
-  conv <- x$fit$convergence
-  conv_msg <- if (conv == 0) "Converged" else paste("Not converged (code:", conv, ")")
-  cat("Model fit:", conv_msg, "\n\n")
   
-  # Key parameters
+  cat("Number of studies :", n_study, "\n")
+  cat("Model fit         :", if (converged) "Converged" else "Not converged", "\n")
+  
+  if (!is.null(loglik)) {
+  cat("-2 log likelihood :", round(loglik, 3), "\n")
+  }
+  cat("\n")
+  
   est <- x$sdreport$par.fixed
   
-  cat("Parameters (HSROC scale):\n")
-  cat("  Lambda:", round(est["Lambda"], digits), "\n")
-  cat("  Theta :", round(est["Theta"], digits), "\n")
-  cat("  Beta  :", round(est["beta"], digits), "\n")
+  cat("Lambda            :", round(est["Lambda"], 3), "\n")
+  cat("Theta             :", round(est["Theta"], 3), "\n")
+  cat("Beta              :", round(est["beta"], 3), "\n")
+  
+  cat("\nUse summary() for parameter estimates.\n")
   
   invisible(x)
 }

@@ -10,7 +10,7 @@
 #' variability based on study-specific weighted averages of log-thresholds.
 #'
 #' @param restructured A data frame in interval format as produced by
-#'   \code{\link{restructure}} (specifically the \code{restructured}
+#'   \code{\link{restructure_data}} (specifically the \code{restructured}
 #'   component of its output). Must contain the columns:
 #'   \describe{
 #'     \item{study}{Study identifier}
@@ -65,7 +65,7 @@
 #' \dontrun{
 #' # Restructure data
 #' data("diabetes")
-#' res <- restructure(
+#' res <- restructure_data(
 #'   data = diabetes,
 #'   TP = TP,
 #'   FP = FP,
@@ -78,19 +78,19 @@
 #' )
 #'
 #' # Compute initial parameters
-#' init <- getInitParms(res$restructured)
+#' init <- initHoyerAFT(res$restructured)
 #' }
 #'
 #' @references
 #' Hoyer, A., Hirt, S., Kuss, O. (2018).
 #' Meta-analysis of full ROC curves using bivariate time-to-event models
 #' for interval-censored data.
-#' \emph{Research Synthesis Methods}, 9(1), 1759--2879.
+#' \emph{Research Synthesis Methods}, 9(1), 62-72.
 #'
 #' @importFrom survival survreg Surv
 #' @importFrom stats aggregate cov cov2cor
 #' @export
-getInitParms <- function(restructured, dist="loglogistic") {
+initHoyerAFT <- function(restructured, dist="loglogistic") {
   # Check distribution
   valid_dists <- c("weibull", "lognormal", "loglogistic")
   if (!dist %in% valid_dists) {
@@ -129,7 +129,7 @@ getInitParms <- function(restructured, dist="loglogistic") {
                             dist = dist)
 
   fit1 <- survival::survreg(Surv(lowerB, upperB, type = "interval2") ~ 1,
-                            data = restructured[restructured$events1!=0,],
+                            data = datfit1,
                             weights = datfit1$events1,
                             dist = dist)
 

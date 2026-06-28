@@ -7,7 +7,7 @@
 #' @description
 #' This function estimates the HSROC model parameters based on study-level
 #' 2x2 table data (true positives, false positives, false negatives, true negatives).
-#' It supports input either as a data frame or as separate vectors.
+#' It supports input either as a data frame.
 #'
 #' @details
 #' The function internally transforms the data into long format and fits the model
@@ -25,6 +25,7 @@
 #' @param conflevel Confidence level used for confidence intervals (default: 0.95).
 #' @param spec Optional specificity value at which sensitivity is estimated.
 #' If \code{NA}, the median observed sensitivity is used as a proxy.
+#' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).
 #'
 #' @return
 #' An object of class \code{"RutterGatsonis"} containing:
@@ -79,7 +80,7 @@
 #' @importFrom TMB MakeADFun sdreport
 #' @importFrom stats complete.cases nlminb median qnorm qlogis sd
 #' @export
-fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA){
+fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA,verbose=FALSE){
   
     if (!is.data.frame(data)) {
       stop("'data' must be a data.frame.")
@@ -184,17 +185,25 @@ fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA){
   
   dat2$model <- "RutterGatsonis"
   
+  # TMB Objective
   obj <- TMB::MakeADFun(data=dat2,
                         parameters,
                         random = c("alpha", "theta"),
-                        DLL = "dtametaTMB_TMBExports"
-  )
+                        silent = !verbose,
+                        DLL = "dtametaTMB_TMBExports")
   # Optimization
-  fit <- stats::nlminb(
-    obj$par,
-    obj$fn,
-    obj$gr
-  )
+  fit <- stats::nlminb(obj$par,
+                       obj$fn,
+                       obj$gr)
+  # Convergence warning.
+  if (fit$convergence != 0) {
+    warning(
+      "TMB optimization did not converge. ",
+      "Estimates may be unreliable. ",
+      "Consider checking starting values, model specification, or data quality."
+    )
+  }
+  
   
   # Reports
   rep  <- TMB::sdreport(obj)

@@ -2,8 +2,8 @@ test_that("fitHoyerAFT returns model object", {
   data("diabetes")
   dat <- diabetes
 
-  res <- restructure(dat, TP, FP, FN, TN, threshold, study, 2, 10)
-  init <- getInitParms(res$restructured)
+  res <- restructure_data(dat, TP, FP, FN, TN, threshold, study, 2, 10)
+  init <- initHoyerAFT(res$restructured)
 
   fit <- fitHoyerAFT(res, init)
 
@@ -15,8 +15,8 @@ test_that("invalid threshold is rejected", {
   data("diabetes")
   dat <- diabetes
 
-  res <- restructure(dat, TP, FP, FN, TN, threshold, study, 2, 10)
-  init <- getInitParms(res$restructured)
+  res <- restructure_data(dat, TP, FP, FN, TN, threshold, study, 2, 10)
+  init <- initHoyerAFT(res$restructured)
 
   expect_error(
     fitHoyerAFT(res, init, threshold = -1)
@@ -39,7 +39,7 @@ test_that("init validation fails if missing columns", {
   
   expect_error(
     fitHoyerAFT(data_list, bad_init),
-    "must be a valid output from getInitParms"
+    "'init' must be a valid output from initHoyerAFT()."
   )
 })
 

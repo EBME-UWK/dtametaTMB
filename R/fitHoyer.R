@@ -51,6 +51,8 @@
 #'
 #' @param conflevel Confidence level for confidence intervals for sensitivities
 #'   and specificities at the chosen thresholds. Defaults to \code{0.95}.
+#' 
+#' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).
 #'
 #' @param ... Additional arguments passed to \code{\link{fitHoyerAFT}}.
 #'
@@ -69,9 +71,9 @@
 #' @details
 #' The function internally calls:
 #' \itemize{
-#'   \item \code{\link{restructure}} to convert cumulative counts into
+#'   \item \code{\link{restructure_data}} to convert cumulative counts into
 #'         interval-censored data
-#'   \item \code{\link{getInitParms}} to estimate starting values
+#'   \item \code{\link{initHoyerAFT}} to estimate starting values
 #'   \item \code{\link{fitHoyerAFT}} to fit the model
 #' }
 #'
@@ -116,6 +118,7 @@ fitHoyer <- function(data,
                      eval_threshold=NA,
                      conflevel=0.95,
                      dist = "loglogistic",
+                     verbose=FALSE,
                      ...) {
   
   # Basic argument checks
@@ -127,7 +130,7 @@ fitHoyer <- function(data,
   }
   
   # Step 1: Restructure data
-  res <- restructure(
+  res <- restructure_data(
     data = data,
     TP = TP,
     FP = FP,
@@ -141,10 +144,10 @@ fitHoyer <- function(data,
   )
   
   # Step 2: Initial parameters
-  init <- getInitParms(res$restructured, dist = dist)
+  init <- initHoyerAFT(res$restructured, dist = dist)
   
   # Step 3: Fit model
-  fit <- fitHoyerAFT(res, init, threshold=eval_threshold, conflevel=conflevel)
+  fit <- fitHoyerAFT(res, init, threshold=eval_threshold, conflevel=conflevel, verbose=verbose)
   
   return(fit)
 }

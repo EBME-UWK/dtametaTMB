@@ -1,7 +1,7 @@
 test_that("plot.HoyerAFT runs without error (greater)", {
   data("diabetes", package = "dtametaTMB")
   
-  res <- restructure(
+  res <- restructure_data(
     data = diabetes,
     TP = TP, FP = FP, FN = FN, TN = TN,
     threshold = threshold,
@@ -11,7 +11,7 @@ test_that("plot.HoyerAFT runs without error (greater)", {
     testdirection = "greater"
   )
   
-  init <- getInitParms(res$restructured, dist = "loglogistic")
+  init <- initHoyerAFT(res$restructured, dist = "loglogistic")
   
   fit <- fitHoyerAFT(res, init)
   
@@ -23,7 +23,7 @@ test_that("plot.HoyerAFT runs without error (greater)", {
 test_that("plot.HoyerAFT returns NULL invisibly", {
   data("diabetes", package = "dtametaTMB")
   
-  res <- restructure(
+  res <- restructure_data(
     data = diabetes,
     TP = TP, FP = FP, FN = FN, TN = TN,
     threshold = threshold,
@@ -32,7 +32,7 @@ test_that("plot.HoyerAFT returns NULL invisibly", {
     largest = 10
   )
   
-  init <- getInitParms(res$restructured, dist = "loglogistic")
+  init <- initHoyerAFT(res$restructured, dist = "loglogistic")
   
   fit <- fitHoyerAFT(res, init)
   
@@ -45,7 +45,7 @@ test_that("plot.HoyerAFT returns NULL invisibly", {
 test_that("plot.HoyerAFT works for all distributions", {
   data("diabetes", package = "dtametaTMB")
   
-  res <- restructure(
+  res <- restructure_data(
     data = diabetes,
     TP = TP, FP = FP, FN = FN, TN = TN,
     threshold = threshold,
@@ -57,7 +57,7 @@ test_that("plot.HoyerAFT works for all distributions", {
   dists <- c("weibull", "lognormal", "loglogistic")
   
   for (d in dists) {
-    init <- getInitParms(res$restructured, dist = d)
+    init <- initHoyerAFT(res$restructured, dist = d)
     fit  <- fitHoyerAFT(res, init)
     
     expect_no_error(plot(fit))

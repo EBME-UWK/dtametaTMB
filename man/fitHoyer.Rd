@@ -18,6 +18,7 @@ fitHoyer(
   eval_threshold = NA,
   conflevel = 0.95,
   dist = "loglogistic",
+  verbose = FALSE,
   ...
 )
 }
@@ -56,6 +57,8 @@ and specificities at the chosen thresholds. Defaults to \code{0.95}.}
 for the AFT model. One of \code{"weibull"}, \code{"lognormal"}, or
 \code{"loglogistic"} (default).}
 
+\item{verbose}{Logical. Whether TMB optimization output should be printed (default: FALSE).}
+
 \item{...}{Additional arguments passed to \code{\link{fitHoyerAFT}}.}
 }
 \value{
@@ -91,9 +94,9 @@ interval-censored likelihoods via Template Model Builder (TMB).
 
 The function internally calls:
 \itemize{
-\item \code{\link{restructure}} to convert cumulative counts into
+\item \code{\link{restructure_data}} to convert cumulative counts into
 interval-censored data
-\item \code{\link{getInitParms}} to estimate starting values
+\item \code{\link{initHoyerAFT}} to estimate starting values
 \item \code{\link{fitHoyerAFT}} to fit the model
 }
 

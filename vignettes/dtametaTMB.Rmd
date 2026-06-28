@@ -47,7 +47,7 @@ library(dtametaTMB)
 
 The implementations reproduce benchmark results from the Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy (including parameter estimates, standard errors, and graphical outputs) for standard datasets such as the Anti‑CCP and RF examples.
 
-## How do I perform a diagnostic test meta-analysis using the bivariate binomial-model of Reitsma?
+## How do I use the Reitsma model?
 
 Unlike the `mada` package, `dtametaTMB` uses the binomial likelihood to model the within study distribution as recommended by The Cochrane Handbook.
 
@@ -117,7 +117,7 @@ plot(reitsma,scale=0.01)
 forest(reitsma)
 ```
 
-## How do I perform a diagnostic test meta-analysis using the Rutter and Gatsonis model?
+## How do I use the Rutter and Gatsonis model?
 
 The number of diseased individuals from study $i$ who test positive is denoted by $y_{i1} \sim \mathcal{B}(n_{i1},\pi_{i1})$.
 
@@ -177,7 +177,7 @@ plot(ruttergatsonis,size="se",scale=0.01)
 forest(ruttergatsonis)
 ```
 
-## How do I perform a diagnostic test accuracy meta-analysis with multiple thresholds per study using the Hoyer method?
+## How do I use the Hoyer model?
 
 The Hoyer model assumes that the diagnostic test measurement arises from a latent continuous variable $Y_{j}$, with $j=0$ for the non-diseased individuals and $j=1$ for the diseased, which follows a parametric survival distribution. The observed test results correspond to interval-censored observations of this latent variable due to the use of thresholds.
 
@@ -266,7 +266,7 @@ $$
 $$S_1(y) = 1/\left(1 + \exp(-\beta_1/\lambda_1 )\,y^{1/\lambda_1} \right), \quad \text{with} \quad \beta_1=-\phi^{-1}\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
 $$S_0(y) = 1/\left(1 + \exp(-\beta_0/\lambda_0 )\,y^{1/\lambda_0} \right), \quad \text{with} \quad \beta_0=-\phi^{-1}\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
 
-#### How do we interpret test direction?
+#### How do I interpret test direction?
 
 
 For tests where larger values indicate disease (`testdirection = "greater"`):
@@ -326,7 +326,7 @@ hoyer
 summary(hoyer)
 ```
 
-## How do we get a summary ROC plot?
+## How do I get a summary plot of the Hoyer model?
 
 ```{r}
 #| echo: TRUE
@@ -383,13 +383,16 @@ summary(less)
 plot(less,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 ```
 
-## How does `fitHoyer` work internally?
+## How does `fitHoyer` work internally? -- Optional advanced workflow
+
+Most users should use the high-level `fitHoyer` function.
+The lower-level functions are provided for advanced use and transparency.
 
 ### Step 1: How do we restructure the data set?
 
 ```{r}
 #| echo: TRUE
-res <- restructure(
+res <- restructure_data(
     data = diabetes,
     TP = TP,
     FP = FP,
@@ -408,7 +411,7 @@ res
 
 ```{r}
 #| echo: TRUE
-init <- getInitParms(res$restructured,
+init <- initHoyerAFT(res$restructured,
                      dist="loglogistic")
 init
 ```

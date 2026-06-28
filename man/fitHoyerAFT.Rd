@@ -4,17 +4,17 @@
 \alias{fitHoyerAFT}
 \title{Fit Threshold-Based bivariate time-to-event DTA Models}
 \usage{
-fitHoyerAFT(data, init, conflevel = 0.95, threshold = NA)
+fitHoyerAFT(data, init, conflevel = 0.95, threshold = NA, verbose = FALSE)
 }
 \arguments{
-\item{data}{A list as produced by \code{\link{restructure}}, containing:
+\item{data}{A list as produced by \code{\link{restructure_data}}, containing:
 \describe{
 \item{restructured}{Interval-formatted data}
 \item{original}{Processed original data with derived quantities}
 }}
 
 \item{init}{A data frame of initial parameter values as produced by
-\code{\link{getInitParms}}.}
+\code{\link{initHoyerAFT}}.}
 
 \item{conflevel}{Confidence level for confidence intervals for sensitivities
 and specificities at the chosen thresholds. Defaults to \code{0.95}.}
@@ -23,6 +23,8 @@ and specificities at the chosen thresholds. Defaults to \code{0.95}.}
 threshold(s) at which sensitivity and specificity should be evaluated.
 If \code{NA} (default), the median threshold from the original data
 is used.}
+
+\item{verbose}{Logical. Whether TMB optimization output should be printed (default: FALSE).}
 }
 \value{
 An object of class \code{"HoyerAFT"} containing:
@@ -58,7 +60,7 @@ Requires a compiled TMB model named \code{"Hoyer"}.
 \examples{
 \dontrun{
 data("diabetes")
-res <- restructure(
+res <- restructure_data(
   data = diabetes,
   TP = TP,
   FP = FP,
@@ -70,7 +72,7 @@ res <- restructure(
   largest = 10
 )
 
-init <- getInitParms(res$restructured)
+init <- initHoyerAFT(res$restructured)
 
 fit <- fitHoyerAFT(res, init)
 

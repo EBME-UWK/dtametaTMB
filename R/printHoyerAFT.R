@@ -10,40 +10,30 @@
 #'
 #' @method print HoyerAFT
 #' @export
+
 print.HoyerAFT <- function(x, ...) {
-
-  cat("\nHoyer AFT Model Fit\n")
-  cat("-------------------\n")
-
-  # Distribution
+  
+  cat("\n", "Hoyer Model", "\n", sep = "")
+  cat(strrep("-", nchar("Hoyer Model")), "\n\n", sep = "")
+  
   dist_name <- switch(as.character(x$distcode),
                       "1" = "Weibull",
                       "2" = "Lognormal",
                       "3" = "Loglogistic",
                       "Unknown")
-
-  cat("Distribution :", dist_name, "\n")
-
-  # Number of studies
-  nstudy <- length(unique(x$restructured$study))
-  cat("Number of studies :", nstudy, "\n")
   
-  # Test direction
-  testd <- unique(x$data$testdirection)
-  cat("Test direction :", testd, "\n")
-
-  # Convergence info
-  if (!is.null(x$fit$convergence) && x$fit$convergence == 0) {
-    cat("Optimization : converged\n")
-  } else {
-    cat("Optimization : NOT converged\n")
-  }
-
-  if (!is.null(x$fit$objective)) {
-    cat("-2 negative Log Likelihood :", round(x$fit$objective*2, 4), "\n")
-  }
-
+  n_study <- length(unique(x$restructured$study))
+  converged <- !is.null(x$fit$convergence) && x$fit$convergence == 0
+  loglik <- if (!is.null(x$fit$objective)) 2 * x$fit$objective else NULL
+  
+  cat("Number of studies :", n_study, "\n")
+  cat("Model fit         :", if (converged) "Converged" else "Not converged", "\n")
+  cat("-2 log likelihood :", round(loglik, 3), "\n")
+  cat("\n")
+  cat("Distribution      :", dist_name, "\n")
+  cat("Test direction    :", unique(x$data$testdirection), "\n")
+  
   cat("\nUse summary() for parameter estimates.\n")
-
+  
   invisible(x)
 }

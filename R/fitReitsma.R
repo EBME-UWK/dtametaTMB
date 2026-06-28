@@ -15,7 +15,7 @@
 #' \itemize{
 #'   \item \code{data}: the original data set with derived quantities
 #'   \item \code{glmmTMB}: fitted model object.
-#'   \item \code{estimates}: parameter estimates with SE and CI.
+#'   \item \code{estimates}: parameter estimates with SE.
 #'   \item \code{vcov}: variance-covariance matrix.
 #'   \item \code{sensspec}: sensitivity and specificity estimates.
 #'   \item \code{LRDOR}: DOR and likelihood ratios.
@@ -46,6 +46,7 @@
 #' A hierarchical regression approach to meta-analysis of diagnostic test accuracy evaluations.
 #' \emph{Statistics in Medicine}, 20(19), 2865–2884.
 #' \doi{10.1002/sim.942}
+#' 
 #' Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
 #' A unification of models for meta-analysis of diagnostic accuracy studies.
 #' \emph{Biostatistics}, 8(2), 239--251.

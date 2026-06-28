@@ -91,7 +91,7 @@
 #' @examples
 #' data("diabetes")
 #'
-#' res <- restructure(
+#' res <- restructure_data(
 #'   data = diabetes,
 #'   TP = TP,
 #'   FP = FP,
@@ -106,18 +106,18 @@
 #' @references
 #' Hoyer, A., Hirt, S., Kuss, O. (2018).
 #' Meta-analysis of full ROC curves using bivariate time-to-event models for interval-censored data.
-#' \emph{Research Synthesis Methods}, 9(1), 1759-2879.
+#' \emph{Research Synthesis Methods}, 9(1), 62-72.
 #' \doi{10.1002/jrsm.1273}
 #' 
 #' @importFrom stats complete.cases
 #' @export
-restructure <- function(data,
-                        TP, FP, FN, TN,
-                        threshold,
-                        study,
-                        smallest,
-                        largest,
-                        testdirection=c("greater", "less")) {
+restructure_data <- function(data,
+                             TP, FP, FN, TN,
+                             threshold,
+                             study,
+                             smallest,
+                             largest,
+                             testdirection=c("greater", "less")) {
   
     testdirection <- match.arg(testdirection)
   

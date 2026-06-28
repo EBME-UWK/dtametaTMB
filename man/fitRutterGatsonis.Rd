@@ -4,7 +4,17 @@
 \alias{fitRutterGatsonis}
 \title{Fit the Rutter and Gatsonis (HSROC) model}
 \usage{
-fitRutterGatsonis(data, TP, FP, FN, TN, study, conflevel = 0.95, spec = NA)
+fitRutterGatsonis(
+  data,
+  TP,
+  FP,
+  FN,
+  TN,
+  study,
+  conflevel = 0.95,
+  spec = NA,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{data}{Data frame containing study-level diagnostic data.}
@@ -23,6 +33,8 @@ fitRutterGatsonis(data, TP, FP, FN, TN, study, conflevel = 0.95, spec = NA)
 
 \item{spec}{Optional specificity value at which sensitivity is estimated.
 If \code{NA}, the median observed sensitivity is used as a proxy.}
+
+\item{verbose}{Logical. Whether TMB optimization output should be printed (default: FALSE).}
 }
 \value{
 An object of class \code{"RutterGatsonis"} containing:
@@ -38,7 +50,7 @@ An object of class \code{"RutterGatsonis"} containing:
 \description{
 This function estimates the HSROC model parameters based on study-level
 2x2 table data (true positives, false positives, false negatives, true negatives).
-It supports input either as a data frame or as separate vectors.
+It supports input either as a data frame.
 }
 \details{
 Fits the hierarchical summary receiver operating characteristic (HSROC)
