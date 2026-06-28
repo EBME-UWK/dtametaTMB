@@ -57,7 +57,7 @@ HSROC (hierarchical summary ROC) curve can be overlaid.
 }
 \details{
 The plot is constructed on the ROC scale with sensitivity on the y-axis
-and specificity on the x-axis (displayed as 1 − false positive rate on a reversed axis).
+and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 
 Study-specific estimates are shown as rectangles, where the size reflects
 approximate study weights derived from the Fisher information matrix.

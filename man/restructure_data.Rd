@@ -109,7 +109,6 @@ curve, but ensures compatibility with the model formulation.
 }
 \examples{
 data("diabetes")
-
 res <- restructure_data(
   data = diabetes,
   TP = TP,

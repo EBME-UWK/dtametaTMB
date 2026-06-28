@@ -90,7 +90,6 @@
 #'
 #' @examples
 #' data("diabetes")
-#'
 #' res <- restructure_data(
 #'   data = diabetes,
 #'   TP = TP,

@@ -51,11 +51,10 @@
 #' }
 #'
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
-#' and specificity on the x-axis (displayed as 1 − false positive rate on a reversed axis).
+#' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
 #'
 #' @examples
-#' \dontrun{
 #' data("diabetes")
 #' fit <- fitHoyer(data=diabetes,
 #'                 TP=TP,
@@ -68,7 +67,6 @@
 #'                 largest=10)
 #'
 #' plot(fit)
-#' }
 #'
 #' @seealso \code{\link{fitHoyerAFT}}
 #' @importFrom graphics abline axis legend lines par points symbols title

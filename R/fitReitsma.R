@@ -23,7 +23,6 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
 #' data("anticcp")
 #' fit <- fitReitsma(
 #'   data = anticcp,
@@ -34,7 +33,7 @@
 #'   study = study
 #' )
 #' fit$estimates
-#' }
+#' 
 #'
 #' @references
 #' Reitsma, J. B., et al. (2005). 
@@ -123,7 +122,7 @@ fitReitsma <- function(data,
   rAB_init     <- max(min(cor(logit_sens,logit_spec),0.99),-0.99)
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   
-  # Reshaping the data
+  ### Reshaping the data
   X$true1 <- X$TP
   X$true0 <- X$TN 
   X$n1    <- X$TP+X$FN
@@ -133,11 +132,18 @@ fitReitsma <- function(data,
                timevar="sens", times=c(1,0), v.names=c("n","true")) 
   Y <- Y[order(Y$id),]  
   Y$spec <- 1-Y$sens
-  # Fitting the Reitsma model
+  ### Fitting the Reitsma model
   MA_Y <- glmmTMB::glmmTMB(formula=cbind(true, n - true) ~ 0 + sens + spec + (0+sens + spec | id), 
                            data=Y, family=stats::binomial(link="logit"),
                            start=list(beta=c(muA_init,muB_init),
-                                      theta=c(log(sA_init),log(sB_init),theta3_init))) 
+                                      theta=c(log(sA_init),log(sB_init),theta3_init)))
+  if (MA_Y$fit$convergence != 0) {
+    warning(
+      "TMB optimization did not converge. ",
+      "Estimates may be unreliable. ",
+      "Consider checking starting values, model specification, or data quality."
+    )
+  }
   ma_Y <- summary(MA_Y)
   S         <- ma_Y$vcov$cond
   qq        <- stats::qnorm(1-(1-conflevel)/2)
@@ -148,7 +154,7 @@ fitReitsma <- function(data,
   res$CI_Upper  <- with(res,plogis(Estimate+qq*`Std. Error`))
   res       <- res[,(5:8)];
   colnames(res) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
-  # How do I get the SAS variance covariance matrix?
+  ### SAS variance covariance matrix
   theta     = glmmTMB::getME(MA_Y,"theta")
   beta_fix  = glmmTMB::fixef(MA_Y)$cond
   V_full    = vcov(MA_Y, full = TRUE)
@@ -160,7 +166,7 @@ fitReitsma <- function(data,
          sigma_AB = (theta[3] / sqrt(1 + theta[3]**2)) * exp(theta[1]) * exp(theta[2]))
   ### Implement Jacobian
   J = matrix(0, nrow = 5, ncol = 5)
-  # fixed effects
+  ### fixed effects
   J[1, 1]  = 1
   J[2, 2]  = 1
   ### variances
@@ -181,14 +187,12 @@ fitReitsma <- function(data,
                                 "sigma_AB")
   ### Apply delta method to get SAS variance-covariance matrix
   V_g  = J %*% V_full %*% t(J)
-  # How do I get standard errors for all estimates?
   rep <- data.frame("Estimate"=g,"Std_Error"=sqrt(diag(V_g)))
   #rep$CI_Lower <- with(rep,Estimate-qq*Std_Error)
   #rep$CI_Upper <- with(rep,Estimate+qq*Std_Error)
-  rep
-  # How do I get estimates and confidence limits for the 
+
   # diagnostic odds ratio, the positive and negative
-  # likelihood ratios?
+  # likelihood ratios
   lsens  <- rep[1,"Estimate"]
   lspec  <- rep[2,"Estimate"]
   DOR    <- exp(lsens+lspec) 
@@ -206,8 +210,7 @@ fitReitsma <- function(data,
                      CI_Lower = c(exp(log(DOR)-qq*se.logDOR), exp(log(LRp)-qq*se.logLRp), exp(log(LRn)-qq*se.logLRn)), 
                      CI_Upper = c(exp(log(DOR)+qq*se.logDOR), exp(log(LRp)+qq*se.logLRp), exp(log(LRn)+qq*se.logLRn)),
                      row.names = c("DOR", "LR+", "LR-")) 
-  # How do I recover the parameters from the
-  # Rutter and Gatsonis HSROC model?
+  # Recover Rutter and Gatsonis estimates
   sigma2_a <- rep[3,"Estimate"]
   sigma2_b <- rep[4,"Estimate"]
   sigma_ab <- rep[5,"Estimate"]

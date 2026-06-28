@@ -87,9 +87,7 @@
 #' \doi{10.1002/jrsm.1273}
 #'
 #' @examples
-#' \dontrun{
 #' data("diabetes")
-#'
 #' fit <- fitHoyer(
 #'   data = diabetes,
 #'   TP = TP,
@@ -102,9 +100,8 @@
 #'   smallest = 2,
 #'   largest = 10
 #' )
-#'
 #' summary(fit)
-#' }
+#' 
 #'
 #' @export
 

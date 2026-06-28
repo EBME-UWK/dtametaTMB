@@ -31,7 +31,7 @@
 #'
 #' @details
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
-#' and specificity on the x-axis (displayed as 1 − false positive rate on a reversed axis).
+#' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
 #'
 #' Study-specific estimates are shown as rectangles, where the size reflects
@@ -57,7 +57,6 @@
 #' MetaDTA.
 #' \emph{BMC Medical Research Methodology}, 19, 81.
 #' \doi{10.1186/s12874-019-0724-x}
-#'
 #'
 #' Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
 #' A unification of models for meta-analysis of diagnostic accuracy studies.

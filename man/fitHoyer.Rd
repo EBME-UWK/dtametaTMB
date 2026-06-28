@@ -104,9 +104,7 @@ Missing values in the input data are removed prior to analysis.
 A message is issued listing the affected studies.
 }
 \examples{
-\dontrun{
 data("diabetes")
-
 fit <- fitHoyer(
   data = diabetes,
   TP = TP,
@@ -119,9 +117,8 @@ fit <- fitHoyer(
   smallest = 2,
   largest = 10
 )
-
 summary(fit)
-}
+
 
 }
 \references{

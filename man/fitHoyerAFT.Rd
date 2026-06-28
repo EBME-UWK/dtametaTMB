@@ -58,7 +58,6 @@ for correlations.
 Requires a compiled TMB model named \code{"Hoyer"}.
 }
 \examples{
-\dontrun{
 data("diabetes")
 res <- restructure_data(
   data = diabetes,
@@ -71,13 +70,10 @@ res <- restructure_data(
   smallest = 2,
   largest = 10
 )
-
 init <- initHoyerAFT(res$restructured)
-
 fit <- fitHoyerAFT(res, init)
-
 summary(fit)
-}
+
 
 }
 \references{

@@ -1,8 +1,8 @@
 ---
 title: "Introduction to dtametaTMB"
 output: 
-  #rmarkdown::html_vignette: default
-  pdf_document: default
+  rmarkdown::html_vignette: default
+  #pdf_document: default
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{knitr::rmarkdown}
@@ -458,6 +458,3 @@ Meta-analysis of full ROC curves using bivariate time-to-event models for interv
 Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y. (editors) (2023).
 Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
 Version 2.0 (updated July 2023). Cochrane.
-Available from <https://training.cochrane.org/handbook-diagnostic-test-accuracy/current>
-
-

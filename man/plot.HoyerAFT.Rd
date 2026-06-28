@@ -66,10 +66,9 @@ and depends on the specified distribution:
 }
 
 The plot is constructed on the ROC scale with sensitivity on the y-axis
-and specificity on the x-axis (displayed as 1 − false positive rate on a reversed axis).
+and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 }
 \examples{
-\dontrun{
 data("diabetes")
 fit <- fitHoyer(data=diabetes,
                 TP=TP,
@@ -82,7 +81,6 @@ fit <- fitHoyer(data=diabetes,
                 largest=10)
 
 plot(fit)
-}
 
 }
 \seealso{

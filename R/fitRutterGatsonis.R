@@ -59,23 +59,19 @@
 #' \doi{10.1093/biostatistics/kxl004}
 #'
 #' @seealso
-#' \code{\link{fitRutterGatsonis}} (print/summary methods if implemented)
+#' \code{\link{fitRutterGatsonis}} (print/summary methods)
 #'
 #' @examples
-#' \dontrun{
-#' data("anticcp")
-#'
+#' data("RF")
 #' fit <- fitRutterGatsonis(
-#'   data = anticcp,
+#'   data = RF,
 #'   TP = TP,
 #'   FP = FP,
 #'   FN = FN,
 #'   TN = TN,
 #'   study = study
 #' )
-#'
 #' summary(fit)
-#' }
 #'
 #' @importFrom TMB MakeADFun sdreport
 #' @importFrom stats complete.cases nlminb median qnorm qlogis sd

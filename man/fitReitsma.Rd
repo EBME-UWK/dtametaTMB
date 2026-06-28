@@ -38,7 +38,6 @@ Fits the Reitsma bivariate random-effects model for diagnostic test accuracy
 meta-analysis using a binomial-normal likelihood via \code{glmmTMB}.
 }
 \examples{
-\dontrun{
 data("anticcp")
 fit <- fitReitsma(
   data = anticcp,
@@ -49,7 +48,7 @@ fit <- fitReitsma(
   study = study
 )
 fit$estimates
-}
+
 
 }
 \references{

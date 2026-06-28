@@ -62,8 +62,6 @@
 #' estimation of between-study variability is not reliable.
 #'
 #' @examples
-#' \dontrun{
-#' # Restructure data
 #' data("diabetes")
 #' res <- restructure_data(
 #'   data = diabetes,
@@ -76,10 +74,8 @@
 #'   smallest = 2,
 #'   largest = 10
 #' )
-#'
-#' # Compute initial parameters
 #' init <- initHoyerAFT(res$restructured)
-#' }
+#' 
 #'
 #' @references
 #' Hoyer, A., Hirt, S., Kuss, O. (2018).

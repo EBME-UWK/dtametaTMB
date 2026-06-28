@@ -39,7 +39,6 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
 #' data("diabetes")
 #' res <- restructure_data(
 #'   data = diabetes,
@@ -52,13 +51,10 @@
 #'   smallest = 2,
 #'   largest = 10
 #' )
-#'
 #' init <- initHoyerAFT(res$restructured)
-#'
 #' fit <- fitHoyerAFT(res, init)
-#'
 #' summary(fit)
-#' }
+#' 
 #'
 #' @details
 #' Model fitting is performed using \code{nlminb}, and uncertainty

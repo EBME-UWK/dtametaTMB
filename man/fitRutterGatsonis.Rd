@@ -64,20 +64,16 @@ accuracy and threshold parameters.
 Reitsma parameterization is recovered from the fitted HSROC parameters.
 }
 \examples{
-\dontrun{
-data("anticcp")
-
+data("RF")
 fit <- fitRutterGatsonis(
-  data = anticcp,
+  data = RF,
   TP = TP,
   FP = FP,
   FN = FN,
   TN = TN,
   study = study
 )
-
 summary(fit)
-}
 
 }
 \references{
@@ -97,5 +93,5 @@ A unification of models for meta-analysis of diagnostic accuracy studies.
 \doi{10.1093/biostatistics/kxl004}
 }
 \seealso{
-\code{\link{fitRutterGatsonis}} (print/summary methods if implemented)
+\code{\link{fitRutterGatsonis}} (print/summary methods)
 }
