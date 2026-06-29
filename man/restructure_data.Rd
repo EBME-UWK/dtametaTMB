@@ -2,7 +2,7 @@
 % Please edit documentation in R/restructure_data.R
 \name{restructure_data}
 \alias{restructure_data}
-\title{Construct Interval Data for Threshold-Based Bivariate Time-to-Event DTA Models}
+\title{Construct Interval Data for Threshold-Based Bivariate Time-to-Event Models}
 \usage{
 restructure_data(
   data,

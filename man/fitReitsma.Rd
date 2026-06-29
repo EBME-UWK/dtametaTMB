@@ -34,7 +34,7 @@ A list of class \code{"Reitsma"} with components:
 }
 }
 \description{
-Fits the Reitsma bivariate random-effects model for diagnostic test accuracy
+Fits the Reitsma bivariate random-effects model for diagnostic test accuracy (DTA)
 meta-analysis using a binomial-normal likelihood via \code{glmmTMB}.
 }
 \examples{

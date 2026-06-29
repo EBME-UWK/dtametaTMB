@@ -1,4 +1,4 @@
-#' Summary Method Reitsma Objects
+#' Summary Method for Reitsma Objects
 #'
 #' Extracts key results from an object of class \code{"Reitsma"}, including
 #' parameter estimates, sensitivity and specificity summaries, and recovered

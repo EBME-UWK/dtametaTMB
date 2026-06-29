@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotRutterGatsonis.R
 \name{plot.RutterGatsonis}
 \alias{plot.RutterGatsonis}
-\title{Plot Results from a Rutter and Gatsonis Diagnostic Test Accuracy Model}
+\title{Plot Results from a Rutter and Gatsonis Model}
 \usage{
 \method{plot}{RutterGatsonis}(
   x,

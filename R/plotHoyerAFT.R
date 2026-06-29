@@ -1,4 +1,4 @@
-#' Plot Results from a Hoyer Diagnostic Test Accuracy Model
+#' Plot Results from a Hoyer Model
 #'
 #' Produces a hierarchical summary receiver operating characteristic
 #' (HSROC) plot from a fitted Hoyer AFT model. The plot shows

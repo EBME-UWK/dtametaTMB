@@ -2,7 +2,7 @@
 % Please edit documentation in R/summaryReitsma.R
 \name{summary.Reitsma}
 \alias{summary.Reitsma}
-\title{Summary Method Reitsma Objects}
+\title{Summary Method for Reitsma Objects}
 \usage{
 \method{summary}{Reitsma}(object, ...)
 }

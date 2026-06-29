@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitHoyer.R
 \name{fitHoyer}
 \alias{fitHoyer}
-\title{Fit Threshold-Based Bivariate Time-to-Event DTA Model (Hoyer)}
+\title{Fit Threshold-Based Bivariate Time-to-Event Model (Hoyer)}
 \usage{
 fitHoyer(
   data,

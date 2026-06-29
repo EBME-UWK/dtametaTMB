@@ -54,7 +54,7 @@ This function estimates the HSROC model parameters based on study-level
 \details{
 Fits the hierarchical summary receiver operating characteristic (HSROC)
 model as proposed by Rutter and Gatsonis for meta-analysis of diagnostic
-test accuracy studies using Template Model Builder (TMB).
+test accuracy (DTA) studies using Template Model Builder (TMB).
 
 The function internally transforms the data into long format and fits the model
 via maximum likelihood using TMB. Random effects are included for study-specific

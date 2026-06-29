@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitHoyerAFT.R
 \name{fitHoyerAFT}
 \alias{fitHoyerAFT}
-\title{Fit Threshold-Based Bivariate Time-to-Event DTA Model (Hoyer AFT)}
+\title{Fit Threshold-Based Bivariate Time-to-Event Model (Hoyer AFT)}
 \usage{
 fitHoyerAFT(data, init, conflevel = 0.95, threshold = NA, verbose = FALSE)
 }

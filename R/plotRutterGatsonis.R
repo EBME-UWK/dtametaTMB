@@ -1,4 +1,4 @@
-#' Plot Results from a Rutter and Gatsonis Diagnostic Test Accuracy Model
+#' Plot Results from a Rutter and Gatsonis Model
 #'
 #' Produces a summary ROC plot for objects of class \code{"RutterGatsonis"}
 #' obtained from \code{\link{fitRutterGatsonis}}. The plot displays study-level

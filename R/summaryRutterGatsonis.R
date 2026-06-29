@@ -27,7 +27,6 @@
 #' \code{\link{fitRutterGatsonis}}
 #'
 #' @export
-
 summary.RutterGatsonis <- function(object, ...) {
   return(list(
     estimates = object$sdreport2,

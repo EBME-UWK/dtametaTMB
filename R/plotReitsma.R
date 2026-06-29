@@ -1,4 +1,4 @@
-#' Plot Results from a Reitsma Diagnostic Test Accuracy Model
+#' Plot Results from a Reitsma Model
 #'
 #' Produces a summary ROC plot for objects of class \code{"Reitsma"}
 #' obtained from \code{\link{fitReitsma}}. The plot displays study-level

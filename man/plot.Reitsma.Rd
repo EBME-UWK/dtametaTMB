@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotReitsma.R
 \name{plot.Reitsma}
 \alias{plot.Reitsma}
-\title{Plot Results from a Reitsma Diagnostic Test Accuracy Model}
+\title{Plot Results from a Reitsma Model}
 \usage{
 \method{plot}{Reitsma}(
   x,
