@@ -14,20 +14,20 @@
 }
 \value{
 A list containing the following components:
-\describe{
-\item{estimates}{Matrix of reported parameter estimates and standard errors
-from the TMB \code{sdreport} summary (i.e., \code{sdreport2}).}
-\item{sensspec}{Data frame with estimated sensitivity at the specified
-specificity, including confidence intervals.}
-\item{Reitsma_recovered}{Data frame of parameters transformed into the
-Reitsma (bivariate) parameterization.}
+\itemize{
+\item \code{estimates} Matrix of reported parameter estimates and standard errors
+from the TMB \code{sdreport} or summary (i.e., \code{sdreport2}).
+\item \code{sensspec} Data frame with estimated sensitivity at the specified
+specificity, including confidence intervals.
+\item \code{Reitsma_recovered} Data frame of parameters transformed into the
+Reitsma (bivariate) parametrization.
 }
 }
 \description{
 This method extracts key components from a fitted HSROC model object
 returned by \code{\link{fitRutterGatsonis}}. It returns parameter
 estimates, sensitivity/specificity summaries, and the recovered
-Reitsma parameterization.
+Reitsma parametrization.
 }
 \details{
 Provides a concise summary of a fitted \code{"RutterGatsonis"} model.

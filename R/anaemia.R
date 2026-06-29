@@ -16,7 +16,7 @@
 #'   \item{H}{Number of healthy individuals}
 #'   \item{sens}{Sensitivity}
 #'   \item{fpr}{False positive rate}
-#'   \item{testdirection}{Smaller values indicate disease}
+#'   \item{testdirection}{Smaller values indicate disease (=less)}
 #' }
 #' @source Synthetic dataset.
 "anaemia"

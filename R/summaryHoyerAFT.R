@@ -12,7 +12,11 @@
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return A list with two data frames containing summary statistics derived
-#'   from the fitted model, corresponding to the \code{sdreport2} and \code{sensspec} element of the object.
+#'   from the fitted model.
+#' \itemize{
+#'   \item \code{sdreport2}: Parameter estimates with standard errors returned from TMB reported parameters.
+#'   \item \code{sensspec}: Estimated sensitivity and specificity (on original scale) with confidence intervals at the specified thresholds.
+#' }
 #'
 #' @seealso \code{\link{fitHoyerAFT}}, \code{\link[=summary.HoyerAFT]{summary}}
 #'

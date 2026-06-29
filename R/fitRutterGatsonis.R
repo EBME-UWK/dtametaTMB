@@ -7,7 +7,6 @@
 #' @description
 #' This function estimates the HSROC model parameters based on study-level
 #' 2x2 table data (true positives, false positives, false negatives, true negatives).
-#' It supports input either as a data frame.
 #'
 #' @details
 #' The function internally transforms the data into long format and fits the model
@@ -75,6 +74,7 @@
 #'
 #' @importFrom TMB MakeADFun sdreport
 #' @importFrom stats complete.cases nlminb median qnorm qlogis sd
+#' @note Requires a compiled TMB model named \code{"RutterGatsonis"}.
 #' @export
 fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA,verbose=FALSE){
   

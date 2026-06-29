@@ -17,7 +17,7 @@ A data frame with 81 rows and 11 variables:
 \item{H}{Number of healthy individuals}
 \item{sens}{Sensitivity}
 \item{fpr}{False positive rate}
-\item{testdirection}{Smaller values indicate disease}
+\item{testdirection}{Smaller values indicate disease (=less)}
 }
 }
 \source{

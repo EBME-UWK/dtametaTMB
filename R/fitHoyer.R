@@ -102,7 +102,7 @@
 #' )
 #' summary(fit)
 #' 
-#'
+#' @note Requires a compiled TMB model named \code{"Hoyer"}.
 #' @export
 
 fitHoyer <- function(data,

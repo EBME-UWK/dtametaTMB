@@ -1,6 +1,6 @@
 #' RF dataset
 #'
-#' This is the RF data set as given by Nishimura (2007) from a review of rheumatoid factor (RA) to diagnose rheumatoid arthritis.
+#' This is the RF data set as given by Nishimura (2007) from a review of rheumatoid factor (RF) to diagnose rheumatoid arthritis.
 #'
 #' @format A data frame with 37 rows and 7 variables:
 #' \describe{

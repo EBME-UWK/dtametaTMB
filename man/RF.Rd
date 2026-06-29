@@ -28,6 +28,6 @@ Annals of Internal Medicine, 146(11), 392-403.
 RF
 }
 \description{
-This is the RF data set as given by Nishimura (2007) from a review of rheumatoid factor (RA) to diagnose rheumatoid arthritis.
+This is the RF data set as given by Nishimura (2007) from a review of rheumatoid factor (RF) to diagnose rheumatoid arthritis.
 }
 \keyword{datasets}

@@ -50,7 +50,6 @@ An object of class \code{"RutterGatsonis"} containing:
 \description{
 This function estimates the HSROC model parameters based on study-level
 2x2 table data (true positives, false positives, false negatives, true negatives).
-It supports input either as a data frame.
 }
 \details{
 Fits the hierarchical summary receiver operating characteristic (HSROC)
@@ -62,6 +61,9 @@ via maximum likelihood using TMB. Random effects are included for study-specific
 accuracy and threshold parameters.
 
 Reitsma parameterization is recovered from the fitted HSROC parameters.
+}
+\note{
+Requires a compiled TMB model named \code{"RutterGatsonis"}.
 }
 \examples{
 data("RF")

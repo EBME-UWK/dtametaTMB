@@ -430,6 +430,7 @@ hoyerAFT <- fitHoyerAFT(data=res,
 #| echo: TRUE
 hoyerAFT
 summary(hoyerAFT)
+
 ```
 
 

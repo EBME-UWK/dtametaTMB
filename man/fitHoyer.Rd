@@ -103,6 +103,9 @@ interval-censored data
 Missing values in the input data are removed prior to analysis.
 A message is issued listing the affected studies.
 }
+\note{
+Requires a compiled TMB model named \code{"Hoyer"}.
+}
 \examples{
 data("diabetes")
 fit <- fitHoyer(
@@ -118,7 +121,6 @@ fit <- fitHoyer(
   largest = 10
 )
 summary(fit)
-
 
 }
 \references{
