@@ -5,7 +5,7 @@
 \alias{RF}
 \title{RF dataset}
 \format{
-A data frame with 37 rows and 7 variables:
+A data frame with 50 rows and 8 variables:
 \describe{
 \item{study}{Study identifier}
 \item{year}{Year of the study}

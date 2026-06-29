@@ -62,7 +62,7 @@ forest.Cochrane <- function(x, ...) {
     
     dt <- dt[order(dt$study, dt$threshold), ]
     dt$study <- as.character(dt$study)
-    dt$study[duplicated(dt$study)] <- paste0("   ", dt$Study[duplicated(dt$study)])
+    dt$study[duplicated(dt$study)] <- " "
     
     dt$" "    <- " "
     dt$fsens  <- paste(rep(" ",18),collapse=" ")

@@ -2,7 +2,7 @@
 #'
 #' This is the RF data set as given by Nishimura (2007) from a review of rheumatoid factor (RF) to diagnose rheumatoid arthritis.
 #'
-#' @format A data frame with 37 rows and 7 variables:
+#' @format A data frame with 50 rows and 8 variables:
 #' \describe{
 #'   \item{study}{Study identifier}
 #'   \item{year}{Year of the study}
