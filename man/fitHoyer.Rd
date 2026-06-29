@@ -23,21 +23,26 @@ fitHoyer(
 )
 }
 \arguments{
-\item{data}{A data frame containing study-level diagnostic test data.}
+\item{data}{A data.frame containing study-level data.}
 
-\item{TP, FP, FN, TN}{Unquoted column names in \code{data} corresponding
-to true positives, false positives, false negatives, and true negatives.}
+\item{TP}{True positives (column name).}
 
-\item{study}{Unquoted column name identifying studies.}
+\item{FP}{False positives (column name).}
 
-\item{threshold}{Unquoted column name specifying the observed threshold values.
+\item{FN}{False negatives (column name).}
+
+\item{TN}{True negatives (column name).}
+
+\item{study}{Study identifier (column name).}
+
+\item{threshold}{The observed threshold value (column name).
 Must be positive and strictly increasing within each study.}
 
-\item{smallest}{Numeric. Positive lower bound defining the leftmost
-interval. Must be smaller than the minimum observed threshold.}
+\item{smallest}{Positive lower bound used to define the
+leftmost interval. Must be smaller than minimum \code{threshold}.}
 
-\item{largest}{Numeric. Positive upper bound defining the rightmost
-interval. Must be larger than the maximum observed threshold.}
+\item{largest}{Positive upper bound used to define the
+rightmost interval. Must be greater than maximum \code{threshold}.}
 
 \item{testdirection}{Direction of the test. Enter \code{"greater"}
 when larger test values indicate disease.

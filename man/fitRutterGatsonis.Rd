@@ -17,19 +17,19 @@ fitRutterGatsonis(
 )
 }
 \arguments{
-\item{data}{Data frame containing study-level diagnostic data.}
+\item{data}{A data.frame containing study-level data.}
 
-\item{TP}{Column name of true positives.}
+\item{TP}{True positives (column name).}
 
-\item{FP}{Column name of false positives.}
+\item{FP}{False positives (column name).}
 
-\item{FN}{Column name of false negatives.}
+\item{FN}{False negatives (column name).}
 
-\item{TN}{Column name of true negatives.}
+\item{TN}{True negatives (column name).}
 
-\item{study}{Column name of identifying studies.}
+\item{study}{Study identifier (column name).}
 
-\item{conflevel}{Confidence level used for confidence intervals (default: 0.95).}
+\item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 
 \item{spec}{Optional specificity value at which sensitivity is estimated.
 If \code{NA}, the median observed sensitivity is used as a proxy.}

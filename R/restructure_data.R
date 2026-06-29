@@ -16,15 +16,14 @@
 #' non-diseased groups. Therefore, input counts must be cumulative over
 #' increasing thresholds within each study.
 #'
-#' @param data A data frame containing study-level diagnostic test data.
-#'
-#' @param TP,FP,FN,TN Unquoted column names in \code{data} corresponding to
-#'   true positives, false positives, false negatives, and true negatives.
-#'
-#' @param threshold Unquoted column name in \code{data} specifying the
-#'   threshold (cutoff) values. Must be positive.
-#'
-#' @param study Unquoted column name identifying studies.
+#' @param data A data.frame containing study-level data.
+#' @param TP True positives (column name).
+#' @param FP False positives (column name).
+#' @param FN False negatives (column name).
+#' @param TN True negatives (column name).
+#' @param study Study identifier (column name).
+#' @param threshold The observed threshold value (column name).
+#'   Must be positive and strictly increasing within each study.
 #'
 #' @param testdirection Direction of the test. Enter \code{"greater"} 
 #'   when larger test values indicate disease. 
@@ -32,10 +31,10 @@
 #'   disease (e.g. anaemia-type tests). 
 #'   Defaults to \code{"greater"}.
 #'
-#' @param smallest Numeric. Positive lower bound used to define the
+#' @param smallest Positive lower bound used to define the
 #'   leftmost interval. Must be smaller than minimum \code{threshold}.
 #'
-#' @param largest Numeric. Positive upper bound used to define the
+#' @param largest Positive upper bound used to define the
 #'   rightmost interval. Must be greater than maximum \code{threshold}.
 #' 
 #'

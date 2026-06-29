@@ -15,13 +15,13 @@
 #'
 #' Reitsma parameterization is recovered from the fitted HSROC parameters.
 #'
-#' @param data Data frame containing study-level diagnostic data.
-#' @param TP Column name of true positives.
-#' @param FP Column name of false positives.
-#' @param FN Column name of false negatives.
-#' @param TN Column name of true negatives.
-#' @param study Column name of identifying studies.
-#' @param conflevel Confidence level used for confidence intervals (default: 0.95).
+#' @param data A data.frame containing study-level data.
+#' @param TP True positives (column name).
+#' @param FP False positives (column name).
+#' @param FN False negatives (column name).
+#' @param TN True negatives (column name).
+#' @param study Study identifier (column name).
+#' @param conflevel Confidence level for confidence intervals. Default is 0.95.
 #' @param spec Optional specificity value at which sensitivity is estimated.
 #' If \code{NA}, the median observed sensitivity is used as a proxy.
 #' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).

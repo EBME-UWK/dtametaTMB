@@ -18,21 +18,21 @@
 #' false positives, false negatives, and true negatives at multiple
 #' thresholds within each study.
 #'
-#' @param data A data frame containing study-level diagnostic test data.
+#' @param data A data.frame containing study-level data.
+#' @param TP True positives (column name).
+#' @param FP False positives (column name).
+#' @param FN False negatives (column name).
+#' @param TN True negatives (column name).
+#' @param study Study identifier (column name).
 #'
-#' @param TP,FP,FN,TN Unquoted column names in \code{data} corresponding
-#'   to true positives, false positives, false negatives, and true negatives.
-#'
-#' @param study Unquoted column name identifying studies.
-#'
-#' @param threshold Unquoted column name specifying the observed threshold values.
+#' @param threshold The observed threshold value (column name).
 #'   Must be positive and strictly increasing within each study.
 #'
-#' @param smallest Numeric. Positive lower bound defining the leftmost
-#'   interval. Must be smaller than the minimum observed threshold.
+#' @param smallest Positive lower bound used to define the
+#'   leftmost interval. Must be smaller than minimum \code{threshold}.
 #'
-#' @param largest Numeric. Positive upper bound defining the rightmost
-#'   interval. Must be larger than the maximum observed threshold.
+#' @param largest Positive upper bound used to define the
+#'   rightmost interval. Must be greater than maximum \code{threshold}.
 #'   
 #' @param eval_threshold Optional numeric value or vector specifying the 
 #'   prediction grid threshold(s) at which sensitivity and specificity 

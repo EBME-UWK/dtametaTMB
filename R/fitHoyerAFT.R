@@ -21,10 +21,11 @@
 #' @param conflevel Confidence level for confidence intervals for sensitivities
 #'   and specificities at the chosen thresholds. Defaults to \code{0.95}.
 #'
-#' @param threshold Optional numeric value or vector specifying the
-#'   threshold(s) at which sensitivity and specificity should be evaluated.
-#'   If \code{NA} (default), the median threshold from the original data
-#'   is used.
+#' @param threshold Optional numeric value or vector specifying the 
+#'   prediction grid threshold(s) at which sensitivity and specificity 
+#'   should be evaluated. If \code{NA} (default), the median threshold from 
+#'   the original data is used.
+#'   
 #' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).
 #'
 #' @return An object of class \code{"HoyerAFT"} containing:

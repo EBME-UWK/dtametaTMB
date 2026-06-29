@@ -20,9 +20,9 @@ fitHoyerAFT(data, init, conflevel = 0.95, threshold = NA, verbose = FALSE)
 and specificities at the chosen thresholds. Defaults to \code{0.95}.}
 
 \item{threshold}{Optional numeric value or vector specifying the
-threshold(s) at which sensitivity and specificity should be evaluated.
-If \code{NA} (default), the median threshold from the original data
-is used.}
+prediction grid threshold(s) at which sensitivity and specificity
+should be evaluated. If \code{NA} (default), the median threshold from
+the original data is used.}
 
 \item{verbose}{Logical. Whether TMB optimization output should be printed (default: FALSE).}
 }
