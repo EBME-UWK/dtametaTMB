@@ -1,4 +1,4 @@
-#' Compute Initial Parameter Values for Threshold-Based bivariate time-to-event DTA Models
+#' Compute Initial Parameter Values for Threshold-Based Bivariate Time-to-Event DTA Models (Hoyer)
 #'
 #' Estimates starting values for fixed and random effects parameters used
 #' in likelihood-based diagnostic test accuracy (DTA) models based on

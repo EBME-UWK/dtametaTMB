@@ -2,7 +2,7 @@
 % Please edit documentation in R/initHoyerAFT.R
 \name{initHoyerAFT}
 \alias{initHoyerAFT}
-\title{Compute Initial Parameter Values for Threshold-Based bivariate time-to-event DTA Models}
+\title{Compute Initial Parameter Values for Threshold-Based Bivariate Time-to-Event DTA Models (Hoyer)}
 \usage{
 initHoyerAFT(restructured, dist = "loglogistic")
 }

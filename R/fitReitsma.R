@@ -1,4 +1,4 @@
-#' Fit Reitsma (2005) Diagnostic Test Accuracy Model
+#' Fit Reitsma Model
 #'
 #' Fits the Reitsma bivariate random-effects model for diagnostic test accuracy 
 #' meta-analysis using a binomial-normal likelihood via \code{glmmTMB}.

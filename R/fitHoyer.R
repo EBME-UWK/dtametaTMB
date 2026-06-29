@@ -1,4 +1,4 @@
-#' Fit Threshold-Based Bivariate Time-to-Event DTA Model (Hoyer AFT)
+#' Fit Threshold-Based Bivariate Time-to-Event DTA Model (Hoyer)
 #'
 #' Fits the threshold-based bivariate accelerated failure time (AFT)
 #' model for diagnostic test accuracy (DTA) meta-analysis as described

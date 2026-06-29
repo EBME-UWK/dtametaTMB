@@ -2,7 +2,7 @@
 % Please edit documentation in R/summaryReitsma.R
 \name{summary.Reitsma}
 \alias{summary.Reitsma}
-\title{Summarize a Fitted Reitsma Model}
+\title{Summary Method Reitsma Objects}
 \usage{
 \method{summary}{Reitsma}(object, ...)
 }

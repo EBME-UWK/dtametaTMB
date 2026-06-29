@@ -1,4 +1,4 @@
-#' Construct Interval Data for Threshold-Based bivariate time-to-event DTA Models
+#' Construct Interval Data for Threshold-Based Bivariate Time-to-Event DTA Models
 #'
 #' Transforms study-level diagnostic test accuracy (DTA) data with multiple thresholds
 #' into interval-censored format suitable for likelihood-based modelling

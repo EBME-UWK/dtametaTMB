@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotHoyerAFT.R
 \name{plot.HoyerAFT}
 \alias{plot.HoyerAFT}
-\title{Plot HSROC Curve for Hoyer AFT Model}
+\title{Plot Results from a Hoyer Diagnostic Test Accuracy Model}
 \usage{
 \method{plot}{HoyerAFT}(
   x,

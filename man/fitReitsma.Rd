@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitReitsma.R
 \name{fitReitsma}
 \alias{fitReitsma}
-\title{Fit Reitsma (2005) Diagnostic Test Accuracy Model}
+\title{Fit Reitsma Model}
 \usage{
 fitReitsma(data, TP, FP, FN, TN, study, conflevel = 0.95)
 }
