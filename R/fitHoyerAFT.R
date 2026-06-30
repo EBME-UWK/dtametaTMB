@@ -167,69 +167,69 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA, verbose=FALS
   rls0 <- which(rownames(rep2)=="logitSurv0")
   
   if(testdir=="greater"){
-    rep6 <- data.frame(threshold=dat2$threshold,
+    sens <- data.frame(threshold=dat2$threshold,
                        logitSurv1=rep2[rls1,"Estimate"],
                        Std_Error=rep2[rls1,"Std. Error"],
                        CI_Lower=NA,
                        CI_Upper=NA)
-    rep6$CI_Lower   <- with(rep6,logitSurv1-qq*Std_Error)
-    rep6$CI_Upper   <- with(rep6,logitSurv1+qq*Std_Error)
-    rep6$Sens       <- with(rep6,plogis(logitSurv1))
-    rep6$SensCI_Lower <- with(rep6,plogis(CI_Lower))
-    rep6$SensCI_Upper <- with(rep6,plogis(CI_Upper))
+    sens$CI_Lower   <- with(sens,logitSurv1-qq*Std_Error)
+    sens$CI_Upper   <- with(sens,logitSurv1+qq*Std_Error)
+    sens$Sens       <- with(sens,plogis(logitSurv1))
+    sens$SensCI_Lower <- with(sens,plogis(CI_Lower))
+    sens$SensCI_Upper <- with(sens,plogis(CI_Upper))
   
-    rep7 <- data.frame(threshold=dat2$threshold,
+    spec <- data.frame(threshold=dat2$threshold,
                        logitSurv0=rep2[rls0,"Estimate"],
                        Std_Error=rep2[rls0,"Std. Error"],
                        CI_Lower=NA,
                        CI_Upper=NA)
-    rep7$CI_Lower   <- with(rep7,logitSurv0-qq*Std_Error)
-    rep7$CI_Upper   <- with(rep7,logitSurv0+qq*Std_Error)
-    rep7$Spec       <- with(rep7,1-plogis(logitSurv0))
-    rep7$SpecCI_Lower <- with(rep7,1-plogis(CI_Upper))
-    rep7$SpecCI_Upper <- with(rep7,1-plogis(CI_Lower))
+    spec$CI_Lower   <- with(spec,logitSurv0-qq*Std_Error)
+    spec$CI_Upper   <- with(spec,logitSurv0+qq*Std_Error)
+    spec$Spec       <- with(spec,1-plogis(logitSurv0))
+    spec$SpecCI_Lower <- with(spec,1-plogis(CI_Upper))
+    spec$SpecCI_Upper <- with(spec,1-plogis(CI_Lower))
    
-    rep8 <- data.frame(threshold=rep6$threshold,
+    sesp <- data.frame(threshold=sens$threshold,
                        conflevel=conflevel,
-                       Sens=rep6$Sens,
-                       SensCI_Lower=rep6$SensCI_Lower,
-                       SensCI_Upper=rep6$SensCI_Upper,
-                       Spec=rep7$Spec,
-                       SpecCI_Lower=rep7$SpecCI_Lower,
-                       SpecCI_Upper=rep7$SpecCI_Upper)
+                       Sens=sens$Sens,
+                       SensCI_Lower=sens$SensCI_Lower,
+                       SensCI_Upper=sens$SensCI_Upper,
+                       Spec=spec$Spec,
+                       SpecCI_Lower=spec$SpecCI_Lower,
+                       SpecCI_Upper=spec$SpecCI_Upper)
   }
   ########
   if(testdir=="less"){
-    rep6 <- data.frame(threshold=dat2$threshold,
+    sens <- data.frame(threshold=dat2$threshold,
                        logitSurv1=rep2[rls1,"Estimate"],
                        Std_Error=rep2[rls1,"Std. Error"],
                        CI_Lower=NA,
                        CI_Upper=NA)
-    rep6$CI_Lower   <- with(rep6,logitSurv1-qq*Std_Error)
-    rep6$CI_Upper   <- with(rep6,logitSurv1+qq*Std_Error)
-    rep6$Sens       <- with(rep6,1-plogis(logitSurv1))
-    rep6$SensCI_Lower <- with(rep6,1-plogis(CI_Upper))
-    rep6$SensCI_Upper <- with(rep6,1-plogis(CI_Lower))
+    sens$CI_Lower   <- with(sens,logitSurv1-qq*Std_Error)
+    sens$CI_Upper   <- with(sens,logitSurv1+qq*Std_Error)
+    sens$Sens       <- with(sens,1-plogis(logitSurv1))
+    sens$SensCI_Lower <- with(sens,1-plogis(CI_Upper))
+    sens$SensCI_Upper <- with(sens,1-plogis(CI_Lower))
     
-    rep7 <- data.frame(threshold=dat2$threshold,
+    spec <- data.frame(threshold=dat2$threshold,
                        logitSurv0=rep2[rls0,"Estimate"],
                        Std_Error=rep2[rls0,"Std. Error"],
                        CI_Lower=NA,
                        CI_Upper=NA)
-    rep7$CI_Lower   <- with(rep7,logitSurv0-qq*Std_Error)
-    rep7$CI_Upper   <- with(rep7,logitSurv0+qq*Std_Error)
-    rep7$Spec       <- with(rep7,plogis(logitSurv0))
-    rep7$SpecCI_Lower <- with(rep7,plogis(CI_Lower))
-    rep7$SpecCI_Upper <- with(rep7,plogis(CI_Upper))
+    spec$CI_Lower   <- with(spec,logitSurv0-qq*Std_Error)
+    spec$CI_Upper   <- with(spec,logitSurv0+qq*Std_Error)
+    spec$Spec       <- with(spec,plogis(logitSurv0))
+    spec$SpecCI_Lower <- with(spec,plogis(CI_Lower))
+    spec$SpecCI_Upper <- with(spec,plogis(CI_Upper))
     
-    rep8 <- data.frame(threshold=rep6$threshold,
+    sesp <- data.frame(threshold=sens$threshold,
                        conflevel=conflevel,
-                       Sens=rep6$Sens,
-                       SensCI_Lower=rep6$SensCI_Lower,
-                       SensCI_Upper=rep6$SensCI_Upper,
-                       Spec=rep7$Spec,
-                       SpecCI_Lower=rep7$SpecCI_Lower,
-                       SpecCI_Upper=rep7$SpecCI_Upper)
+                       Sens=sens$Sens,
+                       SensCI_Lower=sens$SensCI_Lower,
+                       SensCI_Upper=sens$SensCI_Upper,
+                       Spec=spec$Spec,
+                       SpecCI_Lower=spec$SpecCI_Lower,
+                       SpecCI_Upper=spec$SpecCI_Upper)
   }
   # Result object
   res <- list(
@@ -239,7 +239,7 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA, verbose=FALS
     sdreport     = rep,
     sdreport2    = rep2,
     distcode     = dat2$dist,
-    sensspec     = rep8
+    sensspec     = sesp
   )
 
   # Assign class

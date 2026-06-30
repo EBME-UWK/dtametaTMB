@@ -37,12 +37,12 @@
 #'
 #' @references
 #' Reitsma, J. B., et al. (2005). 
-#' Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews.
+#' Bivariate analysis of sensitivity and specificity produces informative summary measusesp in diagnostic reviews.
 #' \emph{Journal of Clinical Epidemiology}, 58(10), 982–990.
 #' \doi{10.1016/j.jclinepi.2005.02.022}
 #'
 #' Rutter, C. M., & Gatsonis, C. A. (2001). 
-#' A hierarchical regression approach to meta-analysis of diagnostic test accuracy evaluations.
+#' A hierarchical regsespsion approach to meta-analysis of diagnostic test accuracy evaluations.
 #' \emph{Statistics in Medicine}, 20(19), 2865–2884.
 #' \doi{10.1002/sim.942}
 #' 
@@ -122,7 +122,7 @@ fitReitsma <- function(data,
   rAB_init     <- max(min(cor(logit_sens,logit_spec),0.99),-0.99)
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   
-  ### Reshaping the data
+  ### sesphaping the data
   X$true1 <- X$TP
   X$true0 <- X$TN 
   X$n1    <- X$TP+X$FN
@@ -130,10 +130,10 @@ fitReitsma <- function(data,
   X$recordid <- 1:nrow(X)
   Y <- reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
                timevar="sens", times=c(1,0), v.names=c("n","true")) 
-  Y <- Y[order(Y$id),]  
+  Y <- Y[order(Y$recordid),]  
   Y$spec <- 1-Y$sens
   ### Fitting the Reitsma model
-  MA_Y <- glmmTMB::glmmTMB(formula=cbind(true, n - true) ~ 0 + sens + spec + (0+sens + spec | id), 
+  MA_Y <- glmmTMB::glmmTMB(formula=cbind(true, n - true) ~ 0 + sens + spec + (0+sens + spec | recordid), 
                            data=Y, family=stats::binomial(link="logit"),
                            start=list(beta=c(muA_init,muB_init),
                                       theta=c(log(sA_init),log(sB_init),theta3_init)))
@@ -147,13 +147,14 @@ fitReitsma <- function(data,
   ma_Y <- summary(MA_Y)
   S         <- ma_Y$vcov$cond
   qq        <- stats::qnorm(1-(1-conflevel)/2)
-  res       <- as.data.frame(ma_Y$coefficients$cond)
-  res$Orig  <- with(res,plogis(Estimate))
-  res$conflevel <- conflevel
-  res$CI_Lower  <- with(res,plogis(Estimate-qq*`Std. Error`))
-  res$CI_Upper  <- with(res,plogis(Estimate+qq*`Std. Error`))
-  res       <- res[,(5:8)];
-  colnames(res) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
+  ### Sensitivity and Specificity
+  sesp           <- as.data.frame(ma_Y$coefficients$cond)
+  sesp$Orig      <- with(sesp,plogis(Estimate))
+  sesp$conflevel <- conflevel
+  sesp$CI_Lower  <- with(sesp,plogis(Estimate-qq*`Std. Error`))
+  sesp$CI_Upper  <- with(sesp,plogis(Estimate+qq*`Std. Error`))
+  sesp           <- sesp[,(5:8)];
+  colnames(sesp) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
   ### SAS variance covariance matrix
   theta     = glmmTMB::getME(MA_Y,"theta")
   beta_fix  = glmmTMB::fixef(MA_Y)$cond
@@ -187,14 +188,14 @@ fitReitsma <- function(data,
                                 "sigma_AB")
   ### Apply delta method to get SAS variance-covariance matrix
   V_g  = J %*% V_full %*% t(J)
-  rep <- data.frame("Estimate"=g,"Std_Error"=sqrt(diag(V_g)))
-  #rep$CI_Lower <- with(rep,Estimate-qq*Std_Error)
-  #rep$CI_Upper <- with(rep,Estimate+qq*Std_Error)
+  esti <- data.frame("Estimate"=g,"Std_Error"=sqrt(diag(V_g)))
+  #esti$CI_Lower <- with(esti,Estimate-qq*Std_Error)
+  #esti$CI_Upper <- with(esti,Estimate+qq*Std_Error)
 
   # diagnostic odds ratio, the positive and negative
   # likelihood ratios
-  lsens  <- rep[1,"Estimate"]
-  lspec  <- rep[2,"Estimate"]
+  lsens  <- esti[1,"Estimate"]
+  lspec  <- esti[2,"Estimate"]
   DOR    <- exp(lsens+lspec) 
   LRp    <- plogis(lsens)/(1-plogis(lspec))
   LRn    <- ((1-plogis(lsens))/plogis(lspec)) 
@@ -205,18 +206,18 @@ fitReitsma <- function(data,
   dLRn = rbind(exp(lsens)/(1+exp(lsens)),1/(1+exp(lspec)))
   se.logLRn = as.numeric(sqrt(t(dLRn) %*% S %*% dLRn))
 
-  rep2 <- data.frame(Estimate = c(DOR, LRp, LRn), 
-                     conflevel=conflevel,
-                     CI_Lower = c(exp(log(DOR)-qq*se.logDOR), exp(log(LRp)-qq*se.logLRp), exp(log(LRn)-qq*se.logLRn)), 
-                     CI_Upper = c(exp(log(DOR)+qq*se.logDOR), exp(log(LRp)+qq*se.logLRp), exp(log(LRn)+qq*se.logLRn)),
-                     row.names = c("DOR", "LR+", "LR-")) 
+  lrdor <- data.frame(Estimate = c(DOR, LRp, LRn), 
+                      conflevel=conflevel,
+                      CI_Lower = c(exp(log(DOR)-qq*se.logDOR), exp(log(LRp)-qq*se.logLRp), exp(log(LRn)-qq*se.logLRn)), 
+                      CI_Upper = c(exp(log(DOR)+qq*se.logDOR), exp(log(LRp)+qq*se.logLRp), exp(log(LRn)+qq*se.logLRn)),
+                      row.names = c("DOR", "LR+", "LR-")) 
   # Recover Rutter and Gatsonis estimates
-  sigma2_a <- rep[3,"Estimate"]
-  sigma2_b <- rep[4,"Estimate"]
-  sigma_ab <- rep[5,"Estimate"]
+  sigma2_a <- esti[3,"Estimate"]
+  sigma2_b <- esti[4,"Estimate"]
+  sigma_ab <- esti[5,"Estimate"]
   sigma_a  <- sqrt(sigma2_a)
   sigma_b  <- sqrt(sigma2_b)
-  rep3 <- data.frame(
+  ruga <- data.frame(
             Lambda   = (((sigma_b/sigma_a)**0.5) * lsens) + ((sigma_a/sigma_b)**0.5 *lspec),
             Theta    = 0.5*((((sigma_b/sigma_a)**0.5 )*lsens) - (((sigma_a/sigma_b)**0.5) *lspec)),
             beta     = log(sigma_b/sigma_a),
@@ -225,11 +226,11 @@ fitReitsma <- function(data,
             row.names="Estimate (recovered)")
   ret <- list(data=XP,
               glmmTMB=MA_Y,
-              estimates=rep,
+              estimates=esti,
               vcov=V_g,
-              sensspec=res,
-              LRDOR=rep2,
-              RutterGatsonis_recovered=rep3)
+              sensspec=sesp,
+              LRDOR=lrdor,
+              RutterGatsonis_recovered=ruga)
   class(ret) <- c("Reitsma","Cochrane")
   return(ret)
 }

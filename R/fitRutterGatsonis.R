@@ -152,12 +152,13 @@ fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA,verb
   X$y0 <- X$FP  
   X$n1 <- X$TP+X$FN
   X$n0 <- X$FP+X$TN
+  X$recordid <- 1:nrow(X)
   n_study <- nrow(X)
   
   ### Reshape the data from wide to long format. ###
   Y = reshape(X, direction="long", varying=list(c("n1", "n0"), c("y1","y0")),
               timevar="x", times=c(0.5,-0.5), v.names=c("n","y")) 
-  Y = Y[order(Y$id),]  
+  Y = Y[order(Y$recordid),]  
   
   dat2 <- list(
     y = Y$y,
@@ -166,7 +167,7 @@ fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA,verb
     spec = ifelse(is.na(spec),
                   stats::median(XP$spec),
                   spec),
-    study = Y$id - 1  # 0-based
+    study = Y$recordid - 1  # 0-based
   )
   
   parameters <- list(
@@ -213,7 +214,7 @@ fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA,verb
   sigma2_alpha <- rep$value["sigma2_alpha"]
   sigma2_theta <- rep$value["sigma2_theta"]
   
-  rep5 <- data.frame(
+  reit <- data.frame(
     mu_A.sens = b**-1*(Theta+0.5*Lambda),
     mu_B.spec = -b*(Theta-0.5*Lambda),
     sigma2_A.sens = b**-2*(sigma2_theta+0.25*sigma2_alpha),
@@ -223,26 +224,26 @@ fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NA,verb
   # How to get sensitivities
   qq   <- qnorm(1-(1-conflevel)/2)
   rlse <- which(rownames(rep2)=="logitsens")
-  rep6 <- data.frame(spec=dat2$spec,
+  sesp <- data.frame(spec=dat2$spec,
                      conflevel=conflevel,
                      logitsens=rep2[rlse,"Estimate"],
                      Std_Error=rep2[rlse,"Std. Error"],
                      CI_Lower=NA,
                      CI_Upper=NA)
-  rep6$CI_Lower   <- with(rep6,logitsens-qq*Std_Error)
-  rep6$CI_Upper   <- with(rep6,logitsens+qq*Std_Error)
-  rep6$Sens       <- with(rep6,plogis(logitsens))
-  rep6$SensCI_Lower <- with(rep6,plogis(CI_Lower))
-  rep6$SensCI_Upper <- with(rep6,plogis(CI_Upper))
-  rep6
+  sesp$CI_Lower     <- with(sesp,logitsens-qq*Std_Error)
+  sesp$CI_Upper     <- with(sesp,logitsens+qq*Std_Error)
+  sesp$Sens         <- with(sesp,plogis(logitsens))
+  sesp$SensCI_Lower <- with(sesp,plogis(CI_Lower))
+  sesp$SensCI_Upper <- with(sesp,plogis(CI_Upper))
+  sesp
   # Result object
   res <- list(
     data         = XP,
     fit          = fit,
     sdreport     = rep,
     sdreport2    = rep2,
-    sensspec     = rep6,
-    Reitsma_recovered = rep5
+    sensspec     = sesp,
+    Reitsma_recovered = reit
   )
   
   # Assign class
