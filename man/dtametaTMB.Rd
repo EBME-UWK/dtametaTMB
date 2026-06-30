@@ -4,7 +4,7 @@
 \name{dtametaTMB}
 \alias{dtametaTMB-package}
 \alias{dtametaTMB}
-\title{dtametaTMB: Meta-analysis of Diagnostic Test Accuracy Studies Using TMB}
+\title{dtametaTMB: Diagnostic Test Accuracy Meta-Analysis using Template Model Builder}
 \description{
 Functions for fitting diagnostic test accuracy (DTA) meta-analysis models
 using Template Model Builder (TMB).

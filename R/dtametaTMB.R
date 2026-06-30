@@ -1,4 +1,4 @@
-#' dtametaTMB: Meta-analysis of Diagnostic Test Accuracy Studies Using TMB
+#' dtametaTMB: Diagnostic Test Accuracy Meta-Analysis using Template Model Builder
 #'
 #' Functions for fitting diagnostic test accuracy (DTA) meta-analysis models
 #' using Template Model Builder (TMB).

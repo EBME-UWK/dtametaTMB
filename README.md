@@ -1,6 +1,6 @@
 # dtametaTMB
 
-**Diagnostic Test Accuracy Meta-Analysis using Template Model Builder (TMB)**
+**Diagnostic Test Accuracy Meta-Analysis using Template Model Builder**
 
 `dtametaTMB` provides a unified framework for frequentist meta-analysis of diagnostic
 test accuracy (DTA) studies in R. It implements several widely used models
