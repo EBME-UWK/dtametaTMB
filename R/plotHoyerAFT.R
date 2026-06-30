@@ -29,10 +29,6 @@
 #'   
 #' @param ... Additional graphical arguments (currently unused).
 #'
-#' @return
-#' This function is called for its side effect: it produces a plot and
-#' returns \code{NULL} invisibly.
-#'
 #' @details
 #' The plot includes:
 #' \itemize{
@@ -53,20 +49,6 @@
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
-#'
-#' @examples
-#' data("diabetes")
-#' fit <- fitHoyer(data=diabetes,
-#'                 TP=TP,
-#'                 FP=FP,
-#'                 FN=FN,
-#'                 TN=TN,
-#'                 threshold=threshold,
-#'                 study=study,
-#'                 smallest=2,
-#'                 largest=10)
-#'
-#' plot(fit)
 #'
 #' @seealso \code{\link{fitHoyerAFT}} \code{\link{fitHoyer}}
 #' @importFrom graphics abline axis legend lines par points symbols title

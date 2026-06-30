@@ -6,7 +6,6 @@
 #' @param x An object of class \code{"HoyerAFT"}.
 #' @param ... Further arguments (unused).
 #'
-#' @return The input object, returned invisibly.
 #' @seealso \code{\link{summary.HoyerAFT}}
 #' @method print HoyerAFT
 #' @export

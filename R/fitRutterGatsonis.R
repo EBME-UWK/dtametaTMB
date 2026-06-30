@@ -4,10 +4,6 @@
 #' model as proposed by Rutter and Gatsonis for meta-analysis of diagnostic
 #' test accuracy (DTA) studies using Template Model Builder (TMB).
 #'
-#' @description
-#' This function estimates the HSROC model parameters based on study-level
-#' 2x2 table data (true positives, false positives, false negatives, true negatives).
-#'
 #' @details
 #' The function internally transforms the data into long format and fits the model
 #' via maximum likelihood using TMB. Random effects are included for study-specific
@@ -23,8 +19,8 @@
 #' @param study Study identifier (column name).
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
 #' @param spec Optional specificity value at which sensitivity is estimated.
-#' If \code{NA}, the median observed sensitivity is used as a proxy.
-#' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).
+#' If \code{NA}, the median observed specificity is used as a proxy.
+#' @param verbose Whether TMB optimization output should be printed (default: FALSE).
 #'
 #' @return
 #' An object of class \code{"RutterGatsonis"} containing:
@@ -33,7 +29,7 @@
 #'   \item{fit}{Optimization result from \code{nlminb}.}
 #'   \item{sdreport}{TMB standard report.}
 #'   \item{sdreport2}{Summary of reported parameters.}
-#'   \item{specsens}{Estimated sensitivity at given specificity with confidence intervals.}
+#'   \item{sensspec}{Estimated sensitivity at given specificity with confidence intervals.}
 #'   \item{Reitsma_recovered}{Recovered parameters in the Reitsma parameterization.}
 #' }
 #'

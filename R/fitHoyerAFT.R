@@ -26,7 +26,7 @@
 #'   should be evaluated. If \code{NA} (default), the median threshold from 
 #'   the original data is used.
 #'   
-#' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).
+#' @param verbose Whether TMB optimization output should be printed (default: FALSE).
 #'
 #' @return An object of class \code{"HoyerAFT"} containing:
 #' \describe{

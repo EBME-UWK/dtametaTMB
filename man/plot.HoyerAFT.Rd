@@ -38,10 +38,6 @@ Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{...}{Additional graphical arguments (currently unused).}
 }
-\value{
-This function is called for its side effect: it produces a plot and
-returns \code{NULL} invisibly.
-}
 \description{
 Produces a hierarchical summary receiver operating characteristic
 (HSROC) plot from a fitted Hoyer AFT model. The plot shows
@@ -67,21 +63,6 @@ and depends on the specified distribution:
 
 The plot is constructed on the ROC scale with sensitivity on the y-axis
 and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
-}
-\examples{
-data("diabetes")
-fit <- fitHoyer(data=diabetes,
-                TP=TP,
-                FP=FP,
-                FN=FN,
-                TN=TN,
-                threshold=threshold,
-                study=study,
-                smallest=2,
-                largest=10)
-
-plot(fit)
-
 }
 \seealso{
 \code{\link{fitHoyerAFT}} \code{\link{fitHoyer}}

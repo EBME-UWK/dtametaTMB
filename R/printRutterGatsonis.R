@@ -6,9 +6,6 @@
 #' @param x An object of class \code{"RutterGatsonis"}.
 #' @param ... Additional arguments (unused).
 #'
-#' @return
-#' Invisibly returns the input object.
-#'
 #' @seealso \code{\link{summary.RutterGatsonis}}
 #'
 #' @method print RutterGatsonis

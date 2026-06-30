@@ -31,10 +31,6 @@ Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }
-\value{
-This function is called for its side effect of producing a plot and
-returns \code{invisible(NULL)}.
-}
 \description{
 Produces a summary ROC plot for objects of class \code{"RutterGatsonis"}
 obtained from \code{\link{fitRutterGatsonis}}. The plot displays study-level

@@ -17,22 +17,19 @@
 #'    \item{"sampsize"}{Size proportional to sample size}
 #'    \item{"se"}{Size proportional to precision on the logit scale}
 #'  }  
-#' @param HSROC Logical; if \code{TRUE}, the HSROC curve is added to the plot.
+#' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
 #'   Default is \code{FALSE}.
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
 #' 
-#' @param conflevel Numeric. Confidence level for the confidence region
-#'   of the summary estimate. Must be between 0 and 1. Default is \code{0.95}.
-#' @param predlevel Numeric. Confidence level for the prediction region.
-#'   Must be between 0 and 1. Default is \code{0.95}.
+#' @param conflevel Confidence level for the confidence region. Default is \code{0.95}.
+#' @param predlevel Confidence level for the prediction region. Default is \code{0.95}.
 #'
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
 #' @details
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
-#'
 #'
 #' Study-specific estimates are shown as rectangles, where the size reflects
 #' approximate study weights derived from the Fisher information matrix.
@@ -69,10 +66,6 @@
 #' individual participant data models.
 #' \emph{Statistical Methods in Medical Research}, 27(10), 2885--2905.
 #' \doi{10.1177/0962280216688033}
-#'
-#' @return
-#' This function is called for its side effect of producing a plot and
-#' returns \code{invisible(NULL)}.
 #'
 #' @seealso \code{\link{fitReitsma}}
 #' @importFrom stats qlogis plogis predict qf

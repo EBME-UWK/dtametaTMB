@@ -10,10 +10,9 @@
 #'
 #' @return A list with the following components:
 #' \itemize{
-#'   \item \code{estimates}: Parameter estimates with standard errors and confidence intervals.
-#'   \item \code{sensspec}: Estimated sensitivity and specificity (on original scale) with confidence intervals.
-#'   \item \code{RutterGatsonis_recovered}: Parameters of the HSROC model recovered
-#'   from the fitted Reitsma model.
+#'   \item \code{estimates}: Parameter estimates with standard errors.
+#'   \item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals.
+#'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #' }
 #'
 #' @seealso \code{\link{fitReitsma}}

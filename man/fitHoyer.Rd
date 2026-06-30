@@ -62,7 +62,7 @@ and specificities at the chosen thresholds. Defaults to \code{0.95}.}
 for the AFT model. One of \code{"weibull"}, \code{"lognormal"}, or
 \code{"loglogistic"} (default).}
 
-\item{verbose}{Logical. Whether TMB optimization output should be printed (default: FALSE).}
+\item{verbose}{Whether TMB optimization output should be printed (default: FALSE).}
 
 \item{...}{Additional arguments passed to \code{\link{fitHoyerAFT}}.}
 }

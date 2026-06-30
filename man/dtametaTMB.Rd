@@ -17,11 +17,11 @@ Implemented methods
 \item Hoyer multiple-threshold model
 }
 
-Main functions
+Main workflow
 \itemize{
-\item fitReitsma()
-\item fitRutterGatsonis()
-\item fitHoyer()
+\item fitReitsma() -> plot() -> forest()
+\item fitRutterGatsonis() -> plot() -> forest()
+\item fitHoyer() -> plot() -> forest()
 }
 
 Included datasets

@@ -7,9 +7,6 @@
 #' @param x An object of class \code{"Reitsma"}.
 #' @param ... Additional arguments (unused).
 #'
-#' @return
-#' Invisibly returns the input object.
-#'
 #' @seealso \code{\link{summary.Reitsma}}
 #'
 #' @method print Reitsma

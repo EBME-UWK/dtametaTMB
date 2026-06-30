@@ -9,11 +9,11 @@
 #' * Rutter-Gatsonis HSROC model
 #' * Hoyer multiple-threshold model
 #'
-#' Main functions
+#' Main workflow
 #'
-#' * fitReitsma()
-#' * fitRutterGatsonis()
-#' * fitHoyer()
+#' * fitReitsma() -> plot() -> forest()
+#' * fitRutterGatsonis() -> plot() -> forest()
+#' * fitHoyer() -> plot() -> forest()
 #'
 #' Included datasets
 #'

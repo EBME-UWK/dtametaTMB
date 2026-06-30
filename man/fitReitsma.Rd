@@ -30,7 +30,7 @@ A list of class \code{"Reitsma"} with components:
 \item \code{vcov}: variance-covariance matrix.
 \item \code{sensspec}: sensitivity and specificity estimates.
 \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
-\item \code{RutterGatsonis_recovered}: HSROC parameters.
+\item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 }
 }
 \description{

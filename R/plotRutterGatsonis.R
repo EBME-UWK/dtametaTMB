@@ -34,10 +34,6 @@
 #'   \item HSROC curve
 #' }
 #'
-#' @return
-#' This function is called for its side effect of producing a plot and
-#' returns \code{invisible(NULL)}.
-#'
 #' @references
 #' Freeman, S. C., Kerby, C. R., Patel, A., Cooper, N. J.,
 #' Quinn, T., & Sutton, A. J. (2019).

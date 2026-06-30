@@ -1,8 +1,8 @@
 #' Compute Initial Parameter Values for Threshold-Based Bivariate Time-to-Event DTA Models (Hoyer)
 #'
-#' Estimates starting values for fixed and random effects parameters used
-#' in likelihood-based diagnostic test accuracy (DTA) models based on
-#' interval-censored data (e.g., Hoyer et al., 2018).
+#' 
+#' Computes initial values for the threshold-based bivariate time-to-event model
+#' of Hoyer et al. (2018).
 #'
 #' The function fits separate intercept-only parametric survival models
 #' for diseased and non-diseased groups using weighted interval-censored
@@ -49,17 +49,6 @@
 #'   \item Right-censored intervals (\code{ctype = 3}) are assigned an
 #'         infinite upper bound.
 #' }
-#'
-#' Separate intercept-only survival models are fitted for diseased and
-#' non-diseased observations using interval-censored likelihoods weighted
-#' by event counts.
-#'
-#' Initial values for the random effects are obtained from the covariance
-#' matrix of study-specific weighted mean log-thresholds for diseased and
-#' non-diseased groups.
-#'
-#' If only a single study is available, a warning is issued as the
-#' estimation of between-study variability is not reliable.
 #'
 #' @examples
 #' data("diabetes")

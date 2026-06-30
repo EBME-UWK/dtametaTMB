@@ -16,8 +16,8 @@ of a call to \code{\link{fitHoyerAFT}}.}
 A list with two data frames containing summary statistics derived
 from the fitted model.
 \itemize{
-\item \code{sdreport2}: Parameter estimates with standard errors returned from TMB reported parameters.
-\item \code{sensspec}: Estimated sensitivity and specificity (on original scale) with confidence intervals at the specified thresholds.
+\item \code{sdreport2}: Parameter estimates with standard errors as returned from TMB reported parameters.
+\item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals at the specified thresholds.
 }
 }
 \description{

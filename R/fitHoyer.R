@@ -52,7 +52,7 @@
 #' @param conflevel Confidence level for confidence intervals for sensitivities
 #'   and specificities at the chosen thresholds. Defaults to \code{0.95}.
 #' 
-#' @param verbose Logical. Whether TMB optimization output should be printed (default: FALSE).
+#' @param verbose Whether TMB optimization output should be printed (default: FALSE).
 #'
 #' @param ... Additional arguments passed to \code{\link{fitHoyerAFT}}.
 #'

@@ -33,20 +33,14 @@ rectangles representing study weights. Default is \code{0.02}.}
 \item{main}{Character string giving the main title of the plot.
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
-\item{HSROC}{Logical; if \code{TRUE}, the HSROC curve is added to the plot.
+\item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.
 Default is \code{FALSE}.}
 
-\item{conflevel}{Numeric. Confidence level for the confidence region
-of the summary estimate. Must be between 0 and 1. Default is \code{0.95}.}
+\item{conflevel}{Confidence level for the confidence region. Default is \code{0.95}.}
 
-\item{predlevel}{Numeric. Confidence level for the prediction region.
-Must be between 0 and 1. Default is \code{0.95}.}
+\item{predlevel}{Confidence level for the prediction region. Default is \code{0.95}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
-}
-\value{
-This function is called for its side effect of producing a plot and
-returns \code{invisible(NULL)}.
 }
 \description{
 Produces a summary ROC plot for objects of class \code{"Reitsma"}

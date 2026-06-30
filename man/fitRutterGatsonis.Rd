@@ -32,9 +32,9 @@ fitRutterGatsonis(
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 
 \item{spec}{Optional specificity value at which sensitivity is estimated.
-If \code{NA}, the median observed sensitivity is used as a proxy.}
+If \code{NA}, the median observed specificity is used as a proxy.}
 
-\item{verbose}{Logical. Whether TMB optimization output should be printed (default: FALSE).}
+\item{verbose}{Whether TMB optimization output should be printed (default: FALSE).}
 }
 \value{
 An object of class \code{"RutterGatsonis"} containing:
@@ -43,19 +43,16 @@ An object of class \code{"RutterGatsonis"} containing:
 \item{fit}{Optimization result from \code{nlminb}.}
 \item{sdreport}{TMB standard report.}
 \item{sdreport2}{Summary of reported parameters.}
-\item{specsens}{Estimated sensitivity at given specificity with confidence intervals.}
+\item{sensspec}{Estimated sensitivity at given specificity with confidence intervals.}
 \item{Reitsma_recovered}{Recovered parameters in the Reitsma parameterization.}
 }
 }
 \description{
-This function estimates the HSROC model parameters based on study-level
-2x2 table data (true positives, false positives, false negatives, true negatives).
-}
-\details{
 Fits the hierarchical summary receiver operating characteristic (HSROC)
 model as proposed by Rutter and Gatsonis for meta-analysis of diagnostic
 test accuracy (DTA) studies using Template Model Builder (TMB).
-
+}
+\details{
 The function internally transforms the data into long format and fits the model
 via maximum likelihood using TMB. Random effects are included for study-specific
 accuracy and threshold parameters.

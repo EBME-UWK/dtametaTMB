@@ -15,12 +15,10 @@
 \value{
 A list containing the following components:
 \itemize{
-\item \code{estimates} Matrix of reported parameter estimates and standard errors
-from the TMB \code{sdreport} or summary (i.e., \code{sdreport2}).
-\item \code{sensspec} Data frame with estimated sensitivity at the specified
+\item \code{estimates} Parameter estimates with standard errors as returned from TMB reported parameters.
+\item \code{sensspec} Estimated sensitivity at the specified
 specificity, including confidence intervals.
-\item \code{Reitsma_recovered} Data frame of parameters transformed into the
-Reitsma (bivariate) parametrization.
+\item \code{Reitsma_recovered} Recovered parameters in the Reitsma parameterization.
 }
 }
 \description{

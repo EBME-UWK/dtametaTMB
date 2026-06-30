@@ -24,7 +24,7 @@ prediction grid threshold(s) at which sensitivity and specificity
 should be evaluated. If \code{NA} (default), the median threshold from
 the original data is used.}
 
-\item{verbose}{Logical. Whether TMB optimization output should be printed (default: FALSE).}
+\item{verbose}{Whether TMB optimization output should be printed (default: FALSE).}
 }
 \value{
 An object of class \code{"HoyerAFT"} containing:
