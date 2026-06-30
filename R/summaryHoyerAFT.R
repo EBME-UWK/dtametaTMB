@@ -18,7 +18,7 @@
 #'   \item \code{sensspec}: Estimated sensitivity and specificity (on original scale) with confidence intervals at the specified thresholds.
 #' }
 #'
-#' @seealso \code{\link{fitHoyerAFT}}, \code{\link[=summary.HoyerAFT]{summary}}
+#' @seealso \code{\link{fitHoyer}} \code{\link{fitHoyerAFT}}
 #'
 #' @export
 summary.HoyerAFT <- function(object, ...) {

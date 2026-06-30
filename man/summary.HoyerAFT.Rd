@@ -30,5 +30,5 @@ provides access to summary statistics computed from the fitted model,
 as stored in the \code{sdreport2} and \code{sensspec} component of the object.
 }
 \seealso{
-\code{\link{fitHoyerAFT}}, \code{\link[=summary.HoyerAFT]{summary}}
+\code{\link{fitHoyer}} \code{\link{fitHoyerAFT}}
 }

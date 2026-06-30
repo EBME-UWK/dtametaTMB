@@ -92,4 +92,5 @@ Hoyer, A., Hirt, S., Kuss, O. (2018).
 Meta-analysis of full ROC curves using bivariate time-to-event models
 for interval-censored data.
 \emph{Research Synthesis Methods}, 9(1), 62-72.
+\doi{10.1002/jrsm.1273}
 }

@@ -84,5 +84,5 @@ plot(fit)
 
 }
 \seealso{
-\code{\link{fitHoyerAFT}}
+\code{\link{fitHoyerAFT}} \code{\link{fitHoyer}}
 }

@@ -5,7 +5,6 @@
 #' and key parameter estimates.
 #'
 #' @param x An object of class \code{"Reitsma"}.
-#' @param digits Number of digits to print (default: 3).
 #' @param ... Additional arguments (unused).
 #'
 #' @return
@@ -15,7 +14,7 @@
 #'
 #' @method print Reitsma
 #' @export
-print.Reitsma <- function(x, digits = 3, ...) {
+print.Reitsma <- function(x, ...) {
   
   cat("\n", "Reitsma Model", "\n", sep = "")
   cat(strrep("-", nchar("Reitsma Model")), "\n\n", sep = "")

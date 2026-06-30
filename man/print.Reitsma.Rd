@@ -4,12 +4,10 @@
 \alias{print.Reitsma}
 \title{Print Method for Reitsma Objects}
 \usage{
-\method{print}{Reitsma}(x, digits = 3, ...)
+\method{print}{Reitsma}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{"Reitsma"}.}
-
-\item{digits}{Number of digits to print (default: 3).}
 
 \item{...}{Additional arguments (unused).}
 }

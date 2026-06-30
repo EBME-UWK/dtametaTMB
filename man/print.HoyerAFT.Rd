@@ -18,3 +18,6 @@ The input object, returned invisibly.
 Displays a concise summary of a fitted Hoyer AFT model, including
 distribution, number of studies, threshold, and optimization status.
 }
+\seealso{
+\code{\link{summary.HoyerAFT}}
+}

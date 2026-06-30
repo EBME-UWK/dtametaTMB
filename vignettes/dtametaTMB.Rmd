@@ -1,8 +1,8 @@
 ---
 title: "Introduction to dtametaTMB"
 output: 
-  rmarkdown::html_vignette: default
-  #pdf_document: default
+  #rmarkdown::html_vignette: default
+  pdf_document: default
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{knitr::rmarkdown}

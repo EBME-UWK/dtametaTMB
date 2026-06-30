@@ -68,7 +68,7 @@
 #'
 #' plot(fit)
 #'
-#' @seealso \code{\link{fitHoyerAFT}}
+#' @seealso \code{\link{fitHoyerAFT}} \code{\link{fitHoyer}}
 #' @importFrom graphics abline axis legend lines par points symbols title
 #' @method plot HoyerAFT
 #' @importFrom stats pnorm plogis

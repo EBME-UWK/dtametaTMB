@@ -18,7 +18,7 @@
 #'   \item \code{estimates}: parameter estimates with SE.
 #'   \item \code{vcov}: variance-covariance matrix.
 #'   \item \code{sensspec}: sensitivity and specificity estimates.
-#'   \item \code{LRDOR}: DOR and likelihood ratios.
+#'   \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
 #'   \item \code{RutterGatsonis_recovered}: HSROC parameters.
 #' }
 #'

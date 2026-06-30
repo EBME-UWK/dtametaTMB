@@ -82,6 +82,7 @@
 #' Meta-analysis of full ROC curves using bivariate time-to-event models
 #' for interval-censored data.
 #' \emph{Research Synthesis Methods}, 9(1), 62-72.
+#' \doi{10.1002/jrsm.1273}
 #'
 #' @importFrom survival survreg Surv
 #' @importFrom stats aggregate cov cov2cor

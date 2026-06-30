@@ -1,5 +1,6 @@
 #' @rawNamespace useDynLib(dtametaTMB, .registration=TRUE); useDynLib(dtametaTMB_TMBExports)
 #' @keywords internal
+#' @noRd
 "_PACKAGE"
 
 # The following block is used by usethis to automatically manage

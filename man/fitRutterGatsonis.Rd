@@ -94,6 +94,3 @@ A unification of models for meta-analysis of diagnostic accuracy studies.
 \emph{Biostatistics}, 8(2), 239--251.
 \doi{10.1093/biostatistics/kxl004}
 }
-\seealso{
-\code{\link{fitRutterGatsonis}} (print/summary methods)
-}
