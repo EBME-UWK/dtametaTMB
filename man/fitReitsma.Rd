@@ -53,12 +53,12 @@ fit$estimates
 }
 \references{
 Reitsma, J. B., et al. (2005).
-Bivariate analysis of sensitivity and specificity produces informative summary measusesp in diagnostic reviews.
+Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews.
 \emph{Journal of Clinical Epidemiology}, 58(10), 982–990.
 \doi{10.1016/j.jclinepi.2005.02.022}
 
 Rutter, C. M., & Gatsonis, C. A. (2001).
-A hierarchical regsespsion approach to meta-analysis of diagnostic test accuracy evaluations.
+A hierarchical regression approach to meta-analysis of diagnostic test accuracy evaluations.
 \emph{Statistics in Medicine}, 20(19), 2865–2884.
 \doi{10.1002/sim.942}
 

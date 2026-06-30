@@ -91,8 +91,7 @@ of observations falling within each interval for diseased and
 non-diseased groups. Therefore, input counts must be cumulative over
 increasing thresholds within each study.
 
-The function first extracts the specified columns using base R
-non-standard evaluation. It then validates that counts are numeric,
+The function first validates that counts are numeric,
 non-negative integers and that threshold values are positive.
 
 Within each study, total numbers of diseased (\code{D}) and
