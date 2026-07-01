@@ -1,4 +1,4 @@
-#' Compute Initial Parameter Values for Threshold-Based Bivariate Time-to-Event DTA Models (Hoyer)
+#' Compute Initial Parameter Values for Hoyer AFT Models
 #'
 #' 
 #' Computes initial values for the threshold-based bivariate time-to-event model

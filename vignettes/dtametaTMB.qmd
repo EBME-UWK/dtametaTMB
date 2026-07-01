@@ -1,11 +1,12 @@
 ---
 title: "Introduction to dtametaTMB"
-output: 
-  #rmarkdown::html_vignette: default
-  pdf_document: default
+format: 
+   html:
+     toc: TRUE
+ # pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -33,6 +34,7 @@ using real datasets included in the package.
 
 ```{r setup}
 #| echo: TRUE
+#install.packages("dtametaTMB")
 library(dtametaTMB)
 ```
 
@@ -332,9 +334,12 @@ summary(hoyer)
 #| echo: TRUE
 #| fig.height: 8
 #| fig.width: 8
-plot(hoyer,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
-plot(hoyer,size="sampsize",scale=0.025,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
-plot(hoyer,size="se",scale=0.025,main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
+plot(hoyer,
+     main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
+plot(hoyer,size="sampsize",scale=0.025,
+     main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
+plot(hoyer,size="se",scale=0.025,
+     main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 ```
 
 
@@ -423,14 +428,13 @@ init
 #| results: 'hide'
 hoyerAFT <- fitHoyerAFT(data=res,
                         init=init,
-                        threshold=c(5.0,5.5,6.0,6.5,7.0,7.5))
+                        eval_threshold=c(5.0,5.5,6.0,6.5,7.0,7.5))
 ```
 
 ```{r}
 #| echo: TRUE
 hoyerAFT
 summary(hoyerAFT)
-
 ```
 
 

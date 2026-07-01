@@ -144,7 +144,7 @@ fitHoyer <- function(data,
   init <- initHoyerAFT(res$restructured, dist = dist)
   
   # Step 3: Fit model
-  fit <- fitHoyerAFT(res, init, threshold=eval_threshold, conflevel=conflevel, verbose=verbose)
+  fit <- fitHoyerAFT(res, init, eval_threshold=eval_threshold, conflevel=conflevel, verbose=verbose)
   
   return(fit)
 }

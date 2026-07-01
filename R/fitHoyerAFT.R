@@ -21,7 +21,7 @@
 #' @param conflevel Confidence level for confidence intervals for sensitivities
 #'   and specificities at the chosen thresholds. Defaults to \code{0.95}.
 #'
-#' @param threshold Optional numeric value or vector specifying the 
+#' @param eval_threshold Optional numeric value or vector specifying the 
 #'   prediction grid threshold(s) at which sensitivity and specificity 
 #'   should be evaluated. If \code{NA} (default), the median threshold from 
 #'   the original data is used.
@@ -74,7 +74,7 @@
 #'
 #' @note Requires a compiled TMB model named \code{"Hoyer"}.
 #' @export
-fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA, verbose=FALSE) {
+fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NA, verbose=FALSE) {
 
   # Extract components
   datao   <- data$original
@@ -92,17 +92,17 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA, verbose=FALS
     stop("'init' must be a valid output from initHoyerAFT().")
   }
 
-  if (!all(is.na(threshold))) {
+  if (!all(is.na(eval_threshold))) {
 
-    if (!is.numeric(threshold)) {
+    if (!is.numeric(eval_threshold)) {
       stop("'threshold' must be numeric.")
     }
 
-    if (any(!is.finite(threshold))) {
+    if (any(!is.finite(eval_threshold))) {
       stop("'threshold' must contain only finite values.")
     }
 
-    if (any(threshold <= 0)) {
+    if (any(eval_threshold <= 0)) {
       stop("'threshold' values must be positive.")
     }
   }
@@ -114,9 +114,9 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, threshold = NA, verbose=FALS
     events0   = datar$events0,
     events1   = datar$events1,
     ctype     = as.integer(datar$ctype),
-    threshold = ifelse(is.na(threshold),
+    threshold = ifelse(is.na(eval_threshold),
                        stats::median(datao$threshold),
-                       threshold),
+                       eval_threshold),
     study     = as.integer(factor(datar$study)) - 1,
     nstudy    = length(unique(datar$study)),
     dist      = init$distcode

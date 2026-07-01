@@ -19,7 +19,7 @@ test_that("invalid threshold is rejected", {
   init <- initHoyerAFT(res$restructured)
 
   expect_error(
-    fitHoyerAFT(res, init, threshold = -1)
+    fitHoyerAFT(res, init, eval_threshold = -1)
   )
 })
 
@@ -69,17 +69,17 @@ test_that("threshold validation works", {
   )
   
   expect_error(
-    fitHoyerAFT(data_list, init, threshold = "a"),
+    fitHoyerAFT(data_list, init, eval_threshold = "a"),
     "must be numeric"
   )
   
   expect_error(
-    fitHoyerAFT(data_list, init, threshold = c(1, Inf)),
+    fitHoyerAFT(data_list, init, eval_threshold = c(1, Inf)),
     "finite"
   )
   
   expect_error(
-    fitHoyerAFT(data_list, init, threshold = c(-1, 2)),
+    fitHoyerAFT(data_list, init, eval_threshold = c(-1, 2)),
     "must be positive"
   )
 })
@@ -154,7 +154,7 @@ test_that("custom threshold is respected", {
     distcode = 1
   )
   
-  fit <- fitHoyerAFT(data_list, init, threshold = 5)
+  fit <- fitHoyerAFT(data_list, init, eval_threshold = 5)
   
   expect_equal(fit$sensspec$threshold[1], 5)
 })
