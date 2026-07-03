@@ -12,7 +12,7 @@ fitRutterGatsonis(
   TN,
   study,
   conflevel = 0.95,
-  spec = NA,
+  spec = NULL,
   verbose = FALSE
 )
 }
@@ -32,7 +32,7 @@ fitRutterGatsonis(
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 
 \item{spec}{Optional specificity value at which sensitivity is estimated.
-If \code{NA}, the median observed specificity is used as a proxy.}
+If \code{NULL}, the median observed specificity is used as a proxy.}
 
 \item{verbose}{Whether TMB optimization output should be printed (default: FALSE).}
 }

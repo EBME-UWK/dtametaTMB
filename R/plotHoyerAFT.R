@@ -23,7 +23,11 @@
 #'    \item{"sampsize"}{Size proportional to sample size}
 #'    \item{"se"}{Size proportional to precision on the logit scale}
 #'  }
-#'  
+#' @param thresholdrange A numeric vector of length 2 giving the range of
+#'   threshold over which sensitivities and specificities are predicted
+#'   If \code{NULL} (default), then the minimum and maximum thresholds
+#'   from the data are used.
+#'   
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
 #'   
@@ -56,6 +60,7 @@
 #' @importFrom stats pnorm plogis
 #' @export
 plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
+                          thresholdrange=NULL,
                           main="Diagnostic Test Accuracy Meta-Analysis",...) {
   size    <- match.arg(size)
   HH      <- x$data
@@ -63,33 +68,10 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
   if (length(testdir) != 1) stop("testdirection must be unique")
   
   op <- par(pty = "s")
-  plot(1,1, ylim=c(0,1), xlim=c(0,1), xaxt = "n", yaxt="n",
-       ann=F, pch=20, col="white",las=1,asp=1)
-  axis( side = 1,                          # 1 = bottom axis
-        at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),  # positions of ticks
-        labels = c(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0))  # custom labels
-  axis( side = 2,
-        at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),las=1)
-  par(new=TRUE)
-  abline(v=(seq(0,1,0.2)), col="lightgray", lty="dotted")
-  abline(h=(seq(0,1,0.2)), col="lightgray", lty="dotted")
-  lines(c(0,1),c(0,1),col="lightgray",lty="dotted")
-  # Plot study level estimates
-  if(size=="equal"){
-    pctse <- rep(1,nrow(x$data))
-    pctsp <- rep(1,nrow(x$data))
-  }
-  if(size=="sampsize"){
-    pctse <- x$data$D / sum(x$data$D)*100
-    pctsp <- x$data$H / sum(x$data$H)*100
-  }
-  if(size=="se"){
-    sem1  <- x$data$sens*(1-x$data$sens)*x$data$D # inverse logit variance
-    spm1  <- x$data$spec*(1-x$data$spec)*x$data$H # inverse logit variance
-    pctse <- sqrt(sem1) / sum(sqrt(sem1))*100
-    pctsp <- sqrt(spm1) / sum(sqrt(spm1))*100
-  }
-  symbols(x=x$data$fpr,y=x$data$sens,rectangles=cbind(pctsp,pctse)*scale,inches=F,add=T,fg="darkgray")
+  ### Plot coordinate system
+  pct <- getWEIGHTS(HH,size)
+  plot_SESPGRID(main=main)
+  symbols(x=x$data$fpr,y=x$data$sens,rectangles=cbind(pct$sp,pct$se)*scale,inches=F,add=T,fg="darkgray")
   # Add lines
   studies <- unique(HH$study)
   for(i in seq_along(studies)) {
@@ -104,8 +86,13 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
           lwd = 1)
   }
   ### Plot meta-analytical summary ROC curve
-  minth   <- min(HH$threshold)
-  maxth   <- max(HH$threshold)
+  if(is.null(thresholdrange)){
+    minth   <- min(HH$threshold)
+    maxth   <- max(HH$threshold)
+  } else {
+    minth   <- thresholdrange[1]
+    maxth   <- thresholdrange[2]
+  }
   beta0   <- x$sdreport2["beta0","Estimate"]
   beta1   <- x$sdreport2["beta1","Estimate"]
   lambda0 <- x$sdreport2["lambda0","Estimate"]
@@ -135,7 +122,6 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
     roc_points <- data.frame(fpr =1-plogis((beta0-log(xx))/lambda0),
                              sens=1-plogis((beta1-log(xx))/lambda1))}
   ##########
-  title(main=main,xlab="Specificity", ylab="Sensitivity")
   points(roc_points, type="l", lwd=2,ann=F)###
   # Add summary point
   # Add the legend

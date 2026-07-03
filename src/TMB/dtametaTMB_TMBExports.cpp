@@ -4,6 +4,7 @@
 #include <TMB.hpp>
 #include "Hoyer.hpp"
 #include "RutterGatsonis.hpp"
+#include "RutterGatsonisReg.hpp"
 
 template<class Type>
 Type objective_function<Type>::operator() () {
@@ -12,6 +13,8 @@ Type objective_function<Type>::operator() () {
     return Hoyer(this);
   } else if(model == "RutterGatsonis") {
     return RutterGatsonis(this);
+  } else if(model == "RutterGatsonisReg") {
+    return RutterGatsonisReg(this);
   } else {
     Rf_error("Unknown model.");
   }

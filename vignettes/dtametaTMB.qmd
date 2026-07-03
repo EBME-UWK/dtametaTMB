@@ -165,7 +165,7 @@ summary(ruttergatsonis)
 #| fig.width: 8
 #| echo: TRUE
 plot(ruttergatsonis)
-plot(ruttergatsonis,size="se",scale=0.01)
+plot(ruttergatsonis,size="se",specrange=c(0.3,0.995),scale=0.01)
 ```
 
 ## How do I get a coupled forest plot?
@@ -348,8 +348,8 @@ plot(hoyer,size="se",scale=0.025,
 *Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
 ```{r}
-#| fig.height: 34
-#| fig.width: 13
+#| fig.height: 32
+#| fig.width: 12
 #| echo: TRUE
 forest(hoyer)
 ```

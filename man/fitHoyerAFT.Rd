@@ -4,7 +4,13 @@
 \alias{fitHoyerAFT}
 \title{Fit Threshold-Based Bivariate Time-to-Event Model (Hoyer AFT)}
 \usage{
-fitHoyerAFT(data, init, conflevel = 0.95, eval_threshold = NA, verbose = FALSE)
+fitHoyerAFT(
+  data,
+  init,
+  conflevel = 0.95,
+  eval_threshold = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{data}{A list as produced by \code{\link{restructure_data}}, containing:
@@ -21,7 +27,7 @@ and specificities at the chosen thresholds. Defaults to \code{0.95}.}
 
 \item{eval_threshold}{Optional numeric value or vector specifying the
 prediction grid threshold(s) at which sensitivity and specificity
-should be evaluated. If \code{NA} (default), the median threshold from
+should be evaluated. If \code{NULL} (default), the median threshold from
 the original data is used.}
 
 \item{verbose}{Whether TMB optimization output should be printed (default: FALSE).}

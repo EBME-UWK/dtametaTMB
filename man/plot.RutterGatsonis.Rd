@@ -8,6 +8,7 @@
   x,
   scale = 0.02,
   size = c("equal", "sampsize", "se"),
+  specrange = c(0.7, 0.995),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   ...
 )
@@ -25,6 +26,10 @@ rectangles representing study weights. Default is \code{0.02}.}
 \item{"sampsize"}{Size proportional to sample size}
 \item{"se"}{Size proportional to precision on the logit scale}
 }}
+
+\item{specrange}{A numeric vector of length 2 giving the range of
+specificities over which the HSROC curve is plotted.
+Defaults to \code{c(0.7, 0.995)}.}
 
 \item{main}{Character string giving the main title of the plot.
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}

@@ -1,12 +1,12 @@
 Package: dtametaTMB
 Title: Diagnostic Test Accuracy Meta-Analysis using Template Model Builder
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: 
     c(
       person("Claus", "Nowak", email = "claus.nowak@donau-uni.ac.at", role = c("aut", "cre"))
     )
-Description: Fits the hierarchical summary receiver operating characteristic (HSROC) 
-    model of Rutter and Gatsonis (2001), the bivariate binomial-normal model of 
+Description: Fits the hierarchical summary receiver operating characteristic (HSROC)
+    model of Rutter and Gatsonis (2001), the bivariate binomial-normal model of
     Reitsma et al. (2005), and the threshold-based bivariate time-to-event model of
     Hoyer et al. (2018) using Template Model Builder (TMB).
 License: GPL (>= 2)

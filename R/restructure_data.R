@@ -43,7 +43,7 @@
 #'   \item{restructured}{A data frame with one row per constructed interval containing:
 #'     \describe{
 #'       \item{study}{Study identifier}
-#'       \item{TP, TN, D, H}{Original counts carried forward}
+#'       \item{TP, TN, n1, n0}{Original counts carried forward}
 #'       \item{threshold}{Threshold associated with the interval}
 #'       \item{lowerB}{Lower interval bound (NA for left-censored)}
 #'       \item{upperB}{Upper interval bound (NA for right-censored)}
@@ -55,8 +55,8 @@
 #'   }
 #'   \item{original}{The processed original data including (derived) quantities:
 #'     \describe{
-#'       \item{D}{Total number of diseased individuals (TP + FN)}
-#'       \item{H}{Total number of non-diseased individuals (TN + FP)}
+#'       \item{n1}{Total number of diseased individuals (TP + FN)}
+#'       \item{n0}{Total number of non-diseased individuals (TN + FP)}
 #'       \item{sens}{Sensitivity (TP / D)}
 #'       \item{spec}{Specificity (TN / H)}
 #'       \item{fpr}{False positive rate (FP / H)}
@@ -69,8 +69,8 @@
 #' The function first validates that counts are numeric,
 #' non-negative integers and that threshold values are positive.
 #'
-#' Within each study, total numbers of diseased (\code{D}) and
-#' non-diseased (\code{H}) individuals are required to be constant across
+#' Within each study, total numbers of diseased (\code{n1}) and
+#' non-diseased (\code{n0}) individuals are required to be constant across
 #' thresholds. Intermediate interval counts are computed as differences
 #' between cumulative counts.
 #'
@@ -189,8 +189,8 @@ restructure_data <- function(data,
   # Order according to study and reported threshold
   dat <- dat[order(dat$study, dat$threshold), ]
   # Derived totals
-  dat$D <- dat$TP + dat$FN
-  dat$H <- dat$TN + dat$FP
+  dat$n1 <- dat$TP + dat$FN
+  dat$n0 <- dat$TN + dat$FP
 
   # Check consistency within each study
   check_consistency <- function(df) {
@@ -257,9 +257,9 @@ restructure_data <- function(data,
   }
   
   dat$testdirection <- testdirection
-  dat$sens <- dat$TP/dat$D
-  dat$spec <- dat$TN/dat$H
-  dat$fpr  <- dat$FP/dat$H
+  dat$sens <- dat$TP/dat$n1
+  dat$spec <- dat$TN/dat$n0
+  dat$fpr  <- dat$FP/dat$n0
   dat2     <- dat  
 
   if (testdirection == "less") {

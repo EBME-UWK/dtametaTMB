@@ -1,0 +1,299 @@
+---
+title: "Meta-Regression"
+format: 
+   html:
+     toc: TRUE
+ # pdf
+vignette: >
+  %\VignetteIndexEntry{Meta-Regression}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{quarto::html}
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dtametaTMB)
+```
+
+This vignette introduces the regression functionality of the `dtametaTMB` package for meta-analysis of diagnostic test accuracy (DTA) studies.
+
+## Validation
+
+The subgroup HSROC implementation reproduces the Cochrane Handbook RF example closely, including the baseline HSROC parameters (accuracy, threshold, shape), between-study variance estimates, and subgroup effects on accuracy and threshold.
+Small numerical differences may arise from optimizer settings, numerical tolerances, and implementation details, but all benchmark estimates and standard errors were recovered to close agreement.
+
+## Dummy-coding vs. cell-means parameterization
+
+For subgroup analyses, we distinguish between two equivalent parameterizations of the same model.
+In the reference-group parameterization, one subgroup serves as the baseline and the remaining subgroup effects are expressed as deviations from this reference.
+In the group-specific (cell-means) parameterization, each subgroup has its own parameter directly.
+The former is convenient for testing subgroup differences, whereas the latter is convenient for reporting subgroup-specific estimates and plotting subgroup-specific HSROC curves.
+The Reitsma subgroup model is fitted twice with both parameterizations.
+The subgroup HSROC model is estimated using a reference-group parameterization, and subgroup-specific parameters are recovered by evaluating the fitted linear predictors at subgroup-specific design points via $\boldsymbol{Z}_pred$.
+
+## How do we include covariates in the Reitsma model?
+
+For sensitivity in study $i$, we have the number of diseased individuals testing positive: $y_{Ai} \sim \mathcal{B}(n_{Ai},\pi_{Ai})$.
+
+Similarly for specificity, we have the number of non-diseased individuals testing negative: $y_{Bi} \sim \mathcal{B}(n_{Bi},\pi_{Bi})$.
+
+Now we introduce a $p$-dimensional design-vector $\boldsymbol{z}_i$ including study level covariates.
+Consequently, at the study level, we have
+
+$$ \begin{pmatrix}
+\boldsymbol{z}_i^{\top}\boldsymbol{\mu}_{Ai} \\
+\boldsymbol{z}_i^{\top}\boldsymbol{\mu}_{Bi}
+\end{pmatrix}
+\sim \mathcal{N}
+\left(
+\begin{pmatrix}
+\boldsymbol{z}_i^{\top}\boldsymbol{\mu}_A \\
+\boldsymbol{z}_i^{\top}\boldsymbol{\mu}_B
+\end{pmatrix},
+\;
+\Sigma
+\right),
+\quad \text{with} \quad
+\Sigma =
+\begin{pmatrix}
+\sigma_A^2 & \sigma_{AB} \\
+\sigma_{AB} & \sigma_B^2
+\end{pmatrix}.$$
+
+Let's assume that $\boldsymbol{z}_i$ includes a single binary covariate representing two subgroups.
+Then using dummy coding with subgroup 1 being the reference, we have
+
+$$\boldsymbol{z}_i^{\top} \boldsymbol{\mu}_{Ai} =
+\begin{cases}
+\mu_{Ai} & \text{for subgroup 1}, \\
+\mu_{Ai} + \nu_{A2} & \text{for subgroup 2},
+\end{cases} \quad \quad
+\boldsymbol{z}_i^{\top} \boldsymbol{\mu}_{Bi} =
+\begin{cases}
+\mu_{Bi} & \text{for subgroup 1}, \\
+\mu_{Bi} + \nu_{B2} & \text{for subgroup 2},
+\end{cases} $$
+
+$$
+\boldsymbol{z}_i^{\top} \boldsymbol{\mu}_{A} =
+\begin{cases}
+\mu_{A} & \text{for subgroup 1}, \\
+\mu_{A} + \nu_{A2} & \text{for subgroup 2},
+\end{cases} \quad \quad
+\boldsymbol{z}_i^{\top} \boldsymbol{\mu}_B =
+\begin{cases}
+\mu_{B} & \text{for subgroup 1}, \\
+\mu_{B} + \nu_{B2} & \text{for subgroup 2}.
+\end{cases} $$ 
+
+
+
+```{r}
+#| echo: TRUE
+data("anticcp")
+reitsmasub <- fitReitsmaSubgroup(data=anticcp,
+                                 TP=TP,
+                                 FP=FP,
+                                 FN=FN,
+                                 TN=TN,
+                                 study=study,
+                                 subgroup=generation)
+reitsmasub
+summary(reitsmasub)
+```
+
+## How do I get a summary plot of the Reitsma model?
+
+```{r}
+#| fig.height: 7
+#| fig.width: 8
+#| echo: TRUE
+plot(reitsmasub,
+     scale=0.01,
+     nudge_legend=-0.2,
+     size="se",
+     col=c("black","red"))
+```
+
+## How do I get a coupled forest plot?
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics.
+Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
+```{r}
+#| fig.height: 11
+#| fig.width: 13
+#| echo: TRUE
+forest(reitsmasub,subgroup_label="Generation")
+```
+
+## How do we include covariates in the Rutter and Gatsonis model?
+
+The number of diseased individuals from study $i$ who test positive is denoted by $y_{i1} \sim \mathcal{B}(n_{i1},\pi_{i1})$.
+
+Similarly, the number of non-diseased individuals who test positive is $y_{i2} \sim \mathcal{B}(n_{i2},\pi_{i2})$.
+
+Now we introduce a $p$-dimensional design-vector $\boldsymbol{z}_i$ including study level covariates.
+Consequently, at the study level, we have
+
+$$\operatorname{logit}(\pi_{ij}) =
+\left( \boldsymbol{z}_i^{\top} \boldsymbol{\theta}_i +  \boldsymbol{z}_i^{\top} \boldsymbol{\alpha}_i x_{ij} \right)
+\exp(-\boldsymbol{z}_i^{\top}\boldsymbol{\beta} x_{ij}), $$
+
+$$  \boldsymbol{z}_i^{\top} \boldsymbol{\alpha}_i \sim \mathcal{N}(\boldsymbol{z}_i^{\top}\boldsymbol{\Lambda}, \sigma_\alpha^2), \quad \quad \boldsymbol{z}_i^{\top} \boldsymbol{\theta}_i \sim \mathcal{N}(\boldsymbol{z}_i^{\top}\boldsymbol{\Theta}, \sigma_\theta^2),$$
+
+where $$x_{ij} =
+\begin{cases}
+-0.5 & \text{for non-diseased individuals}, \\
+\phantom{-}0.5 & \text{for diseased individuals}.
+\end{cases}$$
+
+Let's assume that $\boldsymbol{z}_i$ includes a single categorical covariate representing three subgroups.
+Then using dummy coding with subgroup 1 being the reference, we have
+
+$$\boldsymbol{z}_i^{\top} \boldsymbol{\theta}_i =
+\begin{cases}
+\theta_i & \text{for subgroup 1}, \\
+\theta_i + \gamma_2 & \text{for subgroup 2},\\
+\theta_i + \gamma_3 & \text{for subgroup 3},
+\end{cases} \quad \quad
+\boldsymbol{z}_i^{\top} \boldsymbol{\alpha}_i =
+\begin{cases}
+\alpha_i & \text{for subgroup 1}, \\
+\alpha_i + \xi_2 & \text{for subgroup 2},\\
+\alpha_i + \xi_3 & \text{for subgroup 3},
+\end{cases} $$ $$\boldsymbol{z}_i^{\top} \boldsymbol{\beta} =
+\begin{cases}
+\beta & \text{for subgroup 1}, \\
+\beta + \delta_2 & \text{for subgroup 2},\\
+\beta + \delta_3 & \text{for subgroup 3},
+\end{cases}$$ $$\boldsymbol{z}_i^{\top} \boldsymbol{\Lambda} =
+\begin{cases}
+\Lambda & \text{for subgroup 1}, \\
+\Lambda + \xi_2 & \text{for subgroup 2},\\
+\Lambda + \xi_3 & \text{for subgroup 3},
+\end{cases} \quad \quad
+\boldsymbol{z}_i^{\top} \boldsymbol{\Theta}_i =
+\begin{cases}
+\Theta & \text{for subgroup 1}, \\
+\Theta + \gamma_2 & \text{for subgroup 2},\\
+\Theta +\gamma_3 & \text{for subgroup 3}.
+\end{cases}$$
+
+*Notes:*
+
+- By default, `fitRutterGatsonisSubgroup()` assumes a common shape across all subgroups, which implies $\delta_2=\delta_3=0$ for the case above.
+
+- Moreover, for prediction `fitRutterGatsonisSubgroup()` uses the prediction matrix $$\boldsymbol{Z}_{\mathrm{pred}}=\begin{pmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 0 & 1 \end{pmatrix}$$ for the case above and therefore recovers the threshold, accuracy, and shape parameters for each subgroup as if it were the reference group.
+
+# How do I perform a Rutter and Gatsonis meta-regression with a single categorical study-level covariate?
+
+```{r}
+#| echo: TRUE
+#| results: 'hide'
+data("RF")
+RF2        <- RF[RF$method %in% c("LA","ELISA","Nephelometry"),]
+RF2$method <- factor(RF2$method,levels=c("LA","ELISA","Nephelometry"))
+ruttergatsonissub <- fitRutterGatsonisSubgroup(data=RF2,
+                                               TP=TP,
+                                               FP=FP,
+                                               FN=FN,
+                                               TN=TN,
+                                               study=study,
+                                               subgroup=method)
+```
+
+```{r}
+#| echo: TRUE
+ruttergatsonissub
+summary(ruttergatsonissub)
+```
+
+## How do I get a summary plot of the Rutter and Gatsonis subgroup model?
+
+```{r}
+#| fig.height: 6
+#| fig.width: 8
+#| echo: TRUE
+plot(ruttergatsonissub,
+     specrange=c(0.3,0.995),
+     size="se",
+     col=c("red","black","green"),
+     scale=0.015)
+```
+
+## How do I get a coupled forest plot?
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics.
+Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
+```{r}
+#| fig.height: 12.5
+#| fig.width: 13
+#| echo: TRUE
+forest(ruttergatsonissub,subgroup_label = "Method")
+```
+
+## How do I use the general Rutter and Gatsonis regression function?
+
+This method is for advanced users who feel comfortable specifying their own design and prediction matrices. For study-level covariates, the design matrix $\boldsymbol{Z}$ needs two identical consecutive rows per study, one for the diseased and one for the non-diseased. Of note, there are neither `plot()` nor `forest()` methods for `fitRutterGatsonisReg()`.
+
+Let's reproduce the subgroup-analysis from before.
+
+```{r}
+#| echo: TRUE
+Z  <- model.matrix(~method,data=RF2)
+# For study level-covariates, we need to two identical consective 
+# rows per study (diseased and non-diseased).
+Z2 <- Z[rep(seq_len(nrow(Z)), each = 2), , drop = FALSE]
+Z_pred <- matrix(c(1,0,0,1,1,0,1,0,1),ncol=3,nrow=3,byrow=T)
+
+ruttergatsonisreg <- fitRutterGatsonisReg(data=RF2,
+                                          TP=TP,
+                                          FP=FP,
+                                          FN=FN,
+                                          TN=TN,
+                                          study=study,
+                                          Z=Z2,
+                                          Z_pred=Z_pred)
+ruttergatsonisreg
+summary(ruttergatsonisreg)
+```
+
+## References
+
+Reitsma, J. B., et al. (2005).
+Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews.
+*Journal of Clinical Epidemiology*, 58(10), 982–990.
+
+Rutter, C. M., & Gatsonis, C. A.
+(2001).
+A hierarchical regression approach to meta-analysis of diagnostic test accuracy evaluations.
+*Statistics in Medicine*, 20(19), 2865–2884.
+
+Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C.
+(2007).
+A unification of models for meta-analysis of diagnostic accuracy studies.
+*Biostatistics*, 8(2), 239–251.
+
+Riley, R. D., Ensor, J., Jackson, D., & Burke, D. L.
+(2018).
+Deriving percentage study weights in multi-parameter meta-analysis models.
+*Statistical Methods in Medical Research*, 27(10), 2885–2905.
+
+Hoyer, A., Hirt, S., Kuss, O.
+(2018).
+Meta-analysis of full ROC curves using bivariate time-to-event models for interval-censored data.
+*Research Synthesis Methods*, 9(1), 62-72.
+
+Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y.
+(editors) (2023).
+Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
+Version 2.0 (updated July 2023).
+Cochrane.

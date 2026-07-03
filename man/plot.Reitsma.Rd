@@ -10,6 +10,7 @@
   size = c("fisher", "equal", "sampsize", "se"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   HSROC = FALSE,
+  specrange = c(0.7, 0.995),
   conflevel = 0.95,
   predlevel = 0.95,
   ...
@@ -35,6 +36,10 @@ Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.
 Default is \code{FALSE}.}
+
+\item{specrange}{A numeric vector of length 2 giving the range of
+specificities over which the HSROC curve is plotted.
+Defaults to \code{c(0.7, 0.995)}.}
 
 \item{conflevel}{Confidence level for the confidence region. Default is \code{0.95}.}
 

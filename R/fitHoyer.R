@@ -36,7 +36,7 @@
 #'   
 #' @param eval_threshold Optional numeric value or vector specifying the 
 #'   prediction grid threshold(s) at which sensitivity and specificity 
-#'   should be evaluated. If \code{NA} (default), the median threshold from 
+#'   should be evaluated. If \code{NULL} (default), the median threshold from 
 #'   the original data is used.
 #'
 #' @param dist Character string specifying the parametric distribution
@@ -112,7 +112,7 @@ fitHoyer <- function(data,
                      smallest,
                      largest,
                      testdirection=c("greater","less"),
-                     eval_threshold=NA,
+                     eval_threshold=NULL,
                      conflevel=0.95,
                      dist = "loglogistic",
                      verbose=FALSE,

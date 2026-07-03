@@ -23,7 +23,7 @@
 #'
 #' @param eval_threshold Optional numeric value or vector specifying the 
 #'   prediction grid threshold(s) at which sensitivity and specificity 
-#'   should be evaluated. If \code{NA} (default), the median threshold from 
+#'   should be evaluated. If \code{NULL} (default), the median threshold from 
 #'   the original data is used.
 #'   
 #' @param verbose Whether TMB optimization output should be printed (default: FALSE).
@@ -74,7 +74,7 @@
 #'
 #' @note Requires a compiled TMB model named \code{"Hoyer"}.
 #' @export
-fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NA, verbose=FALSE) {
+fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NULL, verbose=FALSE) {
 
   # Extract components
   datao   <- data$original
@@ -92,7 +92,7 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NA, verbose
     stop("'init' must be a valid output from initHoyerAFT().")
   }
 
-  if (!all(is.na(eval_threshold))) {
+  if (!all(is.null(eval_threshold))) {
 
     if (!is.numeric(eval_threshold)) {
       stop("'threshold' must be numeric.")
@@ -106,7 +106,12 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NA, verbose
       stop("'threshold' values must be positive.")
     }
   }
-
+  
+  if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+      conflevel <= 0 || conflevel >= 1) {
+    stop("conflevel must be a single number in (0, 1).")
+  }
+  
   # Prepare TMB data
   dat2 <- list(
     lowerB    = datar$lowerB,
@@ -114,9 +119,7 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NA, verbose
     events0   = datar$events0,
     events1   = datar$events1,
     ctype     = as.integer(datar$ctype),
-    threshold = ifelse(is.na(eval_threshold),
-                       stats::median(datao$threshold),
-                       eval_threshold),
+    threshold = if (is.null(eval_threshold)) stats::median(datao$threshold) else eval_threshold,
     study     = as.integer(factor(datar$study)) - 1,
     nstudy    = length(unique(datar$study)),
     dist      = init$distcode
@@ -162,75 +165,10 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NA, verbose
   rep2 <- summary(rep, select = "report")
   
   # Get sensitivities and specificities at the thresholds
-  qq <- qnorm(1-(1-conflevel)/2)
-  rls1 <- which(rownames(rep2)=="logitSurv1")
-  rls0 <- which(rownames(rep2)=="logitSurv0")
-  
-  if(testdir=="greater"){
-    sens <- data.frame(threshold=dat2$threshold,
-                       logitSurv1=rep2[rls1,"Estimate"],
-                       Std_Error=rep2[rls1,"Std. Error"],
-                       CI_Lower=NA,
-                       CI_Upper=NA)
-    sens$CI_Lower   <- with(sens,logitSurv1-qq*Std_Error)
-    sens$CI_Upper   <- with(sens,logitSurv1+qq*Std_Error)
-    sens$Sens       <- with(sens,plogis(logitSurv1))
-    sens$SensCI_Lower <- with(sens,plogis(CI_Lower))
-    sens$SensCI_Upper <- with(sens,plogis(CI_Upper))
-  
-    spec <- data.frame(threshold=dat2$threshold,
-                       logitSurv0=rep2[rls0,"Estimate"],
-                       Std_Error=rep2[rls0,"Std. Error"],
-                       CI_Lower=NA,
-                       CI_Upper=NA)
-    spec$CI_Lower   <- with(spec,logitSurv0-qq*Std_Error)
-    spec$CI_Upper   <- with(spec,logitSurv0+qq*Std_Error)
-    spec$Spec       <- with(spec,1-plogis(logitSurv0))
-    spec$SpecCI_Lower <- with(spec,1-plogis(CI_Upper))
-    spec$SpecCI_Upper <- with(spec,1-plogis(CI_Lower))
-   
-    sesp <- data.frame(threshold=sens$threshold,
-                       conflevel=conflevel,
-                       Sens=sens$Sens,
-                       SensCI_Lower=sens$SensCI_Lower,
-                       SensCI_Upper=sens$SensCI_Upper,
-                       Spec=spec$Spec,
-                       SpecCI_Lower=spec$SpecCI_Lower,
-                       SpecCI_Upper=spec$SpecCI_Upper)
-  }
-  ########
-  if(testdir=="less"){
-    sens <- data.frame(threshold=dat2$threshold,
-                       logitSurv1=rep2[rls1,"Estimate"],
-                       Std_Error=rep2[rls1,"Std. Error"],
-                       CI_Lower=NA,
-                       CI_Upper=NA)
-    sens$CI_Lower   <- with(sens,logitSurv1-qq*Std_Error)
-    sens$CI_Upper   <- with(sens,logitSurv1+qq*Std_Error)
-    sens$Sens       <- with(sens,1-plogis(logitSurv1))
-    sens$SensCI_Lower <- with(sens,1-plogis(CI_Upper))
-    sens$SensCI_Upper <- with(sens,1-plogis(CI_Lower))
-    
-    spec <- data.frame(threshold=dat2$threshold,
-                       logitSurv0=rep2[rls0,"Estimate"],
-                       Std_Error=rep2[rls0,"Std. Error"],
-                       CI_Lower=NA,
-                       CI_Upper=NA)
-    spec$CI_Lower   <- with(spec,logitSurv0-qq*Std_Error)
-    spec$CI_Upper   <- with(spec,logitSurv0+qq*Std_Error)
-    spec$Spec       <- with(spec,plogis(logitSurv0))
-    spec$SpecCI_Lower <- with(spec,plogis(CI_Lower))
-    spec$SpecCI_Upper <- with(spec,plogis(CI_Upper))
-    
-    sesp <- data.frame(threshold=sens$threshold,
-                       conflevel=conflevel,
-                       Sens=sens$Sens,
-                       SensCI_Lower=sens$SensCI_Lower,
-                       SensCI_Upper=sens$SensCI_Upper,
-                       Spec=spec$Spec,
-                       SpecCI_Lower=spec$SpecCI_Lower,
-                       SpecCI_Upper=spec$SpecCI_Upper)
-  }
+  sesp <- getHoyerSESP(rep2, 
+                       dat2$threshold, 
+                       testdir=testdir, 
+                       conflevel=conflevel)
   # Result object
   res <- list(
     data         = datao,

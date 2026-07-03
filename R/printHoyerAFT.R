@@ -28,6 +28,8 @@ print.HoyerAFT <- function(x, ...) {
   cat("Number of studies :", n_study, "\n")
   cat("Model fit         :", if (converged) "Converged" else "Not converged", "\n")
   cat("-2 log likelihood :", round(loglik, 3), "\n")
+  cat("AIC               :", round(AIC(x), 3), "\n")
+  cat("BIC               :", round(BIC(x), 3), "\n")
   cat("\n")
   cat("Distribution      :", dist_name, "\n")
   cat("Test direction    :", unique(x$data$testdirection), "\n")

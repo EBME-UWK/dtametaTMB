@@ -26,6 +26,7 @@ forest.Cochrane <- function(x, ...) {
   
   if (inherits(x, "Reitsma") || inherits(x, "RutterGatsonis")) {
     dt <- XP[,c("study","TP","FP","FN","TN","Sensitivity (95%-CI)","Specificity (95%-CI)")]
+    dt <- dt[order(dt$study), ]
     dt$" "    <- " "
     dt$fsens  <- paste(rep(" ",18),collapse=" ")
     dt$a      <- " "

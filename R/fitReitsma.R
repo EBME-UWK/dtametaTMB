@@ -58,57 +58,14 @@ fitReitsma <- function(data,
                        TP, FP, FN, TN,
                        study, conflevel=0.95) {
   
-    if (!is.data.frame(data)) {
-      stop("'data' must be a data.frame.")
-    }
-    TP_col <- deparse(substitute(TP))
-    FP_col <- deparse(substitute(FP))
-    FN_col <- deparse(substitute(FN))
-    TN_col <- deparse(substitute(TN))
-    study_col <- deparse(substitute(study))
-    
-    dat <- data.frame(
-      study = data[[study_col]],
-      TP = data[[TP_col]],
-      TN = data[[TN_col]],
-      FP = data[[FP_col]],
-      FN = data[[FN_col]]
-    )
-    
-  excluded <- !stats::complete.cases(dat)
-  if (any(excluded)) {
-    removed_studies <- unique(dat$study[excluded])
-    message(
-      "Removed rows with missing values for studies: ",
-      paste(removed_studies, collapse = ", ")
-    )
-  }
-  
-  dat <- dat[stats::complete.cases(dat), ]
-  # Validation
-  numeric_cols <- c("TP", "TN", "FP", "FN")
-  non_numeric <- numeric_cols[!sapply(dat[numeric_cols], is.numeric)]
-  if (length(non_numeric) > 0) {
-    stop("Columns must be numeric: ", paste(non_numeric, collapse = ", "))
-  }
-  
-  # Columns
-  count_cols <- c("TP", "TN", "FP", "FN")
-  # Check for non-integers or negative values
-  invalid_counts <- sapply(dat[count_cols], function(x) {
-    any(x < 0 | x != floor(x), na.rm = TRUE)
-  })
-  
-  if (any(invalid_counts)) {
-    stop("Columns TP, TN, FP, FN must contain non-negative integer counts.")
-  }
-  
-  X <- XP <- dat
-  XP$n1    <- XP$TP+XP$FN
-  XP$n0    <- XP$FP+XP$TN
-  XP$sens  <- XP$TP / XP$n1
-  XP$spec  <- XP$TN / XP$n0
-  XP$recordid <- 1:nrow(X)
+  X <- XP <- check_preprocess_data(data,
+                                   TP=TP,
+                                   FP=FP,
+                                   FN=FN,
+                                   TN=TN,
+                                   study=study,
+                                   conflevel=conflevel)
+  XP <- getXP(X=XP)
   
   ### Get initial values
   logit_sens   <- stats::qlogis(pmin(pmax(XP$sens,0.005),0.995))
@@ -122,16 +79,8 @@ fitReitsma <- function(data,
   rAB_init     <- max(min(cor(logit_sens,logit_spec),0.99),-0.99)
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   
-  ### sesphaping the data
-  X$true1 <- X$TP
-  X$true0 <- X$TN 
-  X$n1    <- X$TP+X$FN
-  X$n0    <- X$FP+X$TN
-  X$recordid <- 1:nrow(X)
-  Y <- reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
-               timevar="sens", times=c(1,0), v.names=c("n","true")) 
-  Y <- Y[order(Y$recordid),]  
-  Y$spec <- 1-Y$sens
+  ### resphaping the data
+  Y    <- reshapeX_REIT(X)
   ### Fitting the Reitsma model
   MA_Y <- glmmTMB::glmmTMB(formula=cbind(true, n - true) ~ 0 + sens + spec + (0+sens + spec | recordid), 
                            data=Y, family=stats::binomial(link="logit"),
@@ -144,8 +93,7 @@ fitReitsma <- function(data,
       "Consider checking starting values, model specification, or data quality."
     )
   }
-  ma_Y <- summary(MA_Y)
-  S         <- ma_Y$vcov$cond
+  ma_Y      <- summary(MA_Y)
   qq        <- stats::qnorm(1-(1-conflevel)/2)
   ### Sensitivity and Specificity
   sesp           <- as.data.frame(ma_Y$coefficients$cond)
@@ -153,84 +101,41 @@ fitReitsma <- function(data,
   sesp$conflevel <- conflevel
   sesp$CI_Lower  <- with(sesp,plogis(Estimate-qq*`Std. Error`))
   sesp$CI_Upper  <- with(sesp,plogis(Estimate+qq*`Std. Error`))
-  sesp           <- sesp[,(5:8)];
+  sesp           <- sesp[,(5:8)]
   colnames(sesp) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
   ### SAS variance covariance matrix
-  theta     = glmmTMB::getME(MA_Y,"theta")
-  beta_fix  = glmmTMB::fixef(MA_Y)$cond
-  V_full    = vcov(MA_Y, full = TRUE)
-  ### Define the transformed parameter vector
-  g <- c(mu_A = beta_fix[1],
-         mu_B = beta_fix[2],
-         sigma2_A.sens = exp(2*theta[1]),
-         sigma2_B.spec = exp(2*theta[2]),
-         sigma_AB = (theta[3] / sqrt(1 + theta[3]**2)) * exp(theta[1]) * exp(theta[2]))
-  ### Implement Jacobian
-  J = matrix(0, nrow = 5, ncol = 5)
-  ### fixed effects
-  J[1, 1]  = 1
-  J[2, 2]  = 1
-  ### variances
-  J[3, 3]  = 2 * exp(2 * theta[1])
-  J[4, 4]  = 2 * exp(2 * theta[2])
-  ### covariance
-  sigma_A  = exp(theta[1])
-  sigma_B  = exp(theta[2])
-  rho      = theta[3] / sqrt(1 + theta[3]**2)
-  sigma_AB = rho * sigma_A * sigma_B
-  J[5, 3]  = sigma_AB # d/d theta1
-  J[5, 4]  = sigma_AB # d/d theta2
-  J[5, 5]  = sigma_A * sigma_B / (1 + theta[3]**2)**(3/2)
-  rownames(J) = colnames(J) = c("mu_A.sens",
-                                "mu_B.spec",
-                                "sigma2_A.sens",
-                                "sigma2_B.spec",
-                                "sigma_AB")
-  ### Apply delta method to get SAS variance-covariance matrix
-  V_g  = J %*% V_full %*% t(J)
-  esti <- data.frame("Estimate"=g,"Std_Error"=sqrt(diag(V_g)))
-  #esti$CI_Lower <- with(esti,Estimate-qq*Std_Error)
-  #esti$CI_Upper <- with(esti,Estimate+qq*Std_Error)
-
+  theta      <- glmmTMB::getME(MA_Y,"theta")
+  beta_fix   <- glmmTMB::fixef(MA_Y)$cond
+  V_full     <- vcov(MA_Y, full = TRUE)
+  esti_V_g   <- getesti_V_g(beta_fix=beta_fix, 
+                            theta=theta, 
+                            V_full=V_full) 
+  esti       <- esti_V_g$esti
   # diagnostic odds ratio, the positive and negative
   # likelihood ratios
   lsens  <- esti[1,"Estimate"]
   lspec  <- esti[2,"Estimate"]
-  DOR    <- exp(lsens+lspec) 
-  LRp    <- plogis(lsens)/(1-plogis(lspec))
-  LRn    <- ((1-plogis(lsens))/plogis(lspec)) 
-
-  se.logDOR = as.numeric(sqrt(c(1,1) %*% S %*% c(1,1)))
-  dLRp = rbind(1/(1+exp(lsens)),exp(lspec)/(1+exp(lspec)))
-  se.logLRp = as.numeric(sqrt(t(dLRp) %*% S %*% dLRp))
-  dLRn = rbind(exp(lsens)/(1+exp(lsens)),1/(1+exp(lspec)))
-  se.logLRn = as.numeric(sqrt(t(dLRn) %*% S %*% dLRn))
-
-  lrdor <- data.frame(Estimate = c(DOR, LRp, LRn), 
-                      conflevel=conflevel,
-                      CI_Lower = c(exp(log(DOR)-qq*se.logDOR), exp(log(LRp)-qq*se.logLRp), exp(log(LRn)-qq*se.logLRn)), 
-                      CI_Upper = c(exp(log(DOR)+qq*se.logDOR), exp(log(LRp)+qq*se.logLRp), exp(log(LRn)+qq*se.logLRn)),
-                      row.names = c("DOR", "LR+", "LR-")) 
+  S      <- ma_Y$vcov$cond
+  lrdor  <- getLRDOR(lsens=lsens, lspec=lspec, S=S, conflevel=conflevel)
   # Recover Rutter and Gatsonis estimates
   sigma2_a <- esti[3,"Estimate"]
   sigma2_b <- esti[4,"Estimate"]
   sigma_ab <- esti[5,"Estimate"]
   sigma_a  <- sqrt(sigma2_a)
   sigma_b  <- sqrt(sigma2_b)
-  ruga <- data.frame(
-            Lambda   = (((sigma_b/sigma_a)**0.5) * lsens) + ((sigma_a/sigma_b)**0.5 *lspec),
-            Theta    = 0.5*((((sigma_b/sigma_a)**0.5 )*lsens) - (((sigma_a/sigma_b)**0.5) *lspec)),
-            beta     = log(sigma_b/sigma_a),
-            sigma2_alpha = 2*((sigma_a*sigma_b) + sigma_ab),
-            sigma2_theta = 0.5*((sigma_a*sigma_b) - sigma_ab),
-            row.names="Estimate (recovered)")
-  ret <- list(data=XP,
-              glmmTMB=MA_Y,
-              estimates=esti,
-              vcov=V_g,
-              sensspec=sesp,
-              LRDOR=lrdor,
-              RutterGatsonis_recovered=ruga)
+  ruga     <- getRUGA(lspec    = lspec,
+                      lsens    = lsens,
+                      sigma_a  = sigma_a,
+                      sigma_b  = sigma_b,
+                      sigma_ab = sigma_ab)
+  ##
+  ret <- list(data      = XP,
+              glmmTMB   = MA_Y,
+              estimates = esti,
+              vcov      = esti_V_g$V_g,
+              sensspec  = sesp,
+              LRDOR     = lrdor,
+              RutterGatsonis_recovered = ruga)
   class(ret) <- c("Reitsma","Cochrane")
   return(ret)
 }

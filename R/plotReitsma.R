@@ -19,6 +19,10 @@
 #'  }  
 #' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
 #'   Default is \code{FALSE}.
+#' @param specrange A numeric vector of length 2 giving the range of
+#'   specificities over which the HSROC curve is plotted.
+#'   Defaults to \code{c(0.7, 0.995)}.
+#'
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
 #' 
@@ -77,73 +81,26 @@ plot.Reitsma <- function(x, scale=0.02,
                             size=c("fisher","equal","sampsize","se"), 
                             main="Diagnostic Test Accuracy Meta-Analysis",
                             HSROC=FALSE, 
+                            specrange=c(0.7,0.995),
                             conflevel=0.95,
                             predlevel=0.95, ...) {
   size    <- match.arg(size)
   nstudy  <- nrow(x$data)
-  Lambda  <- x$RutterGatsonis_recovered$Lambda
-  beta    <- x$RutterGatsonis_recovered$beta
-  roc_points <- c()
-  for (i in seq(from=0.001, to=0.999, by=0.01)){
-    Sp_i  <- i
-    Fpr_i <- 1-Sp_i
-    LSp_i <- qlogis(Sp_i)
-    LSe_i <- Lambda*exp(-beta/2) - exp(-beta)*LSp_i
-    Se_i  <- plogis(LSe_i)
-    roc_i <- data.frame(FPR=Fpr_i, Sen=Se_i)
-    roc_points<-rbind(roc_points,roc_i)
-  }
-  minSens <- min(x$data$sens)
-  maxSens <- max(x$data$sens)
-  minFPR  <- min(1-x$data$spec)
-  maxFPR  <- max(1-x$data$spec)
-  # Create new data frame which restricts roc_points to being between min and max values
-  roc_points2 <- 
-     roc_points[
-        roc_points$FPR < maxFPR &
-        roc_points$FPR > minFPR &
-        roc_points$Sen < maxSens &
-        roc_points$Sen > minSens, ]
-  
   # Confidence and prediction region
   muA     <- x$estimates["mu_A.sens",]$Estimate
   muB     <- x$estimates["mu_B.spec",]$Estimate
   seB     <- x$estimates["mu_B.spec",]$Std_Error
   seA     <- x$estimates["mu_A.sens",]$Std_Error
   covAB   <- x$vcov[1,2]
-  r       <- covAB / (seA*seB)
   varA    <- x$estimates["sigma2_A.sens",]$Estimate
   varB    <- x$estimates["sigma2_B.spec",]$Estimate
   sAB     <- x$estimates["sigma_AB",]$Estimate
-  sepredA <- sqrt(varA + seA**2)
-  sepredB <- sqrt(varB + seB**2)
-  rpredAB <- (sAB + covAB) / (sepredA*sepredB)
-  f_conf  <- qf(conflevel, df1 = 2, df2 = nstudy - 2)
-  f_pred  <- qf(predlevel, df1 = 2, df2 = nstudy - 2)
-  croot_conf <- sqrt(2 * f_conf)
-  croot_pred <- sqrt(2 * f_pred)
-  
-  conf_region <- c()
-  pred_region <- c()
-  # Confidence region
-  for (i in seq(0, 2*pi, length.out=361)){
-    confA  <- muA + (seA*croot_conf*cos(i))
-    confB  <- muB + (seB*croot_conf*cos(i + acos(r)))
-    confsens <- plogis(confA)
-    confspec <- plogis(confB)
-    conf_i <- data.frame(X=1-confspec, Y=confsens)
-    #conf_i <- logit(conf_i)
-    conf_region<-rbind(conf_region, conf_i)
-  }
-  for (i in seq(0, 2*pi, length.out=361)){
-    predA <- muA + (sepredA*croot_pred*cos(i))
-    predB <- muB + (sepredB*croot_pred*cos(i + acos(rpredAB)))
-    predsens <- plogis(predA)
-    predspec <- plogis(predB)
-    pred_i <- data.frame(X=1-predspec, Y=predsens)
-    #pred_i <- logit(pred_i)
-    pred_region<-rbind(pred_region, pred_i)
-  }
+  region <- getConfPredRegion(muA=muA,muB=muB,
+                              seA=seA,seB=seB,covAB=covAB, # conf
+                              varA=varA,varB=varB,sAB=sAB, # pred
+                              nstudy=nstudy,
+                              conflevel=conflevel,
+                              predlevel=predlevel)
   # Calculations for percentage weights
   if(size=="fisher"){
     X <- x$data
@@ -214,31 +171,25 @@ plot.Reitsma <- function(x, scale=0.02,
   }
   ####
   op <- par(pty = "s")
-  plot(1,1, ylim=c(0,1), xlim=c(0,1), xaxt = "n", yaxt="n",
-       ann=F, pch=20, col="white",las=1,asp=1)
-  axis( side = 1,                          # 1 = bottom axis
-        at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),  # positions of ticks
-        labels = c(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0))  # custom labels
-  axis( side = 2,
-        at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),las=1)
-  par(new=TRUE) 
-  abline(v=(seq(0,1,0.2)), col="lightgray", lty="dotted")
-  abline(h=(seq(0,1,0.2)), col="lightgray", lty="dotted")
-  lines(c(0,1),c(0,1),col="lightgray",lty="dotted")
-  # Add titles
-  title(main=main, xlab="Specificity", ylab="Sensitivity")
+  ### Plot coordinate system
+  plot_SESPGRID(main=main)
   # Plot study level estimates 
   symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pctsp,pctse)*scale,inches=F,add=T,fg="darkgray")
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
-  if(HSROC==TRUE){points(roc_points2, type="l", lwd=2,ann=F)} ###
+  if(HSROC==TRUE){
+    Lambda  <- x$RutterGatsonis_recovered$Lambda
+    beta    <- x$RutterGatsonis_recovered$beta
+    roc_points2 <- getROCpoints(Lambda,beta,specrange)
+    points(roc_points2, type="l", lwd=2,ann=F)
+    } ###
   # Add summary point
   mean_point <- data.frame(1-x$sensspec["spec",]$Estimate,
                            x$sensspec["sens",]$Estimate)
   points(mean_point, col="black",cex=1.5, pch=15)
   # Add confidence and prediction region
-  lines(conf_region, lty=2, lwd=2, col="black")
-  lines(pred_region, lty=3, lwd=2, col="black")
+  lines(region$conf, lty=2, lwd=2, col="black")
+  lines(region$pred, lty=3, lwd=2, col="black")
   # Add the legend 
   conf_lab <- paste0(round(100 * conflevel), "% Confidence region")
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")

@@ -8,6 +8,7 @@
   x,
   scale = 0.02,
   size = c("equal", "sampsize", "se"),
+  thresholdrange = NULL,
   main = "Diagnostic Test Accuracy Meta-Analysis",
   ...
 )
@@ -32,6 +33,11 @@ rectangles representing study weights. Default is \code{0.02}.}
 \item{"sampsize"}{Size proportional to sample size}
 \item{"se"}{Size proportional to precision on the logit scale}
 }}
+
+\item{thresholdrange}{A numeric vector of length 2 giving the range of
+threshold over which sensitivities and specificities are predicted
+If \code{NULL} (default), then the minimum and maximum thresholds
+from the data are used.}
 
 \item{main}{Character string giving the main title of the plot.
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}

@@ -26,6 +26,8 @@ print.RutterGatsonis <- function(x, ...) {
   if (!is.null(loglik)) {
   cat("-2 log likelihood :", round(loglik, 3), "\n")
   }
+  cat("AIC               :", round(AIC(x), 3), "\n")
+  cat("BIC               :", round(BIC(x), 3), "\n")
   cat("\n")
   
   est <- x$sdreport$par.fixed
