@@ -189,6 +189,7 @@ fitReitsma <- function(data,
   theta      <- glmmTMB::getME(MA_Y,"theta")
   beta_fix   <- glmmTMB::fixef(MA_Y)$cond
   V_full     <- vcov(MA_Y, full = TRUE)
+  V_full[is.na(V_full)] <- 0
   esti_V_g   <- getesti_V_g(beta_fix=beta_fix, 
                             theta=theta, 
                             V_full=V_full) 

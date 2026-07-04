@@ -3,7 +3,7 @@ title: "Introduction to dtametaTMB"
 format: 
    html:
      toc: TRUE
- # pdf
+# pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{quarto::html}
@@ -42,8 +42,10 @@ library(dtametaTMB)
 ## Which model should I use?
 
    -  **Reitsma model:** single threshold per study: use when studies apply similar thresholds.
-   -  **HSROC model:** single threshold per study: use when thresholds vary between studies or in small and extreme data sets
+   -  **Rutter and Gatsonis model:** single threshold per study: use when thresholds vary between studies
    -  **Hoyer model:** multiple thresholds per study
+   
+The Reitsma and Rutter-Gatsonis model classes support parameter constraints for simplified analyses and sparse datasets.
 
 ## Validation
 
@@ -178,6 +180,44 @@ plot(ruttergatsonis,size="se",specrange=c(0.3,0.995),scale=0.01)
 #| echo: TRUE
 forest(ruttergatsonis)
 ```
+
+## How do I simplify the models via parameter constraints?
+
+The package allows model parameters to be constrained to zero during estimation. This can be useful in meta-analysis of sparse data, when convergence is difficult, or when fitting simplified models as descriped in the Cochrane Handbook. For example,
+
+```{r}
+#| echo: TRUE
+reitsmacons <- fitReitsma(data = anticcp, 
+                          TP = TP,
+                          FP = FP,
+                          FN = FN,
+                          TN = TN,
+                          study = study,
+                          constrain = "sigma_AB")
+summary(reitsmacons)$estimates
+```
+fixed the between study random effects covariance at zero. Other options include set `constrain="sigma2_A"`, `"constrain=sigma2_B"`, or `"constrain=all"`. 
+
+The Rutter and Gatsonis model allows for the constraint $\sigma_\alpha^2=0$, $\sigma_\theta^2=0$ and/or $\beta=0$ (shape parameter). For example
+
+```{r}
+#| echo: TRUE
+ruttergatsoniscons <- fitRutterGatsonis(data = RF, 
+                                        TP = TP,
+                                        FP = FP,
+                                        FN = FN,
+                                        TN = TN,
+                                        study = study,
+                                        constrain = c("sigma2_theta","shape"))
+summary(ruttergatsoniscons)$estimates
+```
+
+Note that we can also compare the constrained model with the full model using likelihood ratio tests.
+
+```{r}
+anova(ruttergatsoniscons,ruttergatsonis)
+```
+
 
 ## How do I use the Hoyer model?
 

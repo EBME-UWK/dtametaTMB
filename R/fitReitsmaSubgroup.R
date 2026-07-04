@@ -329,6 +329,7 @@ fitReitsmaSubgroup <- function(data,
   theta_nu   <- glmmTMB::getME(MA_Y_nu,"theta")
   beta_fix_nu<- glmmTMB::fixef(MA_Y_nu)$cond
   V_full_nu  <- vcov(MA_Y_nu, full = TRUE)
+  V_full_nu[is.na(V_full_nu)] <- 0
   esti_V_g_nu<- get2esti_V_g(beta_fix=beta_fix_nu, 
                              theta=theta_nu, 
                              V_full=V_full_nu) 
@@ -364,6 +365,7 @@ fitReitsmaSubgroup <- function(data,
   theta_mu   <- glmmTMB::getME(MA_Y_mu,"theta")
   beta_fix_mu<- glmmTMB::fixef(MA_Y_mu)$cond
   V_full_mu  <- vcov(MA_Y_mu, full = TRUE)
+  V_full_mu[is.na(V_full_mu)] <- 0
   esti_V_g_mu<- get2esti_V_g(beta_fix=beta_fix_mu, 
                              theta=theta_mu, 
                              V_full=V_full_mu) 

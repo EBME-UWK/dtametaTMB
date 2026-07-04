@@ -1,9 +1,9 @@
 ---
 title: "Meta-Regression"
 format: 
-  # html:
-   #  toc: TRUE
-  pdf
+   html:
+     toc: TRUE
+  #pdf
 vignette: >
   %\VignetteIndexEntry{Meta-Regression}
   %\VignetteEncoding{UTF-8}
@@ -132,6 +132,52 @@ Performance is typically faster when knitting the vignette (e.g. via RMarkdown o
 #| echo: TRUE
 forest(reitsmasub,subgroup_label="Generation")
 ```
+## How do I constrain parameters in the Reitsma model?
+
+In sparse data one may wish to fix parameters of the random effects (variance-covariance matrix) at zero. This can be done via the `constrain` argument.
+
+For example,
+
+```{r}
+#| echo: TRUE
+constrainA <- fitReitsmaSubgroup(data=anticcp,
+                                 TP=TP,
+                                 FP=FP,
+                                 FN=FN,
+                                 TN=TN,
+                                 study=study,
+                                 subgroup=generation,
+                                 constrain="sigma2_A")
+summary(constrainA)$estimates
+```
+fixes the logit sensitivity variance to zero. This also implies that the random effects covariance is zero.
+Note that you can also set `constrain` to `"sigma2_AB"`, `"sigma2_B"`, or `"all"`. 
+
+Constraining fixed effects is controlled by the `subgroup_constrain` argument. For example,
+
+```{r}
+#| echo: TRUE
+constrainsens <- fitReitsmaSubgroup(data=anticcp,
+                                    TP=TP,
+                                    FP=FP,
+                                    FN=FN,
+                                    TN=TN,
+                                    study=study,
+                                    subgroup=generation,
+                                    subgroup_constrain="sens")
+summary(constrainsens)$estimates
+```
+assumes equal (logit) sensitivities in all subgroups.
+Note that you can also set `subgroup_constrain` to `"spec"` or `c("sens","spec")`. 
+
+## How can I compare `constrainsens` with the full model?
+
+We can perform a likelihood ratio test via `anova`, essentially testing whether there exist subgroup differences in sensitivity.
+
+```{r}
+anova(constrainsens,reitsmasub)
+```
+
 
 ## How do we include covariates in the Rutter and Gatsonis model?
 
@@ -207,7 +253,8 @@ ruttergatsonissub <- fitRutterGatsonisSubgroup(data=RF2,
                                                TN=TN,
                                                study=study,
                                                subgroup=method,
-                                               constrain="shape")
+                                               constrain="shape") # assumes equal 
+                                                                  # shapes in subgroups
 ```
 
 ```{r}
@@ -241,6 +288,19 @@ Performance is typically faster when knitting the vignette (e.g. via RMarkdown o
 forest(ruttergatsonissub,subgroup_label = "Method")
 ```
 
+## How do I constrain parameters in the Rutter and Gatsonis subgroup model?
+
+In the Rutter and Gatsonis model, all parameter constraints are controlled by `constrain`, i.e.,
+
+  -   `constrain="sigma2_alpha"` sets $\sigma_\alpha^2$ to zero,
+  -   `constrain="sigma2_theta"` sets $\sigma_\theta^2$ to zero,
+  -   `constrain="accuracy"` assumes equal accuracy parameters across subgroups, i.e. $\xi_2=\xi_3=\dots=0$,
+  -   `constrain="threshold"` assumes equal threshold parameters across subgroups, i.e. $\gamma_2=\gamma_3=\dots=0$,
+  -   `constrain="shape"` assumes equal shape parameters across subgroups, i.e. $\delta_2=\delta_3=\dots=0$,
+  -   `constrain="shape_zero"` fixes all shape parameters at zero.
+
+Constraints can also be combined, for example `constrain=c("shape","sigma2_theta")`.
+
 ## How do I use the general Rutter and Gatsonis regression function?
 
 This method is for advanced users who feel comfortable specifying their own design and prediction matrices. For study-level covariates, the design matrix $\boldsymbol{Z}$ needs two identical consecutive rows per study, one for the diseased and one for the non-diseased. Of note, there are neither `plot()` nor `forest()` methods for `fitRutterGatsonisReg()`.
@@ -270,6 +330,45 @@ ruttergatsonisreg <- fitRutterGatsonisReg(data=RF2,
 
 ruttergatsonisreg
 summary(ruttergatsonisreg)
+```
+
+## How do I compare models?
+
+In the previous section we fitted the `RF` data set using the Rutter and Gatsonis subgroup model while keeping the shape parameter equal across all subgroups `constrain="shape"`. Now let's fit the full model allowing for different shape parameters across subgroups and check whether the data lend support to this approach.
+
+```{r}
+#| echo: TRUE
+ruttergatsonissubfull <- fitRutterGatsonisSubgroup(data=RF2,
+                                                   TP=TP,
+                                                   FP=FP,
+                                                   FN=FN,
+                                                   TN=TN,
+                                                   study=study,
+                                                   subgroup=method,
+                                                   constrain=NULL)
+ruttergatsonissubfull
+summary(ruttergatsonissubfull)
+```
+## How do I get the log likelihood, the AIC, and the BIC of a model?
+
+```{r}
+#| echo: TRUE
+logLik(ruttergatsonissubfull)
+AIC(ruttergatsonissubfull)
+BIC(ruttergatsonissubfull)
+
+logLik(ruttergatsonissub)
+AIC(ruttergatsonissub)
+BIC(ruttergatsonissub)
+```
+
+## How do I perform a likelihood ratio test of the two models?
+
+The test below formally investigates whether the HSROC curve shapes are equal in all subgroups.
+```{r}
+#| echo: TRUE
+anova(ruttergatsonissub,
+      ruttergatsonissubfull)
 ```
 
 ## References
