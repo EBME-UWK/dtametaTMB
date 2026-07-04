@@ -13,6 +13,7 @@ fitReitsmaSubgroup(
   study,
   subgroup,
   constrain = NULL,
+  subgroup_constrain = NULL,
   conflevel = 0.95
 )
 }
@@ -61,6 +62,35 @@ All random-effects variance and covariance parameters are fixed
 at zero, resulting in a fixed-effects model.
 }
 }}
+
+\item{subgroup_constrain}{Optional character vector specifying
+restrictions on subgroup-specific logit-sensitivity and/or
+logit-specificity parameters.
+
+This can be useful for testing whether subgroup differences
+are present in sensitivity, specificity, or both.
+
+Allowed values are:
+\describe{
+\item{\code{"sens"}}{
+Constrain all subgroup-specific logit-sensitivity parameters
+to be equal. Subgroup differences are therefore only allowed
+in logit-specificity.
+}
+\item{\code{"spec"}}{
+Constrain all subgroup-specific logit-specificity parameters
+to be equal. Subgroup differences are therefore only allowed
+in logit-sensitivity.
+}
+}
+
+Both constraints may be specified simultaneously, e.g.
+\code{subgroup_constrain = c("sens", "spec")}, which forces
+all subgroup-specific sensitivity and specificity parameters
+to be equal across subgroups.
+
+If \code{NULL} (default), separate sensitivity and specificity
+parameters are estimated for each subgroup.}
 
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 }

@@ -42,6 +42,34 @@
 #'       at zero, resulting in a fixed-effects model.
 #'     }
 #'   }
+#' @param subgroup_constrain Optional character vector specifying
+#'   restrictions on subgroup-specific logit-sensitivity and/or
+#'   logit-specificity parameters.
+#'
+#'   This can be useful for testing whether subgroup differences
+#'   are present in sensitivity, specificity, or both.
+#'
+#'   Allowed values are:
+#'   \describe{
+#'     \item{\code{"sens"}}{
+#'       Constrain all subgroup-specific logit-sensitivity parameters
+#'       to be equal. Subgroup differences are therefore only allowed
+#'       in logit-specificity.
+#'     }
+#'     \item{\code{"spec"}}{
+#'       Constrain all subgroup-specific logit-specificity parameters
+#'       to be equal. Subgroup differences are therefore only allowed
+#'       in logit-sensitivity.
+#'     }
+#'   }
+#'
+#'   Both constraints may be specified simultaneously, e.g.
+#'   \code{subgroup_constrain = c("sens", "spec")}, which forces
+#'   all subgroup-specific sensitivity and specificity parameters
+#'   to be equal across subgroups.
+#'
+#'   If \code{NULL} (default), separate sensitivity and specificity
+#'   parameters are estimated for each subgroup.
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
 #'
 #' @return A list of class \code{"ReitsmaSubgroup"} with components:
@@ -96,6 +124,7 @@ fitReitsmaSubgroup <- function(data,
                        study,
                        subgroup,
                        constrain=NULL,
+                       subgroup_constrain=NULL,
                        conflevel=0.95) {
   
   if (!is.data.frame(data)) {
@@ -149,9 +178,9 @@ fitReitsmaSubgroup <- function(data,
   rAB_init     <- max(min(rAB_init,0.99),-0.99)
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   ###
-  start_list_nu<- list(beta=c(muA_init,rep(0,llsub-1),muB_init,rep(0,llsub-1)),
+  start_list_nu<- list(beta=c(muA_init,muB_init,rep(0,2*(llsub-1))),
                        theta=c(log(sA_init),log(sB_init),theta3_init))
-  start_list_mu<- list(beta=c(rep(muA_init,llsub),rep(muB_init,llsub)),
+  start_list_mu<- list(beta = rep(c(muA_init, muB_init),llsub), 
                        theta=c(log(sA_init),log(sB_init),theta3_init))
   ### Constraints
   
@@ -174,27 +203,49 @@ fitReitsmaSubgroup <- function(data,
     }
   }
   
-  map <- list()
+  
+  allowed_subgroup_constraints <- c(
+    "sens",
+    "spec"
+  )
+  
+  if (!is.null(subgroup_constrain)) {
+    if (!is.character(subgroup_constrain)) {
+      stop("'subgroup_constrain' must be a character vector or NULL.")
+    }
+    invalid_constraints <- setdiff(
+      subgroup_constrain,
+      allowed_subgroup_constraints
+    )
+    if(length(invalid_constraints) > 0){
+      stop(
+        "Unknown subgroup constraint(s): ",
+        paste(invalid_constraints, collapse=", ")
+      )
+    }
+  }
+  
+  map_mu <- map_nu <- list()
   
   if(!is.null(constrain)){
     if (constrain == "sigma_AB") {
       start_list_mu$theta[3] <- 0
       start_list_nu$theta[3] <- 0
-      map$theta <- factor(c(1,2,NA))
+      map_mu$theta <- map_nu$theta <- factor(c(1,2,NA))
     }
     if (constrain == "sigma2_A") {
       start_list_mu$theta[1] <- log(.Machine$double.eps)
       start_list_mu$theta[3] <- 0
       start_list_nu$theta[1] <- log(.Machine$double.eps)
       start_list_nu$theta[3] <- 0
-      map$theta <- factor(c(NA,1,NA))
+      map_mu$theta <- map_nu$theta <- factor(c(NA,1,NA))
     }
     if (constrain == "sigma2_B") {
       start_list_mu$theta[2] <- log(.Machine$double.eps)
       start_list_mu$theta[3] <- 0
       start_list_nu$theta[2] <- log(.Machine$double.eps)
       start_list_nu$theta[3] <- 0
-      map$theta <- factor(c(1,NA,NA))
+      map_mu$theta <- map_nu$theta <- factor(c(1,NA,NA))
     }
     if (constrain == "all") {
       start_list_mu$theta[1] <- log(.Machine$double.eps)
@@ -203,9 +254,39 @@ fitReitsmaSubgroup <- function(data,
       start_list_nu$theta[1] <- log(.Machine$double.eps)
       start_list_nu$theta[2] <- log(.Machine$double.eps)
       start_list_nu$theta[3] <- 0
-      map$theta <- factor(c(NA,NA,NA))
+      map_mu$theta <- map_nu$theta <- factor(c(NA,NA,NA))
     }
   }
+  
+  ### Subgroup constraints
+  if (!is.null(subgroup_constrain)) {
+    beta_map_mu <- seq_len(2 * llsub)
+    if ("sens" %in% subgroup_constrain) {
+      beta_map_mu[seq(1, 2 * llsub, by = 2)] <- 1
+    }
+    if ("spec" %in% subgroup_constrain) {
+      beta_map_mu[seq(2, 2 * llsub, by = 2)] <- 2
+    }
+      map_mu$beta <- factor(beta_map_mu)
+  }
+  
+  if (!is.null(subgroup_constrain)){
+    beta_map_nu <- seq_len(2 * llsub)
+    if ("sens" %in% subgroup_constrain) {
+      idxA <- seq(3, 2 * llsub, by = 2)
+      start_list_nu$beta[idxA] <- 0
+      beta_map_nu[idxA] <- NA
+    }
+    if ("spec" %in% subgroup_constrain) {
+      idxB <- seq(4, 2 * llsub, by = 2)
+      start_list_nu$beta[idxB] <- 0
+      beta_map_nu[idxB] <- NA
+    }
+      map_nu$beta <- factor(beta_map_nu)
+  }
+
+  
+  
   
   ### resphaping the data
   Y    <- reshapeX_REIT(X)
@@ -236,7 +317,7 @@ fitReitsmaSubgroup <- function(data,
   MA_Y_nu <- glmmTMB::glmmTMB(formula=form, 
                               data=Y, family=stats::binomial(link="logit"),
                               start=start_list_nu,
-                              map = if (length(map) == 0) NULL else map)
+                              map = if (length(map_nu) == 0) NULL else map_nu)
   if (MA_Y_nu$fit$convergence != 0) {
     warning(
       "TMB optimization did not converge. ",
@@ -271,7 +352,7 @@ fitReitsmaSubgroup <- function(data,
   MA_Y_mu <- glmmTMB::glmmTMB(formula=form,
                               data=Y, family=stats::binomial(link="logit"),
                               start=start_list_mu,
-                              map = if (length(map) == 0) NULL else map)
+                              map = if (length(map_mu) == 0) NULL else map_mu)
   if (MA_Y_mu$fit$convergence != 0) {
     warning(
       "TMB optimization did not converge. ",
