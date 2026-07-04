@@ -3,7 +3,7 @@ title: "Introduction to dtametaTMB"
 format: 
    html:
      toc: TRUE
- # pdf
+# pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{quarto::html}
@@ -183,7 +183,7 @@ forest(ruttergatsonis)
 
 ## How do I simplify the models via parameter constraints?
 
-The package allows model parameters to be constrained to zero during estimation. This can be useful in meta-analysis of sparse data, when convergence is difficult, or when fitting simplified models as descriped in the Cochrane Handbook. For example,
+The package allows model parameters to be constrained to zero during estimation. This can be useful in meta-analysis of sparse data, when convergence is difficult, or when fitting simplified models as described in the Cochrane Handbook. For example,
 
 ```{r}
 #| echo: TRUE
@@ -196,7 +196,7 @@ reitsmacons <- fitReitsma(data = anticcp,
                           constrain = "sigma_AB")
 summary(reitsmacons)$estimates
 ```
-fixed the between study random effects covariance at zero. Other options include set `constrain="sigma2_A"`, `"constrain=sigma2_B"`, or `"constrain=all"`. 
+fixed the between-study random-effects covariance at zero. Other options include `constrain="sigma2_A"`, `"constrain=sigma2_B"`, or `"constrain=all"`. 
 
 The Rutter and Gatsonis model allows for the constraint $\sigma_\alpha^2=0$, $\sigma_\theta^2=0$ and/or $\beta=0$ (shape parameter). For example
 

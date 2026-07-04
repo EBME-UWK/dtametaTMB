@@ -316,3 +316,71 @@ test_that("multiple subgroup constraints work together", {
 })
 
 
+
+test_that("Reitsma_recovered correctly round-trips per subgroup for fitRutterGatsonisSubgroup (catches sens/spec swaps)", {
+  
+  data("RF")
+  RF2 <- RF[RF$method %in% c("LA", "ELISA", "Nephelometry"), ]
+  RF2$method <- factor(RF2$method, levels = c("LA", "ELISA", "Nephelometry"))
+  
+  fit <- fitRutterGatsonisSubgroup(
+    data     = RF2,
+    TP       = TP,
+    FP       = FP,
+    FN       = FN,
+    TN       = TN,
+    study    = study,
+    subgroup = method
+  )
+  
+  lsub <- fit$subgroups
+  
+  expect_equal(nrow(fit$Reitsma_recovered), length(lsub))
+  expect_equal(rownames(fit$Reitsma_recovered), lsub)
+  
+  for (i in seq_along(lsub)) {
+    
+    # Reitsma-space estimates reported for this subgroup
+    reit_row <- fit$Reitsma_recovered[i, ]
+    
+    # Independently invert them back to HSROC-space using the
+    # package's own (separately-tested) inverse transform
+    recovered <- getRUGA(
+      lsens    = reit_row$mu_A.sens,
+      lspec    = reit_row$mu_B.spec,
+      sigma_a  = sqrt(reit_row$sigma2_A.sens),
+      sigma_b  = sqrt(reit_row$sigma2_B.spec),
+      sigma_ab = reit_row$sigma_AB
+    )
+    
+    # Original HSROC-space estimates for this subgroup, as
+    # actually fitted by fitRutterGatsonisSubgroup()
+    lambda_name <- paste0("Lambda_", lsub[i])
+    theta_name  <- paste0("Theta_",  lsub[i])
+    beta_name   <- paste0("beta_",   lsub[i])
+    
+    original_lambda       <- fit$sdreport2[lambda_name, "Estimate"]
+    original_theta        <- fit$sdreport2[theta_name,  "Estimate"]
+    original_beta         <- fit$sdreport2[beta_name,   "Estimate"]
+    original_sigma2_alpha <- fit$sdreport2["sigma2_alpha", "Estimate"]
+    original_sigma2_theta <- fit$sdreport2["sigma2_theta", "Estimate"]
+    
+    # Round-trip must recover the original subgroup-specific estimates
+    expect_equal(recovered$Lambda, original_lambda,
+                 tolerance = 1e-6,
+                 label = paste("Lambda round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$Theta, original_theta,
+                 tolerance = 1e-6,
+                 label = paste("Theta round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$beta, original_beta,
+                 tolerance = 1e-6,
+                 label = paste("beta round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$sigma2_alpha, original_sigma2_alpha,
+                 tolerance = 1e-6,
+                 label = paste("sigma2_alpha round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$sigma2_theta, original_sigma2_theta,
+                 tolerance = 1e-6,
+                 label = paste("sigma2_theta round-trip for subgroup", lsub[i]))
+  }
+})
+

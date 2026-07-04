@@ -392,5 +392,68 @@ test_that("fitReitsmaSubgroup still estimates subgroup means", {
 
 
 
-
+test_that("RutterGatsonis_recovered correctly round-trips per subgroup (catches sens/spec swaps)", {
+  
+  data("anticcp")
+  
+  fit <- fitReitsmaSubgroup(
+    data     = anticcp,
+    TP       = TP,
+    FP       = FP,
+    FN       = FN,
+    TN       = TN,
+    study    = study,
+    subgroup = generation
+  )
+  
+  lsub      <- fit$subgroups
+  lsub_safe <- make.names(lsub)
+  
+  expect_equal(nrow(fit$RutterGatsonis_recovered), length(lsub))
+  expect_equal(rownames(fit$RutterGatsonis_recovered), lsub)
+  
+  for (i in seq_along(lsub)) {
+    
+    # HSROC-space estimates reported for this subgroup
+    hsroc_row <- fit$RutterGatsonis_recovered[i, ]
+    
+    # Independently invert them back to Reitsma-space using the
+    # package's own (separately-tested) inverse transform
+    recovered <- getREIT(
+      Lambda       = hsroc_row$Lambda,
+      Theta        = hsroc_row$Theta,
+      beta         = hsroc_row$beta,
+      sigma2_alpha = hsroc_row$sigma2_alpha,
+      sigma2_theta = hsroc_row$sigma2_theta
+    )
+    
+    # Original Reitsma-space estimates for this subgroup, as
+    # actually fitted by fitReitsmaSubgroup()
+    muA_name <- paste0("mu_A.", lsub_safe[i])
+    muB_name <- paste0("mu_B.", lsub_safe[i])
+    
+    original_muA <- fit$estimates_mu[muA_name, "Estimate"]
+    original_muB <- fit$estimates_mu[muB_name, "Estimate"]
+    original_sigma2_A <- fit$estimates_mu["sigma2_A.sens", "Estimate"]
+    original_sigma2_B <- fit$estimates_mu["sigma2_B.spec", "Estimate"]
+    original_sigma_AB <- fit$estimates_mu["sigma_AB", "Estimate"]
+    
+    # Round-trip must recover the original subgroup-specific estimates
+    expect_equal(recovered$mu_A.sens, original_muA,
+                 tolerance = 1e-6,
+                 label = paste("mu_A round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$mu_B.spec, original_muB,
+                 tolerance = 1e-6,
+                 label = paste("mu_B round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$sigma2_A.sens, original_sigma2_A,
+                 tolerance = 1e-6,
+                 label = paste("sigma2_A round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$sigma2_B.spec, original_sigma2_B,
+                 tolerance = 1e-6,
+                 label = paste("sigma2_B round-trip for subgroup", lsub[i]))
+    expect_equal(recovered$sigma_AB, original_sigma_AB,
+                 tolerance = 1e-6,
+                 label = paste("sigma_AB round-trip for subgroup", lsub[i]))
+  }
+})
 
