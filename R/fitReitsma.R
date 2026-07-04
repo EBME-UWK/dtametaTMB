@@ -130,6 +130,7 @@ fitReitsma <- function(data,
   sB_init      <- stats::sd(logit_spec)
   sB_init      <- max(sB_init,1e-05)
   rAB_init     <- max(min(cor(logit_sens,logit_spec),0.99),-0.99)
+  if(is.na(rAB_init)) rAB_init <- 0
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   
   ###

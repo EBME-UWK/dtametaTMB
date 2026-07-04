@@ -204,7 +204,10 @@ fitRutterGatsonisReg <- function(data,
      alpha = rep(0, n_study),
      theta = rep(0, n_study)
     )
+  } else {
+    parameters <- init
   }
+  
   
   dat2$model <- "RutterGatsonisReg"
 

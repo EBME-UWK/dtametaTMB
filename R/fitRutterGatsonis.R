@@ -160,9 +160,10 @@ fitRutterGatsonis <- function(data,
   sA_init      <- max(stats::sd(logit_sens),1e-05)
   sB_init      <- max(stats::sd(logit_spec),1e-05)
   rAB_init     <- max(min(stats::cor(logit_sens,logit_spec),0.99),-0.99)
+  if(is.na(rAB_init)) rAB_init <- 0
   sAB_init     <- rAB_init*sA_init*sB_init
-  init <- getRUGA(lspec    = muA_init,
-                  lsens    = muB_init,
+  init <- getRUGA(lsens    = muA_init,
+                  lspec    = muB_init,
                   sigma_a  = sA_init,
                   sigma_b  = sB_init,
                   sigma_ab = sAB_init)

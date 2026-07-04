@@ -194,11 +194,11 @@ restructure_data <- function(data,
 
   # Check consistency within each study
   check_consistency <- function(df) {
-    if (length(unique(df$D)) > 1) {
+    if (length(unique(df$n1)) > 1) {
       stop(sprintf("Inconsistent diseased counts (TP+FN) within study '%s'.",
                    df$study[1]))
     }
-    if (length(unique(df$H)) > 1) {
+    if (length(unique(df$n0)) > 1) {
       stop(sprintf("Inconsistent non-diseased counts (TN+FP) within study '%s'.",
                    df$study[1]))
     }

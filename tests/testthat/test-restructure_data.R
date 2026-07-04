@@ -135,7 +135,7 @@ test_that("greater and less preserve totals", {
     testdirection="less"
   )
   
-  expect_equal(res1$original$D, res2$original$D)
-  expect_equal(res1$original$H, res2$original$H)
+  expect_equal(res1$original$n1, res2$original$n1)
+  expect_equal(res1$original$n0, res2$original$n0)
 })
 

@@ -140,6 +140,7 @@ initHoyerAFT <- function(restructured, dist="loglogistic") {
   su0_init      <- max(sqrt(ssc[1,1]),1e-5)
   su1_init      <- max(sqrt(ssc[2,2]),1e-5)
   coru0u1_init  <- min(max(cov2cor(ssc)[1,2],-0.99),0.99)
+  if(is.na(coru0u1_init)) coru0u1_init <- 0
   if(dist=="weibull"){ distcode = 1 }
   if(dist=="lognormal"){ distcode = 2 }
   if(dist=="loglogistic"){ distcode = 3 }

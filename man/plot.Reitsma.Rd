@@ -25,7 +25,7 @@ rectangles representing study weights. Default is \code{0.02}.}
 
 \item{size}{Character string controlling study weight display:
 \describe{
-\item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default}
+\item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default.}
 \item{"equal"}{All studies shown with equal size}
 \item{"sampsize"}{Size proportional to sample size}
 \item{"se"}{Size proportional to precision on the logit scale}

@@ -387,12 +387,12 @@ fitReitsmaSubgroup <- function(data,
   scounter <- llsub*2+1
   for(i in 1:llsub){
     j <- 2*i
-    ruga <- getRUGA(lspec=esti_V_g_mu$esti[j-1,"Estimate"],
-                    lsens=esti_V_g_mu$esti[j  ,"Estimate"],
+    ruga <- getRUGA(lsens=esti_V_g_mu$esti[j-1,"Estimate"],
+                    lspec=esti_V_g_mu$esti[j  ,"Estimate"],
                     sigma_a=sqrt(esti_V_g_mu$esti[scounter,"Estimate"]),
                     sigma_b=sqrt(esti_V_g_mu$esti[scounter+1,"Estimate"]),
                     sigma_ab=esti_V_g_mu$esti[scounter+2,"Estimate"])
-    ruga2 <- rbind(ruga,ruga2)
+    ruga2 <- rbind(ruga2,ruga)
   }
   rownames(ruga2) <- lsub
   

@@ -1,7 +1,7 @@
 #' @keywords internal
 #' @noRd
-getRUGA <- function(lspec,
-                    lsens,
+getRUGA <- function(lsens,
+                    lspec,
                     sigma_a,
                     sigma_b,
                     sigma_ab) {

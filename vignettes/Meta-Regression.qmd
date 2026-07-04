@@ -3,7 +3,7 @@ title: "Meta-Regression"
 format: 
    html:
      toc: TRUE
-  #pdf
+ # pdf
 vignette: >
   %\VignetteIndexEntry{Meta-Regression}
   %\VignetteEncoding{UTF-8}
