@@ -13,7 +13,7 @@
 print.RutterGatsonisReg <- function(x, ...) {
   
   cat("\n", "Rutter & Gatsonis Regression Model", "\n", sep = "")
-  cat(strrep("-", nchar("Rutter & Gatsonis Regrssion Model")), "\n\n", sep = "")
+  cat(strrep("-", nchar("Rutter & Gatsonis Regression Model")), "\n\n", sep = "")
   
   n_study <- nrow(x$data)
   converged <- x$fit$convergence == 0

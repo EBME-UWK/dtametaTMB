@@ -12,6 +12,7 @@ fitRutterGatsonis(
   TN,
   study,
   conflevel = 0.95,
+  constrain = NULL,
   spec = NULL,
   verbose = FALSE
 )
@@ -31,6 +32,34 @@ fitRutterGatsonis(
 
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 
+\item{constrain}{Optional character vector specifying model parameters
+that should be fixed at zero during estimation.
+
+This can be useful for sparse data, small meta-analyses, or for
+reproducing simplified HSROC models described in the Cochrane
+Handbook for Diagnostic Test Accuracy Reviews.
+
+Allowed values are:
+\describe{
+\item{"sigma2_alpha"}{
+Fix the between-study variance of the HSROC accuracy random effect
+at zero.
+}
+\item{"sigma2_theta"}{
+Fix the between-study variance of the HSROC threshold random effect
+at zero.
+}
+\item{"shape"}{
+Fix the HSROC shape parameter (beta) at zero, resulting in a symmetric
+summary ROC curve.
+}
+}
+
+Multiple constraints may be specified simultaneously, e.g.
+\code{constrain = c("sigma2_alpha", "shape")}.
+
+If \code{NULL} (default), the unconstrained HSROC model is fitted.}
+
 \item{spec}{Optional specificity value at which sensitivity is estimated.
 If \code{NULL}, the median observed specificity is used as a proxy.}
 
@@ -45,6 +74,7 @@ An object of class \code{"RutterGatsonis"} containing:
 \item{sdreport2}{Summary of reported parameters.}
 \item{sensspec}{Estimated sensitivity at given specificity with confidence intervals.}
 \item{Reitsma_recovered}{Recovered parameters in the Reitsma parameterization.}
+\item{constrain}{Parameters fixed at zero.}
 }
 }
 \description{
@@ -58,6 +88,16 @@ via maximum likelihood using TMB. Random effects are included for study-specific
 accuracy and threshold parameters.
 
 Reitsma parameterization is recovered from the fitted HSROC parameters.
+
+The \code{constrain} argument allows simplified HSROC models to be
+fitted by fixing selected parameters at zero. These constrained models
+may improve numerical stability in sparse datasets and can be used to
+reproduce several simplified models presented in the Cochrane Handbook
+for Diagnostic Test Accuracy Reviews.
+
+Constraints are imposed using parameter mapping within Template Model
+Builder (TMB), so constrained parameters are excluded from numerical
+optimization and treated as fixed constants.
 }
 \note{
 Requires a compiled TMB model named \code{"RutterGatsonis"}.

@@ -10,6 +10,16 @@
 #' accuracy and threshold parameters.
 #'
 #' Reitsma parameterization is recovered from the fitted HSROC parameters.
+#' 
+#' The \code{constrain} argument allows simplified HSROC models to be
+#' fitted by fixing selected parameters at zero. These constrained models
+#' may improve numerical stability in sparse datasets and can be used to
+#' reproduce several simplified models presented in the Cochrane Handbook
+#' for Diagnostic Test Accuracy Reviews.
+#'
+#' Constraints are imposed using parameter mapping within Template Model
+#' Builder (TMB), so constrained parameters are excluded from numerical
+#' optimization and treated as fixed constants.
 #'
 #' @param data A data.frame containing study-level data.
 #' @param TP True positives (column name).
@@ -18,6 +28,33 @@
 #' @param TN True negatives (column name).
 #' @param study Study identifier (column name).
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
+#' @param constrain Optional character vector specifying model parameters
+#'   that should be fixed at zero during estimation.
+#'
+#'   This can be useful for sparse data, small meta-analyses, or for
+#'   reproducing simplified HSROC models described in the Cochrane
+#'   Handbook for Diagnostic Test Accuracy Reviews.
+#'
+#'   Allowed values are:
+#'   \describe{
+#'     \item{"sigma2_alpha"}{
+#'       Fix the between-study variance of the HSROC accuracy random effect
+#'       at zero.
+#'     }
+#'     \item{"sigma2_theta"}{
+#'       Fix the between-study variance of the HSROC threshold random effect
+#'       at zero.
+#'     }
+#'     \item{"shape"}{
+#'       Fix the HSROC shape parameter (beta) at zero, resulting in a symmetric
+#'       summary ROC curve.
+#'     }
+#'   }
+#'
+#'   Multiple constraints may be specified simultaneously, e.g.
+#'   \code{constrain = c("sigma2_alpha", "shape")}.
+#'
+#'   If \code{NULL} (default), the unconstrained HSROC model is fitted.
 #' @param spec Optional specificity value at which sensitivity is estimated.
 #' If \code{NULL}, the median observed specificity is used as a proxy.
 #' @param verbose Whether TMB optimization output should be printed (default: FALSE).
@@ -31,6 +68,7 @@
 #'   \item{sdreport2}{Summary of reported parameters.}
 #'   \item{sensspec}{Estimated sensitivity at given specificity with confidence intervals.}
 #'   \item{Reitsma_recovered}{Recovered parameters in the Reitsma parameterization.}
+#'   \item{constrain}{Parameters fixed at zero.}
 #' }
 #'
 #' @importFrom TMB MakeADFun sdreport
@@ -70,9 +108,44 @@
 #' @importFrom stats complete.cases nlminb median qnorm qlogis sd
 #' @note Requires a compiled TMB model named \code{"RutterGatsonis"}.
 #' @export
-fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NULL,verbose=FALSE){
+fitRutterGatsonis <- function(data,
+                              TP,
+                              FP,
+                              FN,
+                              TN,
+                              study,
+                              conflevel=0.95,
+                              constrain=NULL,
+                              spec=NULL,
+                              verbose=FALSE){
   
-   
+  allowed_constraints <- c(
+    "sigma2_alpha",
+    "sigma2_theta",
+    "shape"
+  )
+  
+  if (!is.null(constrain)) {
+    
+    if (!is.character(constrain)) {
+      stop("'constrain' must be a character vector or NULL.")
+    }
+    
+    invalid_constraints <- setdiff(
+      constrain,
+      allowed_constraints
+    )
+    
+    if (length(invalid_constraints) > 0) {
+      stop(
+        "Unknown constraint(s): ",
+        paste(invalid_constraints,
+              collapse = ", ")
+      )
+    }
+    
+  }
+  
   X <- XP <- check_preprocess_data(data,
                                    TP, FP, FN, TN,
                                    study=study,
@@ -118,12 +191,31 @@ fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NULL,ve
     alpha = rep(0, n_study),
     theta = rep(0, n_study)
   )
+  #################
+  ### Constrain ###
+  #################
+  map <- list()
+  if ("sigma2_alpha" %in% constrain) {
+    parameters$log_sigma_alpha <- log(.Machine$double.eps)
+    map$log_sigma_alpha <- factor(NA)
+  }
+  
+  if ("sigma2_theta" %in% constrain) {
+    parameters$log_sigma_theta <- log(.Machine$double.eps)
+    map$log_sigma_theta <- factor(NA)
+  }
+  
+  if ("shape" %in% constrain) {
+    parameters$beta <- 0
+    map$beta <- factor(NA)
+  }
   
   dat2$model <- "RutterGatsonis"
   
   # TMB Objective
   obj <- TMB::MakeADFun(data=dat2,
                         parameters,
+                        map = if(length(map) == 0) NULL else map,
                         random = c("alpha", "theta"),
                         silent = !verbose,
                         DLL = "dtametaTMB_TMBExports")
@@ -173,7 +265,8 @@ fitRutterGatsonis <- function(data,TP,FP,FN,TN,study,conflevel=0.95,spec=NULL,ve
     sdreport     = rep,
     sdreport2    = rep2,
     sensspec     = sesp,
-    Reitsma_recovered = reit
+    Reitsma_recovered = reit,
+    constrain    = constrain
   )
   
   # Assign class

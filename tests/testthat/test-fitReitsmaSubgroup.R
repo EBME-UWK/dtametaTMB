@@ -37,6 +37,7 @@ test_that("fitReitsmaSubgroup returns expected components", {
       "estimates_nu",
       "vcov_nu",
       "RutterGatsonis_recovered",
+      "constrain",
       "subgroups"
     )
   )
@@ -211,6 +212,183 @@ test_that("all subgroup levels are recovered", {
 })
 
 
+
+
+test_that("fitReitsmaSubgroup validates constrain argument", {
+  
+  expect_error(
+    fitReitsmaSubgroup(
+      data = anticcp,
+      TP = TP,
+      FP = FP,
+      FN = FN,
+      TN = TN,
+      study = study,
+      subgroup = generation,
+      constrain = "banana"
+    ),
+    "constrain"
+  )
+  
+  expect_error(
+    fitReitsmaSubgroup(
+      data = anticcp,
+      TP = TP,
+      FP = FP,
+      FN = FN,
+      TN = TN,
+      study = study,
+      subgroup = generation,
+      constrain = c("sigma_AB", "sigma2_A")
+    ),
+    "constrain"
+  )
+  
+})
+
+
+test_that("fitReitsmaSubgroup sigma_AB fixes covariance", {
+  
+  fit <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    constrain = "sigma_AB"
+  )
+  
+  expect_equal(
+    fit$estimates_mu["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+  expect_equal(
+    fit$estimates_nu["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+test_that("fitReitsmaSubgroup sigma2_A fixes sensitivity variance", {
+  
+  fit <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    constrain = "sigma2_A"
+  )
+  
+  expect_lt(
+    fit$estimates_mu["sigma2_A.sens", "Estimate"],
+    1e-12
+  )
+  
+  expect_lt(
+    fit$estimates_nu["sigma2_A.sens", "Estimate"],
+    1e-12
+  )
+  
+  expect_equal(
+    fit$estimates_mu["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+test_that("fitReitsmaSubgroup sigma2_B fixes specificity variance", {
+  
+  fit <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    constrain = "sigma2_B"
+  )
+  
+  expect_lt(
+    fit$estimates_mu["sigma2_B.spec", "Estimate"],
+    1e-12
+  )
+  
+  expect_lt(
+    fit$estimates_nu["sigma2_B.spec", "Estimate"],
+    1e-12
+  )
+  
+  expect_equal(
+    fit$estimates_mu["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+test_that("fitReitsmaSubgroup all fixes all random-effects parameters", {
+  
+  fit <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    constrain = "all"
+  )
+  
+  expect_lt(
+    fit$estimates_mu["sigma2_A.sens", "Estimate"],
+    1e-12
+  )
+  
+  expect_lt(
+    fit$estimates_mu["sigma2_B.spec", "Estimate"],
+    1e-12
+  )
+  
+  expect_equal(
+    fit$estimates_mu["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+test_that("fitReitsmaSubgroup still estimates subgroup means", {
+  
+  fit <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    constrain = "all"
+  )
+  
+  expect_true(
+    all(
+      is.finite(
+        fit$estimates_mu$Estimate
+      )
+    )
+  )
+  
+})
 
 
 

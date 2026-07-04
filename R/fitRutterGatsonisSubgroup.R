@@ -24,8 +24,43 @@
 #' @param TN True negatives (column name).
 #' @param study Study identifier (column name).
 #' @param subgroup A single categorical study-level subgroup variable (column name).
-#' @param shape Whether subgroup-specific shape parameters should be modelled. 
-#' If \code{FALSE} (default), a common shape parameter is assumed across subgroups.
+#' @param constrain Optional character vector specifying model parameters
+#'   that should be constrained during estimation.
+#'
+#'   This can be useful for sparse data, small meta-analyses, or for
+#'   reproducing simplified HSROC models described in the Cochrane
+#'   Handbook for Diagnostic Test Accuracy Reviews.
+#'
+#'   Allowed values are:
+#'   \describe{
+#'     \item{"sigma2_alpha"}{
+#'       Fix the between-study variance of the HSROC accuracy random effect
+#'       at zero.
+#'     }
+#'     \item{"sigma2_theta"}{
+#'       Fix the between-study variance of the HSROC threshold random effect
+#'       at zero.
+#'     }
+#'     \item{"accuracy"}{
+#'       No subgroup effect on accuracy.
+#'     }
+#'     \item{"threshold"}{
+#'       No subgroup effect on threshold.
+#'     }
+#'     \item{"shape"}{
+#'       No subgroup effect on shape.
+#'     }
+#'     \item{"shape_zero"}{
+#'       All shape parameters (beta's) are fixed at zero.
+#'     }
+#'   }
+#'
+#'   Multiple constraints may be specified simultaneously, e.g.
+#'   \code{constrain = c("sigma2_alpha", "shape")}.
+#'   
+#'   \code{shape_zero} overrides \code{shape}.
+#'
+#'   If \code{NULL} (default), the unconstrained HSROC model is fitted.
 #' @param spec Optional specificity value or vector of specificity values at which
 #' sensitivity is estimated. If \code{NULL}, the median observed specificity is
 #' used as a proxy.
@@ -42,6 +77,7 @@
 #'   \item{sensspec}{Estimated subgroup-specific sensitivities at the given
 #'   specificity value(s), with confidence intervals.}
 #'   \item{subgroups}{The subgroup levels used in the model fit.}
+#'   \item{constrain}{Constraints on parameters applied during model fitting.}
 #' }
 #'
 #' @importFrom TMB MakeADFun sdreport
@@ -82,17 +118,44 @@ fitRutterGatsonisSubgroup <- function(data,
                                       TP, FP, FN, TN,
                                       study,
                                       subgroup,
-                                      shape=FALSE,
+                                      constrain=NULL,
                                       spec=NULL,
                                       conflevel=0.95,
                                       verbose=FALSE){
   
-  if(!is.logical(shape)){
-    stop("'shape' must be 'TRUE' or 'FALSE'.")
-  }
   
   if (!is.data.frame(data)) {
     stop("'data' must be a data.frame.")
+  }
+  
+  allowed_constraints <- c(
+    "sigma2_alpha",
+    "sigma2_theta",
+    "accuracy",
+    "threshold",
+    "shape",
+    "shape_zero"
+  )
+  
+  if (!is.null(constrain)) {
+    
+    if (!is.character(constrain)) {
+      stop("'constrain' must be a character vector or NULL.")
+    }
+    
+    invalid_constraints <- setdiff(
+      constrain,
+      allowed_constraints
+    )
+    
+    if (length(invalid_constraints) > 0) {
+      stop(
+        "Unknown constraint(s): ",
+        paste(invalid_constraints,
+              collapse = ", ")
+      )
+    }
+    
   }
   
   TP_col       <- deparse(substitute(TP))
@@ -118,8 +181,8 @@ fitRutterGatsonisSubgroup <- function(data,
     )
   }
   X <- X[stats::complete.cases(X), ]
-  X$subgroup <- factor(make.names(X$subgroup))
-   
+  X$subgroup <- factor(X$subgroup)
+  
   XP <- getXP(X=X)
   # Get starting values
   init <- fitRutterGatsonis(data=X,
@@ -127,7 +190,8 @@ fitRutterGatsonisSubgroup <- function(data,
                             TN=TN,
                             FN=FN,
                             FP=FP,
-                            study=study)$sdreport
+                            study=study,
+                            constrain=NULL)$sdreport
   Lambda_init  <- init$par.fixed["Lambda"]
   Theta_init   <- init$par.fixed["Theta"]
   beta_init    <- init$par.fixed["beta"]
@@ -139,7 +203,6 @@ fitRutterGatsonisSubgroup <- function(data,
   # Construct Z and Z_pred
   lsub   <- levels(Y$subgroup)
   llsub  <- length(lsub)
-  lsub <- levels(Y$subgroup)
   if(llsub== 1){
     Z <- matrix(1, nrow = nrow(Y), ncol = 1)
     Z_pred <- matrix(1, nrow = 1, ncol = 1)
@@ -171,22 +234,36 @@ fitRutterGatsonisSubgroup <- function(data,
   
   dat2$model <- "RutterGatsonisReg"
   
-  if(!shape){
-    map <- list(shape_coef = factor(c(1, rep(NA,ngroup-1))))
-    obj <- TMB::MakeADFun(dat2,
+  map <- list()
+  if("accuracy" %in% constrain){
+    map$accuracy_coef = factor(c(1, rep(NA,ngroup-1)))
+  }
+  if("threshold" %in% constrain){
+    map$threshold_coef = factor(c(1, rep(NA,ngroup-1)))
+  }
+  if("shape" %in% constrain){
+    map$shape_coef = factor(c(1, rep(NA,ngroup-1)))
+  }
+  if("shape_zero" %in% constrain) {
+    parameters$shape_coef <- rep(0,ngroup)
+    map$shape_coef <- factor(rep(NA,ngroup))
+  }
+  if("sigma2_alpha" %in% constrain) {
+    parameters$log_sigma_alpha <- log(.Machine$double.eps)
+    map$log_sigma_alpha <- factor(NA)
+  }
+  
+  if("sigma2_theta" %in% constrain) {
+    parameters$log_sigma_theta <- log(.Machine$double.eps)
+    map$log_sigma_theta <- factor(NA)
+  }
+ 
+  obj <- TMB::MakeADFun(dat2,
                           parameters,
-                          map=map,
+                          map=if(length(map) == 0) NULL else map,
                           random = c("alpha", "theta"),
                           silent=!verbose,
                           DLL = "dtametaTMB_TMBExports")
-  }
-  if(shape){
-    obj <- TMB::MakeADFun(dat2,
-                          parameters,
-                          random = c("alpha", "theta"),
-                          silent=!verbose,
-                          DLL = "dtametaTMB_TMBExports") 
-  }
   
   fit  <- stats::nlminb(obj$par, 
                         obj$fn, 
@@ -245,6 +322,7 @@ fitRutterGatsonisSubgroup <- function(data,
     sdreport2    = rep2,
     sensspec     = sesp,
     Reitsma_recovered = reit2,
+    constrain    = constrain,
     subgroups    = lsub
   )
   class(res) <- c("RutterGatsonisSubgroup","CochraneSubgroup")

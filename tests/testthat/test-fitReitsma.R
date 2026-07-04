@@ -21,7 +21,7 @@ test_that("fitReitsma runs with data frame input", {
   
   expect_named(fit, c(
     "data", "glmmTMB", "estimates", "vcov",
-    "sensspec", "LRDOR", "RutterGatsonis_recovered"
+    "sensspec", "LRDOR", "RutterGatsonis_recovered","constrain"
   ))
 })
 
@@ -161,4 +161,195 @@ test_that("alpha affects CI width in estimates", {
   width2 <- fit2$estimates$CI_Upper - fit2$estimates$CI_Lower
   
   expect_true(all(width2 < width1))
+})
+
+test_that("fitReitsma validates constrain argument", {
+  
+  expect_error(
+    fitReitsma(
+      data = RF,
+      TP = TP,
+      FP = FP,
+      FN = FN,
+      TN = TN,
+      study = study,
+      constrain = "banana"
+    ),
+    "constrain"
+  )
+  
+  expect_error(
+    fitReitsma(
+      data = RF,
+      TP = TP,
+      FP = FP,
+      FN = FN,
+      TN = TN,
+      study = study,
+      constrain = c("sigma_AB", "sigma2_A")
+    ),
+    "constrain"
+  )
+  
+})
+
+test_that("sigma_AB constraint fixes covariance to zero", {
+  
+  fit <- fitReitsma(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "sigma_AB"
+  )
+  
+  expect_equal(
+    fit$estimates["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+
+test_that("sigma2_A constraint fixes variance and covariance", {
+  
+  fit <- fitReitsma(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "sigma2_A"
+  )
+  
+  expect_lt(
+    fit$estimates["sigma2_A.sens", "Estimate"],
+    1e-12
+  )
+  
+  expect_equal(
+    fit$estimates["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+
+test_that("sigma2_B constraint fixes variance and covariance", {
+  
+  fit <- fitReitsma(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "sigma2_B"
+  )
+  
+  expect_lt(
+    fit$estimates["sigma2_B.spec", "Estimate"],
+    1e-12
+  )
+  
+  expect_equal(
+    fit$estimates["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+
+test_that("all constraint removes all heterogeneity", {
+  
+  fit <- fitReitsma(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "all"
+  )
+  
+  expect_lt(
+    fit$estimates["sigma2_A.sens", "Estimate"],
+    1e-12
+  )
+  
+  expect_lt(
+    fit$estimates["sigma2_B.spec", "Estimate"],
+    1e-12
+  )
+  
+  expect_equal(
+    fit$estimates["sigma_AB", "Estimate"],
+    0,
+    tolerance = 1e-8
+  )
+  
+})
+
+
+test_that("fixed effects are still estimated under constraints", {
+  
+  fit <- fitReitsma(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "all"
+  )
+  
+  expect_true(
+    is.finite(
+      fit$estimates["mu_A.sens", "Estimate"]
+    )
+  )
+  
+  expect_true(
+    is.finite(
+      fit$estimates["mu_B.spec", "Estimate"]
+    )
+  )
+  
+})
+
+
+test_that("unconstrained model differs from constrained model", {
+  
+  fit0 <- fitReitsma(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study
+  )
+  
+  fit1 <- fitReitsma(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "sigma_AB"
+  )
+  
+  expect_false(
+    identical(
+      fit0$estimates["sigma_AB", "Estimate"],
+      fit1$estimates["sigma_AB", "Estimate"]
+    )
+  )
+  
 })

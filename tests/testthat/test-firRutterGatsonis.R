@@ -20,7 +20,7 @@ test_that("fitRutterGatsonis runs with data frame input", {
   expect_type(fit, "list")
   expect_named(fit, c(
     "data", "fit", "sdreport", "sdreport2",
-    "sensspec", "Reitsma_recovered"
+    "sensspec", "Reitsma_recovered","constrain"
   ))
 })
 
@@ -142,4 +142,116 @@ test_that("custom spec is respected", {
   fit <- fitRutterGatsonis(dat, TP, FP, FN, TN, study, spec = 0.8)
   
   expect_equal(fit$sensspec$spec[1], 0.8)
+})
+
+
+test_that("fitRutterGatsonis validates constraints", {
+  
+  expect_error(
+    fitRutterGatsonis(
+      data = RF,
+      TP = TP,
+      FP = FP,
+      FN = FN,
+      TN = TN,
+      study = study,
+      constrain = "banana"
+    ),
+    "Unknown constraint"
+  )
+  
+  expect_error(
+    fitRutterGatsonis(
+      data = RF,
+      TP = TP,
+      FP = FP,
+      FN = FN,
+      TN = TN,
+      study = study,
+      constrain = c("shape", "banana")
+    ),
+    "Unknown constraint"
+  )
+  
+})
+
+
+
+test_that("sigma2_alpha constraint fixes alpha variance", {
+  
+  fit <- fitRutterGatsonis(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "sigma2_alpha"
+  )
+  
+  expect_lt(
+    fit$sdreport$value["sigma2_alpha"],
+    1e-12
+  )
+  
+  expect_true(
+    fit$sdreport$value["sigma2_theta"] > 0
+  )
+  
+})
+
+test_that("sigma2_theta constraint fixes theta variance", {
+  
+  fit <- fitRutterGatsonis(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "sigma2_theta"
+  )
+  
+  expect_lt(
+    fit$sdreport$value["sigma2_theta"],
+    1e-12
+  )
+  
+  expect_true(
+    fit$sdreport$value["sigma2_alpha"] > 0
+  )
+  
+})
+
+
+test_that("shape constraint fixes beta", {
+  
+  fit0 <- fitRutterGatsonis(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study
+  )
+  
+  fit1 <- fitRutterGatsonis(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    constrain = "shape"
+  )
+  
+  expect_false(
+    isTRUE(
+      all.equal(
+        fit0$Reitsma_recovered,
+        fit1$Reitsma_recovered
+      )
+    )
+  )
+  
 })

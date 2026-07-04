@@ -12,7 +12,7 @@ fitRutterGatsonisSubgroup(
   TN,
   study,
   subgroup,
-  shape = FALSE,
+  constrain = NULL,
   spec = NULL,
   conflevel = 0.95,
   verbose = FALSE
@@ -33,8 +33,43 @@ fitRutterGatsonisSubgroup(
 
 \item{subgroup}{A single categorical study-level subgroup variable (column name).}
 
-\item{shape}{Whether subgroup-specific shape parameters should be modelled.
-If \code{FALSE} (default), a common shape parameter is assumed across subgroups.}
+\item{constrain}{Optional character vector specifying model parameters
+that should be constrained during estimation.
+
+This can be useful for sparse data, small meta-analyses, or for
+reproducing simplified HSROC models described in the Cochrane
+Handbook for Diagnostic Test Accuracy Reviews.
+
+Allowed values are:
+\describe{
+\item{"sigma2_alpha"}{
+Fix the between-study variance of the HSROC accuracy random effect
+at zero.
+}
+\item{"sigma2_theta"}{
+Fix the between-study variance of the HSROC threshold random effect
+at zero.
+}
+\item{"accuracy"}{
+No subgroup effect on accuracy.
+}
+\item{"threshold"}{
+No subgroup effect on threshold.
+}
+\item{"shape"}{
+No subgroup effect on shape.
+}
+\item{"shape_zero"}{
+All shape parameters (beta's) are fixed at zero.
+}
+}
+
+Multiple constraints may be specified simultaneously, e.g.
+\code{constrain = c("sigma2_alpha", "shape")}.
+
+\code{shape_zero} overrides \code{shape}.
+
+If \code{NULL} (default), the unconstrained HSROC model is fitted.}
 
 \item{spec}{Optional specificity value or vector of specificity values at which
 sensitivity is estimated. If \code{NULL}, the median observed specificity is
@@ -54,6 +89,7 @@ An object of class \code{"RutterGatsonisSubgroup"} containing:
 \item{sensspec}{Estimated subgroup-specific sensitivities at the given
 specificity value(s), with confidence intervals.}
 \item{subgroups}{The subgroup levels used in the model fit.}
+\item{constrain}{Constraints on parameters applied during model fitting.}
 }
 }
 \description{

@@ -12,6 +12,36 @@
 #' @param TN True negatives (column name).
 #' @param study Study identifier (column name).
 #' @param subgroup A single categorical study-level subgroup variable (column name).
+#' @param constrain Optional character string specifying a simplified
+#'   covariance structure for the Reitsma model.
+#'
+#'   This can be useful for sparse data, small meta-analyses, or for
+#'   reproducing simplified bivariate models described in the Cochrane
+#'   Handbook for Diagnostic Test Accuracy Reviews.
+#'
+#'   Allowed values are:
+#'   \describe{
+#'     \item{\code{NULL}}{
+#'       The standard unconstrained Reitsma model is fitted.
+#'     }
+#'     \item{\code{"sigma_AB"}}{
+#'       The covariance between logit-sensitivity and
+#'       logit-specificity random effects is fixed at zero.
+#'       Random effects remain independent.
+#'     }
+#'     \item{\code{"sigma2_A"}}{
+#'       The between-study variance of logit-sensitivity is fixed at zero.
+#'       This also implies a zero covariance.
+#'     }
+#'     \item{\code{"sigma2_B"}}{
+#'       The between-study variance of logit-specificity is fixed at zero.
+#'       This also implies a zero covariance.
+#'     }
+#'     \item{\code{"all"}}{
+#'       All random-effects variance and covariance parameters are fixed
+#'       at zero, resulting in a fixed-effects model.
+#'     }
+#'   }
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
 #'
 #' @return A list of class \code{"ReitsmaSubgroup"} with components:
@@ -26,6 +56,7 @@
 #'   \item \code{vcov_nu}: variance-covariance matrix with dummy/reference-cell parameterization.
 #'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #'   \item \code{subgroups}: The subgroup levels used in the model fit.
+#'   \item \code{constrain}: Random effects parameters fixed at zero.
 #' }
 #'
 #' @examples
@@ -62,8 +93,10 @@
 #' @export
 fitReitsmaSubgroup <- function(data,
                        TP, FP, FN, TN,
+                       study,
                        subgroup,
-                       study, conflevel=0.95) {
+                       constrain=NULL,
+                       conflevel=0.95) {
   
   if (!is.data.frame(data)) {
     stop("'data' must be a data.frame.")
@@ -93,9 +126,13 @@ fitReitsmaSubgroup <- function(data,
   }
   X <- X[stats::complete.cases(X), ]
 
-  X$subgroup <- factor(make.names(X$subgroup))
+  
+  X$subgroup <- factor(X$subgroup)
   lsub       <- levels(X$subgroup)
   llsub      <- length(lsub)
+  lsub_safe  <- make.names(lsub)
+  X$subgroup_safe <- factor(make.names(X$subgroup),levels=lsub_safe)
+  
   XP <- getXP(X=X)
   
   ### Get initial values
@@ -111,17 +148,75 @@ fitReitsmaSubgroup <- function(data,
   rAB_init     <- sAB_init/(sA_init*sB_init)
   rAB_init     <- max(min(rAB_init,0.99),-0.99)
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
+  ###
+  start_list_nu<- list(beta=c(muA_init,rep(0,llsub-1),muB_init,rep(0,llsub-1)),
+                       theta=c(log(sA_init),log(sB_init),theta3_init))
+  start_list_mu<- list(beta=c(rep(muA_init,llsub),rep(muB_init,llsub)),
+                       theta=c(log(sA_init),log(sB_init),theta3_init))
+  ### Constraints
+  
+  allowed_constraints <- c(
+    "sigma_AB",
+    "sigma2_A",
+    "sigma2_B",
+    "all"
+  )
+  
+  if (!is.null(constrain)) {
+    if (!is.character(constrain) ||
+        length(constrain) != 1 ||
+        !constrain %in% allowed_constraints) {
+      stop(
+        "'constrain' must be one of: ",
+        paste(shQuote(allowed_constraints), collapse = ", "),
+        " or NULL."
+      )
+    }
+  }
+  
+  map <- list()
+  
+  if(!is.null(constrain)){
+    if (constrain == "sigma_AB") {
+      start_list_mu$theta[3] <- 0
+      start_list_nu$theta[3] <- 0
+      map$theta <- factor(c(1,2,NA))
+    }
+    if (constrain == "sigma2_A") {
+      start_list_mu$theta[1] <- log(.Machine$double.eps)
+      start_list_mu$theta[3] <- 0
+      start_list_nu$theta[1] <- log(.Machine$double.eps)
+      start_list_nu$theta[3] <- 0
+      map$theta <- factor(c(NA,1,NA))
+    }
+    if (constrain == "sigma2_B") {
+      start_list_mu$theta[2] <- log(.Machine$double.eps)
+      start_list_mu$theta[3] <- 0
+      start_list_nu$theta[2] <- log(.Machine$double.eps)
+      start_list_nu$theta[3] <- 0
+      map$theta <- factor(c(1,NA,NA))
+    }
+    if (constrain == "all") {
+      start_list_mu$theta[1] <- log(.Machine$double.eps)
+      start_list_mu$theta[2] <- log(.Machine$double.eps)
+      start_list_mu$theta[3] <- 0
+      start_list_nu$theta[1] <- log(.Machine$double.eps)
+      start_list_nu$theta[2] <- log(.Machine$double.eps)
+      start_list_nu$theta[3] <- 0
+      map$theta <- factor(c(NA,NA,NA))
+    }
+  }
   
   ### resphaping the data
   Y    <- reshapeX_REIT(X)
   ### Fitting the Reitsma model
-  muA_name <- paste0("mu_A.",lsub[1])
-  muB_name <- paste0("mu_B.",lsub[1])
+  muA_name <- paste0("mu_A.",lsub_safe[1])
+  muB_name <- paste0("mu_B.",lsub_safe[1])
   Y[[muA_name]] <- Y$sens
   Y[[muB_name]] <- Y$spec
   ###
-  nuA_names <- paste0("nu_A.", lsub[-1])
-  nuB_names <- paste0("nu_B.", lsub[-1])
+  nuA_names <- paste0("nu_A.", lsub_safe[-1])
+  nuB_names <- paste0("nu_B.", lsub_safe[-1])
   if(llsub==1){ 
     nuA_names <- nuB_names <- "" 
   } else {
@@ -140,8 +235,8 @@ fitReitsmaSubgroup <- function(data,
   
   MA_Y_nu <- glmmTMB::glmmTMB(formula=form, 
                               data=Y, family=stats::binomial(link="logit"),
-                              start=list(beta=c(muA_init,rep(0,llsub-1),muB_init,rep(0,llsub-1)),
-                                        theta=c(log(sA_init),log(sB_init),theta3_init)))
+                              start=start_list_nu,
+                              map = if (length(map) == 0) NULL else map)
   if (MA_Y_nu$fit$convergence != 0) {
     warning(
       "TMB optimization did not converge. ",
@@ -159,8 +254,8 @@ fitReitsmaSubgroup <- function(data,
   esti       <- esti_V_g_nu$esti
   ####
   ####
-  muA_names <- paste0("mu_A.", lsub)
-  muB_names <- paste0("mu_B.", lsub)
+  muA_names <- paste0("mu_A.", lsub_safe)
+  muB_names <- paste0("mu_B.", lsub_safe)
   for (j in 1:llsub) {
     Y[[muA_names[j]]] <- as.numeric(Y$subgroup == lsub[j]) * Y$sens
     Y[[muB_names[j]]] <- as.numeric(Y$subgroup == lsub[j]) * Y$spec
@@ -175,8 +270,8 @@ fitReitsmaSubgroup <- function(data,
   ####
   MA_Y_mu <- glmmTMB::glmmTMB(formula=form,
                               data=Y, family=stats::binomial(link="logit"),
-                              start=list(beta=c(rep(muA_init,llsub),rep(muB_init,llsub)),
-                                         theta=c(log(sA_init),log(sB_init),theta3_init)))
+                              start=start_list_mu,
+                              map = if (length(map) == 0) NULL else map)
   if (MA_Y_mu$fit$convergence != 0) {
     warning(
       "TMB optimization did not converge. ",
@@ -228,6 +323,7 @@ fitReitsmaSubgroup <- function(data,
               estimates_nu = esti_V_g_nu$esti,
               vcov_nu      = esti_V_g_nu$V_g,
               RutterGatsonis_recovered = ruga2,
+              constrain    = constrain,
               subgroups    = lsub)
   class(ret) <- c("ReitsmaSubgroup","CochraneSubgroup")
   return(ret)

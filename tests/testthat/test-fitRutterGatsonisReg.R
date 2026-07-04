@@ -118,9 +118,7 @@ test_that("RutterGatsonisReg fits with shape = FALSE", {
     FN = FN,
     TN = TN,
     study = study,
-    Z = Z,
-    shape = FALSE
-  )
+    Z = Z)
   
   expect_equal(fit$fit$convergence, 0)
 })
@@ -140,7 +138,6 @@ test_that("RutterGatsonisReg fits with shape = TRUE", {
     TN = TN,
     study = study,
     Z = Z,
-    shape = TRUE
   )
   
   expect_equal(fit$fit$convergence, 0)

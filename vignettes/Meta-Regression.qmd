@@ -1,9 +1,9 @@
 ---
 title: "Meta-Regression"
 format: 
-   html:
-     toc: TRUE
- # pdf
+  # html:
+   #  toc: TRUE
+  pdf
 vignette: >
   %\VignetteIndexEntry{Meta-Regression}
   %\VignetteEncoding{UTF-8}
@@ -25,7 +25,7 @@ This vignette introduces the regression functionality of the `dtametaTMB` packag
 
 ## Validation
 
-The subgroup HSROC implementation reproduces the Cochrane Handbook RF example closely, including the baseline HSROC parameters (accuracy, threshold, shape), between-study variance estimates, and subgroup effects on accuracy and threshold.
+The subgroup HSROC and Reitsma implementations reproduce the Cochrane Handbook RF and anticcp examples closely, including the baseline parameters (HSROC: accuracy, threshold, shape // Reitsma: logit sensitivity and specificity), between-study variance estimates, and subgroup effects on accuracy and threshold.
 Small numerical differences may arise from optimizer settings, numerical tolerances, and implementation details, but all benchmark estimates and standard errors were recovered to close agreement.
 
 ## Dummy-coding vs. cell-means parameterization
@@ -35,7 +35,7 @@ In the reference-group parameterization, one subgroup serves as the baseline and
 In the group-specific (cell-means) parameterization, each subgroup has its own parameter directly.
 The former is convenient for testing subgroup differences, whereas the latter is convenient for reporting subgroup-specific estimates and plotting subgroup-specific HSROC curves.
 The Reitsma subgroup model is fitted twice with both parameterizations.
-The subgroup HSROC model is estimated using a reference-group parameterization, and subgroup-specific parameters are recovered by evaluating the fitted linear predictors at subgroup-specific design points via $\boldsymbol{Z}_pred$.
+The subgroup HSROC model is estimated using a reference-group parameterization, and subgroup-specific parameters are recovered by evaluating the fitted linear predictors at subgroup-specific design points via $\boldsymbol{Z}_\mathrm{pred}$.
 
 ## How do we include covariates in the Reitsma model?
 
@@ -206,7 +206,8 @@ ruttergatsonissub <- fitRutterGatsonisSubgroup(data=RF2,
                                                FN=FN,
                                                TN=TN,
                                                study=study,
-                                               subgroup=method)
+                                               subgroup=method,
+                                               constrain="shape")
 ```
 
 ```{r}
@@ -234,7 +235,7 @@ plot(ruttergatsonissub,
 Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
 ```{r}
-#| fig.height: 12.5
+#| fig.height: 13
 #| fig.width: 13
 #| echo: TRUE
 forest(ruttergatsonissub,subgroup_label = "Method")
@@ -248,11 +249,14 @@ Let's reproduce the subgroup-analysis from before.
 
 ```{r}
 #| echo: TRUE
+# Specify design matrix Z
 Z  <- model.matrix(~method,data=RF2)
-# For study level-covariates, we need to two identical consective 
+# For study level-covariates, we need to two identical consecutive 
 # rows per study (diseased and non-diseased).
 Z2 <- Z[rep(seq_len(nrow(Z)), each = 2), , drop = FALSE]
+# Specify prediction matrix Z_pred
 Z_pred <- matrix(c(1,0,0,1,1,0,1,0,1),ncol=3,nrow=3,byrow=T)
+constrain <- list(shape_coef=factor(c(1, rep(NA, ncol(Z2) - 1))))
 
 ruttergatsonisreg <- fitRutterGatsonisReg(data=RF2,
                                           TP=TP,
@@ -261,7 +265,9 @@ ruttergatsonisreg <- fitRutterGatsonisReg(data=RF2,
                                           TN=TN,
                                           study=study,
                                           Z=Z2,
-                                          Z_pred=Z_pred)
+                                          Z_pred=Z_pred,
+                                          map=constrain)
+
 ruttergatsonisreg
 summary(ruttergatsonisreg)
 ```

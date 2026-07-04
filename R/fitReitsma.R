@@ -8,7 +8,37 @@
 #' @param FP False positives (column name).
 #' @param FN False negatives (column name).
 #' @param TN True negatives (column name).
-#' @param study Study identifier (column name).
+#' @param study Study identifier (column name). 
+#' @param constrain Optional character string specifying a simplified
+#'   covariance structure for the Reitsma model.
+#'
+#'   This can be useful for sparse data, small meta-analyses, or for
+#'   reproducing simplified bivariate models described in the Cochrane
+#'   Handbook for Diagnostic Test Accuracy Reviews.
+#'
+#'   Allowed values are:
+#'   \describe{
+#'     \item{\code{NULL}}{
+#'       The standard unconstrained Reitsma model is fitted.
+#'     }
+#'     \item{\code{"sigma_AB"}}{
+#'       The covariance between logit-sensitivity and
+#'       logit-specificity random effects is fixed at zero.
+#'       Random effects remain independent.
+#'     }
+#'     \item{\code{"sigma2_A"}}{
+#'       The between-study variance of logit-sensitivity is fixed at zero.
+#'       This also implies a zero covariance.
+#'     }
+#'     \item{\code{"sigma2_B"}}{
+#'       The between-study variance of logit-specificity is fixed at zero.
+#'       This also implies a zero covariance.
+#'     }
+#'     \item{\code{"all"}}{
+#'       All random-effects variance and covariance parameters are fixed
+#'       at zero, resulting in a fixed-effects model.
+#'     }
+#'   }
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
 #'
 #' @return A list of class \code{"Reitsma"} with components:
@@ -20,6 +50,7 @@
 #'   \item \code{sensspec}: sensitivity and specificity estimates.
 #'   \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
 #'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
+#'   \item \code{constrain}: Random effects parameters fixed at zero.
 #' }
 #'
 #' @examples
@@ -56,7 +87,9 @@
 #' @export
 fitReitsma <- function(data,
                        TP, FP, FN, TN,
-                       study, conflevel=0.95) {
+                       study,
+                       constrain=NULL,
+                       conflevel=0.95) {
   
   X <- XP <- check_preprocess_data(data,
                                    TP=TP,
@@ -65,6 +98,26 @@ fitReitsma <- function(data,
                                    TN=TN,
                                    study=study,
                                    conflevel=conflevel)
+  
+  allowed_constraints <- c(
+    "sigma_AB",
+    "sigma2_A",
+    "sigma2_B",
+    "all"
+  )
+  
+  if (!is.null(constrain)) {
+    if (!is.character(constrain) ||
+        length(constrain) != 1 ||
+        !constrain %in% allowed_constraints) {
+      stop(
+        "'constrain' must be one of: ",
+        paste(shQuote(allowed_constraints), collapse = ", "),
+        " or NULL."
+      )
+    }
+  }
+
   XP <- getXP(X=XP)
   
   ### Get initial values
@@ -79,13 +132,42 @@ fitReitsma <- function(data,
   rAB_init     <- max(min(cor(logit_sens,logit_spec),0.99),-0.99)
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   
+  ###
+  start_list   <- list(beta=c(muA_init,muB_init),
+                       theta=c(log(sA_init),log(sB_init),theta3_init))
+  
+  map <- list()
+  
+  if(!is.null(constrain)){
+    if (constrain == "sigma_AB") {
+      start_list$theta[3] <- 0
+      map$theta <- factor(c(1,2,NA))
+    }
+    if (constrain == "sigma2_A") {
+      start_list$theta[1] <- log(.Machine$double.eps)
+      start_list$theta[3] <- 0
+      map$theta <- factor(c(NA,1,NA))
+    }
+    if (constrain == "sigma2_B") {
+      start_list$theta[2] <- log(.Machine$double.eps)
+      start_list$theta[3] <- 0
+      map$theta <- factor(c(1,NA,NA))
+    }
+    if (constrain == "all") {
+      start_list$theta[1] <- log(.Machine$double.eps)
+      start_list$theta[2] <- log(.Machine$double.eps)
+      start_list$theta[3] <- 0
+      map$theta <- factor(c(NA,NA,NA))
+    }
+  }
+  
   ### resphaping the data
   Y    <- reshapeX_REIT(X)
   ### Fitting the Reitsma model
   MA_Y <- glmmTMB::glmmTMB(formula=cbind(true, n - true) ~ 0 + sens + spec + (0+sens + spec | recordid), 
                            data=Y, family=stats::binomial(link="logit"),
-                           start=list(beta=c(muA_init,muB_init),
-                                      theta=c(log(sA_init),log(sB_init),theta3_init)))
+                           start=start_list,
+                           map = if(length(map) == 0) NULL else map)
   if (MA_Y$fit$convergence != 0) {
     warning(
       "TMB optimization did not converge. ",
@@ -135,7 +217,8 @@ fitReitsma <- function(data,
               vcov      = esti_V_g$V_g,
               sensspec  = sesp,
               LRDOR     = lrdor,
-              RutterGatsonis_recovered = ruga)
+              RutterGatsonis_recovered = ruga,
+              constrain = constrain)
   class(ret) <- c("Reitsma","Cochrane")
   return(ret)
 }

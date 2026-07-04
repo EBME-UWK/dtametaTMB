@@ -4,7 +4,7 @@
 \alias{fitReitsma}
 \title{Fit Reitsma Model}
 \usage{
-fitReitsma(data, TP, FP, FN, TN, study, conflevel = 0.95)
+fitReitsma(data, TP, FP, FN, TN, study, constrain = NULL, conflevel = 0.95)
 }
 \arguments{
 \item{data}{A data.frame containing study-level data.}
@@ -19,6 +19,37 @@ fitReitsma(data, TP, FP, FN, TN, study, conflevel = 0.95)
 
 \item{study}{Study identifier (column name).}
 
+\item{constrain}{Optional character string specifying a simplified
+covariance structure for the Reitsma model.
+
+This can be useful for sparse data, small meta-analyses, or for
+reproducing simplified bivariate models described in the Cochrane
+Handbook for Diagnostic Test Accuracy Reviews.
+
+Allowed values are:
+\describe{
+\item{\code{NULL}}{
+The standard unconstrained Reitsma model is fitted.
+}
+\item{\code{"sigma_AB"}}{
+The covariance between logit-sensitivity and
+logit-specificity random effects is fixed at zero.
+Random effects remain independent.
+}
+\item{\code{"sigma2_A"}}{
+The between-study variance of logit-sensitivity is fixed at zero.
+This also implies a zero covariance.
+}
+\item{\code{"sigma2_B"}}{
+The between-study variance of logit-specificity is fixed at zero.
+This also implies a zero covariance.
+}
+\item{\code{"all"}}{
+All random-effects variance and covariance parameters are fixed
+at zero, resulting in a fixed-effects model.
+}
+}}
+
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 }
 \value{
@@ -31,6 +62,7 @@ A list of class \code{"Reitsma"} with components:
 \item \code{sensspec}: sensitivity and specificity estimates.
 \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
 \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
+\item \code{constrain}: Random effects parameters fixed at zero.
 }
 }
 \description{

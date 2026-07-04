@@ -13,7 +13,7 @@ fitRutterGatsonisReg(
   study = study,
   Z,
   Z_pred = NULL,
-  shape = FALSE,
+  map = NULL,
   init = NULL,
   spec = NULL,
   conflevel = 0.95,
@@ -48,9 +48,25 @@ at which predictions are evaluated. The number of columns of
 predictions, users will typically want to specify \code{Z_pred}
 explicitly.}
 
-\item{shape}{Logical indicating whether covariate effects are estimated
-for the shape parameter. If \code{FALSE} (default), a common shape
-parameter is assumed across all covariate patterns.}
+\item{map}{Optional named list of parameter mappings passed to
+\code{\link[TMB]{MakeADFun}}.
+
+Parameter mapping allows selected model parameters to be fixed or
+constrained during estimation. This can be useful for fitting
+simplified HSROC models, imposing equality constraints, or
+reproducing model specifications described in the literature.
+
+Each component of \code{map} should be a factor vector with the same
+length as the corresponding parameter. Parameters assigned
+\code{NA} levels are fixed at their initial values supplied via the
+\code{parameters} argument, whereas parameters sharing the same
+factor level are estimated as equal.
+
+This is an advanced feature intended primarily for users familiar
+with Template Model Builder (TMB).
+
+If \code{NULL} (default), all model parameters are estimated freely.
+Example \code{map = list(shape_coef=factor(c(1, rep(NA, ncol(Z) - 1))))}.}
 
 \item{init}{Optional list of initial parameter values.
 If \code{NULL} (default), all fixed and random effects are initialized
@@ -90,6 +106,7 @@ An object of class \code{"RutterGatsonisReg"} containing:
 \item{sdreport2}{Summary of reported model parameters and derived quantities.}
 \item{sensspec}{Estimated sensitivities at the specified specificity
 value(s), including confidence intervals.}
+\item{constrain}{Constraints on parameters applied during model fitting.}
 }
 }
 \description{

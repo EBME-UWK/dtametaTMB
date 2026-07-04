@@ -4,7 +4,17 @@
 \alias{fitReitsmaSubgroup}
 \title{Fit Reitsma Subgroup Model}
 \usage{
-fitReitsmaSubgroup(data, TP, FP, FN, TN, subgroup, study, conflevel = 0.95)
+fitReitsmaSubgroup(
+  data,
+  TP,
+  FP,
+  FN,
+  TN,
+  study,
+  subgroup,
+  constrain = NULL,
+  conflevel = 0.95
+)
 }
 \arguments{
 \item{data}{A data.frame containing study-level data.}
@@ -17,9 +27,40 @@ fitReitsmaSubgroup(data, TP, FP, FN, TN, subgroup, study, conflevel = 0.95)
 
 \item{TN}{True negatives (column name).}
 
+\item{study}{Study identifier (column name).}
+
 \item{subgroup}{A single categorical study-level subgroup variable (column name).}
 
-\item{study}{Study identifier (column name).}
+\item{constrain}{Optional character string specifying a simplified
+covariance structure for the Reitsma model.
+
+This can be useful for sparse data, small meta-analyses, or for
+reproducing simplified bivariate models described in the Cochrane
+Handbook for Diagnostic Test Accuracy Reviews.
+
+Allowed values are:
+\describe{
+\item{\code{NULL}}{
+The standard unconstrained Reitsma model is fitted.
+}
+\item{\code{"sigma_AB"}}{
+The covariance between logit-sensitivity and
+logit-specificity random effects is fixed at zero.
+Random effects remain independent.
+}
+\item{\code{"sigma2_A"}}{
+The between-study variance of logit-sensitivity is fixed at zero.
+This also implies a zero covariance.
+}
+\item{\code{"sigma2_B"}}{
+The between-study variance of logit-specificity is fixed at zero.
+This also implies a zero covariance.
+}
+\item{\code{"all"}}{
+All random-effects variance and covariance parameters are fixed
+at zero, resulting in a fixed-effects model.
+}
+}}
 
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 }
@@ -36,6 +77,7 @@ A list of class \code{"ReitsmaSubgroup"} with components:
 \item \code{vcov_nu}: variance-covariance matrix with dummy/reference-cell parameterization.
 \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 \item \code{subgroups}: The subgroup levels used in the model fit.
+\item \code{constrain}: Random effects parameters fixed at zero.
 }
 }
 \description{

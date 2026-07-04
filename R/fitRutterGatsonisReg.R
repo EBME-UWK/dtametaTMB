@@ -49,9 +49,25 @@
 #' predictions, users will typically want to specify \code{Z_pred}
 #' explicitly.
 #'
-#' @param shape Logical indicating whether covariate effects are estimated
-#' for the shape parameter. If \code{FALSE} (default), a common shape
-#' parameter is assumed across all covariate patterns.
+#' @param map Optional named list of parameter mappings passed to
+#'   \code{\link[TMB]{MakeADFun}}.
+#'
+#'   Parameter mapping allows selected model parameters to be fixed or
+#'   constrained during estimation. This can be useful for fitting
+#'   simplified HSROC models, imposing equality constraints, or
+#'   reproducing model specifications described in the literature.
+#'
+#'   Each component of \code{map} should be a factor vector with the same
+#'   length as the corresponding parameter. Parameters assigned
+#'   \code{NA} levels are fixed at their initial values supplied via the
+#'   \code{parameters} argument, whereas parameters sharing the same
+#'   factor level are estimated as equal.
+#'
+#'   This is an advanced feature intended primarily for users familiar
+#'   with Template Model Builder (TMB).
+#'
+#'   If \code{NULL} (default), all model parameters are estimated freely.
+#'   Example \code{map = list(shape_coef=factor(c(1, rep(NA, ncol(Z) - 1))))}.
 #'
 #' @param spec Optional specificity value or vector of specificity values
 #' at which sensitivity is evaluated for each covariate pattern specified
@@ -72,6 +88,7 @@
 #'   \item{sdreport2}{Summary of reported model parameters and derived quantities.}
 #'   \item{sensspec}{Estimated sensitivities at the specified specificity
 #'   value(s), including confidence intervals.}
+#'   \item{constrain}{Constraints on parameters applied during model fitting.}
 #' }
 #'
 #' @details
@@ -134,15 +151,11 @@ fitRutterGatsonisReg <- function(data,
                                  study=study,
                                  Z,
                                  Z_pred=NULL,
-                                 shape=FALSE,
+                                 map=NULL,
                                  init=NULL,
                                  spec=NULL,
                                  conflevel=0.95,
                                  verbose=FALSE){
-  
-  if(!is.logical(shape)){
-    stop("'shape' must be 'TRUE' or 'FALSE'.")
-  }
   
   # Construct Z and Z_pred
   ngroup <- ncol(Z)
@@ -194,23 +207,14 @@ fitRutterGatsonisReg <- function(data,
   }
   
   dat2$model <- "RutterGatsonisReg"
+
   
-  if(!shape){
-    map <- list(shape_coef = factor(c(1, rep(NA,ngroup-1))))
-    obj <- TMB::MakeADFun(dat2,
-                          parameters,
-                          map=map,
-                          random = c("alpha", "theta"),
-                          silent=!verbose,
-                          DLL = "dtametaTMB_TMBExports")
-  }
-  if(shape){
-    obj <- TMB::MakeADFun(dat2,
-                          parameters,
-                          random = c("alpha", "theta"),
-                          silent=!verbose,
-                          DLL = "dtametaTMB_TMBExports") 
-  }
+  obj <- TMB::MakeADFun(dat2,
+                        parameters,
+                        map=if(is.null(map)) NULL else map,
+                        random = c("alpha", "theta"),
+                        silent=!verbose,
+                        DLL = "dtametaTMB_TMBExports")
   
   fit  <- stats::nlminb(obj$par, 
                         obj$fn, 
@@ -250,7 +254,7 @@ fitRutterGatsonisReg <- function(data,
     fit          = fit,
     sdreport     = rep,
     sdreport2    = rep2,
-    sensspec     = sesp
+    sensspec     = sesp  
   )
   class(res) <- c("RutterGatsonisReg")
   return(res)
