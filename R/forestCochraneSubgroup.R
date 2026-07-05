@@ -9,7 +9,7 @@
 #' @importFrom grid unit 
 #' @importFrom stats qbeta
 #' @export
-forest.CochraneSubgroup <- function(x, subgroup_label="Subgroup",...) {
+forest.CochraneSubgroup <- function(x, subgroup_label="Subgroup", ...) {
   XP <- x$data
   XP$FPR  <- 1 - XP$spec
   # How do I get Clopper-Pearson confidence limits for sensitivity and specificities?

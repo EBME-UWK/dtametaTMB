@@ -1,8 +1,9 @@
 #' @keywords internal
+#' @importFrom stats qnorm plogis
 #' @noRd
 getLRDOR <- function(lsens, lspec, S, conflevel) {
-  sens <- plogis(lsens)
-  spec <- plogis(lspec)
+  sens <- stats::plogis(lsens)
+  spec <- stats::plogis(lspec)
   ## point estimates
   DOR <- exp(lsens + lspec)
   LRp <- sens / (1 - spec)

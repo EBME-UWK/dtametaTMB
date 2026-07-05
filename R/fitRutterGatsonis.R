@@ -72,7 +72,7 @@
 #' }
 #'
 #' @importFrom TMB MakeADFun sdreport
-#' @importFrom stats nlminb median qnorm
+#' @importFrom stats nlminb median qnorm plogis
 #'
 #' @references
 #' Reitsma, J. B., et al. (2005). 
@@ -260,7 +260,7 @@ fitRutterGatsonis <- function(data,
   sigma2_theta <- rep$value["sigma2_theta"]
   reit   <- getREIT(Lambda, Theta, beta, sigma2_alpha, sigma2_theta)
   # How to get sensitivities
-  qq   <- qnorm(1-(1-conflevel)/2)
+  qq   <- stats::qnorm(1-(1-conflevel)/2)
   rlse <- which(rownames(rep2)=="logitsens")
   sesp <- data.frame(spec=dat2$spec,
                      conflevel=conflevel,
@@ -270,10 +270,9 @@ fitRutterGatsonis <- function(data,
                      CI_Upper=NA)
   sesp$CI_Lower     <- with(sesp,logitsens-qq*Std_Error)
   sesp$CI_Upper     <- with(sesp,logitsens+qq*Std_Error)
-  sesp$Sens         <- with(sesp,plogis(logitsens))
-  sesp$SensCI_Lower <- with(sesp,plogis(CI_Lower))
-  sesp$SensCI_Upper <- with(sesp,plogis(CI_Upper))
-  sesp
+  sesp$Sens         <- with(sesp,stats::plogis(logitsens))
+  sesp$SensCI_Lower <- with(sesp,stats::plogis(CI_Lower))
+  sesp$SensCI_Upper <- with(sesp,stats::plogis(CI_Upper))
   # Result object
   res <- list(
     data         = XP,

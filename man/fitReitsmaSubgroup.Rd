@@ -118,15 +118,17 @@ cell coding, and once with central-mean parameterization.
 }
 \examples{
 data("anticcp")
-fit <- fitReitsma(
+fit <- fitReitsmaSubgroup(
   data = anticcp,
   TP = TP,
   FP = FP,
   FN = FN,
   TN = TN,
-  study = study
+  study = study,
+  subgroup = generation
 )
-fit$estimates_mu
+fit
+summary(fit)
 
 
 }

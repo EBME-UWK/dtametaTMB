@@ -104,7 +104,7 @@
 #' by \code{Z_pred}.
 #'
 #' @importFrom TMB MakeADFun sdreport
-#' @importFrom stats complete.cases median nlminb qnorm
+#' @importFrom stats complete.cases median nlminb qnorm plogis
 #'
 #' @references
 #' Reitsma, J. B., Glas, A. S., Rutjes, A. W. S., Scholten, R. J. P. M.,
@@ -149,7 +149,7 @@
 #' @export
 fitRutterGatsonisReg <- function(data,
                                  TP, FP, FN, TN,
-                                 study=study,
+                                 study,
                                  Z,
                                  Z_pred=NULL,
                                  map=NULL,
@@ -249,7 +249,7 @@ fitRutterGatsonisReg <- function(data,
   
   lspec <- length(dat2$spec)
   ## Get sensitivities and specificities
-  qq   <- qnorm(1-(1-conflevel)/2)
+  qq   <- stats::qnorm(1-(1-conflevel)/2)
   rlse <- which(rownames(rep2)=="logitsens")
   sesp <- data.frame(spec=rep(dat2$spec,nrow(Z_pred)),
                      conflevel=conflevel,
@@ -259,11 +259,10 @@ fitRutterGatsonisReg <- function(data,
                      CI_Upper=NA)
   sesp$CI_Lower     <- with(sesp,logitsens-qq*Std_Error)
   sesp$CI_Upper     <- with(sesp,logitsens+qq*Std_Error)
-  sesp$Sens         <- with(sesp,plogis(logitsens))
-  sesp$SensCI_Lower <- with(sesp,plogis(CI_Lower))
-  sesp$SensCI_Upper <- with(sesp,plogis(CI_Upper))
-  sesp
-  
+  sesp$Sens         <- with(sesp,stats::plogis(logitsens))
+  sesp$SensCI_Lower <- with(sesp,stats::plogis(CI_Lower))
+  sesp$SensCI_Upper <- with(sesp,stats::plogis(CI_Upper))
+
   res <- list(
     data         = XP,
     fit          = fit,

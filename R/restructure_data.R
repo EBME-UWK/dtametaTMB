@@ -193,7 +193,6 @@ restructure_data <- function(data,
   dat$n1 <- dat$TP + dat$FN
   dat$n0 <- dat$TN + dat$FP
 
-  # Check consistency within each study
   check_consistency <- function(df) {
     if (length(unique(df$n1)) > 1) {
       stop(
@@ -225,200 +224,71 @@ restructure_data <- function(data,
     }
     TRUE
   }
+  # Shared helper: build a properly separated, multi-line message
+  # for one or more monotonicity violations detected via which(diff(...) ...).
+  .mono_violation_msg <- function(df, col, idx, direction) {
+    msgs <- sprintf(
+      paste0(
+        "%s must be %s with increasing thresholds in study '%s'.\n",
+        "  Rows: %s -> %s\n",
+        "  Thresholds: %s -> %s\n",
+        "  %s: %s -> %s"
+      ),
+      col, direction, df$study[1],
+      rownames(df)[idx], rownames(df)[idx + 1],
+      df$threshold[idx], df$threshold[idx + 1],
+      col, df[[col]][idx], df[[col]][idx + 1]
+    )
+    paste(msgs, collapse = "\n\n")
+  }
   
   # Check consistency within each study
   check_monotonicity_greater <- function(df) {
-    
     df <- df[order(df$threshold), ]
-    
     # FN non-decreasing
     idx <- which(diff(df$FN) < 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "FN must be non-decreasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "FN: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$FN[idx],
-          df$FN[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "FN", idx, "non-decreasing"), call. = FALSE)
     }
-    
     # TN non-decreasing
     idx <- which(diff(df$TN) < 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "TN must be non-decreasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "TN: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$TN[idx],
-          df$TN[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "TN", idx, "non-decreasing"), call. = FALSE)
     }
-    
     # TP non-increasing
     idx <- which(diff(df$TP) > 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "TP must be non-increasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "TP: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$TP[idx],
-          df$TP[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "TP", idx, "non-increasing"), call. = FALSE)
     }
-    
     # FP non-increasing
     idx <- which(diff(df$FP) > 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "FP must be non-increasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "FP: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$FP[idx],
-          df$FP[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "FP", idx, "non-increasing"), call. = FALSE)
     }
-    
     TRUE
   }
   
   check_monotonicity_less <- function(df) {
-    
     df <- df[order(df$threshold), ]
     # FN non-increasing
     idx <- which(diff(df$FN) > 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "FN must be non-increasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "FN: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$FN[idx],
-          df$FN[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "FN", idx, "non-increasing"), call. = FALSE)
     }
-    
     # TN non-increasing
     idx <- which(diff(df$TN) > 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "TN must be non-increasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "TN: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$TN[idx],
-          df$TN[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "TN", idx, "non-increasing"), call. = FALSE)
     }
-    
     # TP non-decreasing
     idx <- which(diff(df$TP) < 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "TP must be non-decreasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "TP: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$TP[idx],
-          df$TP[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "TP", idx, "non-decreasing"), call. = FALSE)
     }
-    
     # FP non-decreasing
     idx <- which(diff(df$FP) < 0)
     if (length(idx) > 0) {
-      stop(
-        sprintf(
-          paste0(
-            "FP must be non-decreasing with increasing thresholds ",
-            "in study '%s'.\n",
-            "Rows: %s -> %s\n",
-            "Thresholds: %s -> %s\n",
-            "FP: %s -> %s"
-          ),
-          df$study[1],
-          rownames(df)[idx],
-          rownames(df)[idx + 1],
-          df$threshold[idx],
-          df$threshold[idx + 1],
-          df$FP[idx],
-          df$FP[idx + 1]
-        )
-      )
+      stop(.mono_violation_msg(df, "FP", idx, "non-decreasing"), call. = FALSE)
     }
     TRUE
   }

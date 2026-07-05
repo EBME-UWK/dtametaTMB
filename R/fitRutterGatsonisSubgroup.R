@@ -81,7 +81,7 @@
 #' }
 #'
 #' @importFrom TMB MakeADFun sdreport
-#' @importFrom stats complete.cases median nlminb qnorm
+#' @importFrom stats complete.cases median nlminb qnorm plogis
 #'
 #' @references
 #' Reitsma, J. B., et al. (2005).
@@ -190,6 +190,7 @@ fitRutterGatsonisSubgroup <- function(data,
                             FN=FN,
                             FP=FP,
                             study=study,
+                            conflevel=conflevel,
                             constrain=NULL)$sdreport
   Lambda_init  <- init$par.fixed["Lambda"]
   Theta_init   <- init$par.fixed["Theta"]
@@ -283,7 +284,7 @@ fitRutterGatsonisSubgroup <- function(data,
   
   lspec <- length(dat2$spec)
   ## Get sensitivities and specificities
-  qq   <- qnorm(1-(1-conflevel)/2)
+  qq   <- stats::qnorm(1-(1-conflevel)/2)
   rlse <- which(rownames(rep2)=="logitsens")
   sesp <- data.frame(subgroup=rep(lsub,each=lspec),
                      spec=rep(dat2$spec,llsub),
@@ -294,10 +295,9 @@ fitRutterGatsonisSubgroup <- function(data,
                      CI_Upper=NA)
   sesp$CI_Lower     <- with(sesp,logitsens-qq*Std_Error)
   sesp$CI_Upper     <- with(sesp,logitsens+qq*Std_Error)
-  sesp$Sens         <- with(sesp,plogis(logitsens))
-  sesp$SensCI_Lower <- with(sesp,plogis(CI_Lower))
-  sesp$SensCI_Upper <- with(sesp,plogis(CI_Upper))
-  sesp
+  sesp$Sens         <- with(sesp,stats::plogis(logitsens))
+  sesp$SensCI_Lower <- with(sesp,stats::plogis(CI_Lower))
+  sesp$SensCI_Upper <- with(sesp,stats::plogis(CI_Upper))
   ## Recover Reitsma parameters
   lamb <- paste0("Lambda_",lsub)
   thet <- paste0("Theta_",lsub)

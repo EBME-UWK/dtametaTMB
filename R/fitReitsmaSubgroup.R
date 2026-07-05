@@ -89,15 +89,17 @@
 #'
 #' @examples
 #' data("anticcp")
-#' fit <- fitReitsma(
+#' fit <- fitReitsmaSubgroup(
 #'   data = anticcp,
 #'   TP = TP,
 #'   FP = FP,
 #'   FN = FN,
 #'   TN = TN,
-#'   study = study
+#'   study = study,
+#'   subgroup = generation
 #' )
-#' fit$estimates_mu
+#' fit
+#' summary(fit)
 #' 
 #'
 #' @references
@@ -166,7 +168,9 @@ fitReitsmaSubgroup <- function(data,
   
   ### Get initial values
   init <- fitReitsma(data=X,
-                     TP=TP,FP=FP,FN=FN,TN=TN,study=study)$estimates
+                     TP=TP,FP=FP,FN=FN,TN=TN,study=study,
+                     constrain=NULL,
+                     conflevel=conflevel)$estimates
   muA_init     <- init["mu_A.sens","Estimate"]
   muB_init     <- init["mu_B.spec","Estimate"]
   sA_init      <- sqrt(init["sigma2_A.sens","Estimate"])
@@ -333,7 +337,6 @@ fitReitsmaSubgroup <- function(data,
   esti_V_g_nu<- get2esti_V_g(beta_fix=beta_fix_nu, 
                              theta=theta_nu, 
                              V_full=V_full_nu) 
-  esti       <- esti_V_g_nu$esti
   ####
   ####
   muA_names <- paste0("mu_A.", lsub_safe)
@@ -369,15 +372,14 @@ fitReitsmaSubgroup <- function(data,
   esti_V_g_mu<- get2esti_V_g(beta_fix=beta_fix_mu, 
                              theta=theta_mu, 
                              V_full=V_full_mu) 
-  esti       <- esti_V_g_mu$esti
   ### Sensitivity and Specificity
   ma_Y_mu        <- summary(MA_Y_mu)
   qq             <- stats::qnorm(1-(1-conflevel)/2)
   sesp           <- as.data.frame(ma_Y_mu$coefficients$cond)
-  sesp$Orig      <- with(sesp,plogis(Estimate))
+  sesp$Orig      <- with(sesp,stats::plogis(Estimate))
   sesp$conflevel <- conflevel
-  sesp$CI_Lower  <- with(sesp,plogis(Estimate-qq*`Std. Error`))
-  sesp$CI_Upper  <- with(sesp,plogis(Estimate+qq*`Std. Error`))
+  sesp$CI_Lower  <- with(sesp,stats::plogis(Estimate-qq*`Std. Error`))
+  sesp$CI_Upper  <- with(sesp,stats::plogis(Estimate+qq*`Std. Error`))
   sesp           <- sesp[,(5:8)]
   sesp$type      <- sub("^mu_([AB])\\..*$", "\\1", rownames(sesp))
   sesp$type      <- c(A = "sens", B = "spec")[sesp$type]

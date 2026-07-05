@@ -10,7 +10,7 @@ fitRutterGatsonisReg(
   FP,
   FN,
   TN,
-  study = study,
+  study,
   Z,
   Z_pred = NULL,
   map = NULL,

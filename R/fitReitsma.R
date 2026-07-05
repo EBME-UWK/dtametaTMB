@@ -191,10 +191,10 @@ fitReitsma <- function(data,
   qq        <- stats::qnorm(1-(1-conflevel)/2)
   ### Sensitivity and Specificity
   sesp           <- as.data.frame(ma_Y$coefficients$cond)
-  sesp$Orig      <- with(sesp,plogis(Estimate))
+  sesp$Orig      <- with(sesp,stats::plogis(Estimate))
   sesp$conflevel <- conflevel
-  sesp$CI_Lower  <- with(sesp,plogis(Estimate-qq*`Std. Error`))
-  sesp$CI_Upper  <- with(sesp,plogis(Estimate+qq*`Std. Error`))
+  sesp$CI_Lower  <- with(sesp,stats::plogis(Estimate-qq*`Std. Error`))
+  sesp$CI_Upper  <- with(sesp,stats::plogis(Estimate+qq*`Std. Error`))
   sesp           <- sesp[,(5:8)]
   colnames(sesp) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
   ### SAS variance covariance matrix

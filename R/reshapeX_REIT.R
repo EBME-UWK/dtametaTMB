@@ -1,4 +1,5 @@
 #' @keywords internal
+#' @importFrom stats reshape
 #' @noRd
 reshapeX_REIT <- function(X){
   X$true1 <- X$TP
@@ -6,8 +7,8 @@ reshapeX_REIT <- function(X){
   X$n1    <- X$TP+X$FN
   X$n0    <- X$FP+X$TN
   X$recordid <- seq_len(nrow(X))
-  Y <- reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
-               timevar="sens", times=c(1,0), v.names=c("n","true")) 
+  Y <- stats::reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
+                      timevar="sens", times=c(1,0), v.names=c("n","true")) 
   Y <- Y[order(Y$recordid),]  
   Y$spec <- 1-Y$sens
   return(Y)

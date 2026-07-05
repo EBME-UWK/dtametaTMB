@@ -3,7 +3,7 @@ title: "Meta-Regression"
 format: 
    html:
      toc: TRUE
- #  pdf
+  # pdf
 vignette: >
   %\VignetteIndexEntry{Meta-Regression}
   %\VignetteEncoding{UTF-8}
@@ -436,9 +436,11 @@ for(st in unique(draw$study)) {
           type="l",col = "grey70",lwd =1)}}
 on.exit(par(op))
 
-schuetz5 <- fitRutterGatsonis(data=subset(schuetz2,test=="MRI"),
-                       TP=TP,FP=FP,FN=FN,TN=TN,
-                       study=study)                       
+schuetz5 <- fitRutterGatsonis(data=subset(schuetz2,test=="CT"),
+                              TP=TP,FP=FP,FN=FN,TN=TN,
+                              study=study)  
+schuetz5
+summary(schuetz5)
 ```
 
 ## References

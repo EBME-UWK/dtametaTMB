@@ -10,7 +10,7 @@
 #'   \describe{
 #'     \item{original}{Original processed data including sensitivity
 #'       (\code{sens}) and false positive rate (\code{fpr})}
-#'     \item{rep2}{Summary of model parameters}
+#'     \item{sdreort2}{Summary of model parameters}
 #'     \item{distcode}{Distribution code (1 = Weibull,
 #'       2 = lognormal, 3 = loglogistic)}
 #'   }
@@ -56,12 +56,12 @@
 #'
 #' @seealso \code{\link{fitHoyerAFT}} \code{\link{fitHoyer}}
 #' @importFrom graphics abline axis legend lines par points symbols title
+#' @importFrom stats plogis pnorm
 #' @method plot HoyerAFT
-#' @importFrom stats pnorm plogis
 #' @export
 plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
                           thresholdrange=NULL,
-                          main="Diagnostic Test Accuracy Meta-Analysis",...) {
+                          main="Diagnostic Test Accuracy Meta-Analysis", ...) {
   size    <- match.arg(size)
   HH      <- x$data
   testdir <- unique(x$data$testdirection)
@@ -105,22 +105,22 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
                              sens=exp(-(xx*exp(-(beta1)))**(1/lambda1)))}
 
   if(x$distcode==2 & testdir=="greater"){
-    roc_points <- data.frame(fpr =1-pnorm((log(xx)-beta0)/lambda0),
-                             sens=1-pnorm((log(xx)-beta1)/lambda1))}
+    roc_points <- data.frame(fpr =1-stats::pnorm((log(xx)-beta0)/lambda0),
+                             sens=1-stats::pnorm((log(xx)-beta1)/lambda1))}
   if(x$distcode==3 & testdir=="greater"){
-    roc_points <- data.frame(fpr =plogis((beta0-log(xx))/lambda0),
-                             sens=plogis((beta1-log(xx))/lambda1))}
+    roc_points <- data.frame(fpr =stats::plogis((beta0-log(xx))/lambda0),
+                             sens=stats::plogis((beta1-log(xx))/lambda1))}
   #############
   #############
   if(x$distcode==1 & testdir=="less"){
     roc_points <- data.frame(fpr =1-exp(-(xx*exp(-(beta0)))**(1/lambda0)),
                              sens=1-exp(-(xx*exp(-(beta1)))**(1/lambda1)))}
   if(x$distcode==2 & testdir=="less"){
-    roc_points <- data.frame(fpr =pnorm((log(xx)-beta0)/lambda0),
-                             sens=pnorm((log(xx)-beta1)/lambda1))}
+    roc_points <- data.frame(fpr =stats::pnorm((log(xx)-beta0)/lambda0),
+                             sens=stats::pnorm((log(xx)-beta1)/lambda1))}
   if(x$distcode==3 & testdir=="less"){
-    roc_points <- data.frame(fpr =1-plogis((beta0-log(xx))/lambda0),
-                             sens=1-plogis((beta1-log(xx))/lambda1))}
+    roc_points <- data.frame(fpr =1-stats::plogis((beta0-log(xx))/lambda0),
+                             sens=1-stats::plogis((beta1-log(xx))/lambda1))}
   ##########
   points(roc_points, type="l", lwd=2,ann=F)###
   # Add summary point
