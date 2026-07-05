@@ -29,6 +29,6 @@ Research Synthesis Methods, 9(1), 62-72.
 diabetes
 }
 \description{
-This is the diabetes data set as given by the supplementary material in Hoyer (2018).
+This is the diabetes data set from the supplementary material in Hoyer (2018).
 }
 \keyword{datasets}

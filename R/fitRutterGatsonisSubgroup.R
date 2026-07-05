@@ -123,11 +123,6 @@ fitRutterGatsonisSubgroup <- function(data,
                                       conflevel=0.95,
                                       verbose=FALSE){
   
-  
-  if (!is.data.frame(data)) {
-    stop("'data' must be a data.frame.")
-  }
-  
   allowed_constraints <- c(
     "sigma2_alpha",
     "sigma2_theta",
@@ -156,6 +151,10 @@ fitRutterGatsonisSubgroup <- function(data,
       )
     }
     
+  }
+  
+  if (!is.data.frame(data)) {
+    stop("'data' must be a data.frame.")
   }
   
   TP_col       <- deparse(substitute(TP))

@@ -7,7 +7,7 @@
 \method{print}{ReitsmaSubgroup}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{"Reitsma"}.}
+\item{x}{An object of class \code{"ReitsmaSubgroup"}.}
 
 \item{...}{Additional arguments (unused).}
 }

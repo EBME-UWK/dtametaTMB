@@ -186,6 +186,7 @@ restructure_data <- function(data,
   if (largest <= max(dat$threshold,na.rm=TRUE)){
     stop("'largest' must be larger than maximum threshold.")
   }
+  
   # Order according to study and reported threshold
   dat <- dat[order(dat$study, dat$threshold), ]
   # Derived totals
@@ -195,55 +196,232 @@ restructure_data <- function(data,
   # Check consistency within each study
   check_consistency <- function(df) {
     if (length(unique(df$n1)) > 1) {
-      stop(sprintf("Inconsistent diseased counts (TP+FN) within study '%s'.",
-                   df$study[1]))
+      stop(
+        sprintf(
+          paste0(
+            "Inconsistent diseased counts (TP+FN) within study '%s'.\n",
+            "Rows: %s\n",
+            "Counts: %s"
+          ),
+          df$study[1],
+          paste(rownames(df), collapse = ", "),
+          paste(unique(df$n1), collapse = ", ")
+        )
+      )
     }
     if (length(unique(df$n0)) > 1) {
-      stop(sprintf("Inconsistent non-diseased counts (TN+FP) within study '%s'.",
-                   df$study[1]))
+      stop(
+        sprintf(
+          paste0(
+            "Inconsistent non-diseased counts (TN+FP) within study '%s'.\n",
+            "Rows: %s\n",
+            "Counts: %s"
+          ),
+          df$study[1],
+          paste(rownames(df), collapse = ", "),
+          paste(unique(df$n0), collapse = ", ")
+        )
+      )
     }
     TRUE
   }
   
   # Check consistency within each study
   check_monotonicity_greater <- function(df) {
+    
     df <- df[order(df$threshold), ]
     
-    # expected directions
-    if (any(diff(df$FN) < 0, na.rm = TRUE)) {
-      stop(sprintf("FN must be non-decreasing with increasing thresholds in study '%s'.", df$study[1]))
+    # FN non-decreasing
+    idx <- which(diff(df$FN) < 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "FN must be non-decreasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "FN: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$FN[idx],
+          df$FN[idx + 1]
+        )
+      )
     }
-    if (any(diff(df$TN) < 0, na.rm = TRUE)) {
-      stop(sprintf("TN must be non-decreasing with increasing thresholds in study '%s'.", df$study[1]))
+    
+    # TN non-decreasing
+    idx <- which(diff(df$TN) < 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "TN must be non-decreasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "TN: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$TN[idx],
+          df$TN[idx + 1]
+        )
+      )
     }
-    if (any(diff(df$TP) > 0, na.rm = TRUE)) {
-      stop(sprintf("TP must be non-increasing with increasing thresholds in study '%s'.", df$study[1]))
+    
+    # TP non-increasing
+    idx <- which(diff(df$TP) > 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "TP must be non-increasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "TP: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$TP[idx],
+          df$TP[idx + 1]
+        )
+      )
     }
-    if (any(diff(df$FP) > 0, na.rm = TRUE)) {
-      stop(sprintf("FP must be non-increasing with increasing thresholds in study '%s'.", df$study[1]))
+    
+    # FP non-increasing
+    idx <- which(diff(df$FP) > 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "FP must be non-increasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "FP: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$FP[idx],
+          df$FP[idx + 1]
+        )
+      )
     }
+    
     TRUE
   }
   
   check_monotonicity_less <- function(df) {
-    df <- df[order(df$threshold), ]
     
-    # expected directions
-    if (any(diff(df$FN) > 0, na.rm = TRUE)) {
-      stop(sprintf("FN must be non-increasing with increasing thresholds in study '%s'.", df$study[1]))
+    df <- df[order(df$threshold), ]
+    # FN non-increasing
+    idx <- which(diff(df$FN) > 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "FN must be non-increasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "FN: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$FN[idx],
+          df$FN[idx + 1]
+        )
+      )
     }
-    if (any(diff(df$TN) > 0, na.rm = TRUE)) {
-      stop(sprintf("TN must be non-increasing with increasing thresholds in study '%s'.", df$study[1]))
+    
+    # TN non-increasing
+    idx <- which(diff(df$TN) > 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "TN must be non-increasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "TN: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$TN[idx],
+          df$TN[idx + 1]
+        )
+      )
     }
-    if (any(diff(df$TP) < 0, na.rm = TRUE)) {
-      stop(sprintf("TP must be non-decreasing with increasing thresholds in study '%s'.", df$study[1]))
+    
+    # TP non-decreasing
+    idx <- which(diff(df$TP) < 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "TP must be non-decreasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "TP: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$TP[idx],
+          df$TP[idx + 1]
+        )
+      )
     }
-    if (any(diff(df$FP) < 0, na.rm = TRUE)) {
-      stop(sprintf("FP must be non-decreasing with increasing thresholds in study '%s'.", df$study[1]))
+    
+    # FP non-decreasing
+    idx <- which(diff(df$FP) < 0)
+    if (length(idx) > 0) {
+      stop(
+        sprintf(
+          paste0(
+            "FP must be non-decreasing with increasing thresholds ",
+            "in study '%s'.\n",
+            "Rows: %s -> %s\n",
+            "Thresholds: %s -> %s\n",
+            "FP: %s -> %s"
+          ),
+          df$study[1],
+          rownames(df)[idx],
+          rownames(df)[idx + 1],
+          df$threshold[idx],
+          df$threshold[idx + 1],
+          df$FP[idx],
+          df$FP[idx + 1]
+        )
+      )
     }
     TRUE
   }
-  
   
   # Apply checks per study
   invisible(lapply(split(dat, dat$study), check_consistency))

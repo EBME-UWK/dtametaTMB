@@ -1,6 +1,6 @@
 #' Anticcp dataset
 #'
-#' This is the anticcp data set as given by Nishimura (2007) from a review of anti-cyclic citrullinated peptide antibody (anti-ccp) to diagnose rheumatoid arthritis.
+#' This is the anticcp data set from Nishimura (2007) from a review of anti-cyclic citrullinated peptide antibody (anti-ccp) to diagnose rheumatoid arthritis.
 #'
 #' @format A data frame with 37 rows and 7 variables:
 #' \describe{

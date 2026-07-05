@@ -126,9 +126,25 @@ fitHoyer <- function(data,
     stop("'smallest' and 'largest' must be provided.")
   }
   
+  TP_col <- deparse(substitute(TP))
+  FP_col <- deparse(substitute(FP))
+  FN_col <- deparse(substitute(FN))
+  TN_col <- deparse(substitute(TN))
+  threshold_col <- deparse(substitute(threshold))
+  study_col <- deparse(substitute(study))
+  
+  dat <- data.frame(
+    study = data[[study_col]],
+    TP = data[[TP_col]],
+    TN = data[[TN_col]],
+    FP = data[[FP_col]],
+    FN = data[[FN_col]],
+    threshold = data[[threshold_col]]
+  )
+  
   # Step 1: Restructure data
   res <- restructure_data(
-    data = data,
+    data = dat,
     TP = TP,
     FP = FP,
     FN = FN,

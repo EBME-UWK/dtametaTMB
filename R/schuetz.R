@@ -1,6 +1,6 @@
 #' Schuetz dataset
 #'
-#' This is the schuetz data set as given by Schuetz (2019) from a meta-analyis of 
+#' This is the schuetz data set from Schuetz (2019) from a meta-analyis of 
 #' non-invasive coronary angiography using computer tomography (CT) versus magnetic resonance imaging (MRT)
 #'
 #' @format A data frame with 108 rows and 7 variables:
@@ -11,7 +11,7 @@
 #'   \item{FP}{Number of false positives}
 #'   \item{FN}{Number of false negatives}
 #'   \item{TN}{Number of true negatives}
-#'   \item{indirect}{whether the comparison is indirect (=1) or diredt (=0)}
+#'   \item{indirect}{whether the comparison is indirect (=1) or direct (=0)}
 #'
 #' }
 #' @source Schuetz, K., et al. (2010).

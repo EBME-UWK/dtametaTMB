@@ -59,13 +59,14 @@ reproducing model specifications described in the literature.
 Each component of \code{map} should be a factor vector with the same
 length as the corresponding parameter. Parameters assigned
 \code{NA} levels are fixed at their initial values supplied via the
-\code{parameters} argument, whereas parameters sharing the same
+\code{init} argument, whereas parameters sharing the same
 factor level are estimated as equal.
 
 This is an advanced feature intended primarily for users familiar
 with Template Model Builder (TMB).
 
 If \code{NULL} (default), all model parameters are estimated freely.
+
 Example \code{map = list(shape_coef=factor(c(1, rep(NA, ncol(Z) - 1))))}.}
 
 \item{init}{Optional list of initial parameter values.

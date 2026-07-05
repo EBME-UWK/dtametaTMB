@@ -145,11 +145,26 @@ fitRutterGatsonis <- function(data,
     }
     
   }
+  if (!is.data.frame(data)) {
+    stop("'data' must be a data.frame.")
+  }
   
-  X <- XP <- check_preprocess_data(data,
-                                   TP, FP, FN, TN,
-                                   study=study,
-                                   conflevel=conflevel)
+  TP_col <- deparse(substitute(TP))
+  FP_col <- deparse(substitute(FP))
+  FN_col <- deparse(substitute(FN))
+  TN_col <- deparse(substitute(TN))
+  study_col <- deparse(substitute(study))
+  
+  dat <- data.frame(
+    study = data[[study_col]],
+    TP = data[[TP_col]],
+    TN = data[[TN_col]],
+    FP = data[[FP_col]],
+    FN = data[[FN_col]]
+  )
+  
+  X <- XP <- check_data(dat=dat,
+                        conflevel=conflevel)
   XP <- getXP(X=XP)
   
   ### Get initial values

@@ -17,8 +17,14 @@ estimation of complex hierarchical models.
 
 ## Key Features
 
-- Frequentist estimation using binomial likelihoods  
-- Support for **multiple thresholds per study** (Hoyer model)  
-- Unified interface across DTA meta-analysis models  
-- Summary ROC (SROC / HSROC) plots    
-- Coupled forest plots  
+- Frequentist estimation using exact binomial likelihoods
+- Reitsma bivariate random-effects model
+- Rutter and Gatsonis (HSROC) model
+- Hoyer multiple-threshold model
+- Subgroup analyses and meta-regression
+- Likelihood-ratio tests for nested model comparisons
+- Support for parameter constraints in sparse-data settings
+- Summary ROC (SROC/HSROC) plots
+- Coupled forest plots
+- Unified interface across DTA meta-analysis models
+- Validation against examples from the Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy

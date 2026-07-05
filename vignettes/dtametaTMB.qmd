@@ -1,9 +1,9 @@
 ---
 title: "Introduction to dtametaTMB"
 format: 
-   html:
+  html:
      toc: TRUE
-# pdf
+ #pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{quarto::html}
@@ -141,6 +141,8 @@ where $$x_{ij} =
 -0.5 & \text{for non-diseased individuals}, \\
 \phantom{-}0.5 & \text{for diseased individuals}.
 \end{cases}$$
+
+In this parameterization $\Lambda$ corresponds to accuracy, $\Theta$ to threshold, and $\beta$ controls the shape of the HSROC curve.
 
 ```{r}
 #| echo: TRUE
@@ -393,6 +395,64 @@ plot(hoyer,size="se",scale=0.025,
 #| echo: TRUE
 forest(hoyer)
 ```
+
+
+## How do I fit the Hoyer model to the FeNO dataset?
+
+*Note:* The FeNO data are reproduced from the original source and the supplementary material accompanying the Cochrane Handbook. However, the study 'Schneider 2013' contains inconsistent diseased counts (TP + FN). To illustrate the Hoyer analysis, we modify the TP counts in rows 118–120 from 39 to 38, restoring a constant total of 154 diseased individuals. Other corrections restoring internal consistency are also conceivable.
+ 
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 8
+data("FENO")
+head(FENO)
+summary(FENO$cutoff)
+# feno <- fitHoyer(data=FENO,
+#                  TP=TP,
+#                  FP=FP,
+#                  FN=FN,
+#                  TN=TN,
+#                  threshold=cutoff,
+#                  study=study,
+#                  dist="loglogistic",
+#                  testdirection="greater",
+#                  eval_threshold=seq(16,40,1),
+#                  smallest=2,
+#                  largest=120)
+#Error in `FUN()`:
+#! Inconsistent diseased counts (TP+FN) within study 'Schneider 2013'.
+#Rows: 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122
+#Counts: 154, 155
+#
+# Let's check the Schneider 2013 study
+check_schneider    <- FENO[110:122,]
+check_schneider$n1 <- with(check_schneider,TP+FN)
+check_schneider$n0 <- with(check_schneider,TN+FP)
+check_schneider
+# Inspection suggests that the TP and/or FN counts
+# in rows 118, 119, 120 may need to be changed.
+# Let's redcue the TP counts from 39 to 38.
+# But other corrections are conceivable as well.
+FENO[118:120,"TP"] <- 38
+### Let's try again
+feno <- fitHoyer(data=FENO,
+                 TP=TP,
+                 FP=FP,
+                 FN=FN,
+                 TN=TN,
+                 threshold=cutoff,
+                 study=study,
+                 dist="loglogistic",
+                 testdirection="greater",
+                 eval_threshold=seq(16,40,1),
+                 smallest=2,
+                 largest=120)
+plot(feno,size="se",scale=0.03,
+     main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
+```
+
+
 
 ## How does `testdirection="less"` work?
 

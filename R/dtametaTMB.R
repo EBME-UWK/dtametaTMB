@@ -12,7 +12,9 @@
 #' Main workflow
 #'
 #' * fitReitsma() -> plot() -> forest()
+#' * fitReitsmaSubgroup() -> plot() -> forest()
 #' * fitRutterGatsonis() -> plot() -> forest()
+#' * fitRutterGatsonisSubgroup() -> plot() -> forest()
 #' * fitHoyer() -> plot() -> forest()
 #'
 #' Included datasets

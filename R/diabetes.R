@@ -1,6 +1,6 @@
 #' Diabetes dataset
 #'
-#' This is the diabetes data set as given by the supplementary material in Hoyer (2018).
+#' This is the diabetes data set from the supplementary material in Hoyer (2018).
 #'
 #' @format A data frame with 124 rows and 9 variables
 #' \describe{

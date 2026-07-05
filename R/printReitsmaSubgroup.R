@@ -3,7 +3,7 @@
 #' Displays a concise summary of a fitted Reitsma Subgroup diagnostic test
 #' accuracy model, including number of studies, convergence status.
 #'
-#' @param x An object of class \code{"Reitsma"}.
+#' @param x An object of class \code{"ReitsmaSubgroup"}.
 #' @param ... Additional arguments (unused).
 #'
 #' @seealso \code{\link{summary.ReitsmaSubgroup}}

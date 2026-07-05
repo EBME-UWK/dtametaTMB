@@ -1,3 +1,22 @@
+#' Extract Log-Likelihood from Diagnostic Test Accuracy Models
+#'
+#' Returns the maximized log-likelihood for a fitted diagnostic test
+#' accuracy meta-analysis model. The returned value is an object of class
+#' `"logLik"` and includes the number of estimated parameters (`df`) and
+#' the number of observations used in model fitting (`nobs`).
+#'
+#' @param object A fitted model object.
+#' @param ... Not used.
+#'
+#' @return An object of class `"logLik"`.
+#'
+#' @seealso
+#' [anova.dtametaTMB()]
+#'
+#' @name logLik.dtametaTMB
+
+
+#' @rdname logLik.dtametaTMB
 #' @export
 logLik.RutterGatsonis <- function(object, ...) {
  structure(
@@ -8,6 +27,7 @@ logLik.RutterGatsonis <- function(object, ...) {
   )
 }
 
+#' @rdname logLik.dtametaTMB
 #' @export
 logLik.RutterGatsonisSubgroup <- function(object, ...) {
   structure(
@@ -18,6 +38,7 @@ logLik.RutterGatsonisSubgroup <- function(object, ...) {
   )
 }
 
+#' @rdname logLik.dtametaTMB
 #' @export
 logLik.RutterGatsonisReg <- function(object, ...) {
   structure(
@@ -28,6 +49,7 @@ logLik.RutterGatsonisReg <- function(object, ...) {
   )
 }
 
+#' @rdname logLik.dtametaTMB
 #' @export
 logLik.HoyerAFT <- function(object, ...) {
   structure(
@@ -38,6 +60,7 @@ logLik.HoyerAFT <- function(object, ...) {
   )
 }
 
+#' @rdname logLik.dtametaTMB
 #' @export
 logLik.Reitsma <- function(object, ...){
   structure(
@@ -48,7 +71,7 @@ logLik.Reitsma <- function(object, ...){
   )
 }
 
-
+#' @rdname logLik.dtametaTMB
 #' @export
 logLik.ReitsmaSubgroup <- function(object, ...){
   structure(
@@ -102,30 +125,77 @@ anova_lrt <- function(object, ..., test = "Chisq") {
   return(out)
 }
 
+#' Likelihood Ratio Tests for Diagnostic Test Accuracy Models
+#'
+#' Compare nested diagnostic test accuracy meta-analysis models using
+#' likelihood ratio tests (LRTs).
+#'
+#' These methods compute likelihood ratio statistics from the fitted model
+#' log-likelihoods and compare models ordered by increasing numbers of
+#' estimated parameters. The test statistic is
+#'
+#' \deqn{2(\ell_1 - \ell_0)}
+#'
+#' where \eqn{\ell_1} and \eqn{\ell_0} are the log-likelihoods of two nested
+#' models. Under standard regularity conditions, the statistic follows a
+#' chi-squared distribution with degrees of freedom equal to the difference
+#' in the numbers of estimated parameters.
+#'
+#' The models supplied should be nested and fitted to the same dataset.
+#' Warnings are issued when models have identical numbers of parameters or
+#' when the log-likelihood decreases for a more complex model, suggesting
+#' that the nesting assumptions may be violated.
+#'
+#' @param object A fitted model object.
+#' @param ... Additional fitted model objects to be compared.
+#' @param test Character string specifying the test to perform. Currently,
+#'   only `"Chisq"` is supported.
+#'
+#' @return An object of class `"anova"` inheriting from `"data.frame"` with
+#'   the following columns:
+#'   \describe{
+#'     \item{Df}{Number of estimated parameters in the model.}
+#'     \item{logLik}{Model log-likelihood.}
+#'     \item{Df.diff}{Difference in parameters compared with the previous
+#'       model.}
+#'     \item{Chisq}{Likelihood ratio chi-squared statistic.}
+#'     \item{Pr(>Chisq)}{P-value from the chi-squared test.}
+#'   }
+#'
+#' @seealso
+#' [logLik()], [stats::anova()]
+#'
+#' @name anova.dtametaTMB
+
+
+#' @rdname anova.dtametaTMB
 #' @export
 anova.Reitsma <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
 
+#' @rdname anova.dtametaTMB
 #' @export
 anova.ReitsmaSubgroup <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
 
+#' @rdname anova.dtametaTMB
 #' @export
 anova.RutterGatsonis <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
 
+#' @rdname anova.dtametaTMB
 #' @export
 anova.RutterGatsonisSubgroup <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
 
+#' @rdname anova.dtametaTMB
 #' @export
 anova.RutterGatsonisReg <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
-
 
 

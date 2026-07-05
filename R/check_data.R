@@ -1,21 +1,6 @@
 #' @keywords internal
 #' @noRd
-check_preprocess_data <- function(data,TP,FP,FN,TN,study,conflevel){
-  if (!is.data.frame(data)) {
-    stop("'data' must be a data.frame.")
-  }
-  TP_col <- deparse(substitute(TP))
-  FP_col <- deparse(substitute(FP))
-  FN_col <- deparse(substitute(FN))
-  TN_col <- deparse(substitute(TN))
-  study_col <- deparse(substitute(study))
-
-  dat <- data.frame(
-    study = data[[study_col]],
-    TP = data[[TP_col]],
-    TN = data[[TN_col]],
-    FP = data[[FP_col]],
-    FN = data[[FN_col]])
+check_data <- function(dat,conflevel){
 
   excluded <- !stats::complete.cases(dat)
   if (any(excluded)) {

@@ -1,0 +1,27 @@
+#' FENO dataset
+#'
+#' This is the FENO data set from Schneider (2017) from a review of fractional exhaled nitric oxide (FeNO) for diagnosis of asthma.
+#' 
+#' @note The data are reproduced from the original source and the supplementary
+#' material accompanying the Cochrane Handbook. However, the study
+#' 'Schneider 2013' contains inconsistent diseased counts (TP + FN).
+#' To illustrate the Hoyer analysis in the vignette, we modify the TP counts 
+#' in rows 118–120 from 39 to 38. Other corrections restoring internal
+#' consistency are also conceivable.
+#'
+#' @format A data frame with 150 rows and 7 variables:
+#' \describe{
+#'   \item{study}{Study identifier}
+#'   \item{study_id}{Study identifier (numeric)}
+#'   \item{cutoff}{Threshold for FeNO measured in ppb}
+#'   \item{TP}{Number of true positives}
+#'   \item{FN}{Number of false negatives}
+#'   \item{FP}{Number of false positives}
+#'   \item{TN}{Number of true negatives}
+#'
+#' }
+#' @source Schneider, A. et al. (2017).
+#' *A novel statistical model for analyzing data of a systematic review generates optimal cutoff values for fractional exhaled nitric oxide for asthma diagnosis.*
+#' Journal of Clinical Epidemiology, 92, 69-78.
+#' \doi{10.1016/j.jclinepi.2017.09.001}
+"FENO"

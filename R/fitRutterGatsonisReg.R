@@ -60,13 +60,14 @@
 #'   Each component of \code{map} should be a factor vector with the same
 #'   length as the corresponding parameter. Parameters assigned
 #'   \code{NA} levels are fixed at their initial values supplied via the
-#'   \code{parameters} argument, whereas parameters sharing the same
+#'   \code{init} argument, whereas parameters sharing the same
 #'   factor level are estimated as equal.
 #'
 #'   This is an advanced feature intended primarily for users familiar
 #'   with Template Model Builder (TMB).
 #'
 #'   If \code{NULL} (default), all model parameters are estimated freely.
+#'   
 #'   Example \code{map = list(shape_coef=factor(c(1, rep(NA, ncol(Z) - 1))))}.
 #'
 #' @param spec Optional specificity value or vector of specificity values
@@ -172,13 +173,24 @@ fitRutterGatsonisReg <- function(data,
     stop("'Z' and 'Z_pred' must have the same number of columns.")
   }
   
-  X <- XP <- check_preprocess_data(data=data,
-                                   TP=TP,
-                                   FP=FP,
-                                   FN=FN,
-                                   TN=TN,
-                                   study=study,
-                                   conflevel=conflevel)
+  if (!is.data.frame(data)) {
+    stop("'data' must be a data.frame.")
+  }
+  TP_col <- deparse(substitute(TP))
+  FP_col <- deparse(substitute(FP))
+  FN_col <- deparse(substitute(FN))
+  TN_col <- deparse(substitute(TN))
+  study_col <- deparse(substitute(study))
+  
+  dat <- data.frame(
+    study = data[[study_col]],
+    TP = data[[TP_col]],
+    TN = data[[TN_col]],
+    FP = data[[FP_col]],
+    FN = data[[FN_col]])
+  
+  X <- XP <- check_data(dat,
+                        conflevel=conflevel)
   
   XP <- getXP(X)
   n_study <- nrow(X)

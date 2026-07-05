@@ -20,7 +20,9 @@ Implemented methods
 Main workflow
 \itemize{
 \item fitReitsma() -> plot() -> forest()
+\item fitReitsmaSubgroup() -> plot() -> forest()
 \item fitRutterGatsonis() -> plot() -> forest()
+\item fitRutterGatsonisSubgroup() -> plot() -> forest()
 \item fitHoyer() -> plot() -> forest()
 }
 
