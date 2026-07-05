@@ -435,13 +435,9 @@ for(st in unique(draw$study)) {
           y = c(tmp$sens[1],tmp$sens[2]),
           type="l",col = "grey70",lwd =1)}}
 on.exit(par(op))
-
-schuetz5 <- fitRutterGatsonis(data=subset(schuetz2,test=="CT"),
-                              TP=TP,FP=FP,FN=FN,TN=TN,
-                              study=study)  
-schuetz5
-summary(schuetz5)
 ```
+
+
 
 ## References
 
@@ -474,3 +470,4 @@ Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y.
 Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
 Version 2.0 (updated July 2023).
 Cochrane.
+

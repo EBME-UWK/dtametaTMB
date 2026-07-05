@@ -3,7 +3,7 @@ title: "Introduction to dtametaTMB"
 format: 
   html:
      toc: TRUE
- #pdf
+# pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{quarto::html}
@@ -26,7 +26,9 @@ commonly used models:
 - the Rutter and Gatsonis (HSROC) model
 - the Hoyer model for multiple thresholds
 
-using real datasets included in the package.
+using real datasets included in the package. 
+
+We discuss subgroup analyses and meta-regression in a separate vignette. 
 
 *Note:* Rendering forest plots via `forest` may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
@@ -563,3 +565,4 @@ Meta-analysis of full ROC curves using bivariate time-to-event models for interv
 Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y. (editors) (2023).
 Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
 Version 2.0 (updated July 2023). Cochrane.
+
