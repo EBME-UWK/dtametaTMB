@@ -99,7 +99,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  for (i in 1:nsub){
+  for (i in seq_len(nsub)){
     symbols(x=1-x$data$spec[x$data$subgroup==sub[i]],
             y=x$data$sens[x$data$subgroup==sub[i]],
             rectangles=cbind(pct$sp[x$data$subgroup==sub[i]],
@@ -112,7 +112,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   if(HSROC==TRUE){
-    for(i in 1:nsub){
+    for(i in seq_len(nsub)){
       roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered$Lambda[i],
                                   beta=x$RutterGatsonis_recovered$beta[i],
                                   specrange)
@@ -120,7 +120,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
     }
   } ###
   # Add summary point
-  for (i in 1:nsub){
+  for (i in seq_len(nsub)){
     j <- i*2
     mean_point <- data.frame(1-x$sensspec[j,"Orig"],
                              x$sensspec[j-1,"Orig"])
@@ -128,7 +128,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
   }
   # Add confidence and prediction region
 
-  for(i in 1:nsub){
+  for(i in seq_len(nsub)){
     j       <- 2*i
     muA     <- x$estimates_mu[j-1,]$Estimate
     muB     <- x$estimates_mu[j,]$Estimate
@@ -138,12 +138,12 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
     varA    <- x$estimates_mu["sigma2_A.sens",]$Estimate
     varB    <- x$estimates_mu["sigma2_B.spec",]$Estimate
     sAB     <- x$estimates_mu["sigma_AB",]$Estimate
-    region <- getConfPredRegion(muA=muA,muB=muB,
-                                seA=seA,seB=seB,covAB=covAB, # conf
-                                varA=varA,varB=varB,sAB=sAB, # pred
-                                nstudy=nstudy[i],
-                                conflevel=conflevel,
-                                predlevel=predlevel)
+    region  <- getConfPredRegion(muA=muA,muB=muB,
+                                 seA=seA,seB=seB,covAB=covAB, # conf
+                                 varA=varA,varB=varB,sAB=sAB, # pred
+                                 nstudy=nstudy[i],
+                                 conflevel=conflevel,
+                                 predlevel=predlevel)
     lines(region$conf, lty=2, lwd=2, col=col2[i])
     lines(region$pred, lty=3, lwd=2, col=col2[i])
   }

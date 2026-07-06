@@ -162,13 +162,6 @@ fitRutterGatsonisReg <- function(data,
   ngroup <- ncol(Z)
   if(is.null(Z_pred)){Z_pred <- matrix(0,ncol=ngroup,nrow=1)}
   
-  if (nrow(Z) != 2 * nrow(data)) {
-    stop(
-      "'Z' must contain exactly two rows per study",
-      "(one diseased and one non-diseased row)."
-    )
-  }
-  
   if (ncol(Z) != ncol(Z_pred)) {
     stop("'Z' and 'Z_pred' must have the same number of columns.")
   }
@@ -197,6 +190,13 @@ fitRutterGatsonisReg <- function(data,
   ###
   Y     <- reshapeX_RUGA(X)
 
+  if (nrow(Z) != nrow(Y)) {
+    stop(
+      "'Z' must contain exactly two rows per study",
+      "(one diseased and one non-diseased row)."
+    )
+  }
+  
   dat2 <- list(
     y      = Y$y,
     n      = Y$n,

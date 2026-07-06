@@ -75,7 +75,7 @@ plot.RutterGatsonisSubgroup <- function(x,
    plot_SESPGRID(main=main)
    # Data points
    pct <- getWEIGHTS(xdata=x$data,size=size)
-   for (i in 1:nsub){
+   for (i in seq_len(nsub)){
      symbols(x=1-x$data$spec[x$data$subgroup==sub[i]],
              y=x$data$sens[x$data$subgroup==sub[i]],
              rectangles=cbind(pct$sp[x$data$subgroup==sub[i]],
@@ -90,7 +90,7 @@ plot.RutterGatsonisSubgroup <- function(x,
   
    Lambda <- x$sdreport2[lamb,]
    beta   <- x$sdreport2[bet,]
-   for(i in 1:nsub){
+   for(i in seq_len(nsub)){
       roc_points2 <- getROCpoints(Lambda[i],
                                   beta[i],
                                   specrange)

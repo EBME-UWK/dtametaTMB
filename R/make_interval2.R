@@ -35,7 +35,7 @@
 #'
 #' @seealso
 #' \code{\link{restructure_data}},
-#' \code{\link{initHoyer}},
+#' \code{\link{initHoyerAFT}},
 #' \code{\link{fitHoyer}},
 #' \code{\link{fitHoyerAFT}}
 #'

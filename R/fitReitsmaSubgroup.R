@@ -82,6 +82,7 @@
 #'   \item \code{glmmTMB_nu}: fitted model object with dummy/reference-cell parameterization
 #'   \item \code{estimates_nu}: parameter estimates with SE with dummy/reference-cell parameterization.
 #'   \item \code{vcov_nu}: variance-covariance matrix with dummy/reference-cell parameterization.
+#'   \item \code{LRDOR}: Diagnostic odds ratios and likelihood ratios.
 #'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #'   \item \code{subgroups}: The subgroup levels used in the model fit.
 #'   \item \code{constrain}: Random effects parameters fixed at zero.
@@ -341,7 +342,7 @@ fitReitsmaSubgroup <- function(data,
   ####
   muA_names <- paste0("mu_A.", lsub_safe)
   muB_names <- paste0("mu_B.", lsub_safe)
-  for (j in 1:llsub) {
+  for (j in seq_len(llsub)) {
     Y[[muA_names[j]]] <- as.numeric(Y$subgroup == lsub[j]) * Y$sens
     Y[[muB_names[j]]] <- as.numeric(Y$subgroup == lsub[j]) * Y$spec
   }
@@ -384,10 +385,21 @@ fitReitsmaSubgroup <- function(data,
   sesp$type      <- sub("^mu_([AB])\\..*$", "\\1", rownames(sesp))
   sesp$type      <- c(A = "sens", B = "spec")[sesp$type]
   sesp           <- sesp[,c("type","Orig","conflevel","CI_Lower","CI_Upper")]
+  ### Diagnostic odds ratios and Likelihood ratios
+  lrdor2 <- data.frame()
+  for(i in seq_len(llsub)){
+    j <- 2*i
+    lsens  <- esti_V_g_mu$esti[j-1,"Estimate"]
+    lspec  <- esti_V_g_mu$esti[j,"Estimate"]
+    S      <- ma_Y_mu$vcov$cond[(j-1):j,(j-1):j]
+    lrdor  <- getLRDOR(lsens=lsens, lspec=lspec, S=S, conflevel=conflevel)
+    rownames(lrdor) <- paste0(lsub[i],": ",rownames(lrdor))
+    lrdor2 <- rbind(lrdor2,lrdor)
+  }
   ### Recover HSROC parameters
   ruga2 <- data.frame()
   scounter <- llsub*2+1
-  for(i in 1:llsub){
+  for(i in seq_len(llsub)){
     j <- 2*i
     ruga <- getRUGA(lsens=esti_V_g_mu$esti[j-1,"Estimate"],
                     lspec=esti_V_g_mu$esti[j  ,"Estimate"],
@@ -407,6 +419,7 @@ fitReitsmaSubgroup <- function(data,
               glmmTMB_nu   = MA_Y_nu,
               estimates_nu = esti_V_g_nu$esti,
               vcov_nu      = esti_V_g_nu$V_g,
+              LRDOR        = lrdor2,
               RutterGatsonis_recovered = ruga2,
               constrain    = constrain,
               subgroups    = lsub)

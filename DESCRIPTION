@@ -8,7 +8,9 @@ Authors@R:
 Description: Fits the hierarchical summary receiver operating characteristic (HSROC)
     model of Rutter and Gatsonis (2001), the bivariate binomial-normal model of
     Reitsma et al. (2005), and the threshold-based bivariate time-to-event model of
-    Hoyer et al. (2018) using Template Model Builder (TMB).
+    Hoyer et al. (2018) using Template Model Builder (TMB). Provides subgroup analyses,
+    HSROC meta-regression, likelihood-ratio tests, SROC plots, confidence and prediction
+    regions, and coupled forest plots.
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

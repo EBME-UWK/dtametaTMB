@@ -10,7 +10,7 @@
 #'   \describe{
 #'     \item{original}{Original processed data including sensitivity
 #'       (\code{sens}) and false positive rate (\code{fpr})}
-#'     \item{sdreort2}{Summary of model parameters}
+#'     \item{sdreport2}{Summary of model parameters}
 #'     \item{distcode}{Distribution code (1 = Weibull,
 #'       2 = lognormal, 3 = loglogistic)}
 #'   }

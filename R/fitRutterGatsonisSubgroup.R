@@ -308,7 +308,7 @@ fitRutterGatsonisSubgroup <- function(data,
   sigma2_alpha <- rep2["sigma2_alpha","Estimate"]
   sigma2_theta <- rep2["sigma2_theta","Estimate"]
   reit <- reit2 <- c()
-  for(i in 1:llsub){
+  for(i in seq_len(llsub)){
     reit  <- getREIT(Lambda[i], Theta[i], beta[i], sigma2_alpha, sigma2_theta)
     reit2 <- rbind(reit2,reit)
   }

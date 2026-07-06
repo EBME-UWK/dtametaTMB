@@ -18,16 +18,12 @@ print.RutterGatsonisSubgroup <- function(x, ...) {
   n_study <- nrow(x$data)
   n_sub   <- length(x$subgroups)
   converged <- x$fit$convergence == 0
-  loglik <- if (!is.null(x$fit$objective)) 2 * x$fit$objective else NULL
-  
+  ll <- logLik(x)
   
   cat("Number of studies   :", n_study, "\n")
   cat("Number of subgroups :", n_sub, "\n")
   cat("Model fit           :", if (converged) "Converged" else "Not converged", "\n")
-  
-  if (!is.null(loglik)) {
-  cat("-2 log likelihood   :", round(loglik, 3), "\n")
-  }
+  cat("-2 log likelihood   :", round(-2 * as.numeric(ll), 3),"( df =", attr(ll, "df"), ")\n")  
   cat("AIC                 :", round(AIC(x), 3), "\n")
   cat("BIC                 :", round(BIC(x), 3), "\n")
   cat("\n")

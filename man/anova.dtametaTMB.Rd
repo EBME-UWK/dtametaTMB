@@ -61,5 +61,5 @@ when the log-likelihood decreases for a more complex model, suggesting
 that the nesting assumptions may be violated.
 }
 \seealso{
-\code{\link[=logLik]{logLik()}}, \code{\link[stats:anova]{stats::anova()}}
+\code{\link[=logLik]{logLik()}}, \code{\link[=anova]{anova()}}
 }

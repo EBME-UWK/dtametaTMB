@@ -5,6 +5,6 @@ getXP <- function(X){
   X$n0    <- X$FP+X$TN
   X$sens  <- X$TP / X$n1
   X$spec  <- X$TN / X$n0
-  X$recordid <- 1:nrow(X)
+  X$recordid <- seq_len(nrow(X))
   return(X)
 }

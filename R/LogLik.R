@@ -163,7 +163,7 @@ anova_lrt <- function(object, ..., test = "Chisq") {
 #'   }
 #'
 #' @seealso
-#' [logLik()], [stats::anova()]
+#' [logLik()], [anova()]
 #'
 #' @name anova.dtametaTMB
 

@@ -105,6 +105,7 @@ A list of class \code{"ReitsmaSubgroup"} with components:
 \item \code{glmmTMB_nu}: fitted model object with dummy/reference-cell parameterization
 \item \code{estimates_nu}: parameter estimates with SE with dummy/reference-cell parameterization.
 \item \code{vcov_nu}: variance-covariance matrix with dummy/reference-cell parameterization.
+\item \code{LRDOR}: Diagnostic odds ratios and likelihood ratios.
 \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 \item \code{subgroups}: The subgroup levels used in the model fit.
 \item \code{constrain}: Random effects parameters fixed at zero.

@@ -22,19 +22,12 @@ print.ReitsmaSubgroup <- function(x, ...) {
   converged <- tryCatch({
     isTRUE(x$glmmTMB_mu$sdr$pdHess)
   }, error = function(e) FALSE)
-  
-  # logLik extraction (if available)
-  loglik <- tryCatch({
-    -2 * as.numeric(stats::logLik(x$glmmTMB_mu))
-  }, error = function(e) NULL)
-  
+  ll <- logLik(x)
   
   cat("Number of studies   :", n_study, "\n")
   cat("Number of subgroups :", n_sub, "\n")
   cat("Model fit           :", if (converged) "Converged" else "Not converged", "\n")
-  if (!is.null(loglik)) {
-  cat("-2 log likelihood   :", round(loglik, 3), "\n")
-  }
+  cat("-2 log likelihood   :", round(-2 * as.numeric(ll), 3),"( df =", attr(ll, "df"), ")\n")  
   cat("AIC                 :", round(AIC(x), 3), "\n")
   cat("BIC                 :", round(BIC(x), 3), "\n")
   cat("\n")

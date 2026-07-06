@@ -36,6 +36,7 @@ test_that("fitReitsmaSubgroup returns expected components", {
       "glmmTMB_nu",
       "estimates_nu",
       "vcov_nu",
+      "LRDOR",
       "RutterGatsonis_recovered",
       "constrain",
       "subgroups"

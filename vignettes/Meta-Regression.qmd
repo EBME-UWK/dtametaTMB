@@ -437,8 +437,6 @@ for(st in unique(draw$study)) {
 on.exit(par(op))
 ```
 
-
-
 ## References
 
 Reitsma, J. B., et al. (2005).
@@ -469,5 +467,5 @@ Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y.
 (editors) (2023).
 Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
 Version 2.0 (updated July 2023).
-Cochrane.
+*Cochrane.*
 

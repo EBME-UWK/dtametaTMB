@@ -20,7 +20,7 @@ get2esti_V_g <- function(beta_fix, theta, V_full) {
   J  <- matrix(0, nrow = lg, ncol = lg)
   
   ## mu_A, mu_B, vu
-  for(i in 1:lb) { J[i,i] <- 1 }
+  for(i in seq_len(lb)) { J[i,i] <- 1 }
   
   ## sigma2_A = exp(2*theta1)
   J[lb+1, lb+1] <- 2 * exp(2 * theta[1])

@@ -4,10 +4,12 @@
 \alias{forest.Cochrane}
 \title{Coupled Forest plot for diagnostic test accuracy meta-analysis}
 \usage{
-\method{forest}{Cochrane}(x, ...)
+\method{forest}{Cochrane}(x, conflevel = 0.95, ...)
 }
 \arguments{
 \item{x}{Object of class \code{"Cochrane"} such as \code{"RutterGatsonis"}, \code{"Reitsma"} or \code{"HoyerAFT"}}
+
+\item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 
 \item{...}{Additional graphical arguments (not currently in use)}
 }

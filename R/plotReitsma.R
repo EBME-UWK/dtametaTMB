@@ -108,7 +108,7 @@ plot.Reitsma <- function(x, scale=0.02,
     X$n0    <- X$FP+X$TN
     X$true1 <- X$TP
     X$true0 <- X$TN 
-    X$recordid <- 1:nrow(X)
+    X$recordid <- seq_len(nrow(X))
     Y_pw <- reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
                     timevar="sens", times=c(1,0), v.names=c("n","true")) 
     ##
@@ -137,7 +137,7 @@ plot.Reitsma <- function(x, scale=0.02,
     pctse <- vector(mode="numeric", length =nstudy)
     pctsp <- vector(mode="numeric", length =nstudy)
     # Get weights  
-    for (i in 1:nstudy){
+    for (i in seq_len(nstudy)){
       DM <- V
       # DM2 <- diag(rep(100000000000),72)
       # DM1 <- V[c(1:2),c(1:2)]

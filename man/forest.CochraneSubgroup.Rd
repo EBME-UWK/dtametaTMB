@@ -4,10 +4,12 @@
 \alias{forest.CochraneSubgroup}
 \title{Coupled Forest plot for diagnostic test accuracy meta-analysis}
 \usage{
-\method{forest}{CochraneSubgroup}(x, subgroup_label = "Subgroup", ...)
+\method{forest}{CochraneSubgroup}(x, conflevel = 0.95, subgroup_label = "Subgroup", ...)
 }
 \arguments{
 \item{x}{Object of class \code{"CochraneSubgroup"} such as \code{"RutterGatsonisSubgroup"}, \code{"ReitsmaSubgroup"}}
+
+\item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 
 \item{subgroup_label}{Column name for the subgroup. Defaults to \code{"Subgroup"}.}
 
