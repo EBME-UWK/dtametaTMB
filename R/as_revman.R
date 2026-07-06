@@ -1,6 +1,7 @@
 #' Export Model Results for RevMan
 #'
-#' Converts fitted model objects into a format suitable for manual entry
+#' Converts fitted model objects (\code{Reitsma}, \code{ReitsmaSubgroup}), \code{RutterGatsonis}, 
+#' \code{RutterGatsonisSubgroup}) into a format suitable for manual entry
 #' into the Diagnostic Test Accuracy module of Review Manager (RevMan).
 #'
 #' @param x A fitted model object.
@@ -46,11 +47,11 @@ as_revman <- function(x, ...) {
 as_revman.Reitsma <- function(x, ...) {
   
   ## extract these from x
-  mu_se   <- x$estimates[1,"Estimate"]
-  mu_sp   <- x$estimates[2,"Estimate"]
-  var_se  <- x$estimates[3,"Estimate"]
-  var_sp  <- x$estimates[4,"Estimate"]
-  cov_ss  <- x$estimates[5,"Estimate"]
+  mu_se   <- x$estimates["mu_A.sens","Estimate"]
+  mu_sp   <- x$estimates["mu_B.spec","Estimate"]
+  var_se  <- x$estimates["sigma2_A.sens","Estimate"]
+  var_sp  <- x$estimates["sigma2_B.spec","Estimate"]
+  cov_ss  <- x$estimates["sigma_AB","Estimate"]
   cor_ss  <- cov_ss/sqrt(var_se*var_sp)
   
   Lambda  <- x$RutterGatsonis_recovered$Lambda
@@ -59,9 +60,9 @@ as_revman.Reitsma <- function(x, ...) {
   varA    <- x$RutterGatsonis_recovered$sigma2_alpha
   varT    <- x$RutterGatsonis_recovered$sigma2_theta
   
-  seelse  <- x$estimates[1,"Std_Error"]
-  seelsp  <- x$estimates[2,"Std_Error"]
-  coves   <- x$vcov[1,2]
+  seelse  <- x$estimates["mu_A.sens","Std_Error"]
+  seelsp  <- x$estimates["mu_B.spec","Std_Error"]
+  coves   <- x$vcov["mu_A.sens","mu_B.spec"]
   nstudy  <- nrow(x$data)
   
   ret <- data.frame(
@@ -154,35 +155,41 @@ as_revman.RutterGatsonis <- function(x, ...) {
 #' @export
 as_revman.ReitsmaSubgroup <- function(x, ...) {
   
-  subs     <- x$subgroups
-  llsub    <- length(subs)
-  scounter <- llsub*2+1
-  n_study  <- table(x$data$subgroup)
-  res  <- vector("list", llsub)
+  sub     <- levels(x$data$subgroup)
+  subs    <- levels(x$data$subgroup_safe)
+  if(!all(subs == make.names(sub))){
+    stop("Object is corrupted. Please don't change object after running fitReitsmaSubgroup().")
+  }
+  if(!all(x$data$subgroup_safe == make.names(x$data$subgroup))){
+    stop("Object is corrupted. Please don't change object after running fitReitsmaSubgroup().")
+  }
+  res  <- vector("list", length(subs))
   for(i in seq_along(subs)) {
-    sg <- subs[i]
-    j  <- 2*i
+    sg  <- subs[i]
+    sg2 <- sub[i]
+    mu_A.sg <- paste0("mu_A.",sg)
+    mu_B.sg <- paste0("mu_B.",sg)
     ###
-    mu_se  <- x$estimates_mu[j-1,"Estimate"]
-    mu_sp  <- x$estimates_mu[j,"Estimate"]
-    var_se <- x$estimates_mu[scounter,"Estimate"]
-    var_sp <- x$estimates_mu[scounter+1,"Estimate"]
-    cov_ss <- x$estimates_mu[scounter+2,"Estimate"]
+    mu_se  <- x$estimates_mu[mu_A.sg,"Estimate"]
+    mu_sp  <- x$estimates_mu[mu_B.sg,"Estimate"]
+    var_se <- x$estimates_mu["sigma2_A.sens","Estimate"]
+    var_sp <- x$estimates_mu["sigma2_B.spec","Estimate"]
+    cov_ss <- x$estimates_mu["sigma_AB","Estimate"]
     cor_ss <- cov_ss/sqrt(var_se*var_sp)
     ###
-    Lambda <- x$RutterGatsonis_recovered[sg,]$Lambda
-    Theta  <- x$RutterGatsonis_recovered[sg,]$Theta
-    beta   <- x$RutterGatsonis_recovered[sg,]$beta
-    varA   <- x$RutterGatsonis_recovered[sg,]$sigma2_alpha
-    varT   <- x$RutterGatsonis_recovered[sg,]$sigma2_theta
+    Lambda <- x$RutterGatsonis_recovered[sg2,"Lambda"]
+    Theta  <- x$RutterGatsonis_recovered[sg2,"Theta"]
+    beta   <- x$RutterGatsonis_recovered[sg2,"beta"]
+    varA   <- x$RutterGatsonis_recovered[sg2,"sigma2_alpha"]
+    varT   <- x$RutterGatsonis_recovered[sg2,"sigma2_theta"]
     ###
-    seelse <- x$estimates_mu[j-1,"Std_Error"]
-    seelsp <- x$estimates_mu[j,"Std_Error"]
-    coves  <- x$vcov_mu[j-1,j]
-    nstudy <- n_study[i]
+    seelse <- x$estimates_mu[mu_A.sg,"Std_Error"]
+    seelsp <- x$estimates_mu[mu_B.sg,"Std_Error"]
+    coves  <- x$vcov_mu[mu_A.sg,mu_B.sg]
+    nstudy <- sum(x$data$subgroup_safe == sg, na.rm = TRUE)
     ###
     res[[i]] <- data.frame(
-      Subgroup=sg,
+      Subgroup=sg2,
       Externally_Calculated_Parameters=
         c(rep("HSROC model parameters",5),
           rep("Bivariate model parameters",6),
@@ -215,21 +222,18 @@ as_revman.ReitsmaSubgroup <- function(x, ...) {
 #' @rdname as_revman.dtametaTMB
 #' @export
 as_revman.RutterGatsonisSubgroup <- function(x, ...) {
-  
   subs     <- x$subgroups
   llsub    <- length(subs)
   #scounter <- llsub*2+1
-  n_study  <- table(x$data$subgroup)
   res  <- vector("list", llsub)
   for(i in seq_along(subs)) {
     sg <- subs[i]
-    j  <- 2*i
     ###
-    mu_se  <- x$Reitsma_recovered[sg,]$mu_A.sens
-    mu_sp  <- x$Reitsma_recovered[sg,]$mu_B.spec
-    var_se <- x$Reitsma_recovered[sg,]$sigma2_A.sens
-    var_sp <- x$Reitsma_recovered[sg,]$sigma2_B.spec
-    cov_ss <- x$Reitsma_recovered[sg,]$sigma_AB
+    mu_se  <- x$Reitsma_recovered[sg,"mu_A.sens"]
+    mu_sp  <- x$Reitsma_recovered[sg,"mu_B.spec"]
+    var_se <- x$Reitsma_recovered[sg,"sigma2_A.sens"]
+    var_sp <- x$Reitsma_recovered[sg,"sigma2_B.spec"]
+    cov_ss <- x$Reitsma_recovered[sg,"sigma_AB"]
     cor_ss <- cov_ss/sqrt(var_se*var_sp)
       ###
       lamb <- paste0("Lambda_",sg)
@@ -245,7 +249,7 @@ as_revman.RutterGatsonisSubgroup <- function(x, ...) {
     seelse <- NA_real_
     seelsp <- NA_real_
     coves  <- NA_real_
-    nstudy <- n_study[i]
+    nstudy <- sum(x$data$subgroup == sg, na.rm = TRUE)
     ###
     res[[i]] <- data.frame(
       Subgroup=sg,

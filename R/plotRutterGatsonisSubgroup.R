@@ -68,7 +68,7 @@ plot.RutterGatsonisSubgroup <- function(x,
    nsub <- length(sub)
    nstudy <- nrow(x$data)
    if(is.null(col)) col <- rainbow(n=nsub)
-   col2 <- adjustcolor(col,alpha.f=0.5)
+   col2 <- adjustcolor(col,alpha.f=0.6)
    
    op <- par(mar = c(5, 4, 4, 10),
              pty="s")   # enlarge right margin

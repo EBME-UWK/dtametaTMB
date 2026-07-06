@@ -6,8 +6,8 @@
 #' and corresponding confidence and prediction regions. Optionally, the
 #' HSROC (hierarchical summary ROC) curve can be overlaid.
 #'
-#' @param x An object of class \code{"Reitsma"}, as returned by
-#'   \code{\link{fitReitsma}}.
+#' @param x An object of class \code{"ReitsmaSubgroup"}, as returned by
+#'   \code{\link{fitReitsmaSubgroup}}.
 #' @param scale A numeric scaling factor controlling the size of the
 #'   rectangles representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
@@ -85,12 +85,18 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
                                  specrange=c(0.7,0.995),
                                  conflevel=0.95,
                                  predlevel=0.95, ...) {
-  size    <- match.arg(size)
-  sub     <- x$subgroups
-  nsub    <- length(sub)
-  nstudy  <- table(x$data$subgroup)
+  size  <- match.arg(size)
+  sub   <- levels(x$data$subgroup)
+  subs  <- levels(x$data$subgroup_safe)
+  nsub  <- length(sub)
+  if(!all(subs == make.names(sub))){
+    stop("Object is corrupted. Please don't change object after running fitReitsmaSubgroup().")
+  }
+  if(!all(x$data$subgroup_safe == make.names(x$data$subgroup))){
+    stop("Object is corrupted. Please don't change object after running fitReitsmaSubgroup().")
+  }
   if(is.null(col)) col <- rainbow(n=nsub)
-  col2 <- adjustcolor(col,alpha.f=0.5)
+  col2 <- adjustcolor(col,alpha.f=0.6)
   # Calculations for percentage weights
   pct <- getWEIGHTS(xdata=x$data,size=size)
   ####
@@ -99,7 +105,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  for (i in seq_len(nsub)){
+  for (i in seq_along(sub)){
     symbols(x=1-x$data$spec[x$data$subgroup==sub[i]],
             y=x$data$sens[x$data$subgroup==sub[i]],
             rectangles=cbind(pct$sp[x$data$subgroup==sub[i]],
@@ -112,36 +118,40 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   if(HSROC==TRUE){
-    for(i in seq_len(nsub)){
-      roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered$Lambda[i],
-                                  beta=x$RutterGatsonis_recovered$beta[i],
+    for(i in seq_along(sub)){
+      roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered[sub[i],"Lambda"],
+                                  beta=x$RutterGatsonis_recovered[sub[i],"beta"],
                                   specrange)
       points(roc_points2, type="l", lwd=2,ann=F,col=col[i])
     }
   } ###
   # Add summary point
-  for (i in seq_len(nsub)){
-    j <- i*2
-    mean_point <- data.frame(1-x$sensspec[j,"Orig"],
-                             x$sensspec[j-1,"Orig"])
-    points(mean_point, col=col[i],cex=1.5, pch=15)
+  for (i in seq_along(subs)){
+    sg      <- subs[i]
+    mu_A.sg <- paste0("mu_A.",sg)
+    mu_B.sg <- paste0("mu_B.",sg)
+    mean_point <- data.frame(1-x$sensspec[mu_B.sg,"Orig"],
+                             x$sensspec[mu_A.sg,"Orig"])
+    points(mean_point, col=col[i], cex=1.5, pch=15)
   }
   # Add confidence and prediction region
 
-  for(i in seq_len(nsub)){
-    j       <- 2*i
-    muA     <- x$estimates_mu[j-1,]$Estimate
-    muB     <- x$estimates_mu[j,]$Estimate
-    seA     <- x$estimates_mu[j-1,]$Std_Error
-    seB     <- x$estimates_mu[j,]$Std_Error
-    covAB   <- x$vcov_mu[j-1,j]
-    varA    <- x$estimates_mu["sigma2_A.sens",]$Estimate
-    varB    <- x$estimates_mu["sigma2_B.spec",]$Estimate
-    sAB     <- x$estimates_mu["sigma_AB",]$Estimate
+  for(i in seq_along(subs)){
+    sg      <- subs[i]
+    mu_A.sg <- paste0("mu_A.",sg)
+    mu_B.sg <- paste0("mu_B.",sg)
+    muA     <- x$estimates_mu[mu_A.sg,"Estimate"]
+    muB     <- x$estimates_mu[mu_B.sg,"Estimate"]
+    seA     <- x$estimates_mu[mu_A.sg,"Std_Error"]
+    seB     <- x$estimates_mu[mu_B.sg,"Std_Error"]
+    covAB   <- x$vcov_mu[mu_A.sg,mu_B.sg]
+    varA    <- x$estimates_mu["sigma2_A.sens","Estimate"]
+    varB    <- x$estimates_mu["sigma2_B.spec","Estimate"]
+    sAB     <- x$estimates_mu["sigma_AB","Estimate"]
     region  <- getConfPredRegion(muA=muA,muB=muB,
                                  seA=seA,seB=seB,covAB=covAB, # conf
                                  varA=varA,varB=varB,sAB=sAB, # pred
-                                 nstudy=nstudy[i],
+                                 nstudy=sum(x$data$subgroup_safe == sg, na.rm = TRUE),
                                  conflevel=conflevel,
                                  predlevel=predlevel)
     lines(region$conf, lty=2, lwd=2, col=col2[i])

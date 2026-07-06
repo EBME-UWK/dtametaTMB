@@ -19,8 +19,8 @@
 )
 }
 \arguments{
-\item{x}{An object of class \code{"Reitsma"}, as returned by
-\code{\link{fitReitsma}}.}
+\item{x}{An object of class \code{"ReitsmaSubgroup"}, as returned by
+\code{\link{fitReitsmaSubgroup}}.}
 
 \item{scale}{A numeric scaling factor controlling the size of the
 rectangles representing study weights. Default is \code{0.02}.}

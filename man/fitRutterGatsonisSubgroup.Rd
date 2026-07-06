@@ -103,7 +103,7 @@ accuracy and threshold parameters. Optionally, subgroup-specific effects
 can also be estimated for the shape parameter.
 
 The fitted model returns subgroup-specific summary sensitivity estimates
-evaluated at user-specified specificity values. If \code{spec = NA}, the
+evaluated at user-specified specificity values. If \code{spec = NULL}, the
 median observed specificity is used as a proxy.
 
 This function is intended as a convenient wrapper for subgroup analyses

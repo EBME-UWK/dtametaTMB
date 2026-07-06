@@ -290,9 +290,6 @@ fitReitsmaSubgroup <- function(data,
       map_nu$beta <- factor(beta_map_nu)
   }
 
-  
-  
-  
   ### resphaping the data
   Y    <- reshapeX_REIT(X)
   ### Fitting the Reitsma model
@@ -387,25 +384,28 @@ fitReitsmaSubgroup <- function(data,
   sesp           <- sesp[,c("type","Orig","conflevel","CI_Lower","CI_Upper")]
   ### Diagnostic odds ratios and Likelihood ratios
   lrdor2 <- data.frame()
-  for(i in seq_len(llsub)){
-    j <- 2*i
-    lsens  <- esti_V_g_mu$esti[j-1,"Estimate"]
-    lspec  <- esti_V_g_mu$esti[j,"Estimate"]
-    S      <- ma_Y_mu$vcov$cond[(j-1):j,(j-1):j]
+  for(i in seq_along(lsub_safe)){
+    sg      <- lsub_safe[i]
+    mu_A.sg <- paste0("mu_A.",sg)
+    mu_B.sg <- paste0("mu_B.",sg)
+    lsens  <- esti_V_g_mu$esti[mu_A.sg,"Estimate"]
+    lspec  <- esti_V_g_mu$esti[mu_B.sg,"Estimate"]
+    S      <- ma_Y_mu$vcov$cond[c(mu_A.sg,mu_B.sg),c(mu_A.sg,mu_B.sg)]
     lrdor  <- getLRDOR(lsens=lsens, lspec=lspec, S=S, conflevel=conflevel)
     rownames(lrdor) <- paste0(lsub[i],": ",rownames(lrdor))
     lrdor2 <- rbind(lrdor2,lrdor)
   }
   ### Recover HSROC parameters
   ruga2 <- data.frame()
-  scounter <- llsub*2+1
-  for(i in seq_len(llsub)){
-    j <- 2*i
-    ruga <- getRUGA(lsens=esti_V_g_mu$esti[j-1,"Estimate"],
-                    lspec=esti_V_g_mu$esti[j  ,"Estimate"],
-                    sigma_a=sqrt(esti_V_g_mu$esti[scounter,"Estimate"]),
-                    sigma_b=sqrt(esti_V_g_mu$esti[scounter+1,"Estimate"]),
-                    sigma_ab=esti_V_g_mu$esti[scounter+2,"Estimate"])
+  for(i in seq_along(lsub_safe)){
+    sg      <- lsub_safe[i]
+    mu_A.sg <- paste0("mu_A.",sg)
+    mu_B.sg <- paste0("mu_B.",sg)
+    ruga <- getRUGA(lsens=esti_V_g_mu$esti[mu_A.sg,"Estimate"],
+                    lspec=esti_V_g_mu$esti[mu_B.sg,"Estimate"],
+                    sigma_a=sqrt(esti_V_g_mu$esti["sigma2_A.sens","Estimate"]),
+                    sigma_b=sqrt(esti_V_g_mu$esti["sigma2_B.spec","Estimate"]),
+                    sigma_ab=esti_V_g_mu$esti["sigma_AB","Estimate"])
     ruga2 <- rbind(ruga2,ruga)
   }
   rownames(ruga2) <- lsub

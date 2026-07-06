@@ -52,7 +52,8 @@ The returned table contains the model parameters displayed by RevMan:
 }
 }
 \description{
-Converts fitted model objects into a format suitable for manual entry
+Converts fitted model objects (\code{Reitsma}, \code{ReitsmaSubgroup}), \code{RutterGatsonis},
+\code{RutterGatsonisSubgroup}) into a format suitable for manual entry
 into the Diagnostic Test Accuracy module of Review Manager (RevMan).
 }
 \note{

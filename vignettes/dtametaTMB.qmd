@@ -3,7 +3,7 @@ title: "Introduction to dtametaTMB"
 format: 
   html:
      toc: TRUE
-# pdf
+ #pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{quarto::html}
