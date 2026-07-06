@@ -4,25 +4,7 @@
 #' into the Diagnostic Test Accuracy module of Review Manager (RevMan).
 #'
 #' @param x A fitted model object.
-#' @param ... Further arguments passed to methods.
-#'
-#' @return
-#' A data frame containing parameter estimates formatted according to the
-#' parameter names used in RevMan.
-#'
-#' @export
-as_revman <- function(x, ...) {
-  UseMethod("as_revman")
-}
-
-#' Export Reitsma Model Results for RevMan
-#'
-#' Creates a data frame containing the parameter estimates required for
-#' manual entry of a bivariate model into the Diagnostic Test Accuracy
-#' module of Review Manager (RevMan).
-#'
-#' @param x An object of class \code{"Reitsma"}.
-#' @param ... Not used.
+#' @param ... Currently not used.
 #'
 #' @return
 #' A data frame with columns:
@@ -32,9 +14,7 @@ as_revman <- function(x, ...) {
 #'   \item{Estimate}{Parameter estimate.}
 #' }
 #'
-#' @details
-#' The returned table contains the bivariate model parameters displayed by
-#' RevMan:
+#' The returned table contains the model parameters displayed by RevMan:
 #' \itemize{
 #'   \item \code{E(logitSe)}
 #'   \item \code{E(logitSp)}
@@ -53,6 +33,15 @@ as_revman <- function(x, ...) {
 #'   \item \code{Studies}
 #' }
 #'
+#' @note For Rutter and Gatsonis models \code{SE(E(logitSe))}, \code{SE(E(logitSp))}, and \code{Cov(Es)} are not computed.
+#' @export
+#' @name as_revman.dtametaTMB
+as_revman <- function(x, ...) {
+  UseMethod("as_revman")
+}
+
+
+#' @rdname as_revman.dtametaTMB
 #' @export
 as_revman.Reitsma <- function(x, ...) {
   
@@ -107,44 +96,7 @@ as_revman.Reitsma <- function(x, ...) {
 }
 
 
-#' Export Rutter Gatsonis Model Results for RevMan
-#'
-#' Creates a data frame containing the parameter estimates required for
-#' manual entry of a bivariate model into the Diagnostic Test Accuracy
-#' module of Review Manager (RevMan).
-#'
-#' @param x An object of class \code{"RutterGatsonis"}.
-#' @param ... Not used.
-#'
-#' @return
-#' A data frame with columns:
-#' \describe{
-#'   \item{Externally Calculated Parameters}{Revman model/parameter types.}
-#'   \item{Parameter}{RevMan parameter name.}
-#'   \item{Estimate}{Parameter estimate.}
-#' }
-#'
-#' @details
-#' The returned table contains the bivariate model parameters displayed by
-#' RevMan:
-#' \itemize{
-#'   \item \code{E(logitSe)}
-#'   \item \code{E(logitSp)}
-#'   \item \code{Var(logitSe)}
-#'   \item \code{Var(logitSp)}
-#'   \item \code{Cov(logits)}
-#'   \item \code{Corr(logits)}
-#'   \item \code{Lambda}
-#'   \item \code{Theta}
-#'   \item \code{beta}
-#'   \item \code{Var(accuracy)}
-#'   \item \code{Var(threshold)}
-#'   \item \code{SE(E(logitSe))}
-#'   \item \code{SE(E(logitSp))}
-#'   \item \code{Cov(Es)}
-#'   \item \code{Studies}
-#' }
-#'
+#' @rdname as_revman.dtametaTMB
 #' @export
 as_revman.RutterGatsonis <- function(x, ...) {
   ## extract these from x
@@ -198,44 +150,7 @@ as_revman.RutterGatsonis <- function(x, ...) {
 }
 
 
-#' Export Reitsma Subgroup Model Results for RevMan
-#'
-#' Creates a data frame containing the parameter estimates required for
-#' manual entry of a bivariate model into the Diagnostic Test Accuracy
-#' module of Review Manager (RevMan).
-#'
-#' @param x An object of class \code{"ReitsmaSubgroup"}.
-#' @param ... Not used.
-#'
-#' @return
-#' A data frame with columns:
-#' \describe{
-#'   \item{Externally Calculated Parameters}{Revman model/parameter types.}
-#'   \item{Parameter}{RevMan parameter name.}
-#'   \item{Estimate}{Parameter estimate.}
-#' }
-#'
-#' @details
-#' The returned table contains the bivariate model parameters displayed by
-#' RevMan:
-#' \itemize{
-#'   \item \code{E(logitSe)}
-#'   \item \code{E(logitSp)}
-#'   \item \code{Var(logitSe)}
-#'   \item \code{Var(logitSp)}
-#'   \item \code{Cov(logits)}
-#'   \item \code{Corr(logits)}
-#'   \item \code{Lambda}
-#'   \item \code{Theta}
-#'   \item \code{beta}
-#'   \item \code{Var(accuracy)}
-#'   \item \code{Var(threshold)}
-#'   \item \code{SE(E(logitSe))}
-#'   \item \code{SE(E(logitSp))}
-#'   \item \code{Cov(Es)}
-#'   \item \code{Studies}
-#' }
-#'
+#' @rdname as_revman.dtametaTMB
 #' @export
 as_revman.ReitsmaSubgroup <- function(x, ...) {
   
@@ -297,44 +212,7 @@ as_revman.ReitsmaSubgroup <- function(x, ...) {
 }
 
 
-#' Export Rutter Gatsonis Subgroup Model Results for RevMan
-#'
-#' Creates a data frame containing the parameter estimates required for
-#' manual entry of a bivariate model into the Diagnostic Test Accuracy
-#' module of Review Manager (RevMan).
-#'
-#' @param x An object of class \code{"RutterGatsonisSubgroup"}.
-#' @param ... Not used.
-#'
-#' @return
-#' A data frame with columns:
-#' \describe{
-#'   \item{Externally Calculated Parameters}{Revman model/parameter types.}
-#'   \item{Parameter}{RevMan parameter name.}
-#'   \item{Estimate}{Parameter estimate.}
-#' }
-#'
-#' @details
-#' The returned table contains the bivariate model parameters displayed by
-#' RevMan:
-#' \itemize{
-#'   \item \code{E(logitSe)}
-#'   \item \code{E(logitSp)}
-#'   \item \code{Var(logitSe)}
-#'   \item \code{Var(logitSp)}
-#'   \item \code{Cov(logits)}
-#'   \item \code{Corr(logits)}
-#'   \item \code{Lambda}
-#'   \item \code{Theta}
-#'   \item \code{beta}
-#'   \item \code{Var(accuracy)}
-#'   \item \code{Var(threshold)}
-#'   \item \code{SE(E(logitSe))}
-#'   \item \code{SE(E(logitSp))}
-#'   \item \code{Cov(Es)}
-#'   \item \code{Studies}
-#' }
-#'
+#' @rdname as_revman.dtametaTMB
 #' @export
 as_revman.RutterGatsonisSubgroup <- function(x, ...) {
   
