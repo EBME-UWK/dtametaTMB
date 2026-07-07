@@ -36,7 +36,7 @@ Included datasets
 \item schuetz
 }
 
-See the package vignette for worked examples and model descriptions.
+See the package vignettes for worked examples and model descriptions.
 }
 \author{
 \strong{Maintainer}: Claus Nowak \email{claus.nowak@donau-uni.ac.at}

@@ -16,7 +16,7 @@ Invisibly returns the input object.
 }
 \description{
 Displays a concise summary of a fitted Hoyer AFT model, including
-distribution, number of studies, threshold, and optimization status.
+distribution, number of studies, convergence status, and likelihood-based fit statistics.
 }
 \seealso{
 \code{\link{summary.HoyerAFT}}

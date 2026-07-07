@@ -30,11 +30,9 @@ rectangles representing study weights. Default is \code{0.02}.}
 \item{"se"}{Size proportional to precision on the logit scale.}
 }}
 
-\item{nudge_legend}{Numeric value controlling the horizontal position of the
-subgroup legend relative to the right side of the plotting region.
-More negative values move the legend further to the right (outside the plot),
-whereas values closer to zero move it closer to the plotting area.
-Default is \code{-0.4}.}
+\item{nudge_legend}{Numeric horizontal offset for the subgroup legend.
+More negative values move the legend further right, outside the plotting area.
+Values closer to zero move it closer to the panel. Default is \code{-0.4}.}
 
 \item{specrange}{A numeric vector of length 2 giving the range of
 specificities over which the HSROC curve is plotted.

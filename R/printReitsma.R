@@ -1,8 +1,8 @@
 #' Print Method for Reitsma Objects
 #'
 #' Displays a concise summary of a fitted Reitsma diagnostic test
-#' accuracy model, including number of studies, convergence status,
-#' and key parameter estimates.
+#' accuracy model, including number of studies, convergence status
+#' and likelihood-based fit statistics.
 #'
 #' @param x An object of class \code{"Reitsma"}.
 #' @param ... Additional arguments (unused).

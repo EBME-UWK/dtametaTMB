@@ -1,7 +1,8 @@
 #' Print Method for ReitsmaSubgroup Objects
 #'
 #' Displays a concise summary of a fitted Reitsma Subgroup diagnostic test
-#' accuracy model, including number of studies, convergence status.
+#' accuracy model, including number of studies, convergence status, and
+#' likelihood-based fit statistics.
 #'
 #' @param x An object of class \code{"ReitsmaSubgroup"}.
 #' @param ... Additional arguments (unused).

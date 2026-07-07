@@ -26,7 +26,7 @@
 #' * RF
 #' * schuetz
 #'
-#' See the package vignette for worked examples and model descriptions.
+#' See the package vignettes for worked examples and model descriptions.
 #'
 #' @name dtametaTMB
 #' @rawNamespace useDynLib(dtametaTMB, .registration=TRUE); useDynLib(dtametaTMB_TMBExports)

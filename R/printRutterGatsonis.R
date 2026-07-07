@@ -1,7 +1,8 @@
 #' Print Method for RutterGatsonis Objects
 #'
 #' Displays a concise summary of a fitted HSROC model,
-#' including number of studies, convergence status, and key estimates.
+#' including number of studies, convergence status, and
+#' likelihood-based fit statistics.
 #'
 #' @param x An object of class \code{"RutterGatsonis"}.
 #' @param ... Additional arguments (unused).

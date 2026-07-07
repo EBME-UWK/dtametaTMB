@@ -16,7 +16,8 @@ Invisibly returns the input object.
 }
 \description{
 Displays a concise summary of a fitted Reitsma Subgroup diagnostic test
-accuracy model, including number of studies, convergence status.
+accuracy model, including number of studies, convergence status, and
+likelihood-based fit statistics.
 }
 \seealso{
 \code{\link{summary.ReitsmaSubgroup}}

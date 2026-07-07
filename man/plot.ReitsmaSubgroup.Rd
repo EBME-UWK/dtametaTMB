@@ -40,11 +40,9 @@ Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 study-level rectangles, summary points, confidence and prediction region.
 If \code{NULL}, colours are generated automatically.}
 
-\item{nudge_legend}{Numeric value controlling the horizontal position of the
-subgroup legend relative to the right side of the plotting region.
-More negative values move the legend further to the right (outside the plot),
-whereas values closer to zero move it closer to the plotting area.
-Default is \code{-0.4}.}
+\item{nudge_legend}{Numeric horizontal offset for the subgroup legend.
+More negative values move the legend further right, outside the plotting area.
+Values closer to zero move it closer to the panel. Default is \code{-0.4}.}
 
 \item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.
 Default is \code{FALSE}.}

@@ -1,7 +1,7 @@
 #' Print Hoyer AFT Model Object
 #'
 #' Displays a concise summary of a fitted Hoyer AFT model, including
-#' distribution, number of studies, threshold, and optimization status.
+#' distribution, number of studies, convergence status, and likelihood-based fit statistics.
 #'
 #' @param x An object of class \code{"HoyerAFT"}.
 #' @param ... Further arguments (unused).

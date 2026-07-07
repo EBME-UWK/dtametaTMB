@@ -20,11 +20,9 @@
 #' @param specrange A numeric vector of length 2 giving the range of
 #'   specificities over which the HSROC curve is plotted.
 #'   Defaults to \code{c(0.7, 0.995)}.
-#' @param nudge_legend Numeric value controlling the horizontal position of the
-#'   subgroup legend relative to the right side of the plotting region.
-#'   More negative values move the legend further to the right (outside the plot),
-#'   whereas values closer to zero move it closer to the plotting area.
-#'   Default is \code{-0.4}.
+#' @param nudge_legend Numeric horizontal offset for the subgroup legend.
+#'   More negative values move the legend further right, outside the plotting area.
+#'   Values closer to zero move it closer to the panel. Default is \code{-0.4}.
 #' @param connectstudies Whether the point estimates (rectangles) of two subgroups 
 #'   within the same study should be connected. Defaults to \code{FALSE}.
 #' @param main Character string giving the main title of the plot.
