@@ -75,8 +75,6 @@
 #' @importFrom stats qlogis plogis predict qf
 #' @method plot Reitsma
 #' @export
-
-
 plot.Reitsma <- function(x, scale=0.02, 
                             size=c("fisher","equal","sampsize","se"), 
                             main="Diagnostic Test Accuracy Meta-Analysis",
@@ -174,7 +172,7 @@ plot.Reitsma <- function(x, scale=0.02,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pctsp,pctse)*scale,inches=F,add=T,fg="darkgray")
+  symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pctsp,pctse)*scale,inches=FALSE,add=TRUE,fg="darkgray")
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   if(HSROC==TRUE){

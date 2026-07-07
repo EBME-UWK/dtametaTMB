@@ -80,8 +80,8 @@ plot.RutterGatsonisSubgroup <- function(x,
              y=x$data$sens[x$data$subgroup==sub[i]],
              rectangles=cbind(pct$sp[x$data$subgroup==sub[i]],
                               pct$se[x$data$subgroup==sub[i]])*scale,
-             inches=F,
-             add=T,
+             inches=FALSE,
+             add=TRUE,
              fg=col2[i])
    }
    
@@ -94,7 +94,7 @@ plot.RutterGatsonisSubgroup <- function(x,
       roc_points2 <- getROCpoints(Lambda[i],
                                   beta[i],
                                   specrange)
-      points(roc_points2, type="l", lwd=2,ann=F,col=col[i])
+      points(roc_points2, type="l", lwd=2,ann=FALSE,col=col[i])
    }
    
    legend("right",

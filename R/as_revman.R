@@ -169,6 +169,16 @@ as_revman.ReitsmaSubgroup <- function(x, ...) {
     sg2 <- sub[i]
     mu_A.sg <- paste0("mu_A.",sg)
     mu_B.sg <- paste0("mu_B.",sg)
+    if(x$variances=="unequal"){
+      s2_A.sg <- paste0("sigma2_A.",sg)
+      s2_B.sg <- paste0("sigma2_B.",sg)
+      s_AB.sg <- paste0("sigma_AB.",sg)
+    }
+    if(x$variances=="common"){
+      s2_A.sg <- "sigma2_A.sens"
+      s2_B.sg <- "sigma2_B.spec"
+      s_AB.sg <- "sigma_AB"
+    }
     ###
     mu_se  <- x$estimates_mu[mu_A.sg,"Estimate"]
     mu_sp  <- x$estimates_mu[mu_B.sg,"Estimate"]

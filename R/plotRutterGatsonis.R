@@ -61,7 +61,7 @@ plot.RutterGatsonis <- function(x, scale=0.02,size=c("equal","sampsize","se"),
   plot_SESPGRID(main=main)
   # Plot study level estimates 
   pct <- getWEIGHTS(x$data,size)
-  symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pct$sp,pct$se)*scale,inches=F,add=T,fg="darkgray")
+  symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pct$sp,pct$se)*scale,inches=FALSE,add=TRUE,fg="darkgray")
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   points(roc_points2, type="l", lwd=2,ann=F)###

@@ -13,7 +13,8 @@ fitReitsmaSubgroup(
   study,
   subgroup,
   constrain = NULL,
-  subgroup_constrain = NULL,
+  sensspec_constrain = NULL,
+  variances = c("common", "unequal"),
   conflevel = 0.95
 )
 }
@@ -61,9 +62,11 @@ This also implies a zero covariance.
 All random-effects variance and covariance parameters are fixed
 at zero, resulting in a fixed-effects model.
 }
-}}
+}
+These random-effects simplifications are currently only available for
+\code{variances="common"}.}
 
-\item{subgroup_constrain}{Optional character vector specifying
+\item{sensspec_constrain}{Optional character vector specifying
 restrictions on subgroup-specific logit-sensitivity and/or
 logit-specificity parameters.
 
@@ -85,12 +88,16 @@ in logit-sensitivity.
 }
 
 Both constraints may be specified simultaneously, e.g.
-\code{subgroup_constrain = c("sens", "spec")}, which forces
+\code{sensspec_constrain = c("sens", "spec")}, which forces
 all subgroup-specific sensitivity and specificity parameters
 to be equal across subgroups.
 
 If \code{NULL} (default), separate sensitivity and specificity
 parameters are estimated for each subgroup.}
+
+\item{variances}{Whether the between-study random-effects variance-covariance
+matrix should be assumed to be \code{"common"} (default) or (\code{"unequal"})
+across subgroups.}
 
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 }

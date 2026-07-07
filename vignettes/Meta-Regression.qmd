@@ -2,8 +2,8 @@
 title: "Meta-Regression"
 format: 
    html:
-     toc: TRUE
-#   pdf
+    toc: TRUE
+  # pdf
 vignette: >
   %\VignetteIndexEntry{Meta-Regression}
   %\VignetteEncoding{UTF-8}
@@ -154,7 +154,7 @@ summary(constrainA)$estimates
 fixes the logit sensitivity variance to zero. This also implies that the random effects covariance is zero.
 Note that you can also set `constrain` to `"sigma_AB"`, `"sigma2_B"`, or `"all"`. 
 
-Constraining fixed effects is controlled by the `subgroup_constrain` argument. For example,
+Constraining fixed effects is controlled by the `sensspec_constrain` argument. For example,
 
 ```{r}
 #| echo: TRUE
@@ -165,7 +165,7 @@ constrainsens <- fitReitsmaSubgroup(data=anticcp,
                                     TN=TN,
                                     study=study,
                                     subgroup=generation,
-                                    subgroup_constrain="sens")
+                                    sensspec_constrain="sens")
 summary(constrainsens)$estimates
 ```
 assumes equal (logit) sensitivities in all subgroups.
@@ -177,6 +177,29 @@ We can perform a likelihood ratio test via `anova`, essentially testing whether 
 
 ```{r}
 anova(constrainsens,reitsmasub)
+```
+
+## How do I allow for different subgroup-specific random-effects (co-)variances in the Reitsma model?
+
+```{r}
+#| fig.height: 7
+#| fig.width: 8
+#| echo: TRUE
+heteroskedastic <- fitReitsmaSubgroup(data=anticcp,
+                                      TP=TP,
+                                      FP=FP,
+                                      FN=FN,
+                                      TN=TN,
+                                      study=study,
+                                      subgroup=generation,
+                                      variances="unequal")
+heteroskedastic
+plot(heteroskedastic,
+     scale=0.01,
+     nudge_legend=-0.2,
+     size="se",
+     col=c("black","red"))
+anova(reitsmasub,heteroskedastic)
 ```
 
 
@@ -397,12 +420,12 @@ schuetzreitsma2 <- fitReitsmaSubgroup(data=schuetz,
                                       TP=TP,FP=FP,FN=FN,TN=TN,
                                       study=study,
                                       subgroup=test,
-                                      subgroup_constrain="sens")
+                                      sensspec_constrain="sens")
 schuetzreitsma3 <- fitReitsmaSubgroup(data=schuetz,
                                       TP=TP,FP=FP,FN=FN,TN=TN,
                                       study=study,
                                       subgroup=test,
-                                      subgroup_constrain="spec")
+                                      sensspec_constrain="spec")
 anova(schuetzreitsma2,schuetzreitsma)
 anova(schuetzreitsma3,schuetzreitsma)
 ```

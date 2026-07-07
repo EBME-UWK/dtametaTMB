@@ -88,6 +88,7 @@ NULL
 
 anova_lrt <- function(object, ..., test = "Chisq") {
   models <- list(object, ...)
+ 
   if (length(models) < 2) {
     stop("At least two fitted models are required.")
   }

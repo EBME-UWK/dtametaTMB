@@ -9,7 +9,6 @@
 #' @seealso \code{\link{summary.HoyerAFT}}
 #' @method print HoyerAFT
 #' @export
-
 print.HoyerAFT <- function(x, ...) {
   
   cat("\n", "Hoyer Model", "\n", sep = "")

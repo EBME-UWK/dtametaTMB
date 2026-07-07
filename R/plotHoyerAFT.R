@@ -71,7 +71,7 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
   ### Plot coordinate system
   pct <- getWEIGHTS(HH,size)
   plot_SESPGRID(main=main)
-  symbols(x=x$data$fpr,y=x$data$sens,rectangles=cbind(pct$sp,pct$se)*scale,inches=F,add=T,fg="darkgray")
+  symbols(x=x$data$fpr,y=x$data$sens,rectangles=cbind(pct$sp,pct$se)*scale,inches=FALSE,add=TRUE,fg="darkgray")
   # Add lines
   studies <- unique(HH$study)
   for(i in seq_along(studies)) {

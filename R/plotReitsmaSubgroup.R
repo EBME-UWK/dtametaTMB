@@ -74,8 +74,6 @@
 #' @method plot ReitsmaSubgroup
 #' @importFrom grDevices adjustcolor rainbow
 #' @export
-
-
 plot.ReitsmaSubgroup <- function(x, scale=0.02, 
                                  size=c("equal","sampsize","se"), 
                                  main="Diagnostic Test Accuracy Meta-Analysis",
@@ -110,8 +108,8 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
             y=x$data$sens[x$data$subgroup==sub[i]],
             rectangles=cbind(pct$sp[x$data$subgroup==sub[i]],
                              pct$se[x$data$subgroup==sub[i]])*scale,
-            inches=F,
-            add=T,
+            inches=FALSE,
+            add=TRUE,
             fg=col2[i])
   }
   
@@ -122,7 +120,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
       roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered[sub[i],"Lambda"],
                                   beta=x$RutterGatsonis_recovered[sub[i],"beta"],
                                   specrange)
-      points(roc_points2, type="l", lwd=2,ann=F,col=col[i])
+      points(roc_points2, type="l", lwd=2,ann=FALSE,col=col[i])
     }
   } ###
   # Add summary point
@@ -135,19 +133,28 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
     points(mean_point, col=col[i], cex=1.5, pch=15)
   }
   # Add confidence and prediction region
-
   for(i in seq_along(subs)){
     sg      <- subs[i]
     mu_A.sg <- paste0("mu_A.",sg)
     mu_B.sg <- paste0("mu_B.",sg)
+    if(x$variances=="unequal"){
+      s2_A.sg <- paste0("sigma2_A.",sg)
+      s2_B.sg <- paste0("sigma2_B.",sg)
+      s_AB.sg <- paste0("sigma_AB.",sg)
+    }
+    if(x$variances=="common"){
+      s2_A.sg <- "sigma2_A.sens"
+      s2_B.sg <- "sigma2_B.spec"
+      s_AB.sg <- "sigma_AB"
+    }
     muA     <- x$estimates_mu[mu_A.sg,"Estimate"]
     muB     <- x$estimates_mu[mu_B.sg,"Estimate"]
     seA     <- x$estimates_mu[mu_A.sg,"Std_Error"]
     seB     <- x$estimates_mu[mu_B.sg,"Std_Error"]
     covAB   <- x$vcov_mu[mu_A.sg,mu_B.sg]
-    varA    <- x$estimates_mu["sigma2_A.sens","Estimate"]
-    varB    <- x$estimates_mu["sigma2_B.spec","Estimate"]
-    sAB     <- x$estimates_mu["sigma_AB","Estimate"]
+    varA    <- x$estimates_mu[s2_A.sg,"Estimate"]
+    varB    <- x$estimates_mu[s2_B.sg,"Estimate"]
+    sAB     <- x$estimates_mu[s_AB.sg,"Estimate"]
     region  <- getConfPredRegion(muA=muA,muB=muB,
                                  seA=seA,seB=seB,covAB=covAB, # conf
                                  varA=varA,varB=varB,sAB=sAB, # pred
