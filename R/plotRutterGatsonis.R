@@ -45,6 +45,8 @@
 #' \emph{BMC Medical Research Methodology}, 19, 81.
 #' \doi{10.1186/s12874-019-0724-x}
 #' 
+#' @return
+#' No return value. Called for its side effect of producing a plot.
 #' @seealso \code{\link{fitRutterGatsonis}}
 #' @method plot RutterGatsonis
 #' @export
@@ -56,7 +58,9 @@ plot.RutterGatsonis <- function(x, scale=0.02,size=c("equal","sampsize","se"),
   beta    <- x$sdreport2["beta","Estimate"]
   roc_points2 <- getROCpoints(Lambda,beta,specrange=specrange)
   ####
-  op <- par(pty = "s")
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  par(pty = "s")
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
@@ -75,5 +79,5 @@ plot.RutterGatsonis <- function(x, scale=0.02,size=c("equal","sampsize","se"),
            lty = c(NA,1,NA), 
            lwd = c(NA,2,NA), 
            col = c(NA,"black","darkgray"))
-  on.exit(par(op))
+  invisible(NULL)
 }

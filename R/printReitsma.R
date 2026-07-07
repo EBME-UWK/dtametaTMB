@@ -8,7 +8,8 @@
 #' @param ... Additional arguments (unused).
 #'
 #' @seealso \code{\link{summary.Reitsma}}
-#'
+#' @return
+#' Invisibly returns the input object.
 #' @method print Reitsma
 #' @export
 print.Reitsma <- function(x, ...) {

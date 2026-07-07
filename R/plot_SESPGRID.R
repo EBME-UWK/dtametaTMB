@@ -1,6 +1,6 @@
 #' @keywords internal
 #' @noRd
-plot_SESPGRID <- function(main){
+plot_SESPGRID <- function(main,...){
   plot(1,1, ylim=c(0,1), xlim=c(0,1), xaxt = "n", yaxt="n",
        ann=F, pch=20, col="white",las=1,asp=1)
   axis( side = 1,                          # 1 = bottom axis

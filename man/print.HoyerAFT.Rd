@@ -11,6 +11,9 @@
 
 \item{...}{Further arguments (unused).}
 }
+\value{
+Invisibly returns the input object.
+}
 \description{
 Displays a concise summary of a fitted Hoyer AFT model, including
 distribution, number of studies, threshold, and optimization status.

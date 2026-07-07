@@ -11,6 +11,9 @@
 
 \item{...}{Additional arguments (unused).}
 }
+\value{
+Invisibly returns the input object.
+}
 \description{
 Displays a concise summary of a fitted HSROC model,
 including number of studies, and convergence status.

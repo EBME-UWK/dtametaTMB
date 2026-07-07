@@ -25,8 +25,11 @@
 #'   More negative values move the legend further to the right (outside the plot),
 #'   whereas values closer to zero move it closer to the plotting area.
 #'   Default is \code{-0.4}.
+#' @param connectstudies Whether the point estimates (rectangles) of two subgroups 
+#'   within the same study should be connected. Defaults to \code{FALSE}.
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
+#'   
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
 #' @details
@@ -51,6 +54,10 @@
 #' \emph{BMC Medical Research Methodology}, 19, 81.
 #' \doi{10.1186/s12874-019-0724-x}
 #'
+#' 
+#' @return
+#' No return value. Called for its side effect of producing a plot.
+#'
 #' @seealso \code{\link{fitRutterGatsonisSubgroup}}
 #' @method plot RutterGatsonisSubgroup
 #' @importFrom grDevices adjustcolor rainbow
@@ -62,16 +69,24 @@ plot.RutterGatsonisSubgroup <- function(x,
                                         specrange=c(0.7,0.995),
                                         col=NULL,
                                         main="Diagnostic Test Accuracy Meta-Analysis",
+                                        connectstudies=FALSE,
                                         ...){
+   if(connectstudies) {
+     if(length(unique(x$data$subgroup)) != 2) {
+       warning("'connectstudies=TRUE' is only recommended for two-subgroup comparisons." )
+     }
+   }
    size <- match.arg(size)
    sub  <- x$subgroups
    nsub <- length(sub)
    nstudy <- nrow(x$data)
-   if(is.null(col)) col <- rainbow(n=nsub)
-   col2 <- adjustcolor(col,alpha.f=0.6)
-   
-   op <- par(mar = c(5, 4, 4, 10),
-             pty="s")   # enlarge right margin
+   if(is.null(col)) col <- grDevices::rainbow(n=nsub)
+   col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
+   ##
+   oldpar <- par(no.readonly = TRUE)
+   on.exit(par(oldpar))
+   par(mar = c(5, 4, 4, 10),
+       pty="s")   # enlarge right margin
    plot_SESPGRID(main=main)
    # Data points
    pct <- getWEIGHTS(xdata=x$data,size=size)
@@ -96,7 +111,19 @@ plot.RutterGatsonisSubgroup <- function(x,
                                   specrange)
       points(roc_points2, type="l", lwd=2,ann=FALSE,col=col[i])
    }
-   
+   ## Connect studies
+   if(connectstudies){
+     for(st in unique(x$data$study)){
+       tmp <- x$data[x$data$study == st, ]
+       tmp <- tmp[order(tmp$subgroup), ]
+       if(nrow(tmp) == 2) {
+         lines(x = c(1-tmp$spec[1],1-tmp$spec[2]),
+               y = c(tmp$sens[1],tmp$sens[2]),
+               type="l",col = "grey70",lwd =1)
+       }
+     }
+   }
+   ###
    legend("right",
           inset = c(nudge_legend, 0),
           legend = sub,
@@ -115,6 +142,5 @@ plot.RutterGatsonisSubgroup <- function(x,
           lty = c(NA,1,NA), 
           lwd = c(NA,2,NA), 
           col = c(NA,"black","darkgray"))
-   
-    on.exit(par(op))
+   invisible(NULL)
 }

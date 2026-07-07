@@ -1,4 +1,7 @@
 #' Coupled Forest plot for diagnostic test accuracy meta-analysis
+#' 
+#' Provides coupled forest plots of sensitivities and specificities
+#' with Clopper-Pearson confidence limits.
 #'
 #' @param x Object of class \code{"CochraneSubgroup"} such as \code{"RutterGatsonisSubgroup"}, \code{"ReitsmaSubgroup"}
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
@@ -9,6 +12,8 @@
 #' @importFrom forestploter forest
 #' @importFrom grid unit 
 #' @importFrom stats qbeta
+#' @return
+#' No return value. Called for its side effect of producing a plot.
 #' @export
 forest.CochraneSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup", ...) {
   XP <- x$data
@@ -104,5 +109,6 @@ forest.CochraneSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup"
   #   plot(p)
   #   
   # }
+  invisible(NULL)
 }
 

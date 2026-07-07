@@ -7,7 +7,8 @@
 #' @param ... Additional arguments (unused).
 #'
 #' @seealso \code{\link{summary.RutterGatsonisSubgroup}}
-#'
+#' @return
+#' Invisibly returns the input object.
 #' @method print RutterGatsonisSubgroup
 #' @export
 print.RutterGatsonisSubgroup <- function(x, ...) {

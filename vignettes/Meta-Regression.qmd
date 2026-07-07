@@ -3,14 +3,11 @@ title: "Meta-Regression"
 format: 
    html:
     toc: TRUE
-  # pdf
+  #   pdf
 vignette: >
   %\VignetteIndexEntry{Meta-Regression}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{quarto::html}
-editor: 
-  markdown: 
-    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -25,9 +22,7 @@ This vignette introduces the regression functionality of the `dtametaTMB` packag
 
 ## Validation
 
-The subgroup HSROC and Reitsma implementations reproduce the Cochrane Handbook RF and anticcp examples closely, including the baseline parameters (HSROC: accuracy, threshold, shape // Reitsma: logit sensitivity and specificity), between-study variance estimates, and subgroup effects on accuracy and threshold.
-Small numerical differences may arise from optimizer settings, numerical tolerances, and implementation details, but all benchmark estimates and standard errors were generally recovered to close agreement.
-The Schuetz CT/MRI analysis reproduced the published subgroup parameter estimates, variance components, and graphical results closely. Likelihood-ratio tests led to identical substantive conclusions, although the LR statistics differed somewhat from the published values.
+The subgroup HSROC and Reitsma implementations reproduce the Cochrane Handbook RF and Anti-CCP examples closely, including the baseline parameters (HSROC: accuracy, threshold, shape; Reitsma: logit sensitivity and specificity), between-study variance estimates, and subgroup effects on accuracy and threshold. The Schuetz CT/MRI analyses yielded results broadly consistent with the published subgroup parameter estimates and variance components. Likelihood-ratio tests led to identical substantive conclusions, although the LR statistics differed somewhat from the published values.
 
 ## Dummy-coding vs. cell-means parameterization
 
@@ -256,11 +251,7 @@ $$\boldsymbol{z}_i^{\top} \boldsymbol{\theta}_i =
 \Theta +\gamma_3 & \text{for subgroup 3}.
 \end{cases}$$
 
-*Notes:*
-
-- By default, `fitRutterGatsonisSubgroup()` assumes a common shape across all subgroups, which implies $\delta_2=\delta_3=0$ for the case above.
-
-- Moreover, for prediction `fitRutterGatsonisSubgroup()` uses the prediction matrix $$\boldsymbol{Z}_{\mathrm{pred}}=\begin{pmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 0 & 1 \end{pmatrix}$$ for the case above and therefore recovers the threshold, accuracy, and shape parameters for each subgroup as if it were the reference group.
+*Note:* For prediction `fitRutterGatsonisSubgroup()` uses the prediction matrix $$\boldsymbol{Z}_{\mathrm{pred}}=\begin{pmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 0 & 1 \end{pmatrix}$$ for the case above and therefore recovers the threshold, accuracy, and shape parameters for each subgroup as if it were the reference group.
 
 ## How do I perform a Rutter and Gatsonis meta-regression with a single categorical study-level covariate?
 
@@ -446,18 +437,8 @@ round(summary(schuetzreitsma4)$estimates,5)
 plot(schuetzreitsma4,predlevel=0,
      nudge_legend=-0.2,
      size="se",scale=0.0025,
+     connectstudies = TRUE,
      col=c("red","black"))
-### add connecting lines to the plot
-op <- par(mar = c(5, 4, 4, 10), pty="s")
-draw <- schuetzreitsma4$data
-for(st in unique(draw$study)) {
-  tmp <- draw[draw$study == st, ]
-  tmp <- tmp[order(tmp$subgroup), ]
-  if(nrow(tmp) == 2) {
-    lines(x = c(1-tmp$spec[1],1-tmp$spec[2]),
-          y = c(tmp$sens[1],tmp$sens[2]),
-          type="l",col = "grey70",lwd =1)}}
-on.exit(par(op))
 ```
 
 ## References

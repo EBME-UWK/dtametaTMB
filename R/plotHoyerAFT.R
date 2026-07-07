@@ -52,7 +52,8 @@
 #'
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
-#'
+#' @return
+#' No return value. Called for its side effect of producing a plot.
 #'
 #' @seealso \code{\link{fitHoyerAFT}} \code{\link{fitHoyer}}
 #' @importFrom graphics abline axis legend lines par points symbols title
@@ -66,8 +67,9 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
   HH      <- x$data
   testdir <- unique(x$data$testdirection)
   if (length(testdir) != 1) stop("testdirection must be unique")
-  
-  op <- par(pty = "s")
+  oldpar <- par(no.readonly=TRUE)
+  on.exit(par(oldpar))
+  par(pty = "s")
   ### Plot coordinate system
   pct <- getWEIGHTS(HH,size)
   plot_SESPGRID(main=main)
@@ -103,7 +105,7 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
   if(x$distcode==1 & testdir=="greater"){
     roc_points <- data.frame(fpr =exp(-(xx*exp(-(beta0)))**(1/lambda0)),
                              sens=exp(-(xx*exp(-(beta1)))**(1/lambda1)))}
-
+  
   if(x$distcode==2 & testdir=="greater"){
     roc_points <- data.frame(fpr =1-stats::pnorm((log(xx)-beta0)/lambda0),
                              sens=1-stats::pnorm((log(xx)-beta1)/lambda1))}
@@ -132,5 +134,5 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
          lty = c(NA,1,NA),
          lwd = c(NA,2,NA),
          col = c(NA,"black","darkgray"))
-  on.exit(par(op))
+  invisible(NULL)
 }

@@ -7,7 +7,8 @@
 #' @param ... Additional arguments (unused).
 #'
 #' @seealso \code{\link{summary.RutterGatsonis}}
-#'
+#' @return
+#' Invisibly returns the input object. 
 #' @method print RutterGatsonis
 #' @export
 print.RutterGatsonis <- function(x, ...) {

@@ -34,6 +34,8 @@
 #' 
 #' @param conflevel Confidence level for the confidence region. Default is \code{0.95}.
 #' @param predlevel Confidence level for the prediction region. Default is \code{0.95}.
+#' @param connectstudies Whether the point estimates (rectangles) of two subgroups 
+#'   within the same study should be connected. Defaults to \code{FALSE}.
 #'
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
@@ -57,18 +59,13 @@
 #' based on the estimated variance-covariance structure of the model.
 #' 
 #' @references
-#' Freeman, S. C., Kerby, C. R., Patel, A., Cooper, N. J.,
-#' Quinn, T., & Sutton, A. J. (2019).
-#' Development of an interactive web-based tool to conduct
-#' and interrogate meta-analysis of diagnostic test accuracy studies:
-#' MetaDTA.
-#' \emph{BMC Medical Research Methodology}, 19, 81.
-#' \doi{10.1186/s12874-019-0724-x}
-#'
 #' Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
 #' A unification of models for meta-analysis of diagnostic accuracy studies.
 #' \emph{Biostatistics}, 8(2), 239--251.
 #' \doi{10.1093/biostatistics/kxl004}
+#' 
+#' @return
+#' No return value. Called for its side effect of producing a plot.
 #'
 #' @seealso \code{\link{fitReitsmaSubgroup}}
 #' @method plot ReitsmaSubgroup
@@ -82,7 +79,15 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
                                  HSROC=FALSE,
                                  specrange=c(0.7,0.995),
                                  conflevel=0.95,
-                                 predlevel=0.95, ...) {
+                                 predlevel=0.95,
+                                 connectstudies=FALSE,
+                                 ...) {
+  
+  if(connectstudies) {
+    if(length(unique(x$data$subgroup)) != 2) {
+      warning("'connectstudies=TRUE' is only recommended for two-subgroup comparisons." )
+    }
+  }
   size  <- match.arg(size)
   sub   <- levels(x$data$subgroup)
   subs  <- levels(x$data$subgroup_safe)
@@ -93,13 +98,15 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
   if(!all(x$data$subgroup_safe == make.names(x$data$subgroup))){
     stop("Object is corrupted. Please don't change object after running fitReitsmaSubgroup().")
   }
-  if(is.null(col)) col <- rainbow(n=nsub)
-  col2 <- adjustcolor(col,alpha.f=0.6)
+  if(is.null(col)) col <- grDevices::rainbow(n=nsub)
+  col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
   # Calculations for percentage weights
   pct <- getWEIGHTS(xdata=x$data,size=size)
   ####
-  op <- par(mar = c(5, 4, 4, 10),
-            pty="s")
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  par(mar = c(5, 4, 4, 10),
+      pty="s")
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
@@ -112,9 +119,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
             add=TRUE,
             fg=col2[i])
   }
-  
-  #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
-  # Add the ROC curve
+    # Add the ROC curve
   if(HSROC==TRUE){
     for(i in seq_along(sub)){
       roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered[sub[i],"Lambda"],
@@ -164,7 +169,18 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
     lines(region$conf, lty=2, lwd=2, col=col2[i])
     lines(region$pred, lty=3, lwd=2, col=col2[i])
   }
-
+  ## Connect studies
+  if(connectstudies){
+    for(st in unique(x$data$study)){
+      tmp <- x$data[x$data$study == st, ]
+      tmp <- tmp[order(tmp$subgroup), ]
+      if(nrow(tmp) == 2) {
+        lines(x = c(1-tmp$spec[1],1-tmp$spec[2]),
+              y = c(tmp$sens[1],tmp$sens[2]),
+              type="l",col = "grey70",lwd =1)
+      }
+    }
+  }
   # Add the legend 
   conf_lab <- paste0(round(100 * conflevel), "% Confidence region")
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
@@ -202,5 +218,5 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
          xpd = TRUE,
          cex = 1.2,
          bty = "n")
-  on.exit(par(op))
+  invisible(NULL)
 }

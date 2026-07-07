@@ -15,6 +15,7 @@
   specrange = c(0.7, 0.995),
   conflevel = 0.95,
   predlevel = 0.95,
+  connectstudies = FALSE,
   ...
 )
 }
@@ -56,7 +57,13 @@ Defaults to \code{c(0.7, 0.995)}.}
 
 \item{predlevel}{Confidence level for the prediction region. Default is \code{0.95}.}
 
+\item{connectstudies}{Whether the point estimates (rectangles) of two subgroups
+within the same study should be connected. Defaults to \code{FALSE}.}
+
 \item{...}{Additional graphical arguments passed to plotting functions.}
+}
+\value{
+No return value. Called for its side effect of producing a plot.
 }
 \description{
 Produces a summary ROC plot for objects of class \code{"ReitsmaSubgroup"}
@@ -85,14 +92,6 @@ Confidence and prediction regions are derived using the delta method
 based on the estimated variance-covariance structure of the model.
 }
 \references{
-Freeman, S. C., Kerby, C. R., Patel, A., Cooper, N. J.,
-Quinn, T., & Sutton, A. J. (2019).
-Development of an interactive web-based tool to conduct
-and interrogate meta-analysis of diagnostic test accuracy studies:
-MetaDTA.
-\emph{BMC Medical Research Methodology}, 19, 81.
-\doi{10.1186/s12874-019-0724-x}
-
 Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
 A unification of models for meta-analysis of diagnostic accuracy studies.
 \emph{Biostatistics}, 8(2), 239--251.

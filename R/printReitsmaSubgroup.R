@@ -7,7 +7,8 @@
 #' @param ... Additional arguments (unused).
 #'
 #' @seealso \code{\link{summary.ReitsmaSubgroup}}
-#'
+#' @return
+#' Invisibly returns the input object.
 #' @method print ReitsmaSubgroup
 #' @export
 print.ReitsmaSubgroup <- function(x, ...) {

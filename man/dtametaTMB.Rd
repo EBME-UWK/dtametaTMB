@@ -36,14 +36,6 @@ Included datasets
 
 See the package vignette for worked examples and model descriptions.
 }
-\seealso{
-Useful links:
-\itemize{
-  \item \url{https://github.com/EBME-UWK/dtametaTMB}
-  \item Report bugs at \url{https://github.com/EBME-UWK/dtametaTMB/issues}
-}
-
-}
 \author{
 \strong{Maintainer}: Claus Nowak \email{claus.nowak@donau-uni.ac.at}
 

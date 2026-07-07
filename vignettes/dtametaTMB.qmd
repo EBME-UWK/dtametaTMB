@@ -2,8 +2,8 @@
 title: "Introduction to dtametaTMB"
 format: 
   html:
-    toc: TRUE
-# pdf
+   toc: TRUE
+ # pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{quarto::html}
@@ -28,7 +28,7 @@ commonly used models:
 
 using real datasets included in the package. 
 
-We discuss subgroup analyses and meta-regression in a separate vignette. 
+Subgroup analyses and meta-regression are covered in a separate vignette. 
 
 *Note:* Rendering forest plots via `forest` may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 

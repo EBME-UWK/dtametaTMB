@@ -12,6 +12,7 @@
   specrange = c(0.7, 0.995),
   col = NULL,
   main = "Diagnostic Test Accuracy Meta-Analysis",
+  connectstudies = FALSE,
   ...
 )
 }
@@ -45,7 +46,13 @@ and study-level rectangles. If \code{NULL}, colours are generated automatically.
 \item{main}{Character string giving the main title of the plot.
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
+\item{connectstudies}{Whether the point estimates (rectangles) of two subgroups
+within the same study should be connected. Defaults to \code{FALSE}.}
+
 \item{...}{Additional graphical arguments passed to plotting functions.}
+}
+\value{
+No return value. Called for its side effect of producing a plot.
 }
 \description{
 Produces summary ROC plots for objects of class \code{"RutterGatsonisSubgroup"}

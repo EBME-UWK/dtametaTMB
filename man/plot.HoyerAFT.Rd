@@ -44,6 +44,9 @@ Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{...}{Additional graphical arguments (currently unused).}
 }
+\value{
+No return value. Called for its side effect of producing a plot.
+}
 \description{
 Produces a hierarchical summary receiver operating characteristic
 (HSROC) plot from a fitted Hoyer AFT model. The plot shows

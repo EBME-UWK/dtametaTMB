@@ -96,7 +96,7 @@ If \code{NULL} (default), separate sensitivity and specificity
 parameters are estimated for each subgroup.}
 
 \item{variances}{Whether the between-study random-effects variance-covariance
-matrix should be assumed to be \code{"common"} (default) or (\code{"unequal"})
+matrix should be assumed to be \code{"common"} (default) or \code{"unequal"}
 across subgroups.}
 
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}

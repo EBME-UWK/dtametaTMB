@@ -47,6 +47,9 @@ Defaults to \code{c(0.7, 0.995)}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }
+\value{
+No return value. Called for its side effect of producing a plot.
+}
 \description{
 Produces a summary ROC plot for objects of class \code{"Reitsma"}
 obtained from \code{\link{fitReitsma}}. The plot displays study-level

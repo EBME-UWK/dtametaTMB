@@ -71,6 +71,8 @@
 #' \emph{Statistical Methods in Medical Research}, 27(10), 2885--2905.
 #' \doi{10.1177/0962280216688033}
 #'
+#' @return
+#' No return value. Called for its side effect of producing a plot.
 #' @seealso \code{\link{fitReitsma}}
 #' @importFrom stats qlogis plogis predict qf
 #' @method plot Reitsma
@@ -168,7 +170,9 @@ plot.Reitsma <- function(x, scale=0.02,
     pctsp <- sqrt(spm1) / sum(sqrt(spm1))*100
   }
   ####
-  op <- par(pty = "s")
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  par(pty="s")
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
@@ -217,5 +221,5 @@ plot.Reitsma <- function(x, scale=0.02,
            lwd = c(NA,NA,2,2,NA), 
            col = c(NA,"black","black","black","darkgray"))
   }
-  on.exit(par(op))
+  invisible(NULL)
 }

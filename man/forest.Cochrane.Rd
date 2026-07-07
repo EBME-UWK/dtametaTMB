@@ -13,6 +13,10 @@
 
 \item{...}{Additional graphical arguments (not currently in use)}
 }
+\value{
+No return value. Called for its side effect of producing a plot.
+}
 \description{
-Coupled Forest plot for diagnostic test accuracy meta-analysis
+Provides coupled forest plots of sensitivities and specificities
+with Clopper-Pearson confidence limits.
 }

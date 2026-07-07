@@ -75,7 +75,7 @@
 #'   parameters are estimated for each subgroup.
 #'   
 #' @param variances Whether the between-study random-effects variance-covariance 
-#'   matrix should be assumed to be \code{"common"} (default) or (\code{"unequal"}) 
+#'   matrix should be assumed to be \code{"common"} (default) or \code{"unequal"} 
 #'   across subgroups.
 #'   
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.

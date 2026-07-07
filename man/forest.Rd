@@ -9,8 +9,11 @@ forest(x, ...)
 \arguments{
 \item{x}{Object}
 
-\item{...}{Additional arguments}
+\item{...}{Additional arguments
+
+#' @return
+No return value. Called for its side effect of producing a plot.}
 }
 \description{
-Forest plot generic
+Produces coupled forest plots.
 }
