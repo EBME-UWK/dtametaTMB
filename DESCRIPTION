@@ -7,14 +7,13 @@ Authors@R:
              email = "claus.nowak@donau-uni.ac.at",
              role = c("aut", "cre"))
     )
-Description: Fits the hierarchical summary receiver operating characteristic (HSROC)
-    model of Rutter and Gatsonis (2001) <doi:10.1002/sim.942>, the bivariate
-    binomial-normal model of Reitsma et al. (2005) <doi:10.1016/j.jclinepi.2005.02.022>,
-    and the threshold-based bivariate time-to-event model of Hoyer et al. (2018) <doi:10.1002/jrsm.1273>
-    using Template Model Builder (TMB). Provides subgroup analyses, HSROC meta-regression,
-    likelihood-ratio tests, SROC plots, and coupled forest plots.
+Description: Fits the hierarchical summary receiver operating characteristic (HSROC) model of
+    Rutter and Gatsonis (2001) <doi:10.1002/sim.942>, the bivariate binomial-normal model of
+    Reitsma et al. (2005) <doi:10.1016/j.jclinepi.2005.02.022>, and the threshold-based bivariate 
+    time-to-event model of Hoyer et al. (2018) <doi:10.1002/jrsm.1273> using Template Model Builder
+    (TMB). Provides subgroup analyses, HSROC meta-regression, likelihood-ratio tests, SROC plots,
+    and coupled forest plots.
 License: GPL (>= 2)
-SystemRequirements: Quarto command line tool
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports:

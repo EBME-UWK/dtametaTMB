@@ -76,7 +76,9 @@
 #'   
 #' @param variances Whether the between-study random-effects variance-covariance 
 #'   matrix should be assumed to be \code{"common"} (default) or \code{"unequal"} 
-#'   across subgroups.
+#'   across subgroups. If \code{"common"}, a single between-study variance-covariance 
+#'   matrix is estimated and shared across all subgroups. If \code{"unequal"}, 
+#'   subgroup-specific variance-covariance matrices are estimated.
 #'   
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
 #'
@@ -94,6 +96,7 @@
 #'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #'   \item \code{subgroups}: The subgroup levels used in the model fit.
 #'   \item \code{constrain}: Random effects parameters fixed at zero.
+#'   \item \code{variances}: Variance structure used in the fitted model.
 #' }
 #'
 #' @examples
@@ -532,29 +535,20 @@ fitReitsmaSubgroup <- function(data,
   }
   ### Recover HSROC parameters
   ruga2 <- data.frame()
-  
-  if(variances=="common"){
     for(i in seq_along(lsub_safe)){
       sg      <- lsub_safe[i]
       mu_A.sg <- paste0("mu_A.",sg)
       mu_B.sg <- paste0("mu_B.",sg)
-      ruga <- getRUGA(lsens=esti_V_g_mu$esti[mu_A.sg,"Estimate"],
-                      lspec=esti_V_g_mu$esti[mu_B.sg,"Estimate"],
-                      sigma_a=sqrt(esti_V_g_mu$esti["sigma2_A.sens","Estimate"]),
-                      sigma_b=sqrt(esti_V_g_mu$esti["sigma2_B.spec","Estimate"]),
-                      sigma_ab=esti_V_g_mu$esti["sigma_AB","Estimate"])
-      ruga2 <- rbind(ruga2,ruga)
-    }
-  }
-  
-  if(variances=="unequal"){
-    for(i in seq_along(lsub_safe)){
-      sg      <- lsub_safe[i]
-      mu_A.sg <- paste0("mu_A.",sg)
-      mu_B.sg <- paste0("mu_B.",sg)
-      s2_A.sg <- paste0("sigma2_A.",sg)
-      s2_B.sg <- paste0("sigma2_B.",sg)
-      s_AB.sg <- paste0("sigma_AB.",sg)
+      if(variances=="unequal"){
+        s2_A.sg <- paste0("sigma2_A.",sg)
+        s2_B.sg <- paste0("sigma2_B.",sg)
+        s_AB.sg <- paste0("sigma_AB.",sg)
+      }  
+      if(variances=="common"){
+        s2_A.sg <- "sigma2_A.sens"
+        s2_B.sg <- "sigma2_B.spec"
+        s_AB.sg <- "sigma_AB"
+      }
       ruga <- getRUGA(lsens=esti_V_g_mu$esti[mu_A.sg,"Estimate"],
                       lspec=esti_V_g_mu$esti[mu_B.sg,"Estimate"],
                       sigma_a=sqrt(esti_V_g_mu$esti[s2_A.sg,"Estimate"]),
@@ -562,8 +556,6 @@ fitReitsmaSubgroup <- function(data,
                       sigma_ab=esti_V_g_mu$esti[s_AB.sg,"Estimate"])
       ruga2 <- rbind(ruga2,ruga)
     }
-  }
-  
   rownames(ruga2) <- lsub
   
   ##

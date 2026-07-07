@@ -97,7 +97,9 @@ parameters are estimated for each subgroup.}
 
 \item{variances}{Whether the between-study random-effects variance-covariance
 matrix should be assumed to be \code{"common"} (default) or \code{"unequal"}
-across subgroups.}
+across subgroups. If \code{"common"}, a single between-study variance-covariance
+matrix is estimated and shared across all subgroups. If \code{"unequal"},
+subgroup-specific variance-covariance matrices are estimated.}
 
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 }
@@ -116,6 +118,7 @@ A list of class \code{"ReitsmaSubgroup"} with components:
 \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 \item \code{subgroups}: The subgroup levels used in the model fit.
 \item \code{constrain}: Random effects parameters fixed at zero.
+\item \code{variances}: Variance structure used in the fitted model.
 }
 }
 \description{

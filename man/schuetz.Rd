@@ -7,7 +7,7 @@
 \format{
 A data frame with 108 rows and 7 variables:
 \describe{
-\item{test}{Which test was used, CT or MRT}
+\item{test}{Which test was used, CT or MRI}
 \item{study}{Study identifier}
 \item{TP}{Number of true positives}
 \item{FP}{Number of false positives}
@@ -27,7 +27,7 @@ Annals of Internal Medicine, 152(3), 167-177.
 schuetz
 }
 \description{
-This is the schuetz data set from Schuetz (2019) from a meta-analyis of
-non-invasive coronary angiography using computer tomography (CT) versus magnetic resonance imaging (MRT)
+This is the schuetz data set from Schuetz (2010) from a meta-analyis of
+non-invasive coronary angiography using computer tomography (CT) versus magnetic resonance imaging (MRI)
 }
 \keyword{datasets}

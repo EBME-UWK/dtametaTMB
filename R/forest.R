@@ -5,7 +5,7 @@
 #' @param x Object
 #' @param ... Additional arguments
 #'
-#'#' @return
+#' @return
 #' No return value. Called for its side effect of producing a plot.
 #' 
 #' @export

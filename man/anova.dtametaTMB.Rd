@@ -48,9 +48,9 @@ These methods compute likelihood ratio statistics from the fitted model
 log-likelihoods and compare models ordered by increasing numbers of
 estimated parameters. The test statistic is
 
-\deqn{2(\ell_1 - \ell_0)}
+\deqn{-2(\ell_0 - \ell_1)}
 
-where \eqn{\ell_1} and \eqn{\ell_0} are the log-likelihoods of two nested
+where \eqn{\ell_0} and \eqn{\ell_1} are the log-likelihoods of two nested
 models. Under standard regularity conditions, the statistic follows a
 chi-squared distribution with degrees of freedom equal to the difference
 in the numbers of estimated parameters.

@@ -128,18 +128,21 @@
 #'
 #' @examples
 #' data("RF")
-#'
-#' Z <- model.matrix(~ method, data = RF)
+#' RF2        <- RF[RF$method %in% c("LA","ELISA","Nephelometry"),]
+#' RF2$method <- factor(RF2$method,levels=c("LA","ELISA","Nephelometry"))
+#' Z <- model.matrix(~ method, data = RF2)
 #' Z <- Z[rep(seq_len(nrow(Z)), each = 2), , drop = FALSE]
+#' Z_pred <- matrix(c(1,0,0,1,1,0,1,0,1),ncol=3,nrow=3,byrow=TRUE)
 #'
 #' fit <- fitRutterGatsonisReg(
-#'   data = RF,
+#'   data = RF2,
 #'   TP = TP,
 #'   FP = FP,
 #'   FN = FN,
 #'   TN = TN,
 #'   study = study,
-#'   Z = Z
+#'   Z = Z,
+#'   Z_pred = Z_pred
 #' )
 #'
 #' summary(fit)

@@ -57,9 +57,9 @@
 #'     \describe{
 #'       \item{n1}{Total number of diseased individuals (TP + FN)}
 #'       \item{n0}{Total number of non-diseased individuals (TN + FP)}
-#'       \item{sens}{Sensitivity (TP / D)}
-#'       \item{spec}{Specificity (TN / H)}
-#'       \item{fpr}{False positive rate (FP / H)}
+#'       \item{sens}{Sensitivity (TP / n1)}
+#'       \item{spec}{Specificity (TN / n0)}
+#'       \item{fpr}{False positive rate (FP / n0)}
 #'       \item{testdirection}{As specified by \code{testdirection}}
 #'     }
 #'   }

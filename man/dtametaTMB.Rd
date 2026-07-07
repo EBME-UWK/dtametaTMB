@@ -28,10 +28,12 @@ Main workflow
 
 Included datasets
 \itemize{
-\item anticcp
-\item RF
-\item diabetes
 \item anaemia
+\item anticcp
+\item diabetes
+\item FENO
+\item RF
+\item schuetz
 }
 
 See the package vignette for worked examples and model descriptions.

@@ -1,6 +1,6 @@
 #' Export Model Results for RevMan
 #'
-#' Converts fitted model objects (\code{Reitsma}, \code{ReitsmaSubgroup}), \code{RutterGatsonis}, 
+#' Converts fitted model objects (\code{Reitsma}, \code{ReitsmaSubgroup}, \code{RutterGatsonis}, 
 #' \code{RutterGatsonisSubgroup}) into a format suitable for manual entry
 #' into the Diagnostic Test Accuracy module of Review Manager (RevMan).
 #'

@@ -19,10 +19,12 @@
 #'
 #' Included datasets
 #'
-#' * anticcp
-#' * RF
-#' * diabetes
 #' * anaemia
+#' * anticcp
+#' * diabetes
+#' * FENO
+#' * RF
+#' * schuetz
 #'
 #' See the package vignette for worked examples and model descriptions.
 #'
