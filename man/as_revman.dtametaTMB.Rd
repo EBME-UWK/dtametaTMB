@@ -28,7 +28,7 @@ as_revman(x, ...)
 A data frame with columns:
 \describe{
 \item{Subgroup}{Only returned for \code{ReitsmaSubgroup} and \code{RutterGatsonisSubgroup} objects.}
-\item{Externally Calculated Parameters}{Revman model/parameter types.}
+\item{Externally_Calculated_Parameters}{Revman model/parameter types.}
 \item{Parameter}{RevMan parameter name.}
 \item{Estimate}{Parameter estimate.}
 }

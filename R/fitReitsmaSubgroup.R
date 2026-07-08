@@ -150,7 +150,7 @@ fitReitsmaSubgroup <- function(data,
   
   if(variances=="unequal" &&
      !is.null(constrain)) {
-    
+
     stop(
       "'constrain' is currently not supported when ",
       "variances='unequal'."
@@ -491,8 +491,8 @@ fitReitsmaSubgroup <- function(data,
       V_full <- V_full_mu[c(mu_A.sg,mu_B.sg,s2_A,s2_B,s_AB),
                           c(mu_A.sg,mu_B.sg,s2_A,s2_B,s_AB)]
       esti_V_g_mu2[[i]] <- get3esti_V_g(beta_fix=beta_fix, 
-                                       theta=theta, 
-                                       V_full=V_full) 
+                                        theta=theta, 
+                                        V_full=V_full) 
     }
     esti_V_g_mu$esti <- do.call(rbind,lapply(esti_V_g_mu2,`[[`,"esti"))
     esti_V_g_mu$V_g  <- matrix(0,ncol=llsub*5,nrow=llsub*5)
@@ -526,12 +526,12 @@ fitReitsmaSubgroup <- function(data,
     sg      <- lsub_safe[i]
     mu_A.sg <- paste0("mu_A.",sg)
     mu_B.sg <- paste0("mu_B.",sg)
-    lsens  <- esti_V_g_mu$esti[mu_A.sg,"Estimate"]
-    lspec  <- esti_V_g_mu$esti[mu_B.sg,"Estimate"]
-    S      <- ma_Y_mu$vcov$cond[c(mu_A.sg,mu_B.sg),c(mu_A.sg,mu_B.sg)]
-    lrdor  <- getLRDOR(lsens=lsens, lspec=lspec, S=S, conflevel=conflevel)
+    lsens   <- esti_V_g_mu$esti[mu_A.sg,"Estimate"]
+    lspec   <- esti_V_g_mu$esti[mu_B.sg,"Estimate"]
+    S       <- ma_Y_mu$vcov$cond[c(mu_A.sg,mu_B.sg),c(mu_A.sg,mu_B.sg)]
+    lrdor   <- getLRDOR(lsens=lsens, lspec=lspec, S=S, conflevel=conflevel)
     rownames(lrdor) <- paste0(lsub[i],": ",rownames(lrdor))
-    lrdor2 <- rbind(lrdor2,lrdor)
+    lrdor2  <- rbind(lrdor2,lrdor)
   }
   ### Recover HSROC parameters
   ruga2 <- data.frame()

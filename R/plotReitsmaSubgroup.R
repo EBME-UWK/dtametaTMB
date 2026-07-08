@@ -80,7 +80,14 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
                                  predlevel=0.95,
                                  connectstudies=FALSE,
                                  ...) {
-  
+  if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+      conflevel <= 0 || conflevel >= 1) {
+    stop("conflevel must be a single number in (0, 1).")
+  }
+  if (!is.numeric(predlevel) || length(predlevel) != 1L ||
+      predlevel <= 0 || predlevel >= 1) {
+    stop("predlevel must be a single number in (0, 1).")
+  }
   if(connectstudies) {
     if(length(unique(x$data$subgroup)) != 2) {
       warning("'connectstudies=TRUE' is only recommended for two-subgroup comparisons." )

@@ -84,6 +84,14 @@ plot.Reitsma <- function(x, scale=0.02,
                             specrange=c(0.7,0.995),
                             conflevel=0.95,
                             predlevel=0.95, ...) {
+  if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+      conflevel <= 0 || conflevel >= 1) {
+    stop("conflevel must be a single number in (0, 1).")
+  }
+  if (!is.numeric(predlevel) || length(predlevel) != 1L ||
+      predlevel <= 0 || predlevel >= 1) {
+    stop("predlevel must be a single number in (0, 1).")
+  }
   size    <- match.arg(size)
   nstudy  <- nrow(x$data)
   # Confidence and prediction region

@@ -15,6 +15,10 @@
 #' No return value. Called for its side effect of producing a plot.
 #' @export
 forest.Cochrane <- function(x,conflevel=0.95, ...) {
+  if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+      conflevel <= 0 || conflevel >= 1) {
+    stop("conflevel must be a single number in (0, 1).")
+  }
   XP <- x$data
   XP$FPR  <- 1 - XP$spec
   alpha   <- 1 - conflevel
@@ -26,22 +30,22 @@ forest.Cochrane <- function(x,conflevel=0.95, ...) {
   XP$FPR_LCI   <- with(XP,stats::qbeta(p=alpha/2,  shape1=FP,  shape2=TN+1))
   XP$FPR_UCI   <- with(XP,stats::qbeta(p=1-alpha/2,shape1=FP+1,shape2=TN))
   # How do I create the forest plot?
-  XP$`Sensitivity (95%-CI)` <- with(XP,paste0(sprintf("%.2f", sens)," [",
-                                              sprintf("%.2f", Sens_LCI),", ",
-                                              sprintf("%.2f", Sens_UCI),"]"))
-  XP$`Specificity (95%-CI)` <- with(XP,paste0(sprintf("%.2f", spec)," [",
-                                              sprintf("%.2f", 1-FPR_UCI),", ",
-                                              sprintf("%.2f", 1-FPR_LCI),"]"))
+  XP$senslabel <- with(XP,paste0(sprintf("%.2f", sens)," [",
+                                         sprintf("%.2f", Sens_LCI),", ",
+                                         sprintf("%.2f", Sens_UCI),"]"))
+  XP$speclabel <- with(XP,paste0(sprintf("%.2f", spec)," [",
+                                         sprintf("%.2f", 1-FPR_UCI),", ",
+                                         sprintf("%.2f", 1-FPR_LCI),"]"))
   
   if (inherits(x, "Reitsma") || inherits(x, "RutterGatsonis")) {
-    dt <- XP[,c("study","TP","FP","FN","TN",senslabel,speclabel)]
+    dt <- XP[,c("study","TP","FP","FN","TN","senslabel","speclabel")]
     dt <- dt[order(dt$study), ]
     dt$" "    <- " "
     dt$fsens  <- paste(rep(" ",18),collapse=" ")
     dt$a      <- " "
     dt$fspec  <- paste(rep(" ",18),collapse=" ")  
     cc <- colnames(dt) 
-    colnames(dt) <- c("Study",cc[2:8],senslabel," ",speclabel)
+    colnames(dt) <- c("Study",cc[2:5],senslabel,speclabel," ",senslabel," ",speclabel)
     
     p <- forestploter::forest(dt,
                               est = list(XP$sens,
@@ -68,7 +72,7 @@ forest.Cochrane <- function(x,conflevel=0.95, ...) {
     plot(p)
   }
   if(inherits(x,"HoyerAFT")){
-    dt <- XP[, c("study", "threshold", "TP","FP","FN","TN", senslabel, speclabel)]
+    dt <- XP[, c("study", "threshold", "TP","FP","FN","TN","senslabel", "speclabel")]
     
     dt <- dt[order(dt$study, dt$threshold), ]
     dt$study <- as.character(dt$study)
@@ -79,7 +83,8 @@ forest.Cochrane <- function(x,conflevel=0.95, ...) {
     dt$a      <- " "
     dt$fspec  <- paste(rep(" ",18),collapse=" ")  
     cc <- colnames(dt) 
-    colnames(dt) <- c("Study","Threshold",cc[3:9],senslabel," ",speclabel)
+    colnames(dt) <- c("Study","Threshold",cc[3:6],
+                      senslabel,speclabel," ",senslabel," ",speclabel)
     
     p <- forestploter::forest(dt,
                               est = list(XP$sens,
