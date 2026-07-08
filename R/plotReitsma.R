@@ -191,7 +191,7 @@ plot.Reitsma <- function(x, scale=0.02,
     Lambda  <- x$RutterGatsonis_recovered$Lambda
     beta    <- x$RutterGatsonis_recovered$beta
     roc_points2 <- getROCpoints(Lambda,beta,specrange)
-    points(roc_points2, type="l", lwd=2,ann=F)
+    points(roc_points2, type="l", lwd=2,ann=FALSE)
     } ###
   # Add summary point
   mean_point <- data.frame(1-x$sensspec["spec",]$Estimate,

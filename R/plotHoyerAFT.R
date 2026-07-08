@@ -124,7 +124,7 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
     roc_points <- data.frame(fpr =1-stats::plogis((beta0-log(xx))/lambda0),
                              sens=1-stats::plogis((beta1-log(xx))/lambda1))}
   ##########
-  points(roc_points, type="l", lwd=2,ann=F)###
+  points(roc_points, type="l", lwd=2,ann=FALSE)###
   # Add summary point
   # Add the legend
   legend("bottomright",

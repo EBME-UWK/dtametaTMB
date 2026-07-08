@@ -150,7 +150,6 @@ fitReitsmaSubgroup <- function(data,
   
   if(variances=="unequal" &&
      !is.null(constrain)) {
-
     stop(
       "'constrain' is currently not supported when ",
       "variances='unequal'."
@@ -427,15 +426,18 @@ fitReitsmaSubgroup <- function(data,
         mnu_A.sg  <- paste0("nu_A.",sg)
         mnu_B.sg  <- paste0("nu_B.",sg)
       }
-      j = i*3
-      theta    <- theta_nu[c(j-2,j-1,j)]
+      j <- i*3
+      k <- i*2
+      theta        <- theta_nu[c(j-2, j-1, j)]
+      n_beta       <- length(beta_fix_nu)                 # number of fixed effects
+      theta_idx    <- n_beta + c(j-2, j-1, j)
       names(theta) <- paste0(c("sigma2_A.","sigma2_B.","sigma_AB."),sg)
-      beta_fix <- beta_fix_nu[c(mnu_A.sg,mnu_B.sg)]
-      s2_A <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.1")
-      s2_B <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.2")
-      s_AB <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.3")
-      V_full <- V_full_nu[c(mnu_A.sg,mnu_B.sg,s2_A,s2_B,s_AB),
-                          c(mnu_A.sg,mnu_B.sg,s2_A,s2_B,s_AB)]
+      beta_fix     <- beta_fix_nu[c(mnu_A.sg,mnu_B.sg)]
+      #s2_A <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.1")
+      #s2_B <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.2")
+      #s_AB <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.3")
+      V_full <- V_full_nu[c(k-1,k,theta_idx),
+                          c(k-1,k,theta_idx)]
       esti_V_g_nu2[[i]] <- get3esti_V_g(beta_fix=beta_fix, 
                                         theta=theta, 
                                         V_full=V_full) 
@@ -481,15 +483,18 @@ fitReitsmaSubgroup <- function(data,
       sg       <- lsub_safe[i]
       mu_A.sg  <- paste0("mu_A.",sg)
       mu_B.sg  <- paste0("mu_B.",sg)
-      j = i*3
-      theta    <- theta_mu[c(j-2,j-1,j)]
+      j <- i*3
+      k <- i*2
+      theta        <- theta_mu[c(j-2,j-1,j)]
+      n_beta       <- length(beta_fix_mu)                 # number of fixed effects
+      theta_idx    <- n_beta + c(j-2, j-1, j)
       names(theta) <- paste0(c("sigma2_A.","sigma2_B.","sigma_AB."),sg)
-      beta_fix <- beta_fix_mu[c(mu_A.sg,mu_B.sg)]
-      s2_A <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.1")
-      s2_B <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.2")
-      s_AB <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.3")
-      V_full <- V_full_mu[c(mu_A.sg,mu_B.sg,s2_A,s2_B,s_AB),
-                          c(mu_A.sg,mu_B.sg,s2_A,s2_B,s_AB)]
+      beta_fix     <- beta_fix_mu[c(mu_A.sg,mu_B.sg)]
+      #s2_A <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.1")
+      #s2_B <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.2")
+      #s_AB <- paste0("theta_0+random_A.",sg,"+random_B.",sg,"|recordid.3")
+      V_full <- V_full_mu[c(k-1,k,theta_idx),
+                          c(k-1,k,theta_idx)]
       esti_V_g_mu2[[i]] <- get3esti_V_g(beta_fix=beta_fix, 
                                         theta=theta, 
                                         V_full=V_full) 

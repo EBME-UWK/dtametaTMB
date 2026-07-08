@@ -183,9 +183,9 @@ as_revman.ReitsmaSubgroup <- function(x, ...) {
     ###
     mu_se  <- x$estimates_mu[mu_A.sg,"Estimate"]
     mu_sp  <- x$estimates_mu[mu_B.sg,"Estimate"]
-    var_se <- x$estimates_mu["sigma2_A.sens","Estimate"]
-    var_sp <- x$estimates_mu["sigma2_B.spec","Estimate"]
-    cov_ss <- x$estimates_mu["sigma_AB","Estimate"]
+    var_se <- x$estimates_mu[s2_A.sg,"Estimate"]
+    var_sp <- x$estimates_mu[s2_B.sg,"Estimate"]
+    cov_ss <- x$estimates_mu[s_AB.sg,"Estimate"]
     cor_ss <- cov_ss/sqrt(var_se*var_sp)
     ###
     Lambda <- x$RutterGatsonis_recovered[sg2,"Lambda"]
