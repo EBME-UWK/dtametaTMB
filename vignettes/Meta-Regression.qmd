@@ -434,7 +434,7 @@ schuetzreitsma4 <- fitReitsmaSubgroup(data=schuetz2,
                                       subgroup=test,
                                       constrain="sigma2_A")
 round(summary(schuetzreitsma4)$estimates,5)
-plot(schuetzreitsma4,
+plot(schuetzreitsma4,predlevel=0.000001,
      nudge_legend=-0.2,
      size="se",scale=0.0025,
      connectstudies = TRUE,
