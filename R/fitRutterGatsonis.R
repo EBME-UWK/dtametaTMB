@@ -170,11 +170,15 @@ fitRutterGatsonis <- function(data,
   ### Get initial values
   logit_sens   <- stats::qlogis(pmin(pmax(XP$sens,0.005),0.995))
   logit_spec   <- stats::qlogis(pmin(pmax(XP$spec,0.005),0.995))
-  muA_init     <- mean(logit_sens)
-  muB_init     <- mean(logit_spec)
-  sA_init      <- max(stats::sd(logit_sens),1e-05)
-  sB_init      <- max(stats::sd(logit_spec),1e-05)
-  rAB_init     <- max(min(stats::cor(logit_sens,logit_spec),0.99),-0.99)
+  muA_init     <- mean(logit_sens,na.rm=TRUE)
+  muB_init     <- mean(logit_spec,na.rm=TRUE)
+  sA_init      <- stats::sd(logit_sens,na.rm=TRUE)
+  sA_init      <- max(sA_init,1e-05)
+  sB_init      <- stats::sd(logit_spec,na.rm=TRUE)
+  sB_init      <- max(sB_init,1e-05)
+  rAB_init     <- max(min(stats::cor(logit_sens,
+                                     logit_spec,
+                                     use="pairwise.complete.obs"),0.99),-0.99)
   if(is.na(rAB_init)) rAB_init <- 0
   sAB_init     <- rAB_init*sA_init*sB_init
   init <- getRUGA(lsens    = muA_init,

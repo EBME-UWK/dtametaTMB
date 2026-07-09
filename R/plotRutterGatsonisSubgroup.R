@@ -104,8 +104,8 @@ plot.RutterGatsonisSubgroup <- function(x,
    Lambda <- x$sdreport2[lamb,]
    beta   <- x$sdreport2[bet,]
    for(i in seq_len(nsub)){
-      roc_points2 <- getROCpoints(Lambda[i],
-                                  beta[i],
+      roc_points2 <- getROCpoints(Lambda[i,"Estimate"],
+                                  beta[i,"Estimate"],
                                   specrange)
       points(roc_points2, type="l", lwd=2,ann=FALSE,col=col[i])
    }

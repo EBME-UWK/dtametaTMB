@@ -134,13 +134,15 @@ fitReitsma <- function(data,
   ### Get initial values
   logit_sens   <- stats::qlogis(pmin(pmax(XP$sens,0.005),0.995))
   logit_spec   <- stats::qlogis(pmin(pmax(XP$spec,0.005),0.995))
-  muA_init     <- mean(logit_sens)
-  muB_init     <- mean(logit_spec)
-  sA_init      <- stats::sd(logit_sens)
+  muA_init     <- mean(logit_sens,na.rm=TRUE)
+  muB_init     <- mean(logit_spec,na.rm=TRUE)
+  sA_init      <- stats::sd(logit_sens,na.rm=TRUE)
   sA_init      <- max(sA_init,1e-05)
-  sB_init      <- stats::sd(logit_spec)
+  sB_init      <- stats::sd(logit_spec,na.rm=TRUE)
   sB_init      <- max(sB_init,1e-05)
-  rAB_init     <- max(min(cor(logit_sens,logit_spec),0.99),-0.99)
+  rAB_init     <- max(min(stats::cor(logit_sens,
+                                     logit_spec,
+                                     use="pairwise.complete.obs"),0.99),-0.99)
   if(is.na(rAB_init)) rAB_init <- 0
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   
@@ -200,7 +202,7 @@ fitReitsma <- function(data,
   ### SAS variance covariance matrix
   theta      <- glmmTMB::getME(MA_Y,"theta")
   beta_fix   <- glmmTMB::fixef(MA_Y)$cond
-  V_full     <- vcov(MA_Y, full = TRUE)
+  V_full     <- stats::vcov(MA_Y, full = TRUE)
   V_full[is.na(V_full)] <- 0
   esti_V_g   <- getesti_V_g(beta_fix=beta_fix, 
                             theta=theta, 

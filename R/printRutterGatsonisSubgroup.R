@@ -19,17 +19,19 @@ print.RutterGatsonisSubgroup <- function(x, ...) {
   
   n_study <- nrow(x$data)
   n_sub   <- length(x$subgroups)
+  n_study   <- nrow(x$data)
   converged <- x$fit$convergence == 0
-  ll <- logLik(x)
+  pdHess    <- x$sdreport$pdHess
+  ll        <- logLik(x)
   
   cat("Number of studies   :", n_study, "\n")
   cat("Number of subgroups :", n_sub, "\n")
-  cat("Model fit           :", if (converged) "Converged" else "Not converged", "\n")
+  cat("Optimizer           :", if (converged) "Converged" else "Not converged", "\n")
+  cat("Hessian             :", if (pdHess) "Positive definite" else "Not positive definite", "\n")
+  cat("Max |grad|          :", max(abs(x$sdreport$gradient.fixed)), "\n")
   cat("-2 log likelihood   :", round(-2 * as.numeric(ll), 3),"( df =", attr(ll, "df"), ")\n")  
   cat("AIC                 :", round(AIC(x), 3), "\n")
   cat("BIC                 :", round(BIC(x), 3), "\n")
-  cat("\n")
-  
   cat("\nUse summary() for parameter estimates.\n")
   
   invisible(x)

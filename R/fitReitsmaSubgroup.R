@@ -405,7 +405,7 @@ fitReitsmaSubgroup <- function(data,
   ### SAS variance covariance matrix
   theta_nu   <- glmmTMB::getME(MA_Y_nu,"theta")
   beta_fix_nu<- glmmTMB::fixef(MA_Y_nu)$cond
-  V_full_nu  <- vcov(MA_Y_nu, full = TRUE)
+  V_full_nu  <- stats::vcov(MA_Y_nu, full = TRUE)
   V_full_nu[is.na(V_full_nu)] <- 0
   
   if(variances=="common"){
@@ -475,7 +475,7 @@ fitReitsmaSubgroup <- function(data,
   ### SAS variance covariance matrix ###
   theta_mu   <- glmmTMB::getME(MA_Y_mu,"theta")
   beta_fix_mu<- glmmTMB::fixef(MA_Y_mu)$cond
-  V_full_mu  <- vcov(MA_Y_mu, full = TRUE)
+  V_full_mu  <- stats::vcov(MA_Y_mu, full = TRUE)
   V_full_mu[is.na(V_full_mu)] <- 0
   if(variances=="unequal"){
     esti_V_g_mu <- esti_V_g_mu2 <- list()

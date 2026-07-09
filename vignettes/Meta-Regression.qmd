@@ -1,8 +1,8 @@
 ---
 title: "Meta-Regression"
 format: 
-   html:
-    toc: TRUE
+  html:
+   toc: TRUE
    #  pdf
 vignette: >
   %\VignetteIndexEntry{Meta-Regression}
@@ -188,7 +188,6 @@ heteroskedastic <- fitReitsmaSubgroup(data=anticcp,
                                       study=study,
                                       subgroup=generation,
                                       variances="unequal")
-heteroskedastic
 plot(heteroskedastic,
      scale=0.01,
      nudge_legend=-0.2,

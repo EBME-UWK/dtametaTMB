@@ -18,17 +18,15 @@ print.Reitsma <- function(x, ...) {
   cat(strrep("-", nchar("Reitsma Model")), "\n\n", sep = "")
   
   
-  n_study <- nrow(x$data)
-  
-  converged <- tryCatch({
-    isTRUE(x$glmmTMB$sdr$pdHess)
-  }, error = function(e) FALSE)
-  
-  # logLik extraction (if available)
-  ll <- logLik(x)
+  n_study   <- nrow(x$data)
+  converged <- x$glmmTMB$fit$convergence == 0
+  pdHess    <- x$glmmTMB$sdr$pdHess
+  ll        <- logLik(x)
   
   cat("Number of studies :", n_study, "\n")
-  cat("Model fit         :", if (converged) "Converged" else "Not converged", "\n")
+  cat("Optimizer         :", if (converged) "Converged" else "Not converged", "\n")
+  cat("Hessian           :", if (pdHess) "Positive definite" else "Not positive definite", "\n")
+  cat("Max |grad|        :", max(abs(x$glmmTMB$sdr$gradient.fixed)), "\n")
   cat("-2 log likelihood :", round(-2 * as.numeric(ll), 3),"( df =", attr(ll, "df"), ")\n")  
   cat("AIC               :", round(AIC(x), 3), "\n")
   cat("BIC               :", round(BIC(x), 3), "\n")

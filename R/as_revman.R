@@ -109,11 +109,11 @@ as_revman.RutterGatsonis <- function(x, ...) {
   cov_ss  <- x$Reitsma_recovered$sigma_AB
   cor_ss  <- cov_ss/sqrt(var_se*var_sp)
   
-  Lambda  <- x$sdreport2[1,"Estimate"]
-  Theta   <- x$sdreport2[2,"Estimate"]
-  beta    <- x$sdreport2[3,"Estimate"]
-  varA    <- x$sdreport2[4,"Estimate"]
-  varT    <- x$sdreport2[5,"Estimate"]
+  Lambda  <- x$sdreport2["Lambda","Estimate"]
+  Theta   <- x$sdreport2["Theta","Estimate"]
+  beta    <- x$sdreport2["beta","Estimate"]
+  varA    <- x$sdreport2["sigma2_alpha","Estimate"]
+  varT    <- x$sdreport2["sigma2_theta","Estimate"]
   
   seelse  <- NA_real_
   seelsp  <- NA_real_
