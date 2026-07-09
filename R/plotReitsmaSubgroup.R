@@ -138,8 +138,8 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
     sg      <- subs[i]
     mu_A.sg <- paste0("mu_A.",sg)
     mu_B.sg <- paste0("mu_B.",sg)
-    mean_point <- data.frame(1-x$sensspec[mu_B.sg,"Orig"],
-                             x$sensspec[mu_A.sg,"Orig"])
+    mean_point <- data.frame(1-x$sensspec[mu_B.sg,"Estimate"],
+                             x$sensspec[mu_A.sg,"Estimate"])
     points(mean_point, col=col[i], cex=1.5, pch=15)
   }
   # Add confidence and prediction region

@@ -34,7 +34,7 @@ print.RutterGatsonis <- function(x, ...) {
   
   cat("Lambda            :", round(est["Lambda"], 3), "\n")
   cat("Theta             :", round(est["Theta"], 3), "\n")
-  cat("Beta              :", round(est["beta"], 3), "\n")
+  cat("beta              :", round(est["beta"], 3), "\n")
   
   cat("\nUse summary() for parameter estimates.\n")
   

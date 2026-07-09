@@ -81,7 +81,7 @@ test_that("sensspec contains expected columns", {
     all(
       c(
         "type",
-        "Orig",
+        "Estimate",
         "conflevel",
         "CI_Lower",
         "CI_Upper"

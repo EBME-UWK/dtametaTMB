@@ -197,7 +197,7 @@ fitReitsma <- function(data,
   sesp$conflevel <- conflevel
   sesp$CI_Lower  <- with(sesp,stats::plogis(Estimate-qq*`Std. Error`))
   sesp$CI_Upper  <- with(sesp,stats::plogis(Estimate+qq*`Std. Error`))
-  sesp           <- sesp[,(5:8)]
+  sesp           <- sesp[,c("Orig","conflevel","CI_Lower","CI_Upper")]
   colnames(sesp) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
   ### SAS variance covariance matrix
   theta      <- glmmTMB::getME(MA_Y,"theta")

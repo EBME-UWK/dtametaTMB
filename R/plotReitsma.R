@@ -95,14 +95,14 @@ plot.Reitsma <- function(x, scale=0.02,
   size    <- match.arg(size)
   nstudy  <- nrow(x$data)
   # Confidence and prediction region
-  muA     <- x$estimates["mu_A.sens",]$Estimate
-  muB     <- x$estimates["mu_B.spec",]$Estimate
-  seB     <- x$estimates["mu_B.spec",]$Std_Error
-  seA     <- x$estimates["mu_A.sens",]$Std_Error
-  covAB   <- x$vcov[1,2]
-  varA    <- x$estimates["sigma2_A.sens",]$Estimate
-  varB    <- x$estimates["sigma2_B.spec",]$Estimate
-  sAB     <- x$estimates["sigma_AB",]$Estimate
+  muA     <- x$estimates["mu_A.sens","Estimate"]
+  muB     <- x$estimates["mu_B.spec","Estimate"]
+  seB     <- x$estimates["mu_B.spec","Std_Error"]
+  seA     <- x$estimates["mu_A.sens","Std_Error"]
+  covAB   <- x$vcov["mu_A.sens","mu_B.spec"]
+  varA    <- x$estimates["sigma2_A.sens","Estimate"]
+  varB    <- x$estimates["sigma2_B.spec","Estimate"]
+  sAB     <- x$estimates["sigma_AB","Estimate"]
   region <- getConfPredRegion(muA=muA,muB=muB,
                               seA=seA,seB=seB,covAB=covAB, # conf
                               varA=varA,varB=varB,sAB=sAB, # pred
@@ -194,8 +194,8 @@ plot.Reitsma <- function(x, scale=0.02,
     points(roc_points2, type="l", lwd=2,ann=FALSE)
     } ###
   # Add summary point
-  mean_point <- data.frame(1-x$sensspec["spec",]$Estimate,
-                           x$sensspec["sens",]$Estimate)
+  mean_point <- data.frame(1-x$sensspec["spec","Estimate"],
+                           x$sensspec["sens","Estimate"])
   points(mean_point, col="black",cex=1.5, pch=15)
   # Add confidence and prediction region
   lines(region$conf, lty=2, lwd=2, col="black")

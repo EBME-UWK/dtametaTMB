@@ -442,7 +442,7 @@ fitReitsmaSubgroup <- function(data,
                                         theta=theta, 
                                         V_full=V_full) 
     }
-    esti_V_g_nu$esti <- do.call(rbind,lapply(esti_V_g_nu2,`[[`,"esti"))
+    esti_V_g_nu$esti <- do.call(rbind,lapply(esti_V_g_nu2, function(x) x$esti))
     esti_V_g_nu$V_g  <- matrix(0,ncol=llsub*5,nrow=llsub*5)
     for(i in seq_along(lsub_safe)){
       j <- i*5
@@ -499,7 +499,7 @@ fitReitsmaSubgroup <- function(data,
                                         theta=theta, 
                                         V_full=V_full) 
     }
-    esti_V_g_mu$esti <- do.call(rbind,lapply(esti_V_g_mu2,`[[`,"esti"))
+    esti_V_g_mu$esti <- do.call(rbind,lapply(esti_V_g_mu2, function(x) x$esti))
     esti_V_g_mu$V_g  <- matrix(0,ncol=llsub*5,nrow=llsub*5)
     for(i in seq_along(lsub_safe)){
       j <- i*5
@@ -521,10 +521,11 @@ fitReitsmaSubgroup <- function(data,
   sesp$conflevel <- conflevel
   sesp$CI_Lower  <- with(sesp,stats::plogis(Estimate-qq*`Std. Error`))
   sesp$CI_Upper  <- with(sesp,stats::plogis(Estimate+qq*`Std. Error`))
-  sesp           <- sesp[,(5:8)]
+  sesp           <- sesp[,c("Orig","conflevel","CI_Lower","CI_Upper")]
+  colnames(sesp) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
   sesp$type      <- sub("^mu_([AB])\\..*$", "\\1", rownames(sesp))
   sesp$type      <- c(A = "sens", B = "spec")[sesp$type]
-  sesp           <- sesp[,c("type","Orig","conflevel","CI_Lower","CI_Upper")]
+  sesp           <- sesp[,c("type","Estimate","conflevel","CI_Lower","CI_Upper")]
   ### Diagnostic odds ratios and Likelihood ratios
   lrdor2 <- data.frame()
   for(i in seq_along(lsub_safe)){

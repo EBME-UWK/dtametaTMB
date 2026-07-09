@@ -250,7 +250,7 @@ fitRutterGatsonisReg <- function(data,
   rep  <- TMB::sdreport(obj) 
   rep2 <- summary(rep,select="report")#p.value=TRUE)
   
-  lspec <- length(dat2$spec)
+  # lspec <- length(dat2$spec)
   ## Get sensitivities and specificities
   qq   <- stats::qnorm(1-(1-conflevel)/2)
   rlse <- which(rownames(rep2)=="logitsens")

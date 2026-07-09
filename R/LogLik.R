@@ -100,7 +100,7 @@ anova_lrt <- function(object, ..., test = "Chisq") {
   dfs         <- dfs[ord]
   if(any(diff(dfs) == 0)) {
     warning(
-      "Likelihood-ratio tests require nested models with different numbers of parameters.",
+      "Likelihood-ratio tests require nested models with different numbers of parameters. ",
       "Likelihood-ratio tests may not be meaningful."
     )
   }

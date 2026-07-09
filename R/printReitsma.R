@@ -35,8 +35,8 @@ print.Reitsma <- function(x, ...) {
   
   est <- x$estimates
   
-  cat("mu_A (sens)       :", round(est["mu_A.sens","Estimate"], 3), "\n")
-  cat("mu_B (spec)       :", round(est["mu_B.spec","Estimate"], 3), "\n")
+  cat("mu_A (logitsens)  :", round(est["mu_A.sens","Estimate"], 3), "\n")
+  cat("mu_B (logitspec)  :", round(est["mu_B.spec","Estimate"], 3), "\n")
   
   cat("\nUse summary() for parameter estimates.\n")
 
