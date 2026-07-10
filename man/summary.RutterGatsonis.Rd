@@ -25,7 +25,7 @@ specificity, including confidence intervals.
 This method extracts key components from a fitted HSROC model object
 returned by \code{\link{fitRutterGatsonis}}. It returns parameter
 estimates, sensitivity/specificity summaries, and the recovered
-Reitsma parametrization.
+Reitsma parameterization.
 }
 \details{
 Provides a concise summary of a fitted \code{"RutterGatsonis"} model.

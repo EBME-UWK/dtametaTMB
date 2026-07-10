@@ -6,7 +6,7 @@
 #' This method extracts key components from a fitted HSROC model object
 #' returned by \code{\link{fitRutterGatsonis}}. It returns parameter
 #' estimates, sensitivity/specificity summaries, and the recovered
-#' Reitsma parametrization.
+#' Reitsma parameterization.
 #'
 #' @param object An object of class \code{"RutterGatsonis"} as returned by
 #'   \code{\link{fitRutterGatsonis}}.

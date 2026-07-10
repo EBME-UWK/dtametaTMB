@@ -248,7 +248,7 @@ fitRutterGatsonisReg <- function(data,
   
   # Standard errors
   rep  <- TMB::sdreport(obj) 
-  rep2 <- summary(rep,select="report")#p.value=TRUE)
+  rep2 <- summary(rep,select="report")
   
   # lspec <- length(dat2$spec)
   ## Get sensitivities and specificities

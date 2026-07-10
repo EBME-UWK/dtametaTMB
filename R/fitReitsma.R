@@ -204,20 +204,22 @@ fitReitsma <- function(data,
   beta_fix   <- glmmTMB::fixef(MA_Y)$cond
   V_full     <- stats::vcov(MA_Y, full = TRUE)
   V_full[is.na(V_full)] <- 0
-  esti_V_g   <- getesti_V_g(beta_fix=beta_fix, 
-                            theta=theta, 
-                            V_full=V_full) 
+  names(beta_fix) <- c("mu_A.sens","mu_B.spec")
+  names(theta)    <- c("sigma2_A.sens","sigma2_B.spec","sigma_AB")
+  esti_V_g   <- get3esti_V_g(beta_fix=beta_fix, 
+                             theta=theta, 
+                             V_full=V_full) 
   esti       <- esti_V_g$esti
   # diagnostic odds ratio, the positive and negative
   # likelihood ratios
-  lsens  <- esti[1,"Estimate"]
-  lspec  <- esti[2,"Estimate"]
+  lsens  <- esti["mu_A.sens","Estimate"]
+  lspec  <- esti["mu_B.spec","Estimate"]
   S      <- ma_Y$vcov$cond
   lrdor  <- getLRDOR(lsens=lsens, lspec=lspec, S=S, conflevel=conflevel)
   # Recover Rutter and Gatsonis estimates
-  sigma2_a <- esti[3,"Estimate"]
-  sigma2_b <- esti[4,"Estimate"]
-  sigma_ab <- esti[5,"Estimate"]
+  sigma2_a <- esti["sigma2_A.sens","Estimate"]
+  sigma2_b <- esti["sigma2_B.spec","Estimate"]
+  sigma_ab <- esti["sigma_AB","Estimate"]
   sigma_a  <- sqrt(sigma2_a)
   sigma_b  <- sqrt(sigma2_b)
   ruga     <- getRUGA(lspec    = lspec,
