@@ -399,13 +399,27 @@ schuetz$test   <- factor(schuetz$test,levels=c("MRI","CT"))
 schuetzreitsma <- fitReitsmaSubgroup(data=schuetz,
                                      TP=TP,FP=FP,FN=FN,TN=TN,
                                      study=study,
-                                     subgroup=test)
+                                     subgroup=test,
+                                     variances="common")
 schuetzreitsma
 summary(schuetzreitsma)
 plot(schuetzreitsma,
      nudge_legend=-0.2,
      size="se",
      col=c("red","black"))
+
+schuetzreitsma1 <- fitReitsmaSubgroup(data=schuetz,
+                                      TP=TP,FP=FP,FN=FN,TN=TN,
+                                      study=study,
+                                      subgroup=test,
+                                      variances="unequal")
+schuetzreitsma1
+summary(schuetzreitsma1)
+plot(schuetzreitsma1,
+     nudge_legend=-0.2,
+     size="se",
+     col=c("red","black"))
+
 schuetzreitsma2 <- fitReitsmaSubgroup(data=schuetz,
                                       TP=TP,FP=FP,FN=FN,TN=TN,
                                       study=study,
@@ -416,6 +430,7 @@ schuetzreitsma3 <- fitReitsmaSubgroup(data=schuetz,
                                       study=study,
                                       subgroup=test,
                                       sensspec_constrain="spec")
+anova(schuetzreitsma,schuetzreitsma1)
 anova(schuetzreitsma2,schuetzreitsma)
 anova(schuetzreitsma3,schuetzreitsma)
 ```
