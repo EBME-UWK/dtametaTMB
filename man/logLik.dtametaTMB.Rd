@@ -8,6 +8,10 @@
 \alias{logLik.HoyerAFT}
 \alias{logLik.Reitsma}
 \alias{logLik.ReitsmaSubgroup}
+\alias{logLik.ReitsmaLCA}
+\alias{logLik.RutterGatsonisLCA}
+\alias{logLik.ReitsmaSubgroupLCA}
+\alias{logLik.RutterGatsonisSubgroupLCA}
 \title{Extract Log-Likelihood from Diagnostic Test Accuracy Models}
 \usage{
 \method{logLik}{RutterGatsonis}(object, ...)
@@ -21,6 +25,14 @@
 \method{logLik}{Reitsma}(object, ...)
 
 \method{logLik}{ReitsmaSubgroup}(object, ...)
+
+\method{logLik}{ReitsmaLCA}(object, ...)
+
+\method{logLik}{RutterGatsonisLCA}(object, ...)
+
+\method{logLik}{ReitsmaSubgroupLCA}(object, ...)
+
+\method{logLik}{RutterGatsonisSubgroupLCA}(object, ...)
 }
 \arguments{
 \item{object}{A fitted model object.}

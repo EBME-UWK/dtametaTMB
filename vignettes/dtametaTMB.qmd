@@ -28,7 +28,7 @@ commonly used models:
 
 using real datasets included in the package. 
 
-Subgroup analyses and meta-regression are covered in a separate vignette. 
+Subgroup analyses, meta-regression, and latent class analysis allowing for an imperfect reference standard are covered in separate vignettes. 
 
 *Note:* Rendering forest plots via `forest` may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 

@@ -1,0 +1,674 @@
+---
+title: "Latent Class Meta-Analysis"
+subtitle: "Reitsma and Rutter-Gatsonis Models with an Imperfect Reference Standard"
+format: 
+  html:
+   toc: TRUE
+#  pdf
+vignette: >
+  %\VignetteIndexEntry{Latent Class Meta-Analysis}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dtametaTMB)
+```
+
+## What are latent class models?
+
+In conventional meta-analysis of diagnostic test accuracy studies, the reference standard is assumed to classify disease status without error. In practice, however, the reference test may itself be imperfect. Latent class models relax the gold-standard assumption by treating the true disease status as an unobserved (latent) variable and jointly modelling the results of the index and reference tests.
+
+## Which latent class models does dtametaTMB support?
+
+The latent class models in **dtametaTMB** are based on the reduced latent class formulations proposed by Liu et al. (2015).
+
+> Liu, Y., Chen, Y., & Chu, H. (2015). A unification of models for meta-analysis of diagnostic accuracy studies without a gold standard. *Biometrics*, 71(2), 538--547.
+
+The latent class implementations were validated by reproducing the SAS PROC NLMIXED examples provided by Liu et al. (2015). 
+
+### What is conditional independence?
+
+The latent class models in **dtametaTMB** assume conditional independence between the index test and the reference test given the true disease status. Under this assumption, any association between the index and reference tests is fully explained by the latent disease status. Consequently, the latent-class probabilities can be expressed as functions of disease prevalence and the sensitivities and specificities of the two tests without introducing additional covariance parameters.
+
+To account for residual dependence between the index and reference tests, more complex latent class models do include covariance terms among diseased and/or non-diseased individuals. Although potentially more flexible, these models are also more difficult to identify and estimate reliably, particularly in sparse data.
+
+## How do latent class models work?
+
+Consider study $i$. Let
+
+- $y_{11i}$ denote the number of participants testing positive with both the index and reference tests,
+- $y_{10i}$ denote the number of participants testing positive with the index test and negative with the reference test,
+- $y_{01i}$ denote the number of participants testing negative with the index test and positive with the reference test, and
+- $y_{00i}$ denote the number of participants testing negative with both the index and reference tests.
+
+Let
+
+$$
+n_i = y_{11i}+y_{10i}+y_{01i}+y_{00i}
+$$
+
+denote the total sample size in study $i$.
+
+Furthermore, let
+
+$$
+p_{11i},\quad p_{10i},\quad p_{01i},\quad p_{00i}
+$$
+
+denote the corresponding latent-class cell probabilities.
+
+Conditional on the model parameters, the observed counts are assumed to follow a multinomial distribution,
+
+$$
+(Y_{11i},Y_{10i},Y_{01i},Y_{00i})
+\sim
+\text{Multinomial}
+\left(
+n_i,
+(p_{11i},p_{10i},p_{01i},p_{00i})
+\right).
+$$
+
+Ignoring the multinomial coefficient, which does not depend on the model parameters, the study-specific likelihood is proportional to
+
+$$
+L_i \propto
+p_{11i}^{\,y_{11i}}
+p_{10i}^{\,y_{10i}}
+p_{01i}^{\,y_{01i}}
+p_{00i}^{\,y_{00i}}.
+$$
+
+Equivalently, the study-specific log-likelihood can be written as
+
+$$
+\ell_i =
+y_{11i}\log(p_{11i}) +
+y_{10i}\log(p_{10i}) +
+y_{01i}\log(p_{01i}) +
+y_{00i}\log(p_{00i}),
+$$
+
+which corresponds directly to the likelihood contribution implemented in the TMB template.
+
+## How do we model disease prevalence?
+
+Let $\pi_i$ denote the prevalence of disease in study $i$. We model the study-specific prevalence by
+
+$$
+\text{logit}(\pi_i)
+=
+\mu_{\text{prev}}
++
+u_{\text{prev},i},
+$$
+
+where
+
+$$
+u_{\text{prev},i}
+\sim
+\mathcal{N}(0,\sigma_{\text{prev}}^2).
+$$
+
+The parameter $\mu_{\text{prev}}$ represents the average logit prevalence across studies, while $\sigma_{\text{prev}}^2$ describes between-study heterogeneity in disease prevalence.
+
+## How do we model the index test? (Reitsma version)
+
+Let $Se_{i}$ and $Sp_{i}$ denote the sensitivity and specificity of the index test in study $i$.
+
+The study-specific logit sensitivities and specificities are modeled as
+
+$$
+\text{logit}(Se_{i})
+=
+\mu_{A,\mathrm{index}}
++
+u_{Ai},
+$$
+
+and
+
+$$
+\text{logit}(Sp_{i})
+=
+\mu_{B,\mathrm{index}}
++
+u_{Bi},
+$$
+
+where
+
+$$
+\begin{pmatrix}
+u_{Ai}\\
+u_{Bi}
+\end{pmatrix}
+\sim
+\mathcal{N}
+\left(
+\begin{pmatrix}
+0\\
+0
+\end{pmatrix},
+\begin{pmatrix}
+\sigma^2_{A,\mathrm{index}} &
+\sigma_{AB,\mathrm{index}}\\[4pt]
+\sigma_{AB,\mathrm{index}} &
+\sigma^2_{B,\mathrm{index}}
+\end{pmatrix}
+\right).
+$$
+
+The parameters
+
+$$
+\mu_{A,\mathrm{index}}
+\quad\text{and}\quad
+\mu_{B,\mathrm{index}}
+$$
+
+represent the average logit sensitivity and specificity of the index test, respectively.
+
+The variance components
+
+$$
+\sigma^2_{A,\mathrm{index}}
+\quad\text{and}\quad
+\sigma^2_{B,\mathrm{index}}
+$$
+
+describe heterogeneity in sensitivity and specificity, whereas
+
+$$
+\sigma_{AB,\mathrm{index}}
+$$
+
+captures the association between them.
+
+## How do we model the index test? (Rutter and Gatsonis version)
+
+Let $x_{ij}$ indicate disease status, where
+
+$$
+x_{ij}
+=
+\begin{cases}
++0.5, & \text{diseased},\\
+-0.5, & \text{non-diseased}.
+\end{cases}
+$$
+
+The Rutter and Gatsonis model is given by
+
+$$
+\eta_{ij}
+=
+\left[
+\Theta
++
+\theta_i
++
+(\Lambda+\alpha_i)x_{ij}
+\right]
+\exp(-\beta x_{ij}),
+$$
+
+where
+
+$$
+\theta_i \sim \mathcal{N}(0,\sigma^2_\theta), \quad\text{and}\quad
+\alpha_i \sim \mathcal{N}(0,\sigma^2_\alpha).
+$$
+The parameter $\Lambda$ controls diagnostic accuracy, whereas $\Theta$ controls the diagnostic threshold. 
+The shape parameter $\beta$ determines the asymmetry of the summary ROC curve.
+
+Using the Rutter and Gatsonis parameterization, the study-specific sensitivity and specificity of the index test are
+
+$$
+\text{logit}(Se_{i})
+=
+\left(
+\Theta
++
+\theta_i
++
+\frac{\Lambda+\alpha_i}{2}
+\right)
+\exp\!\left(-\frac{\beta}{2}\right)
+$$
+
+and
+
+$$
+\text{logit}(Sp_{i})
+=
+-
+\left(
+\Theta
++
+\theta_i
+-
+\frac{\Lambda+\alpha_i}{2}
+\right)
+\exp\!\left(\frac{\beta}{2}\right)
+.
+$$
+
+
+## How do we model the reference test?
+
+The reduced latent class models of Liu et al. (2015) assume that the reference test has common sensitivity and specificity across studies.
+
+$$
+Se_R
+=
+\text{logit}^{-1}
+\left(
+\mu_{A,\mathrm{ref}}
+\right),
+$$
+
+and
+
+$$
+Sp_R
+=
+\text{logit}^{-1}
+\left(
+\mu_{B,\mathrm{ref}}
+\right).
+$$
+
+The parameters
+
+$$
+\mu_{A,\mathrm{ref}}
+\quad\text{and}\quad
+\mu_{B,\mathrm{ref}}
+$$
+
+represent the logit sensitivity and specificity of the reference test, respectively.
+
+## How do we model the latent-class probabilities?
+
+Under conditional independence the latent class probabilities for study $i$ are then given by
+
+$$
+p_{11i}
+=
+\pi_i Se_{Ai}Se_R
++
+(1-\pi_i)(1-Sp_{Ai})(1-Sp_R),
+$$
+
+$$
+p_{10i}
+=
+\pi_i Se_{Ai}(1-Se_R)
++
+(1-\pi_i)(1-Sp_{Ai})Sp_R,
+$$
+
+$$
+p_{01i}
+=
+\pi_i (1-Se_{Ai})Se_R
++
+(1-\pi_i)Sp_{Ai}(1-Sp_R),
+$$
+
+$$
+p_{00i}
+=
+\pi_i (1-Se_{Ai})(1-Se_R)
++
+(1-\pi_i)Sp_{Ai}Sp_R.
+$$
+
+These probabilities correspond to the four observable cells
+
+$$
+(y_{11i},y_{10i},y_{01i},y_{00i}),
+$$
+
+while the true disease status remains unobserved.
+
+## Model parameters (Reitsma version)
+
+The reduced Reitsma latent class model therefore estimates
+
+$$
+\mu_{\text{prev}},
+\quad
+\mu_{A,\mathrm{index}},
+\quad
+\mu_{B,\mathrm{index}},
+\quad
+\mu_{A,\mathrm{ref}},
+\quad
+\mu_{B,\mathrm{ref}},
+$$
+
+together with
+
+$$
+\sigma^2_{\text{prev}},
+\quad
+\sigma^2_{A,\mathrm{index}},
+\quad
+\sigma^2_{B,\mathrm{index}},
+\quad
+\sigma_{AB,\mathrm{index}}.
+$$
+
+## Model parameters (Rutter and Gatsonis version)
+
+The reduced HSROC latent class model estimates
+
+$$
+\mu_{\text{prev}},
+\quad
+\Lambda,
+\quad
+\Theta,
+\quad
+\beta,
+\quad
+\mu_{A,\mathrm{ref}},
+\quad
+\mu_{B,\mathrm{ref}},
+$$
+
+together with
+
+$$
+\sigma^2_{\text{prev}},
+\quad
+\sigma^2_\alpha,
+\quad
+\sigma^2_\theta.
+$$
+
+For some datasets, the threshold heterogeneity parameter $\sigma^2_\theta$ may be estimated close to zero, suggesting that a reduced model with fixed threshold heterogeneity may provide an adequate description of the data. This phenomenon is discussed by Liu et al. (2015) and can also arise in practical applications when most between-study variation is attributable to changes in diagnostic accuracy rather than diagnostic threshold.
+
+## How does the model provide study-specific sensitivities/specificities?
+
+Because the true disease status is unobserved, study-specific sensitivities and specificities are not directly available from the observed data. Instead, they are obtained as empirical Bayes estimates derived from the fitted latent class model. Conditional empirical Bayes variances are used to construct study-specific confidence intervals. These model-based estimates and intervals form the basis of the SROC and coupled forest plots.
+
+## How do we obtain starting values?
+
+Starting values are obtained from simpler nested models. For example, the latent class models are initialized using parameter estimates from the corresponding non-latent-class Reitsma or HSROC models. Subgroup models use the fitted non-subgroup latent class model to obtain initial values for common parameters, while subgroup contrasts are initialized at zero.
+
+## How do I fit the Reitsma latent class model?
+
+```{r}
+#| echo: TRUE
+data("pap")
+papLCA <- fitReitsmaLCA(data=pap,
+                        y11=y11,
+                        y10=y10,
+                        y01=y01,
+                        y00=y00,
+                        study=id)
+papLCA
+```
+
+## How do I get a summary plot?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 8
+plot(papLCA)
+```
+## How do I get a coupled forest plot?
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
+```{r}
+#| echo: TRUE
+#| fig.height: 17
+#| fig.width: 11
+forest(papLCA)
+```
+
+
+## How do I fit the Rutter and Gatsonis latent class model?
+
+```{r}
+#| echo: TRUE
+papLCA2 <- fitRutterGatsonisLCA(data=pap,
+                                y11=y11,
+                                y10=y10,
+                                y01=y01,
+                                y00=y00,
+                                study=id)
+papLCA2
+summary(papLCA2)
+```
+
+## How do I get a summary plot?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 8
+plot(papLCA2,specrange=c(0.3,0.995))
+```
+## How do I get a coupled forest plot?
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
+```{r}
+#| echo: TRUE
+#| fig.height: 17
+#| fig.width: 11
+forest(papLCA2)
+```
+
+## How do I perform subgroup analyses?
+
+In the subgroup models, the reference test's logit mean sensitivity and specificity are assumed common across all subgroups, whereas the logit mean prevalence and its between-study random effect variance can differ across subgroups $g=1,\dots,G$, i.e.,
+
+$$ \mu_{\text{prev},g}, \quad \sigma^2_{\text{prev},g}$$.
+
+However, by default $\sigma^2_{\text{prev},1}=\dots=\sigma^2_{\text{prev},2}=\dots=\sigma^2_{\text{prev},G}$ are assumed to be common. Separate prevalence heterogeneity parameters are estimated only when `prev_variance="unequal"`.
+
+### Reitsma subgroup latent class model
+
+For the index test, the Reitsma subgroup latent class model allows for different logit mean sensitivities and specificities across subgroups, i.e.,
+
+$$ \mu_{A,\text{index},g}, \quad \mu_{B,\text{index},g}$$.
+
+By default (`variances="common"`), a common between-study variance-covariance structure is assumed across all subgroups, i.e.,
+
+$$ \Sigma_1=\Sigma_2=\dots=\Sigma_G.$$
+Alternatively, subgroup-specific variance-covariance matrices can be estimated by specifying `variances="unequal"`. In this case, each subgroup has its own between-study variance-covariance matrix
+
+$$\Sigma_{g} = \begin{pmatrix} \sigma^2_{A,\text{index},g} & \sigma_{AB,\text{index},g} \\ \sigma_{AB,\text{index},g} & \sigma^2_{B,\text{index},g} \end{pmatrix}.$$
+For convenience, subgroup differences relative to the reference subgroup are also reported on the logit scale through the parameters $\nu_\text{prev}, \nu_{A,\text{index}}, \nu_{B,\text{index}}$.
+
+### Rutter and Gatsonis subgroup latent class model
+
+For the index test, the Rutter and Gatsonis subgroup latent class model allows for different accuracy, threshold and shape effects per subgroups, i.e.,
+
+$$\Lambda_{g}, \quad \Theta_{g}, \quad \beta_{g},  $$
+while the random effects variances $\sigma^2_\alpha$ and $\sigma^2_\theta$ are assumed common across subgroups.
+
+For convenience, subgroup differences relative to the reference subgroup are also reported through the parameters
+$$\nu_{g}, \quad \xi_{g}, \quad \gamma_{g}, \quad \delta_{g}. $$
+## 
+
+
+## How do I fit the Reitsma subgroup latent class model?
+
+```{r}
+#| echo: TRUE
+pap$type <- factor(pap$type,levels=c("SC","FU"))
+papLCA3 <- fitReitsmaSubgroupLCA(data=pap,
+                                 y11=y11,
+                                 y10=y10,
+                                 y01=y01,
+                                 y00=y00,
+                                 subgroup=type,
+                                 study=id)
+papLCA3
+summary(papLCA3)
+```
+
+## How do I get a summary plot?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 8
+plot(papLCA3,
+     nudge_legend = -0.2)
+```
+## How do I get a coupled forest plot?
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
+```{r}
+#| echo: TRUE
+#| fig.height: 17
+#| fig.width: 13
+forest(papLCA3)
+```
+
+
+## How do I fit the Rutter and Gatsonis latent class model?
+
+```{r}
+#| echo: TRUE
+pap$type <- factor(pap$type,levels=c("SC","FU"))
+papLCA4 <- fitRutterGatsonisSubgroupLCA(data=pap,
+                                        y11=y11,
+                                        y10=y10,
+                                        y01=y01,
+                                        y00=y00,
+                                        subgroup=type,
+                                        constrain="shape",
+                                        study=id)
+papLCA4
+summary(papLCA4)
+```
+
+## How do I get a summary plot?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 8
+plot(papLCA4,
+     specrange=c(0.3,0.995),
+     nudge_legend = -0.2)
+```
+## How do I get a coupled forest plot?
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
+```{r}
+#| echo: TRUE
+#| fig.height: 17
+#| fig.width: 13
+forest(papLCA4)
+```
+
+## How do I apply these methods to the `schuetz` data set?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 6
+#| fig.width: 8
+data("schuetz")
+schuetzLCA <- fitReitsmaLCA(data=schuetz,
+                            y11=TP,
+                            y10=FP,
+                            y01=FN,
+                            y00=TN,
+                            study=study)
+schuetzLCA
+summary(schuetzLCA)
+
+schuetzLCA2 <- fitReitsmaSubgroupLCA(data=schuetz,
+                                     y11=TP,
+                                     y10=FP,
+                                     y01=FN,
+                                     y00=TN,
+                                     subgroup=test,
+                                     study=study)
+schuetzLCA2
+summary(schuetzLCA2)
+plot(schuetzLCA2,
+     nudge_legend=-0.2,
+     size="eb",
+     col=c("red","black"))
+
+
+schuetzLCA3 <- fitReitsmaSubgroupLCA(data=schuetz,
+                                     y11=TP,
+                                     y10=FP,
+                                     y01=FN,
+                                     y00=TN,
+                                     subgroup=test,
+                                     variances="unequal",
+                                     prev_variance="unequal",
+                                     study=study)
+schuetzLCA3
+plot(schuetzLCA3,
+     nudge_legend=-0.2,
+     size="eb",
+     col=c("red","black"))
+
+
+schuetzLCA4 <- fitReitsmaSubgroupLCA(data=schuetz,
+                                     y11=TP,
+                                     y10=FP,
+                                     y01=FN,
+                                     y00=TN,
+                                     subgroup=test,
+                                     variances="unequal",
+                                     prev_variance="common",
+                                     study=study)
+
+anova(schuetzLCA ,schuetzLCA2)
+anova(schuetzLCA2,schuetzLCA3)
+anova(schuetzLCA2,schuetzLCA4)
+
+schuetzLCA5 <- fitReitsmaSubgroupLCA(data=schuetz,
+                                     y11=TP,
+                                     y10=FP,
+                                     y01=FN,
+                                     y00=TN,
+                                     subgroup=test,
+                                     variances="unequal",
+                                     sensspec_constrain = "sens",
+                                     prev_variance="common",
+                                     study=study)
+schuetzLCA5
+anova(schuetzLCA5,schuetzLCA4)
+
+schuetzLCA6 <- fitReitsmaSubgroupLCA(data=schuetz,
+                                     y11=TP,
+                                     y10=FP,
+                                     y01=FN,
+                                     y00=TN,
+                                     subgroup=test,
+                                     variances="unequal",
+                                     sensspec_constrain = "spec",
+                                     prev_variance="common",
+                                     study=study)
+schuetzLCA6
+anova(schuetzLCA6,schuetzLCA4)
+```
+
+## References
+
+Liu, Y., Chen, Y., & Chu, H. (2015). A unification of models for meta-analysis of diagnostic accuracy studies without a gold standard. *Biometrics*, 71(2), 538--547.

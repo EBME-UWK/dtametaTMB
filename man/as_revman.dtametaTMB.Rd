@@ -7,6 +7,10 @@
 \alias{as_revman.RutterGatsonis}
 \alias{as_revman.ReitsmaSubgroup}
 \alias{as_revman.RutterGatsonisSubgroup}
+\alias{as_revman.ReitsmaLCA}
+\alias{as_revman.RutterGatsonisLCA}
+\alias{as_revman.ReitsmaSubgroupLCA}
+\alias{as_revman.RutterGatsonisSubgroupLCA}
 \title{Export Model Results for RevMan}
 \usage{
 as_revman(x, ...)
@@ -18,6 +22,14 @@ as_revman(x, ...)
 \method{as_revman}{ReitsmaSubgroup}(x, ...)
 
 \method{as_revman}{RutterGatsonisSubgroup}(x, ...)
+
+\method{as_revman}{ReitsmaLCA}(x, ...)
+
+\method{as_revman}{RutterGatsonisLCA}(x, ...)
+
+\method{as_revman}{ReitsmaSubgroupLCA}(x, ...)
+
+\method{as_revman}{RutterGatsonisSubgroupLCA}(x, ...)
 }
 \arguments{
 \item{x}{A fitted model object.}

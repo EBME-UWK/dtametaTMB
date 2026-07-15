@@ -7,6 +7,10 @@
 \alias{anova.RutterGatsonis}
 \alias{anova.RutterGatsonisSubgroup}
 \alias{anova.RutterGatsonisReg}
+\alias{anova.RutterGatsonisLCA}
+\alias{anova.RutterGatsonisSubgroupLCA}
+\alias{anova.ReitsmaLCA}
+\alias{anova.ReitsmaSubgroupLCA}
 \title{Likelihood Ratio Tests for Diagnostic Test Accuracy Models}
 \usage{
 \method{anova}{Reitsma}(object, ..., test = "Chisq")
@@ -18,6 +22,14 @@
 \method{anova}{RutterGatsonisSubgroup}(object, ..., test = "Chisq")
 
 \method{anova}{RutterGatsonisReg}(object, ..., test = "Chisq")
+
+\method{anova}{RutterGatsonisLCA}(object, ..., test = "Chisq")
+
+\method{anova}{RutterGatsonisSubgroupLCA}(object, ..., test = "Chisq")
+
+\method{anova}{ReitsmaLCA}(object, ..., test = "Chisq")
+
+\method{anova}{ReitsmaSubgroupLCA}(object, ..., test = "Chisq")
 }
 \arguments{
 \item{object}{A fitted model object.}

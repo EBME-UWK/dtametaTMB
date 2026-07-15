@@ -1,0 +1,43 @@
+#' Print Method for RutterGatsonisLCA Objects
+#'
+#' Displays a concise summary of a fitted HSROC LCA model,
+#' including number of studies, convergence status, and
+#' likelihood-based fit statistics.
+#'
+#' @param x An object of class \code{"RutterGatsonisLCA"}.
+#' @param ... Additional arguments (unused).
+#'
+#' @seealso \code{\link{summary.RutterGatsonisLCA}}
+#' @return
+#' Invisibly returns the input object. 
+#' @method print RutterGatsonisLCA
+#' @export
+print.RutterGatsonisLCA <- function(x, ...) {
+  
+  cat("\n", "Rutter & Gatsonis LCA Model", "\n", sep = "")
+  cat(strrep("-", nchar("Rutter & Gatsonis LCA Model")), "\n\n", sep = "")
+  
+  n_study   <- nrow(x$data)
+  converged <- x$fit$convergence == 0
+  pdHess    <- x$sdreport$pdHess
+  ll        <- logLik(x)
+  
+  cat("Number of studies :", n_study, "\n")
+  cat("Optimizer         :", if (converged) "Converged" else "Not converged", "\n")
+  cat("Hessian           :", if (pdHess) "Positive definite" else "Not positive definite", "\n")
+  cat("Max |grad|        :", max(abs(x$sdreport$gradient.fixed)), "\n")
+  cat("-2 log likelihood :", round(-2 * as.numeric(ll), 3),"( df =", attr(ll, "df"), ")\n")  
+  cat("AIC               :", round(AIC(x), 3), "\n")
+  cat("BIC               :", round(BIC(x), 3), "\n\n")
+  
+  est <- x$sdreport2[,"Estimate"]
+  
+  cat("mu_prev           :", round(est["mu_prev"], 3), "\n")
+  cat("Lambda            :", round(est["Lambda"], 3), "\n")
+  cat("Theta             :", round(est["Theta"], 3), "\n")
+  cat("beta              :", round(est["beta"], 3), "\n")
+  
+  cat("\nUse summary() for parameter estimates.\n")
+  
+  invisible(x)
+}

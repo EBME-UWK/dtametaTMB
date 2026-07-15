@@ -83,6 +83,52 @@ logLik.ReitsmaSubgroup <- function(object, ...){
 }
 
 
+#' @rdname logLik.dtametaTMB
+#' @export
+logLik.ReitsmaLCA <- function(object, ...) {
+  structure(
+    -object$fit$objective,
+    class = "logLik",
+    df = length(object$fit$par),
+    nobs = nrow(object$data)
+  )
+}
+
+#' @rdname logLik.dtametaTMB
+#' @export
+logLik.RutterGatsonisLCA <- function(object, ...) {
+  structure(
+    -object$fit$objective,
+    class = "logLik",
+    df = length(object$fit$par),
+    nobs = nrow(object$data)
+  )
+}
+
+#' @rdname logLik.dtametaTMB
+#' @export
+logLik.ReitsmaSubgroupLCA <- function(object, ...) {
+  structure(
+    -object$fit$objective,
+    class = "logLik",
+    df = length(object$fit$par),
+    nobs = nrow(object$data)
+  )
+}
+
+#' @rdname logLik.dtametaTMB
+#' @export
+logLik.RutterGatsonisSubgroupLCA <- function(object, ...) {
+  structure(
+    -object$fit$objective,
+    class = "logLik",
+    df = length(object$fit$par),
+    nobs = nrow(object$data)
+  )
+}
+
+
+
 #' @importFrom stats logLik pchisq
 NULL
 
@@ -196,6 +242,30 @@ anova.RutterGatsonisSubgroup <- function(object, ..., test = "Chisq") {
 #' @rdname anova.dtametaTMB
 #' @export
 anova.RutterGatsonisReg <- function(object, ..., test = "Chisq") {
+  anova_lrt(object, ..., test = test)
+}
+
+#' @rdname anova.dtametaTMB
+#' @export
+anova.RutterGatsonisLCA <- function(object, ..., test = "Chisq") {
+  anova_lrt(object, ..., test = test)
+}
+
+#' @rdname anova.dtametaTMB
+#' @export
+anova.RutterGatsonisSubgroupLCA <- function(object, ..., test = "Chisq") {
+  anova_lrt(object, ..., test = test)
+}
+
+#' @rdname anova.dtametaTMB
+#' @export
+anova.ReitsmaLCA <- function(object, ..., test = "Chisq") {
+  anova_lrt(object, ..., test = test)
+}
+
+#' @rdname anova.dtametaTMB
+#' @export
+anova.ReitsmaSubgroupLCA <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
 

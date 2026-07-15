@@ -1,0 +1,27 @@
+#' tub dataset
+#'
+#' This is the tub data set from Kohli et al. (2018) from a meta-analysis 
+#' comparing Papanicolaou (Pap) test results with histology for the diagnosis of cervical cancer.
+#' 
+#' @note The data set was taken from the supplementary material of the Cochrane Handbook for 
+#' Systematic Reviews of Diagnostic Test Accuracy Studies.
+#'
+#' @format A data frame with 29 rows and 5 variables:
+#' \describe{
+#'   \item{id}{Study identifier}
+#'   \item{y11}{Number testing positive with both tests}
+#'   \item{y10}{Number testing positive with index test but negative with reference test}
+#'   \item{y01}{Number testing negative with index test but positive with reference test}
+#'   \item{y00}{Number testing positive with both tests}
+#' }
+#' @source 
+#' Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y. (editors) (2023).
+#' *Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.*
+#' Version 2.0 (updated July 2023). Cochrane.
+#' 
+#' Kohli, M. et a. (2018).
+#' *Xpert MTB/RIF assay for extrapulmonary tuberculosis and rifampicin resistance*.
+#' Cochrane Database of Systematic Reviews 2018, 8, CD012768.
+#' \doi{10.1002/14651858.CD012768.pub2}
+#' 
+"tub"

@@ -21,6 +21,7 @@ estimation of complex hierarchical models.
 - Reitsma bivariate random-effects model
 - Rutter and Gatsonis (HSROC) model
 - Hoyer multiple-threshold model
+- Reitsma and Rutter-Gatsonis (HSROC) latent class analyses for studies without a perfect reference standard
 - Subgroup analyses and meta-regression
 - Likelihood-ratio tests for nested model comparisons
 - Support for parameter constraints in sparse-data settings

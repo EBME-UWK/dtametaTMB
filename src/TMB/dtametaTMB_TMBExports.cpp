@@ -3,18 +3,30 @@
 #define TMB_LIB_INIT R_init_dtametaTMB_TMBExports
 #include <TMB.hpp>
 #include "Hoyer.hpp"
+#include "ReitsmaLCA.hpp"
+#include "ReitsmaSubgroupLCA.hpp"
 #include "RutterGatsonis.hpp"
+#include "RutterGatsonisLCA.hpp"
 #include "RutterGatsonisReg.hpp"
+#include "RutterGatsonisSubgroupLCA.hpp"
 
 template<class Type>
 Type objective_function<Type>::operator() () {
   DATA_STRING(model);
   if(model == "Hoyer") {
     return Hoyer(this);
+  } else if(model == "ReitsmaLCA") {
+    return ReitsmaLCA(this);
+  } else if(model == "ReitsmaSubgroupLCA") {
+    return ReitsmaSubgroupLCA(this);
   } else if(model == "RutterGatsonis") {
     return RutterGatsonis(this);
+  } else if(model == "RutterGatsonisLCA") {
+    return RutterGatsonisLCA(this);
   } else if(model == "RutterGatsonisReg") {
     return RutterGatsonisReg(this);
+  } else if(model == "RutterGatsonisSubgroupLCA") {
+    return RutterGatsonisSubgroupLCA(this);
   } else {
     Rf_error("Unknown model.");
   }

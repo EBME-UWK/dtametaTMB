@@ -290,3 +290,245 @@ as_revman.RutterGatsonisSubgroup <- function(x, ...) {
   }
   do.call(rbind, res)
 }
+
+
+###
+###
+###
+
+
+#' @rdname as_revman.dtametaTMB
+#' @export
+as_revman.ReitsmaLCA <- function(x, ...) {
+
+  ## extract these from x
+  mu_se   <- x$sdreport2["mu_A.index","Estimate"]
+  mu_sp   <- x$sdreport2["mu_B.index","Estimate"]
+  var_se  <- x$sdreport2["sigma2_A.index","Estimate"]
+  var_sp  <- x$sdreport2["sigma2_B.index","Estimate"]
+  cov_ss  <- x$sdreport2["sigma_AB.index","Estimate"]
+  cor_ss  <- cov_ss/sqrt(var_se*var_sp)
+
+  Lambda  <- x$RutterGatsonis_recovered$Lambda
+  Theta   <- x$RutterGatsonis_recovered$Theta
+  beta    <- x$RutterGatsonis_recovered$beta
+  varA    <- x$RutterGatsonis_recovered$sigma2_alpha
+  varT    <- x$RutterGatsonis_recovered$sigma2_theta
+
+  seelse  <- x$sdreport2["mu_A.index","Std. Error"]
+  seelsp  <- x$sdreport2["mu_B.index","Std. Error"]
+  coves   <- x$vcov["mu_A.index","mu_B.index"]
+  nstudy  <- nrow(x$data)
+
+  ret <- data.frame(
+    Externally_Calculated_Parameters=
+      c(rep("HSROC model parameters",5),
+        rep("Bivariate model parameters",6),
+        rep("Confidence and prediction regions",4)),
+    Parameter = c(
+      "Lambda",
+      "Theta",
+      "beta",
+      "Var(accuracy)",
+      "Var(threshold)",
+      "E(logitSe)",
+      "E(logitSp)",
+      "Var(logitSe)",
+      "Var(logitSp)",
+      "Cov(logits)",
+      "Corr(logits)",
+      "SE(E(logitSe))",
+      "SE(E(logitSp))",
+      "Cov(Es)",
+      "Studies"
+    ),
+    Estimate = c(Lambda,Theta,beta,varA,varT,
+                 mu_se,mu_sp,var_se,var_sp,cov_ss,cor_ss,
+                 seelse,seelsp,coves,nstudy),
+
+    row.names = NULL
+  )
+  return(ret)
+}
+
+
+#' @rdname as_revman.dtametaTMB
+#' @export
+as_revman.RutterGatsonisLCA <- function(x, ...) {
+  ## extract these from x
+  mu_se   <- x$Reitsma_recovered$mu_A.sens
+  mu_sp   <- x$Reitsma_recovered$mu_B.spec
+  var_se  <- x$Reitsma_recovered$sigma2_A.sens
+  var_sp  <- x$Reitsma_recovered$sigma2_B.spec
+  cov_ss  <- x$Reitsma_recovered$sigma_AB
+  cor_ss  <- cov_ss/sqrt(var_se*var_sp)
+
+  Lambda  <- x$sdreport2["Lambda","Estimate"]
+  Theta   <- x$sdreport2["Theta","Estimate"]
+  beta    <- x$sdreport2["beta","Estimate"]
+  varA    <- x$sdreport2["sigma2_alpha","Estimate"]
+  varT    <- x$sdreport2["sigma2_theta","Estimate"]
+
+  seelse  <- NA_real_
+  seelsp  <- NA_real_
+  coves   <- NA_real_
+  nstudy  <- nrow(x$data)
+
+  ret <- data.frame(
+    Externally_Calculated_Parameters=
+      c(rep("HSROC model parameters",5),
+        rep("Bivariate model parameters",6),
+        rep("Confidence and prediction regions",4)),
+    Parameter = c(
+      "Lambda",
+      "Theta",
+      "beta",
+      "Var(accuracy)",
+      "Var(threshold)",
+      "E(logitSe)",
+      "E(logitSp)",
+      "Var(logitSe)",
+      "Var(logitSp)",
+      "Cov(logits)",
+      "Corr(logits)",
+      "SE(E(logitSe))",
+      "SE(E(logitSp))",
+      "Cov(Es)",
+      "Studies"
+    ),
+    Estimate = c(Lambda,Theta,beta,varA,varT,
+                 mu_se,mu_sp,var_se,var_sp,cov_ss,cor_ss,
+                 seelse,seelsp,coves,nstudy),
+
+    row.names = NULL
+  )
+  return(ret)
+}
+
+
+#' @rdname as_revman.dtametaTMB
+#' @export
+as_revman.ReitsmaSubgroupLCA <- function(x, ...) {
+
+  sub  <- levels(x$data$subgroup)
+  res  <- vector("list", length(sub))
+  for(i in seq_along(sub)) {
+    sg  <- sub[i]
+    mu_A.sg <- paste0("mu_A.index.",sg)
+    mu_B.sg <- paste0("mu_B.index.",sg)
+    s2_A.sg <- paste0("sigma2_A.index.",sg)
+    s2_B.sg <- paste0("sigma2_B.index.",sg)
+    s_AB.sg <- paste0("sigma_AB.index.",sg)
+    mu_se  <- x$sdreport2[mu_A.sg,"Estimate"]
+    mu_sp  <- x$sdreport2[mu_B.sg,"Estimate"]
+    var_se <- x$sdreport2[s2_A.sg,"Estimate"]
+    var_sp <- x$sdreport2[s2_B.sg,"Estimate"]
+    cov_ss <- x$sdreport2[s_AB.sg,"Estimate"]
+    cor_ss <- cov_ss/sqrt(var_se*var_sp)
+    ###
+    Lambda <- x$RutterGatsonis_recovered[sg,"Lambda"]
+    Theta  <- x$RutterGatsonis_recovered[sg,"Theta"]
+    beta   <- x$RutterGatsonis_recovered[sg,"beta"]
+    varA   <- x$RutterGatsonis_recovered[sg,"sigma2_alpha"]
+    varT   <- x$RutterGatsonis_recovered[sg,"sigma2_theta"]
+    ###
+    seelse <- x$sdreport2[mu_A.sg,"Std. Error"]
+    seelsp <- x$sdreport2[mu_B.sg,"Std. Error"]
+    coves  <- x$vcov[mu_A.sg,mu_B.sg]
+    nstudy <- sum(x$data$subgroup == sg, na.rm = TRUE)
+    ###
+    res[[i]] <- data.frame(
+      Subgroup=sg,
+      Externally_Calculated_Parameters=
+        c(rep("HSROC model parameters",5),
+          rep("Bivariate model parameters",6),
+          rep("Confidence and prediction regions",4)),
+      Parameter = c(
+        "Lambda",
+        "Theta",
+        "beta",
+        "Var(accuracy)",
+        "Var(threshold)",
+        "E(logitSe)",
+        "E(logitSp)",
+        "Var(logitSe)",
+        "Var(logitSp)",
+        "Cov(logits)",
+        "Corr(logits)",
+        "SE(E(logitSe))",
+        "SE(E(logitSp))",
+        "Cov(Es)",
+        "Studies"),
+      Estimate = c(Lambda,Theta,beta,varA,varT,
+                   mu_se,mu_sp,var_se,var_sp,cov_ss,cor_ss,
+                   seelse,seelsp,coves,nstudy))
+  }
+
+  do.call(rbind, res)
+}
+
+
+###
+###
+###
+
+#' @rdname as_revman.dtametaTMB
+#' @export
+as_revman.RutterGatsonisSubgroupLCA <- function(x, ...) {
+  subs     <- x$subgroups
+  llsub    <- length(subs)
+  #scounter <- llsub*2+1
+  res  <- vector("list", llsub)
+  for(i in seq_along(subs)) {
+    sg <- subs[i]
+    ###
+    mu_se  <- x$Reitsma_recovered[sg,"mu_A.sens"]
+    mu_sp  <- x$Reitsma_recovered[sg,"mu_B.spec"]
+    var_se <- x$Reitsma_recovered[sg,"sigma2_A.sens"]
+    var_sp <- x$Reitsma_recovered[sg,"sigma2_B.spec"]
+    cov_ss <- x$Reitsma_recovered[sg,"sigma_AB"]
+    cor_ss <- cov_ss/sqrt(var_se*var_sp)
+    ###
+    lamb <- paste0("Lambda_",sg)
+    thet <- paste0("Theta_",sg)
+    bet  <- paste0("beta_",sg)
+    ###
+    Lambda <- x$sdreport2[lamb,"Estimate"]
+    Theta  <- x$sdreport2[thet,"Estimate"]
+    beta   <- x$sdreport2[bet,"Estimate"]
+    varA   <- x$sdreport2["sigma2_alpha","Estimate"]
+    varT   <- x$sdreport2["sigma2_theta","Estimate"]
+    ###
+    seelse <- NA_real_
+    seelsp <- NA_real_
+    coves  <- NA_real_
+    nstudy <- sum(x$data$subgroup == sg, na.rm = TRUE)
+    ###
+    res[[i]] <- data.frame(
+      Subgroup=sg,
+      Externally_Calculated_Parameters=
+        c(rep("HSROC model parameters",5),
+          rep("Bivariate model parameters",6),
+          rep("Confidence and prediction regions",4)),
+      Parameter = c(
+        "Lambda",
+        "Theta",
+        "beta",
+        "Var(accuracy)",
+        "Var(threshold)",
+        "E(logitSe)",
+        "E(logitSp)",
+        "Var(logitSe)",
+        "Var(logitSp)",
+        "Cov(logits)",
+        "Corr(logits)",
+        "SE(E(logitSe))",
+        "SE(E(logitSp))",
+        "Cov(Es)",
+        "Studies"),
+      Estimate = c(Lambda,Theta,beta,varA,varT,
+                   mu_se,mu_sp,var_se,var_sp,cov_ss,cor_ss,
+                   seelse,seelsp,coves,nstudy))
+  }
+  do.call(rbind, res)
+}
