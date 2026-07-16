@@ -1,7 +1,8 @@
 #' Export Model Results for RevMan
 #'
 #' Converts fitted model objects (\code{Reitsma}, \code{ReitsmaSubgroup}, \code{RutterGatsonis}, 
-#' \code{RutterGatsonisSubgroup}) into a format suitable for manual entry
+#' \code{RutterGatsonisSubgroup}, \code{ReitsmaLCA}, \code{ReitsmaSubgroupLCA}, \code{RutterGatsonisLCA}, and
+#' \code{RutterGatsonisSubgroupLCA}) into a format suitable for manual entry
 #' into the Diagnostic Test Accuracy module of Review Manager (RevMan).
 #'
 #' @param x A fitted model object.
@@ -10,8 +11,8 @@
 #' @return
 #' A data frame with columns:
 #' \describe{
-#'   \item{Subgroup}{Only returned for \code{ReitsmaSubgroup} and \code{RutterGatsonisSubgroup} objects.}
-#'   \item{Externally_Calculated_Parameters}{Revman model/parameter types.}
+#'   \item{Subgroup}{Only returned for subgroup model objects.}
+#'   \item{Externally_Calculated_Parameters}{RevMan model/parameter types.}
 #'   \item{Parameter}{RevMan parameter name.}
 #'   \item{Estimate}{Parameter estimate.}
 #' }
