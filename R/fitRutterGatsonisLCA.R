@@ -287,12 +287,17 @@ fitRutterGatsonisLCA <- function(data,
   var_a   <- u[u$raneff=="alpha","u_var"]
   var_t   <- u[u$raneff=="theta","u_var"]
   
-  rep3    <- TMB::sdreport(obj,getJointPrecision=TRUE)$jointPrecision
-  idx_a   <- which(colnames(rep3)=="alpha")
-  idx_t   <- which(colnames(rep3)=="theta")
-  vcov    <- solve(as.matrix(rep3))[idx_a,idx_t]
-  cov_at  <- diag(vcov)
-  
+  if ("sigma2_alpha" %in% constrain ||
+      "sigma2_theta" %in% constrain) {
+    cov_at  <- rep(0, n_study)
+  } else {
+    rep3    <- TMB::sdreport(obj,getJointPrecision=TRUE)$jointPrecision
+    idx_a   <- which(colnames(rep3)=="alpha")
+    idx_t   <- which(colnames(rep3)=="theta")
+    vcov    <- solve(as.matrix(rep3))[idx_a,idx_t]
+    cov_at  <- diag(vcov)
+  }
+
   lsens_study <- (Theta + theta_i + (Lambda+alpha_i)/2)*exp(-beta/2)
   lspec_study <- -(Theta + theta_i - (Lambda+alpha_i)/2)*exp(beta/2)
   
