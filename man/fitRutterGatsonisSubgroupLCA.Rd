@@ -13,7 +13,7 @@ fitRutterGatsonisSubgroupLCA(
   study,
   subgroup,
   constrain = NULL,
-  prev_variance = c("common", "unequal"),
+  prev_variances = c("common", "unequal"),
   spec = NULL,
   conflevel = 0.95,
   verbose = FALSE
@@ -68,7 +68,7 @@ Multiple constraints may be specified simultaneously, e.g.
 
 If \code{NULL} (default), the unconstrained HSROC model is fitted.}
 
-\item{prev_variance}{Whether the between-study random-effects variance for
+\item{prev_variances}{Whether the between-study random-effects variance for
 logit prevalence should be assumed to be \code{"common"} (default) or \code{"unequal"}
 across subgroups. If \code{"common"}, a single between-study variance is estimated and shared across all subgroups.
 If \code{"unequal"}, subgroup-specific variances are estimated.}
@@ -102,7 +102,7 @@ conditional independence.
 Requires a compiled TMB model named \code{"RutterGatsonisSubgroupLCA"}.
 }
 \examples{
-data("RF")
+data("schuetz")
 fit <- fitRutterGatsonisSubgroupLCA(
   data = schuetz,
   y11 = TP,

@@ -46,7 +46,7 @@
 #'   If \code{NULL} (default), the unconstrained HSROC model is fitted.
 #' @param spec Optional specificity value at which sensitivity is estimated.
 #'    If \code{NULL}, a specificity of 0.8 is used as a proxy.
-#' @param prev_variance Whether the between-study random-effects variance for 
+#' @param prev_variances Whether the between-study random-effects variance for 
 #'   logit prevalence should be assumed to be \code{"common"} (default) or \code{"unequal"} 
 #'   across subgroups. If \code{"common"}, a single between-study variance is estimated and shared across all subgroups. 
 #'   If \code{"unequal"}, subgroup-specific variances are estimated.
@@ -91,7 +91,7 @@
 #' \doi{10.1093/biostatistics/kxl004}
 #'
 #' @examples
-#' data("RF")
+#' data("schuetz")
 #' fit <- fitRutterGatsonisSubgroupLCA(
 #'   data = schuetz,
 #'   y11 = TP,
@@ -114,12 +114,12 @@ fitRutterGatsonisSubgroupLCA <- function(data,
                                          study,
                                          subgroup,
                                          constrain=NULL,
-                                         prev_variance=c("common","unequal"),
+                                         prev_variances=c("common","unequal"),
                                          spec=NULL,
                                          conflevel=0.95,
                                          verbose=FALSE){
   
-  prev_variance  <- match.arg(prev_variance)
+  prev_variances  <- match.arg(prev_variances)
   
   allowed_constraints <- c(
     "sigma2_alpha",
@@ -267,7 +267,7 @@ fitRutterGatsonisSubgroupLCA <- function(data,
     map$log_sigma_theta <- factor(NA)
   }
   
-  if(prev_variance=="common"){
+  if(prev_variances=="common"){
     map$log_sigma_prev_coef = factor(c(1, rep(NA,ngroup-1)))
   }
   

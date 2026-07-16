@@ -37,7 +37,7 @@
 #' }
 #'
 #' @references
-#' #' Liu, Y., Chen, Y., & Chu, H. (2015). 
+#' Liu, Y., Chen, Y., & Chu, H. (2015). 
 #' A unification of models for meta-analysis of diagnostic accuracy studies without a gold standard. 
 #' \emph{Biometrics}, 71(2), 538-547.
 #' \doi{10.1111/biom.12264}

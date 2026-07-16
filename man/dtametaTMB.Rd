@@ -15,6 +15,7 @@ Implemented methods
 \item Reitsma model
 \item Rutter-Gatsonis HSROC model
 \item Hoyer multiple-threshold model
+\item Latent class analysis for studies with an imperfect reference standard
 }
 
 Main workflow
@@ -24,6 +25,10 @@ Main workflow
 \item fitRutterGatsonis() -> plot() -> forest()
 \item fitRutterGatsonisSubgroup() -> plot() -> forest()
 \item fitHoyer() -> plot() -> forest()
+\item fitReitsmaLCA() -> plot() -> forest()
+\item fitReitsmaSubgroupLCA() -> plot() -> forest()
+\item fitRutterGatsonisLCA() -> plot() -> forest()
+\item fitRutterGatsonisSubgroupLCA() -> plot() -> forest()
 }
 
 Included datasets
@@ -32,8 +37,10 @@ Included datasets
 \item anticcp
 \item diabetes
 \item FENO
+\item pap
 \item RF
 \item schuetz
+\item tub
 }
 
 See the package vignettes for worked examples and model descriptions.

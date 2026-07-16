@@ -15,7 +15,7 @@ fitReitsmaSubgroupLCA(
   constrain = NULL,
   sensspec_constrain = NULL,
   variances = c("common", "unequal"),
-  prev_variance = c("common", "unequal"),
+  prev_variances = c("common", "unequal"),
   conflevel = 0.95,
   verbose = FALSE
 )
@@ -99,7 +99,7 @@ across subgroups. If \code{"common"}, a single between-study variance-covariance
 matrix is estimated and shared across all subgroups. If \code{"unequal"},
 subgroup-specific variance-covariance matrices are estimated.}
 
-\item{prev_variance}{Whether the between-study random-effects variance for
+\item{prev_variances}{Whether the between-study random-effects variance for
 logit prevalence should be assumed to be \code{"common"} (default) or \code{"unequal"}
 across subgroups. If \code{"common"}, a single between-study variance  is estimated and shared across all subgroups.
 If \code{"unequal"}, subgroup-specific variances are estimated.}

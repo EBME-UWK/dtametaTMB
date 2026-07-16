@@ -8,6 +8,7 @@
 #' * Reitsma model
 #' * Rutter-Gatsonis HSROC model
 #' * Hoyer multiple-threshold model
+#' * Latent class analysis for studies with an imperfect reference standard
 #'
 #' Main workflow
 #'
@@ -16,6 +17,10 @@
 #' * fitRutterGatsonis() -> plot() -> forest()
 #' * fitRutterGatsonisSubgroup() -> plot() -> forest()
 #' * fitHoyer() -> plot() -> forest()
+#' * fitReitsmaLCA() -> plot() -> forest()
+#' * fitReitsmaSubgroupLCA() -> plot() -> forest()
+#' * fitRutterGatsonisLCA() -> plot() -> forest()
+#' * fitRutterGatsonisSubgroupLCA() -> plot() -> forest()
 #'
 #' Included datasets
 #'
@@ -23,8 +28,10 @@
 #' * anticcp
 #' * diabetes
 #' * FENO
+#' * pap
 #' * RF
 #' * schuetz
+#' * tub
 #'
 #' See the package vignettes for worked examples and model descriptions.
 #'

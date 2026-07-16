@@ -12,7 +12,7 @@ A data frame with 59 rows and 6 variables:
 \item{y11}{Number testing positive with both tests}
 \item{y10}{Number testing positive with index test but negative with reference test}
 \item{y01}{Number testing negative with index test but positive with reference test}
-\item{y00}{Number testing positive with both tests}
+\item{y00}{Number testing negative with both tests}
 }
 }
 \source{

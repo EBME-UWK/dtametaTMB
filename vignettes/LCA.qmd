@@ -4,7 +4,7 @@ subtitle: "Reitsma and Rutter-Gatsonis Models with an Imperfect Reference Standa
 format: 
   html:
    toc: TRUE
-#  pdf
+ # pdf
 vignette: >
   %\VignetteIndexEntry{Latent Class Meta-Analysis}
   %\VignetteEngine{quarto::html}
@@ -417,6 +417,7 @@ papLCA <- fitReitsmaLCA(data=pap,
                         y00=y00,
                         study=id)
 papLCA
+summary(papLCA)
 ```
 
 ## How do I get a summary plot?
@@ -478,7 +479,7 @@ In the subgroup models, the reference test's logit mean sensitivity and specific
 
 $$ \mu_{\text{prev},g}, \quad \sigma^2_{\text{prev},g}$$.
 
-However, by default $\sigma^2_{\text{prev},1}=\dots=\sigma^2_{\text{prev},2}=\dots=\sigma^2_{\text{prev},G}$ are assumed to be common. Separate prevalence heterogeneity parameters are estimated only when `prev_variance="unequal"`.
+However, by default $\sigma^2_{\text{prev},1}=\dots=\sigma^2_{\text{prev},2}=\dots=\sigma^2_{\text{prev},G}$ are assumed to be common. Separate prevalence heterogeneity parameters are estimated only when `prev_variances="unequal"`.
 
 ### Reitsma subgroup latent class model
 
@@ -619,7 +620,7 @@ schuetzLCA3 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      y00=TN,
                                      subgroup=test,
                                      variances="unequal",
-                                     prev_variance="unequal",
+                                     prev_variances="unequal",
                                      study=study)
 schuetzLCA3
 plot(schuetzLCA3,
@@ -635,7 +636,7 @@ schuetzLCA4 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      y00=TN,
                                      subgroup=test,
                                      variances="unequal",
-                                     prev_variance="common",
+                                     prev_variances="common",
                                      study=study)
 
 anova(schuetzLCA ,schuetzLCA2)
@@ -650,7 +651,7 @@ schuetzLCA5 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      subgroup=test,
                                      variances="unequal",
                                      sensspec_constrain = "sens",
-                                     prev_variance="common",
+                                     prev_variances="common",
                                      study=study)
 schuetzLCA5
 anova(schuetzLCA5,schuetzLCA4)
@@ -663,7 +664,7 @@ schuetzLCA6 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      subgroup=test,
                                      variances="unequal",
                                      sensspec_constrain = "spec",
-                                     prev_variance="common",
+                                     prev_variances="common",
                                      study=study)
 schuetzLCA6
 anova(schuetzLCA6,schuetzLCA4)

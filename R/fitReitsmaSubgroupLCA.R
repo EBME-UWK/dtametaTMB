@@ -74,7 +74,7 @@
 #'   matrix is estimated and shared across all subgroups. If \code{"unequal"}, 
 #'   subgroup-specific variance-covariance matrices are estimated.
 #'
-#' @param prev_variance Whether the between-study random-effects variance for 
+#' @param prev_variances Whether the between-study random-effects variance for 
 #'   logit prevalence should be assumed to be \code{"common"} (default) or \code{"unequal"} 
 #'   across subgroups. If \code{"common"}, a single between-study variance  is estimated and shared across all subgroups. 
 #'   If \code{"unequal"}, subgroup-specific variances are estimated.
@@ -142,12 +142,12 @@ fitReitsmaSubgroupLCA <- function(data,
                                   constrain=NULL,
                                   sensspec_constrain=NULL,
                                   variances=c("common","unequal"),
-                                  prev_variance=c("common","unequal"),
+                                  prev_variances=c("common","unequal"),
                                   conflevel=0.95,
                                   verbose=FALSE) {
   
   variances      <- match.arg(variances)
-  prev_variance  <- match.arg(prev_variance)
+  prev_variances <- match.arg(prev_variances)
   
   if (!is.data.frame(data)) {
     stop("'data' must be a data.frame.")
@@ -283,7 +283,7 @@ fitReitsmaSubgroupLCA <- function(data,
     }
   }
   
-  if(prev_variance=="common"){
+  if(prev_variances=="common"){
       map$log_sigma_prev    <- factor(rep(1,G))
   }
   
