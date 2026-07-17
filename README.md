@@ -33,7 +33,7 @@ multiple-threshold models within a consistent interface.
 
 ### Implementation
 
-- Frequentist estimation using exact binomial likelihoods
+- Frequentist estimation using exact binomial and multinomial likelihoods
 - Template Model Builder (TMB) backend
 - Unified interface across model families
 - Validation against published examples and Cochrane Handbook analyses
