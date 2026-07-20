@@ -9,7 +9,7 @@
 #'
 #' @method forest Cochrane
 #' @importFrom forestploter forest
-#' @importFrom grid unit 
+#' @importFrom grid unit
 #' @importFrom stats qbeta
 #' @return
 #' No return value. Called for its side effect of producing a plot.
@@ -38,8 +38,8 @@ forest.Cochrane <- function(x,conflevel=0.95, ...) {
                                          sprintf("%.2f", 1-FPR_LCI),"]"))
   
   if (inherits(x, "Reitsma") || inherits(x, "RutterGatsonis")) {
+    XP <- XP[order(XP$study), ]
     dt <- XP[,c("study","TP","FP","FN","TN","senslabel","speclabel")]
-    dt <- dt[order(dt$study), ]
     dt$" "    <- " "
     dt$fsens  <- paste(rep(" ",18),collapse=" ")
     dt$a      <- " "
@@ -59,6 +59,7 @@ forest.Cochrane <- function(x,conflevel=0.95, ...) {
                               nudge_y=0.000001,
                               xlim=c(0,1),
                               ref_line = 3)
+    
     p <- forestploter::edit_plot(p,
                                  col = 2:7,
                                  which="text",
@@ -70,11 +71,11 @@ forest.Cochrane <- function(x,conflevel=0.95, ...) {
                                  hjust = grid::unit(1,"npc"),
                                  x = grid::unit(1,"npc"))
     plot(p)
+    #grid::grid.draw(p)
   }
   if(inherits(x,"HoyerAFT")){
+    XP <- XP[order(XP$study, XP$threshold), ]
     dt <- XP[, c("study", "threshold", "TP","FP","FN","TN","senslabel", "speclabel")]
-    
-    dt <- dt[order(dt$study, dt$threshold), ]
     dt$study <- as.character(dt$study)
     dt$study[duplicated(dt$study)] <- " "
     
@@ -109,7 +110,7 @@ forest.Cochrane <- function(x,conflevel=0.95, ...) {
                                  hjust = grid::unit(1,"npc"),
                                  x = grid::unit(1,"npc"))
     plot(p)
-    
+   #grid::grid.draw(p)
   }
   invisible(NULL)
 }

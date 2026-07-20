@@ -4,7 +4,7 @@ subtitle: "Reitsma and Rutter-Gatsonis Models with an Imperfect Reference Standa
 format: 
   html:
    toc: TRUE
- # pdf
+# pdf
 vignette: >
   %\VignetteIndexEntry{Latent Class Meta-Analysis}
   %\VignetteEngine{quarto::html}
@@ -302,33 +302,33 @@ Under conditional independence the latent class probabilities for study $i$ are 
 $$
 p_{11i}
 =
-\pi_i Se_{Ai}Se_R
+\pi_i Se_{i}Se_R
 +
-(1-\pi_i)(1-Sp_{Ai})(1-Sp_R),
+(1-\pi_i)(1-Sp_{i})(1-Sp_R),
 $$
 
 $$
 p_{10i}
 =
-\pi_i Se_{Ai}(1-Se_R)
+\pi_i Se_{i}(1-Se_R)
 +
-(1-\pi_i)(1-Sp_{Ai})Sp_R,
+(1-\pi_i)(1-Sp_{i})Sp_R,
 $$
 
 $$
 p_{01i}
 =
-\pi_i (1-Se_{Ai})Se_R
+\pi_i (1-Se_{i})Se_R
 +
-(1-\pi_i)Sp_{Ai}(1-Sp_R),
+(1-\pi_i)Sp_{i}(1-Sp_R),
 $$
 
 $$
 p_{00i}
 =
-\pi_i (1-Se_{Ai})(1-Se_R)
+\pi_i (1-Se_{i})(1-Se_R)
 +
-(1-\pi_i)Sp_{Ai}Sp_R.
+(1-\pi_i)Sp_{i}Sp_R.
 $$
 
 These probabilities correspond to the four observable cells
@@ -399,7 +399,7 @@ For some datasets, the threshold heterogeneity parameter $\sigma^2_\theta$ may b
 
 ## How does the model provide study-specific sensitivities/specificities?
 
-Because the true disease status is unobserved, study-specific sensitivities and specificities are not directly available from the observed data. Instead, they are obtained as empirical Bayes estimates derived from the fitted latent class model. Conditional empirical Bayes variances are used to construct study-specific confidence intervals. These model-based estimates and intervals form the basis of the SROC and coupled forest plots.
+Because the true disease status is unobserved, study-specific sensitivities and specificities are not directly available from the observed data. Instead, they are obtained as empirical Bayes estimates derived from the fitted latent class model. Conditional empirical Bayes variances are used to quantify uncertainty in study-level summaries and graphical displays.
 
 ## How do we obtain starting values?
 

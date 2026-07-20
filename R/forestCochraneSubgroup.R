@@ -39,8 +39,8 @@ forest.CochraneSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup"
                                          sprintf("%.2f", 1-FPR_LCI),"]"))
   
   if (inherits(x, "ReitsmaSubgroup") || inherits(x, "RutterGatsonisSubgroup")) {
+    XP <- XP[order(XP$study,XP$subgroup), ]
     dt <- XP[,c("study","subgroup","TP","FP","FN","TN","senslabel","speclabel")]
-    dt <- dt[order(dt$study,dt$subgroup), ]
     dt$" "    <- " "
     dt$fsens  <- paste(rep(" ",18),collapse=" ")
     dt$a      <- " "
@@ -74,9 +74,9 @@ forest.CochraneSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup"
     plot(p)
   }
   # if(inherits(x,"HoyerAFT")){
+  #   XP <- XP[order(XP$study,XP$subgroup,XP$threshold), ]
   #   dt <- XP[, c("study",subgroup_label,"threshold", "TP","FP","FN","TN", "senslabel", "speclabel")]
   #   
-  #   dt <- dt[order(dt$study,dt$subgroup,dt$threshold), ]
   #   dt$study <- as.character(dt$study)
   #   dt$study[duplicated(dt$study)] <- " "
   #   dt$subgroup[duplicated(dt$study)] <- " "

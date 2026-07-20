@@ -42,8 +42,8 @@ forest.CochraneLCA <- function(x,conflevel=0.95, ...) {
                                  sprintf("%.2f", Spec_UCI),"]"))
   
   if (inherits(x, "ReitsmaLCA") || inherits(x, "RutterGatsonisLCA")) {
+    XP <- XP[order(XP$study), ]
     dt <- XP[,c("study","y11","y10","y01","y00","senslabel","speclabel")]
-    dt <- dt[order(dt$study), ]
     dt$" "    <- " "
     dt$fsens  <- paste(rep(" ",18),collapse=" ")
     dt$a      <- " "
@@ -76,9 +76,9 @@ forest.CochraneLCA <- function(x,conflevel=0.95, ...) {
     plot(p)
   }
   # if(inherits(x,"HoyerAFT")){
+  #   XP <- XP[order(XP$study, XP$threshold), ]
   #   dt <- XP[, c("study", "threshold", "TP","FP","FN","TN","senslabel", "speclabel")]
   #   
-  #   dt <- dt[order(dt$study, dt$threshold), ]
   #   dt$study <- as.character(dt$study)
   #   dt$study[duplicated(dt$study)] <- " "
   #   
