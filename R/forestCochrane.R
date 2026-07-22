@@ -8,7 +8,7 @@
 #' @param ... Additional graphical arguments (not currently in use)
 #'
 #' @method forest Cochrane
-#' @importFrom forestploter forest
+#' @importFrom forestploter forest edit_plot
 #' @importFrom grid unit
 #' @importFrom stats qbeta
 #' @return

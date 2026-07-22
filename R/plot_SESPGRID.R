@@ -5,7 +5,7 @@ plot_SESPGRID <- function(main,...){
        ann=FALSE, pch=20, col="white",las=1,asp=1)
   axis( side = 1,                          # 1 = bottom axis
         at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),  # positions of ticks
-        labels = c(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0))  # custom labels
+        labels = c(1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0))  # custom labels
   axis( side = 2,
         at = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),las=1)
   abline(v=(seq(0,1,0.2)), col="lightgray", lty="dotted")

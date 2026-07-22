@@ -11,9 +11,9 @@
 #' @param ... Additional graphical arguments (not currently in use)
 #'
 #' @method forest CochraneSubgroupLCA
-#' @importFrom forestploter forest
+#' @importFrom forestploter forest edit_plot
 #' @importFrom grid unit 
-#' @importFrom stats qlogis plogis
+#' @importFrom stats qnorm qlogis plogis
 #' @return
 #' No return value. Called for its side effect of producing a plot.
 #' @export
@@ -79,48 +79,6 @@ forest.CochraneSubgroupLCA <- function(x, conflevel=0.95, subgroup_label="Subgro
                                  x = grid::unit(1,"npc"))
     plot(p)
   }
-  # if(inherits(x,"HoyerAFT")){
-  #   XP <- XP[order(XP$study,XP$subgroup,XP$threshold), ]
-  #   dt <- XP[, c("study",subgroup_label,"threshold", "TP","FP","FN","TN", "senslabel", "speclabel")]
-  #   
-  #   dt$study <- as.character(dt$study)
-  #   dt$study[duplicated(dt$study)] <- " "
-  #   dt$subgroup[duplicated(dt$study)] <- " "
-  #   dt$study[duplicated(dt$study)] <- " "
-  #   
-  #   dt$" "    <- " "
-  #   dt$fsens  <- paste(rep(" ",18),collapse=" ")
-  #   dt$a      <- " "
-  #   dt$fspec  <- paste(rep(" ",18),collapse=" ")  
-  #   cc <- colnames(dt) 
-  #   colnames(dt) <- c("Study","Subgroup","Threshold",cc[4:7],
-  #                     senslabel,speclabel," ", senslabel," ",speclabel)
-  #   
-  #   p <- forestploter::forest(dt,
-  #                             est = list(XP$sens,
-  #                                        XP$spec),
-  #                             lower = list(XP$Sens_LCI,
-  #                                          1-XP$FPR_UCI), 
-  #                             upper = list(XP$Sens_UCI,
-  #                                          1-XP$FPR_LCI),
-  #                             sizes = 0.75,
-  #                             ci_column = c(11,13),
-  #                             nudge_y=0.000001,
-  #                             xlim=c(0,1),
-  #                             ref_line = 3)
-  #   p <- forestploter::edit_plot(p,
-  #                                col = 2:9,
-  #                                which="text",
-  #                                hjust = grid::unit(1,"npc"),
-  #                                x = grid::unit(1,"npc"))
-  #   p <- forestploter::edit_plot(p,
-  #                                col = 2:13,
-  #                                part="header",
-  #                                hjust = grid::unit(1,"npc"),
-  #                                x = grid::unit(1,"npc"))
-  #   plot(p)
-  #   
-  # }
   invisible(NULL)
 }
 

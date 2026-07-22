@@ -10,7 +10,7 @@
 #' @param ... Additional graphical arguments (not currently in use)
 #'
 #' @method forest CochraneLCA
-#' @importFrom forestploter forest
+#' @importFrom forestploter forest edit_plot
 #' @importFrom grid unit 
 #' @importFrom stats qnorm plogis qlogis
 #' @return
@@ -75,46 +75,6 @@ forest.CochraneLCA <- function(x,conflevel=0.95, ...) {
                                  x = grid::unit(1,"npc"))
     plot(p)
   }
-  # if(inherits(x,"HoyerAFT")){
-  #   XP <- XP[order(XP$study, XP$threshold), ]
-  #   dt <- XP[, c("study", "threshold", "TP","FP","FN","TN","senslabel", "speclabel")]
-  #   
-  #   dt$study <- as.character(dt$study)
-  #   dt$study[duplicated(dt$study)] <- " "
-  #   
-  #   dt$" "    <- " "
-  #   dt$fsens  <- paste(rep(" ",18),collapse=" ")
-  #   dt$a      <- " "
-  #   dt$fspec  <- paste(rep(" ",18),collapse=" ")  
-  #   cc <- colnames(dt) 
-  #   colnames(dt) <- c("Study","Threshold",cc[3:6],
-  #                     senslabel,speclabel," ",senslabel," ",speclabel)
-  #   
-  #   p <- forestploter::forest(dt,
-  #                             est = list(XP$sens,
-  #                                        XP$spec),
-  #                             lower = list(XP$Sens_LCI,
-  #                                          1-XP$FPR_UCI), 
-  #                             upper = list(XP$Sens_UCI,
-  #                                          1-XP$FPR_LCI),
-  #                             sizes = 0.75,
-  #                             ci_column = c(10,12),
-  #                             nudge_y=0.000001,
-  #                             xlim=c(0,1),
-  #                             ref_line = 3)
-  #   p <- forestploter::edit_plot(p,
-  #                                col = 2:8,
-  #                                which="text",
-  #                                hjust = grid::unit(1,"npc"),
-  #                                x = grid::unit(1,"npc"))
-  #   p <- forestploter::edit_plot(p,
-  #                                col = 2:12,
-  #                                part="header",
-  #                                hjust = grid::unit(1,"npc"),
-  #                                x = grid::unit(1,"npc"))
-  #   plot(p)
-  #   
-  # }
   invisible(NULL)
 }
 
