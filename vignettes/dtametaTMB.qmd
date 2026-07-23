@@ -3,7 +3,7 @@ title: "Introduction to dtametaTMB"
 format: 
   html:
    toc: TRUE
-#  pdf
+ # pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEngine{quarto::html}
@@ -258,7 +258,7 @@ $$f(y; \mu_j, \phi_j) = \mu_j \phi_j y^{\phi_j - 1} \exp(-\mu_j y^{\phi_j})$$
 
 $$f(y; \mu_j, \phi_j) =
 \frac{1}{\phi_j y}
-\phi\!\left(\frac{\log(y) - \mu_j}{\phi_j}\right)$$
+\varphi\!\left(\frac{\log(y) - \mu_j}{\phi_j}\right)$$
 
 #### Log-logistic distribution
 
@@ -269,8 +269,8 @@ $$f(y; \mu_j, \phi_j) =
 
 To account for between-study heterogeneity and the correlation between diseased and non-diseased groups, we introduce study-specific random effects:
 
-$$\log(y_{0}) = \beta_{0} + \varepsilon_0 + u_{0i}, \quad
-\log(y_{1}) = \beta_{1} + \varepsilon_1 + u_{1i},$$
+$$\log(y_{0i}) = \beta_{0} + \varepsilon_{0i} + u_{0i}, \quad
+\log(y_{1i}) = \beta_{1} + \varepsilon_{1i} + u_{1i},$$
 
 with
 
@@ -306,21 +306,23 @@ where $y_k^L$ and $y_k^R$ denote finite threshold values.
 We can model the ROC curve by predicting sensitivities and specificities (1 - false positive rates) at several threshold values $y$.
 
 #### Weibull distribution
-$$S_1(y) = \exp(-(y\,\exp(-\beta_1))^{1/\lambda_1}), \quad \text{with} \quad \beta_1=-\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
-$$S_0(y) = \exp(-(y\,\exp(-\beta_0))^{1/\lambda_0}), \quad \text{with} \quad \beta_0=-\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
+$$S_1(y) = \exp\left(-\exp\left(\frac{\log(y) - \beta_1}{\lambda_1}\right)\right),
+\quad \text{with} \quad \beta_1=-\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
+$$S_0(y) = \exp\left(-\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right)\right),
+\quad \text{with} \quad \beta_0=-\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
 
 #### Log-normal distribution
 $$
-S_1(y) = 1-\Phi\left(\frac{1}{\lambda_1} ( \log(y) - \beta_1 )  \right), \quad \text{with} \quad \beta_1=\mu_1, \quad \lambda_1 = \phi_1,
+S_1(y) = 1-\Phi\left(\frac{  \log(y) - \beta_1 }{\lambda_1}  \right), \quad \text{with} \quad \beta_1=\mu_1, \quad \lambda_1 = \phi_1,
 $$
 $$
-S_0(y) = 1-\Phi\left(\frac{1}{\lambda_0} ( \log(y) - \beta_0 )  \right), \quad \text{with} \quad \beta_0=\mu_0, \quad \lambda_0 = \phi_0.
+S_0(y) = 1-\Phi\left(\frac{ \log(y) - \beta_0 }{\lambda_0}  \right), \quad \text{with} \quad \beta_0=\mu_0, \quad \lambda_0 = \phi_0.
 $$
 
 #### Log-logistic distribution
 
-$$S_1(y) = 1/\left(1 + \exp(-\beta_1/\lambda_1 )\,y^{1/\lambda_1} \right), \quad \text{with} \quad \beta_1=-\phi^{-1}\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
-$$S_0(y) = 1/\left(1 + \exp(-\beta_0/\lambda_0 )\,y^{1/\lambda_0} \right), \quad \text{with} \quad \beta_0=-\phi^{-1}\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
+$$S_1(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_1}{\lambda_1}\right) \right)^{-1}, \quad \text{with} \quad \beta_1=-\phi^{-1}_1\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
+$$S_0(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right) \right)^{-1}, \quad \text{with} \quad \beta_0=-\phi^{-1}_0\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
 
 #### How do I interpret test direction?
 

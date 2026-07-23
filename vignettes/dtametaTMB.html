@@ -504,7 +504,7 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="log-normal-distribution">Log-normal distribution</h4>
 <p><span class="math display">\[f(y; \mu_j, \phi_j) =
 \frac{1}{\phi_j y}
-\phi\!\left(\frac{\log(y) - \mu_j}{\phi_j}\right)\]</span></p>
+\varphi\!\left(\frac{\log(y) - \mu_j}{\phi_j}\right)\]</span></p>
 </section>
 <section id="log-logistic-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="log-logistic-distribution">Log-logistic distribution</h4>
@@ -515,8 +515,8 @@ window.Quarto = {
 <section id="random-effects-structure" class="level3">
 <h3 class="anchored" data-anchor-id="random-effects-structure">Random effects structure</h3>
 <p>To account for between-study heterogeneity and the correlation between diseased and non-diseased groups, we introduce study-specific random effects:</p>
-<p><span class="math display">\[\log(y_{0}) = \beta_{0} + \varepsilon_0 + u_{0i}, \quad
-\log(y_{1}) = \beta_{1} + \varepsilon_1 + u_{1i},\]</span></p>
+<p><span class="math display">\[\log(y_{0i}) = \beta_{0} + \varepsilon_{0i} + u_{0i}, \quad
+\log(y_{1i}) = \beta_{1} + \varepsilon_{1i} + u_{1i},\]</span></p>
 <p>with</p>
 <p><span class="math display">\[\begin{pmatrix}
 u_{0i} \\
@@ -550,19 +550,21 @@ u_{1i}
 <p>We can model the ROC curve by predicting sensitivities and specificities (1 - false positive rates) at several threshold values <span class="math inline">\(y\)</span>.</p>
 <section id="weibull-distribution-1" class="level4">
 <h4 class="anchored" data-anchor-id="weibull-distribution-1">Weibull distribution</h4>
-<p><span class="math display">\[S_1(y) = \exp(-(y\,\exp(-\beta_1))^{1/\lambda_1}), \quad \text{with} \quad \beta_1=-\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,\]</span> <span class="math display">\[S_0(y) = \exp(-(y\,\exp(-\beta_0))^{1/\lambda_0}), \quad \text{with} \quad \beta_0=-\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.\]</span></p>
+<p><span class="math display">\[S_1(y) = \exp\left(-\exp\left(\frac{\log(y) - \beta_1}{\lambda_1}\right)\right),
+\quad \text{with} \quad \beta_1=-\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,\]</span> <span class="math display">\[S_0(y) = \exp\left(-\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right)\right),
+\quad \text{with} \quad \beta_0=-\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.\]</span></p>
 </section>
 <section id="log-normal-distribution-1" class="level4">
 <h4 class="anchored" data-anchor-id="log-normal-distribution-1">Log-normal distribution</h4>
 <p><span class="math display">\[
-S_1(y) = 1-\Phi\left(\frac{1}{\lambda_1} ( \log(y) - \beta_1 )  \right), \quad \text{with} \quad \beta_1=\mu_1, \quad \lambda_1 = \phi_1,
+S_1(y) = 1-\Phi\left(\frac{  \log(y) - \beta_1 }{\lambda_1}  \right), \quad \text{with} \quad \beta_1=\mu_1, \quad \lambda_1 = \phi_1,
 \]</span> <span class="math display">\[
-S_0(y) = 1-\Phi\left(\frac{1}{\lambda_0} ( \log(y) - \beta_0 )  \right), \quad \text{with} \quad \beta_0=\mu_0, \quad \lambda_0 = \phi_0.
+S_0(y) = 1-\Phi\left(\frac{ \log(y) - \beta_0 }{\lambda_0}  \right), \quad \text{with} \quad \beta_0=\mu_0, \quad \lambda_0 = \phi_0.
 \]</span></p>
 </section>
 <section id="log-logistic-distribution-1" class="level4">
 <h4 class="anchored" data-anchor-id="log-logistic-distribution-1">Log-logistic distribution</h4>
-<p><span class="math display">\[S_1(y) = 1/\left(1 + \exp(-\beta_1/\lambda_1 )\,y^{1/\lambda_1} \right), \quad \text{with} \quad \beta_1=-\phi^{-1}\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,\]</span> <span class="math display">\[S_0(y) = 1/\left(1 + \exp(-\beta_0/\lambda_0 )\,y^{1/\lambda_0} \right), \quad \text{with} \quad \beta_0=-\phi^{-1}\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.\]</span></p>
+<p><span class="math display">\[S_1(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_1}{\lambda_1}\right) \right)^{-1}, \quad \text{with} \quad \beta_1=-\phi^{-1}_1\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,\]</span> <span class="math display">\[S_0(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right) \right)^{-1}, \quad \text{with} \quad \beta_0=-\phi^{-1}_0\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.\]</span></p>
 </section>
 <section id="how-do-i-interpret-test-direction" class="level4">
 <h4 class="anchored" data-anchor-id="how-do-i-interpret-test-direction">How do I interpret test direction?</h4>
