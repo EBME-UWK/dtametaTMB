@@ -349,7 +349,7 @@ summary(ruttergatsonisreg)
 
 ## How do I compare models?
 
-In the previous section we fitted the `RF` data set using the Rutter and Gatsonis subgroup model while keeping the shape parameter equal across all subgroups `constrain="shape"`. Now let's fit the full model allowing for different shape parameters across subgroups and check whether the data lend support to this approach.
+In the previous section we fitted the `RF` data set using the Rutter and Gatsonis subgroup model while keeping the shape parameter equal across all subgroups `constrain="shape"`. Now let's fit the full model allowing for different shape parameters across subgroups and check whether the data lend support to this approach. In addition, let's also consider a model that constrains both `shape` and `accuracy`.
 
 ```{r}
 #| echo: TRUE
@@ -363,6 +363,17 @@ ruttergatsonissubfull <- fitRutterGatsonisSubgroup(data=RF2,
                                                    constrain=NULL)
 ruttergatsonissubfull
 summary(ruttergatsonissubfull)
+ruttergatsonissubacc <- fitRutterGatsonisSubgroup(data=RF2,
+                                                  TP=TP,
+                                                  FP=FP,
+                                                  FN=FN,
+                                                  TN=TN,
+                                                  study=study,
+                                                  subgroup=method,
+                                                  constrain=c("shape","accuracy"))
+ruttergatsonissubacc
+summary(ruttergatsonissubacc)
+
 ```
 ## How do I get the log likelihood, the AIC, and the BIC of a model?
 
@@ -375,14 +386,22 @@ BIC(ruttergatsonissubfull)
 logLik(ruttergatsonissub)
 AIC(ruttergatsonissub)
 BIC(ruttergatsonissub)
+
+logLik(ruttergatsonissubacc)
+AIC(ruttergatsonissubacc)
+BIC(ruttergatsonissubacc)
 ```
 
 ## How do I perform a likelihood ratio test of the two models?
 
-The test below formally investigates whether the HSROC curve shapes are equal in all subgroups.
+The tests below formally investigate whether the HSROC curve shapes and/or accuracy parameters are equal in all subgroups.
 ```{r}
 #| echo: TRUE
 anova(ruttergatsonissub,
+      ruttergatsonissubfull)
+anova(ruttergatsonissubacc,
+      ruttergatsonissub)
+anova(ruttergatsonissubacc,
       ruttergatsonissubfull)
 ```
 

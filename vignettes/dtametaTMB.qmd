@@ -6,8 +6,11 @@ format:
  # pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
-  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{quarto::html}
+editor: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -17,20 +20,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette introduces the main functionality of the
-`dtametaTMB` package for meta-analysis of diagnostic test
-accuracy (DTA) studies. We demonstrate how to fit three
-commonly used models:
+This vignette introduces the main functionality of the `dtametaTMB` package for meta-analysis of diagnostic test accuracy (DTA) studies.
+We demonstrate how to fit three commonly used models:
 
 - the Reitsma bivariate model
 - the Rutter and Gatsonis (HSROC) model
 - the Hoyer model for multiple thresholds
 
-using real datasets included in the package. 
+using real datasets included in the package.
 
-Subgroup analyses, meta-regression, and latent class analysis allowing for an imperfect reference standard are covered in separate vignettes. 
+Subgroup analyses, meta-regression, and latent class analysis allowing for an imperfect reference standard are covered in separate vignettes.
 
-*Note:* Rendering forest plots via `forest` may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+*Note:* Rendering forest plots via `forest` may take longer in an interactive R session due to the underlying grid graphics.
+Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
 ## How do I load the package?
 
@@ -40,13 +42,12 @@ Subgroup analyses, meta-regression, and latent class analysis allowing for an im
 library(dtametaTMB)
 ```
 
-
 ## Which model should I use?
 
-   -  **Reitsma model:** single threshold per study: use when studies apply similar thresholds.
-   -  **Rutter and Gatsonis model:** single threshold per study: use when thresholds vary between studies
-   -  **Hoyer model:** multiple thresholds per study
-   
+- **Reitsma model:** single threshold per study: use when studies apply similar thresholds.
+- **Rutter and Gatsonis model:** single threshold per study: use when thresholds vary between studies
+- **Hoyer model:** multiple thresholds per study
+
 The Reitsma and Rutter-Gatsonis model classes support parameter constraints for simplified analyses and sparse datasets.
 
 ## Validation
@@ -116,7 +117,8 @@ plot(reitsma,scale=0.01)
 
 ## How do I get a coupled forest plot?
 
-*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics.
+Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
 ```{r}
 #| fig.height: 11
@@ -131,7 +133,6 @@ forest(reitsma)
 #| echo: TRUE
 as_revman(reitsma)
 ```
-
 
 ## How do I use the Rutter and Gatsonis model?
 
@@ -186,7 +187,8 @@ plot(ruttergatsonis,size="se",specrange=c(0.3,0.995),scale=0.01)
 
 ## How do I get a coupled forest plot?
 
-*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics.
+Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
 ```{r}
 #| fig.height: 14
@@ -197,7 +199,9 @@ forest(ruttergatsonis)
 
 ## How do I simplify the models via parameter constraints?
 
-The package allows model parameters to be constrained to zero during estimation. This can be useful in meta-analysis of sparse data, when convergence is difficult, or when fitting simplified models as described in the Cochrane Handbook. For example,
+The package allows model parameters to be constrained to zero during estimation.
+This can be useful in meta-analysis of sparse data, when convergence is difficult, or when fitting simplified models as described in the Cochrane Handbook.
+For example,
 
 ```{r}
 #| echo: TRUE
@@ -210,9 +214,12 @@ reitsmacons <- fitReitsma(data = anticcp,
                           constrain = "sigma_AB")
 summary(reitsmacons)$estimates
 ```
-fixed the between-study random-effects covariance at zero. Other options include `constrain="sigma2_A"`, `"constrain=sigma2_B"`, or `"constrain=all"`. 
 
-The Rutter and Gatsonis model allows for the constraint $\sigma_\alpha^2=0$, $\sigma_\theta^2=0$ and/or $\beta=0$ (shape parameter). For example
+fixed the between-study random-effects covariance at zero.
+Other options include `constrain="sigma2_A"`, `"constrain=sigma2_B"`, or `"constrain=all"`.
+
+The Rutter and Gatsonis model allows for the constraint $\sigma_\alpha^2=0$, $\sigma_\theta^2=0$ and/or $\beta=0$ (shape parameter).
+For example
 
 ```{r}
 #| echo: TRUE
@@ -232,10 +239,10 @@ Note that we can also compare the constrained model with the full model using li
 anova(ruttergatsoniscons,ruttergatsonis)
 ```
 
-
 ## How do I use the Hoyer model?
 
-The Hoyer model assumes that the diagnostic test measurement arises from a latent continuous variable $Y_{j}$, with $j=0$ for the non-diseased individuals and $j=1$ for the diseased, which follows a parametric survival distribution. The observed test results correspond to interval-censored observations of this latent variable due to the use of thresholds.
+The Hoyer model assumes that the diagnostic test measurement arises from a latent continuous variable $Y_{j}$, with $j=0$ for the non-diseased individuals and $j=1$ for the diseased, which follows a parametric survival distribution.
+The observed test results correspond to interval-censored observations of this latent variable due to the use of thresholds.
 
 ### Which distributions does `dtametaTMB` support?
 
@@ -299,33 +306,29 @@ Because only thresholded outcomes (TN,TP,FN,FP) are observed, the latent variabl
 - Interval censoring between adjacent thresholds
 - Right censoring: $(y_k^L, +\infty)$
 
-where $y_k^L$ and $y_k^R$ denote finite threshold values. 
+where $y_k^L$ and $y_k^R$ denote finite threshold values.
 
 ### How do I compute sensitivities and specificities?
 
 We can model the ROC curve by predicting sensitivities and specificities (1 - false positive rates) at several threshold values $y$.
 
 #### Weibull distribution
+
 $$S_1(y) = \exp\left(-\exp\left(\frac{\log(y) - \beta_1}{\lambda_1}\right)\right),
-\quad \text{with} \quad \beta_1=-\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
-$$S_0(y) = \exp\left(-\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right)\right),
+\quad \text{with} \quad \beta_1=-\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$ $$S_0(y) = \exp\left(-\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right)\right),
 \quad \text{with} \quad \beta_0=-\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
 
 #### Log-normal distribution
-$$
-S_1(y) = 1-\Phi\left(\frac{  \log(y) - \beta_1 }{\lambda_1}  \right), \quad \text{with} \quad \beta_1=\mu_1, \quad \lambda_1 = \phi_1,
-$$
-$$
-S_0(y) = 1-\Phi\left(\frac{ \log(y) - \beta_0 }{\lambda_0}  \right), \quad \text{with} \quad \beta_0=\mu_0, \quad \lambda_0 = \phi_0.
-$$
+
+$$S_1(y) = 1-\Phi\left(\frac{  \log(y) - \beta_1 }{\lambda_1}  \right), \quad \text{with} \quad \beta_1=\mu_1, \quad \lambda_1 = \phi_1,$$
+
+$$S_0(y) = 1-\Phi\left(\frac{ \log(y) - \beta_0 }{\lambda_0}  \right), \quad \text{with} \quad \beta_0=\mu_0, \quad \lambda_0 = \phi_0.$$
 
 #### Log-logistic distribution
 
-$$S_1(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_1}{\lambda_1}\right) \right)^{-1}, \quad \text{with} \quad \beta_1=-\phi^{-1}_1\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$
-$$S_0(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right) \right)^{-1}, \quad \text{with} \quad \beta_0=-\phi^{-1}_0\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
+$$S_1(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_1}{\lambda_1}\right) \right)^{-1}, \quad \text{with} \quad \beta_1=-\phi^{-1}_1\log{(\mu_1}), \quad \lambda_1 = 1/\phi_1,$$ $$S_0(y) = \left(1 +\exp\left(\frac{\log(y) - \beta_0}{\lambda_0}\right) \right)^{-1}, \quad \text{with} \quad \beta_0=-\phi^{-1}_0\log{(\mu_0}), \quad \lambda_0 = 1/\phi_0.$$
 
 #### How do I interpret test direction?
-
 
 For tests where larger values indicate disease (`testdirection = "greater"`):
 
@@ -358,8 +361,7 @@ head(diabetes)
 summary(diabetes$threshold)
 ```
 
-The argument `eval_threshold` specifies the values at which sensitivities
-and specificities are evaluated after model fitting.
+The argument `eval_threshold` specifies the values at which sensitivities and specificities are evaluated after model fitting.
 
 ```{r}
 #| echo: TRUE
@@ -398,10 +400,10 @@ plot(hoyer,size="se",scale=0.025,
      main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 ```
 
-
 ## How do I get a coupled forest plot?
 
-*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics.
+Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
 
 ```{r}
 #| fig.height: 32
@@ -410,11 +412,13 @@ plot(hoyer,size="se",scale=0.025,
 forest(hoyer)
 ```
 
-
 ## How do I fit the Hoyer model to the FeNO dataset?
 
-*Note:* The FeNO data are reproduced from the original source and the supplementary material accompanying the Cochrane Handbook. However, the study 'Schneider 2013' contains inconsistent diseased counts (TP + FN). To illustrate the Hoyer analysis, we modify the TP counts in rows 118–120 from 39 to 38, restoring a constant total of 154 diseased individuals. Other corrections restoring internal consistency are also conceivable.
- 
+*Note:* The FeNO data are reproduced from the original source and the supplementary material accompanying the Cochrane Handbook.
+However, the study 'Schneider 2013' contains inconsistent diseased counts (TP + FN).
+To illustrate the Hoyer analysis, we modify the TP counts in rows 118–120 from 39 to 38, restoring a constant total of 154 diseased individuals.
+Other corrections restoring internal consistency are also conceivable.
+
 ```{r}
 #| echo: TRUE
 #| fig.height: 8
@@ -446,7 +450,7 @@ check_schneider$n0 <- with(check_schneider,TN+FP)
 check_schneider
 # Inspection suggests that the TP and/or FN counts
 # in rows 118, 119, 120 may need to be changed.
-# Let's redcue the TP counts from 39 to 38.
+# Let's reduce the TP counts from 39 to 38.
 # But other corrections are conceivable as well.
 FENO[118:120,"TP"] <- 38
 ### Let's try again
@@ -466,17 +470,17 @@ plot(feno,size="se",scale=0.03,
      main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 ```
 
-
-
 ## How does `testdirection="less"` work?
 
-We use the synthetic anaemia data set. Smaller values in haemoglobin indicate disease.
+We use the synthetic anaemia data set.
+Smaller values in haemoglobin indicate disease.
 
 ```{r}
 #| echo: TRUE
 data("anaemia")
 summary(anaemia$threshold)
 ```
+
 ```{r}
 #| echo: TRUE
 #| results: 'hide'
@@ -493,6 +497,7 @@ less <-  fitHoyer(data=anaemia,
                   smallest=5,
                   largest=17)
 ```
+
 ```{r}
 #| echo: TRUE
 #| fig.height: 8
@@ -525,7 +530,6 @@ res <- restructure_data(
 res
 ```
 
-
 ### Step 2: How do we get initial values?
 
 ```{r}
@@ -557,23 +561,28 @@ Reitsma, J. B., et al. (2005).
 Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews.
 *Journal of Clinical Epidemiology*, 58(10), 982–990.
 
-Rutter, C. M., & Gatsonis, C. A. (2001).
+Rutter, C. M., & Gatsonis, C. A.
+(2001).
 A hierarchical regression approach to meta-analysis of diagnostic test accuracy evaluations.
 *Statistics in Medicine*, 20(19), 2865–2884.
 
-Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
+Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C.
+(2007).
 A unification of models for meta-analysis of diagnostic accuracy studies.
 *Biostatistics*, 8(2), 239–251.
 
-Riley, R. D., Ensor, J., Jackson, D., & Burke, D. L. (2018).
+Riley, R. D., Ensor, J., Jackson, D., & Burke, D. L.
+(2018).
 Deriving percentage study weights in multi-parameter meta-analysis models.
 *Statistical Methods in Medical Research*, 27(10), 2885–2905.
 
-Hoyer, A., Hirt, S., Kuss, O. (2018).
+Hoyer, A., Hirt, S., Kuss, O.
+(2018).
 Meta-analysis of full ROC curves using bivariate time-to-event models for interval-censored data.
 *Research Synthesis Methods*, 9(1), 62-72.
 
-Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y. (editors) (2023).
+Deeks, J. J., Bossuyt, P. M., Leeflang, M. M., & Takwoingi, Y.
+(editors) (2023).
 Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.
-Version 2.0 (updated July 2023). *Cochrane.*
-
+Version 2.0 (updated July 2023).
+*Cochrane.*

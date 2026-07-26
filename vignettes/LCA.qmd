@@ -512,13 +512,13 @@ $$\nu_{g}, \quad \xi_{g}, \quad \gamma_{g}, \quad \delta_{g}. $$
 ```{r}
 #| echo: TRUE
 pap$type <- factor(pap$type,levels=c("SC","FU"))
-system.time(papLCA3 <- fitReitsmaSubgroupLCA(data=pap,
+papLCA3 <- fitReitsmaSubgroupLCA(data=pap,
                                  y11=y11,
                                  y10=y10,
                                  y01=y01,
                                  y00=y00,
                                  subgroup=type,
-                                 study=id))
+                                 study=id)
 papLCA3
 summary(papLCA3)
 ```
