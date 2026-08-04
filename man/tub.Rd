@@ -29,7 +29,9 @@ tub
 }
 \description{
 This is the tub data set from Kohli et al. (2018) from a meta-analysis
-comparing Papanicolaou (Pap) test results with histology for the diagnosis of cervical cancer.
+examining the accuracy of the GeneXpert test for tuberculosis meningitis.
+In each study the index test was GeneXpert and the (imperfect) reference
+standard was culture.
 }
 \note{
 The data set was taken from the supplementary material of the Cochrane Handbook for
