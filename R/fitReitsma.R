@@ -236,6 +236,6 @@ fitReitsma <- function(data,
               LRDOR     = lrdor,
               RutterGatsonis_recovered = ruga,
               constrain = constrain)
-  class(ret) <- c("Reitsma","Cochrane")
+  class(ret) <- c("Reitsma")
   return(ret)
 }

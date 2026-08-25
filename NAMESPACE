@@ -17,10 +17,25 @@ S3method(as_revman,RutterGatsonis)
 S3method(as_revman,RutterGatsonisLCA)
 S3method(as_revman,RutterGatsonisSubgroup)
 S3method(as_revman,RutterGatsonisSubgroupLCA)
-S3method(forest,Cochrane)
-S3method(forest,CochraneLCA)
-S3method(forest,CochraneSubgroup)
-S3method(forest,CochraneSubgroupLCA)
+S3method(coef,HoyerAFT)
+S3method(coef,Reitsma)
+S3method(coef,ReitsmaLCA)
+S3method(coef,ReitsmaSubgroup)
+S3method(coef,ReitsmaSubgroupLCA)
+S3method(coef,RutterGatsonis)
+S3method(coef,RutterGatsonisLCA)
+S3method(coef,RutterGatsonisReg)
+S3method(coef,RutterGatsonisSubgroup)
+S3method(coef,RutterGatsonisSubgroupLCA)
+S3method(forest,HoyerAFT)
+S3method(forest,Reitsma)
+S3method(forest,ReitsmaLCA)
+S3method(forest,ReitsmaSubgroup)
+S3method(forest,ReitsmaSubgroupLCA)
+S3method(forest,RutterGatsonis)
+S3method(forest,RutterGatsonisLCA)
+S3method(forest,RutterGatsonisSubgroup)
+S3method(forest,RutterGatsonisSubgroupLCA)
 S3method(logLik,HoyerAFT)
 S3method(logLik,Reitsma)
 S3method(logLik,ReitsmaLCA)
@@ -60,6 +75,16 @@ S3method(summary,RutterGatsonisLCA)
 S3method(summary,RutterGatsonisReg)
 S3method(summary,RutterGatsonisSubgroup)
 S3method(summary,RutterGatsonisSubgroupLCA)
+S3method(vcov,HoyerAFT)
+S3method(vcov,Reitsma)
+S3method(vcov,ReitsmaLCA)
+S3method(vcov,ReitsmaSubgroup)
+S3method(vcov,ReitsmaSubgroupLCA)
+S3method(vcov,RutterGatsonis)
+S3method(vcov,RutterGatsonisLCA)
+S3method(vcov,RutterGatsonisReg)
+S3method(vcov,RutterGatsonisSubgroup)
+S3method(vcov,RutterGatsonisSubgroupLCA)
 export(as_revman)
 export(fitHoyer)
 export(fitHoyerAFT)
@@ -75,49 +100,66 @@ export(fitRutterGatsonisSubgroupLCA)
 export(forest)
 export(initHoyerAFT)
 export(restructure_data)
-importFrom(TMB,MakeADFun)
-importFrom(TMB,sdreport)
-importFrom(forestploter,edit_plot)
-importFrom(forestploter,forest)
-importFrom(glmmTMB,fixef)
-importFrom(glmmTMB,getME)
-importFrom(glmmTMB,glmmTMB)
-importFrom(grDevices,adjustcolor)
-importFrom(grDevices,rainbow)
-importFrom(graphics,abline)
-importFrom(graphics,axis)
-importFrom(graphics,legend)
-importFrom(graphics,lines)
-importFrom(graphics,par)
-importFrom(graphics,points)
-importFrom(graphics,symbols)
-importFrom(graphics,title)
-importFrom(grid,unit)
-importFrom(stats,AIC)
-importFrom(stats,BIC)
-importFrom(stats,aggregate)
-importFrom(stats,as.formula)
-importFrom(stats,binomial)
-importFrom(stats,complete.cases)
-importFrom(stats,cor)
-importFrom(stats,cov)
-importFrom(stats,cov2cor)
-importFrom(stats,logLik)
-importFrom(stats,median)
-importFrom(stats,model.matrix)
-importFrom(stats,nlminb)
-importFrom(stats,pchisq)
-importFrom(stats,plogis)
-importFrom(stats,pnorm)
-importFrom(stats,predict)
-importFrom(stats,qbeta)
-importFrom(stats,qf)
-importFrom(stats,qlogis)
-importFrom(stats,qnorm)
-importFrom(stats,reshape)
-importFrom(stats,sd)
-importFrom(stats,var)
-importFrom(stats,vcov)
-importFrom(survival,Surv)
-importFrom(survival,survreg)
+importFrom(TMB,
+  MakeADFun,
+  sdreport
+)
+importFrom(forestploter,
+  edit_plot,
+  forest
+)
+importFrom(glmmTMB,
+  fixef,
+  getME,
+  glmmTMB
+)
+importFrom(grDevices,
+  adjustcolor,
+  rainbow
+)
+importFrom(graphics,
+  abline,
+  axis,
+  legend,
+  lines,
+  par,
+  points,
+  symbols,
+  title
+)
+importFrom(grid,
+  grid.draw,
+  unit
+)
+importFrom(stats,
+  AIC,
+  BIC,
+  aggregate,
+  as.formula,
+  binomial,
+  complete.cases,
+  cor,
+  cov,
+  cov2cor,
+  logLik,
+  median,
+  model.matrix,
+  nlminb,
+  pchisq,
+  plogis,
+  pnorm,
+  predict,
+  qbeta,
+  qf,
+  qlogis,
+  qnorm,
+  reshape,
+  sd,
+  var,
+  vcov
+)
+importFrom(survival,
+  Surv,
+  survreg
+)
 useDynLib(dtametaTMB, .registration=TRUE); useDynLib(dtametaTMB_TMBExports)

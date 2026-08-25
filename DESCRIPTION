@@ -11,8 +11,8 @@ Description: Fits the hierarchical summary receiver operating characteristic (HS
     Rutter and Gatsonis (2001) <doi:10.1002/sim.942>, the bivariate binomial-normal model of
     Reitsma et al. (2005) <doi:10.1016/j.jclinepi.2005.02.022>, the threshold-based bivariate
     time-to-event model of Hoyer et al. (2018) <doi:10.1002/jrsm.1273>, and the latent class
-    extensions of Liu et al. (2015) <doi:10.1111/biom.12264> for diagnostic studies without
-    a perfect reference standard. Provides subgroup analyses, HSROC meta-regression,
+    extensions of Liu et al. (2015) <doi:10.1111/biom.12264> for diagnostic studies with an
+    imperfect reference standard. Provides subgroup analyses, HSROC meta-regression,
     likelihood-ratio tests, summary ROC plots, and coupled forest plots.
 License: GPL (>= 2)
 URL: https://github.com/EBME-UWK/dtametaTMB
@@ -36,5 +36,5 @@ Config/testthat/edition: 3
 Depends:
     R (>= 3.5)
 LazyData: true
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
 VignetteBuilder: quarto

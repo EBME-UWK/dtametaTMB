@@ -16,7 +16,7 @@ multiple-threshold models within a consistent interface.
 - Reitsma bivariate random-effects model
 - Rutter and Gatsonis (HSROC) model
 - Hoyer multiple-threshold model
-- Latent class Reitsma and HSROC models for studies without a perfect reference standard
+- Latent class Reitsma and HSROC models for studies with an imperfect reference standard
 
 ### Extensions
 

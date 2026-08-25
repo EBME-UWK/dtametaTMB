@@ -35,7 +35,7 @@ The latent class implementations were validated by reproducing the SAS PROC NLMI
 
 The latent class models in **dtametaTMB** assume conditional independence between the index test and the reference test given the true disease status. Under this assumption, any association between the index and reference tests is fully explained by the latent disease status. Consequently, the latent-class probabilities can be expressed as functions of disease prevalence and the sensitivities and specificities of the two tests without introducing additional covariance parameters.
 
-To account for residual dependence between the index and reference tests, more complex latent class models do include covariance terms among diseased and/or non-diseased individuals. Although potentially more flexible, these models are also more difficult to identify and estimate reliably, particularly in sparse data.
+To account for residual dependence between the index and reference tests, more complex latent class models do include covariance terms among diseased and/or non-diseased individuals. Although more flexible, these models are also more difficult to identify and estimate reliably, particularly in sparse data.
 
 ## How do latent class models work?
 

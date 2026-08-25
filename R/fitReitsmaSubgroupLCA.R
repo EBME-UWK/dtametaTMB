@@ -403,7 +403,7 @@ fitReitsmaSubgroupLCA <- function(data,
   )
   
   # Assign class
-  class(res) <- c("ReitsmaSubgroupLCA","CochraneSubgroupLCA")
+  class(res) <- c("ReitsmaSubgroupLCA")
   
   return(res)
 }

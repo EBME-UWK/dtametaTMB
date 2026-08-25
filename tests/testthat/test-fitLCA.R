@@ -43,7 +43,7 @@ test_that("fitReitsmaLCA returns expected object structure", {
   )
   
   expect_s3_class(fit, "ReitsmaLCA")
-  expect_true("CochraneLCA" %in% class(fit))
+  expect_true("ReitsmaLCA" %in% class(fit))
   
   expect_true(is.list(fit))
   
@@ -262,7 +262,7 @@ test_that("fitRutterGatsonisLCA returns expected object", {
   )
   
   expect_s3_class(fit, "RutterGatsonisLCA")
-  expect_true("CochraneLCA" %in% class(fit))
+  expect_true("RutterGatsonisLCA" %in% class(fit))
   
   expect_true("sdreport2" %in% names(fit))
   expect_true("sensspec" %in% names(fit))
@@ -495,7 +495,7 @@ test_that("fitReitsmaSubgroupLCA returns expected object", {
   )
   
   expect_s3_class(fit, "ReitsmaSubgroupLCA")
-  expect_true("CochraneSubgroupLCA" %in% class(fit))
+  expect_true("ReitsmaSubgroupLCA" %in% class(fit))
   
   expect_true("subgroups" %in% names(fit))
   expect_true("sensspec" %in% names(fit))
@@ -728,7 +728,7 @@ test_that("fitRutterGatsonisSubgroupLCA returns expected object", {
   )
   
   expect_true(
-    "CochraneSubgroupLCA" %in% class(fit)
+    "RutterGatsonisSubgroupLCA" %in% class(fit)
   )
   
   expect_true("sensspec" %in% names(fit))

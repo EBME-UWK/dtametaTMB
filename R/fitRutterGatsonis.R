@@ -289,7 +289,7 @@ fitRutterGatsonis <- function(data,
   )
   
   # Assign class
-  class(res) <- c("RutterGatsonis","Cochrane")
+  class(res) <- c("RutterGatsonis")
   
   return(res)
 }
