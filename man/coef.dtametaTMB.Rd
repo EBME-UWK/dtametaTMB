@@ -43,7 +43,12 @@
 A named vector of parameter estimates.
 }
 \description{
-Returns the estimated model parameters
+Returns the estimated model parameters.
+}
+\note{
+For \code{ReitsmaSubgroup} models, \code{coef()} returns
+parameter estimates from the cell-means parameterization rather
+than treatment-contrast coefficients.
 }
 \seealso{
 \code{\link[=vcov.dtametaTMB]{vcov.dtametaTMB()}}

@@ -47,6 +47,11 @@ A variance-covariance matrix corresponding to the parameters returned by
 Returns the variance-covariance matrix of the estimated model
 parameters.
 }
+\note{
+For \code{ReitsmaSubgroup} models, the returned
+variance-covariance matrix corresponds to the cell-means
+parameterization returned by \code{coef()}.
+}
 \seealso{
 \code{\link[=coef.dtametaTMB]{coef.dtametaTMB()}}
 }

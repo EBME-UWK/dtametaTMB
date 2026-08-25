@@ -1,12 +1,16 @@
 #' Extract model coefficients
 #'
-#' Returns the estimated model parameters
+#' Returns the estimated model parameters.
 #'
 #' @param object A fitted model object.
 #' @param ... Not currently used.
 #'
 #' @return
 #' A named vector of parameter estimates.
+#' 
+#' @note For \code{ReitsmaSubgroup} models, \code{coef()} returns
+#' parameter estimates from the cell-means parameterization rather
+#' than treatment-contrast coefficients.
 #'
 #' @seealso
 #' [vcov.dtametaTMB()]
@@ -85,6 +89,10 @@ coef.RutterGatsonisSubgroupLCA <- function(object, ...) {
 #' @return
 #' A variance-covariance matrix corresponding to the parameters returned by 
 #' \code{coef()}.
+#'
+#' @note For \code{ReitsmaSubgroup} models, the returned
+#' variance-covariance matrix corresponds to the cell-means
+#' parameterization returned by \code{coef()}.
 #'
 #' @seealso
 #' [coef.dtametaTMB()]
