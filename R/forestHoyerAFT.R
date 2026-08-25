@@ -9,7 +9,7 @@
 #'
 #' @method forest HoyerAFT
 #' @importFrom forestploter forest edit_plot
-#' @importFrom grid unit grid.draw
+#' @importFrom grid unit
 #' @importFrom stats qbeta
 #' @return
 #' Invisibly returns a \code{forestploter} object. Users may further modify the plot
@@ -73,7 +73,7 @@ forest.HoyerAFT <- function(x,conflevel=0.95, ...) {
                                part="header",
                                hjust = grid::unit(1,"npc"),
                                x = grid::unit(1,"npc"))
-  grid::grid.draw(p)
+  plot(p)
   invisible(p)
 }
 

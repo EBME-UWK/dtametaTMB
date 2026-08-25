@@ -9,10 +9,11 @@
 #'
 #' @method forest Reitsma
 #' @importFrom forestploter forest edit_plot
-#' @importFrom grid unit grid.draw
+#' @importFrom grid unit
 #' @importFrom stats qbeta
 #' @return
-#' No return value. Called for its side effect of producing a plot.
+#' Invisibly returns a \code{forestploter} object. Users may further modify the plot
+#' using \code{forestploter} functions before printing or exporting.
 #' @export
 forest.Reitsma <- function(x,conflevel=0.95, ...) {
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
@@ -70,7 +71,6 @@ forest.Reitsma <- function(x,conflevel=0.95, ...) {
                                hjust = grid::unit(1,"npc"),
                                x = grid::unit(1,"npc"))
   plot(p)
-  grid::grid.draw(p)
   invisible(p)
 }
 

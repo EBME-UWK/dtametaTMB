@@ -12,7 +12,8 @@ forest(x, ...)
 \item{...}{Additional arguments}
 }
 \value{
-No return value. Called for its side effect of producing a plot.
+Invisibly returns a \code{forestploter} object. Users may further modify the plot
+using \code{forestploter} functions before printing or exporting.
 }
 \description{
 Produces coupled forest plots.

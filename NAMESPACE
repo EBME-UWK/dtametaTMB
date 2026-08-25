@@ -127,10 +127,7 @@ importFrom(graphics,
   symbols,
   title
 )
-importFrom(grid,
-  grid.draw,
-  unit
-)
+importFrom(grid,unit)
 importFrom(stats,
   AIC,
   BIC,
