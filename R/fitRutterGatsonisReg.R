@@ -277,3 +277,26 @@ fitRutterGatsonisReg <- function(data,
   return(res)
 }
 
+#' @method plot RutterGatsonisReg
+#' @export
+plot.RutterGatsonisReg <- function(x, ...) {
+  stop("plot() is not defined for meta-regression models fitted with ",
+       "user-specified design matrices, since a single summary ROC curve ",
+       "is generally not well defined in this setting.", call. = FALSE)
+}
+
+#' @method forest RutterGatsonisReg
+#' @export
+forest.RutterGatsonisReg <- function(x, ...) {
+  stop("forest() is not defined for meta-regression models fitted with ",
+       "user-specified design matrices.", call. = FALSE)
+}
+
+#' @method as_revman RutterGatsonisReg
+#' @export
+as_revman.RutterGatsonisReg <- function(x, ...) {
+  stop("as_revman() is not defined for meta-regression models; RevMan export ",
+       "assumes the fixed HSROC parameterization (Lambda, Theta, beta) that ",
+       "does not generally apply to user-specified covariate structures.",
+       call. = FALSE)
+}
