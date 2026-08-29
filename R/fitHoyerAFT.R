@@ -181,7 +181,7 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NULL, verbo
   )
 
   # Assign class
-  class(res) <- c("HoyerAFT")
+  class(res) <- c("HoyerAFT","DTAmodel")
 
   return(res)
 }

@@ -578,6 +578,6 @@ fitReitsmaSubgroup <- function(data,
               constrain    = constrain,
               subgroups    = lsub,
               variances    = variances)
-  class(ret) <- c("ReitsmaSubgroup")
+  class(ret) <- c("ReitsmaSubgroup","Reitsma","DTAmodel")
   return(ret)
 }

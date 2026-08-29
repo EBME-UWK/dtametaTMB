@@ -2,23 +2,15 @@
 % Please edit documentation in R/LogLik.R
 \name{logLik.dtametaTMB}
 \alias{logLik.dtametaTMB}
-\alias{logLik.RutterGatsonis}
-\alias{logLik.RutterGatsonisSubgroup}
-\alias{logLik.RutterGatsonisReg}
+\alias{logLik.DTAmodel}
 \alias{logLik.HoyerAFT}
 \alias{logLik.Reitsma}
 \alias{logLik.ReitsmaSubgroup}
 \alias{logLik.ReitsmaLCA}
-\alias{logLik.RutterGatsonisLCA}
 \alias{logLik.ReitsmaSubgroupLCA}
-\alias{logLik.RutterGatsonisSubgroupLCA}
 \title{Extract Log-Likelihood from Diagnostic Test Accuracy Models}
 \usage{
-\method{logLik}{RutterGatsonis}(object, ...)
-
-\method{logLik}{RutterGatsonisSubgroup}(object, ...)
-
-\method{logLik}{RutterGatsonisReg}(object, ...)
+\method{logLik}{DTAmodel}(object, ...)
 
 \method{logLik}{HoyerAFT}(object, ...)
 
@@ -28,11 +20,7 @@
 
 \method{logLik}{ReitsmaLCA}(object, ...)
 
-\method{logLik}{RutterGatsonisLCA}(object, ...)
-
 \method{logLik}{ReitsmaSubgroupLCA}(object, ...)
-
-\method{logLik}{RutterGatsonisSubgroupLCA}(object, ...)
 }
 \arguments{
 \item{object}{A fitted model object.}

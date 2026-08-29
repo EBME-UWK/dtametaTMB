@@ -15,21 +15,10 @@
 #'
 #' @name logLik.dtametaTMB
 
-
 #' @rdname logLik.dtametaTMB
 #' @export
-logLik.RutterGatsonis <- function(object, ...) {
- structure(
-    -object$fit$objective,
-    class = "logLik",
-    df = length(object$fit$par),
-    nobs = nrow(object$data)
-  )
-}
 
-#' @rdname logLik.dtametaTMB
-#' @export
-logLik.RutterGatsonisSubgroup <- function(object, ...) {
+logLik.DTAmodel <- function(object, ...) {
   structure(
     -object$fit$objective,
     class = "logLik",
@@ -38,16 +27,6 @@ logLik.RutterGatsonisSubgroup <- function(object, ...) {
   )
 }
 
-#' @rdname logLik.dtametaTMB
-#' @export
-logLik.RutterGatsonisReg <- function(object, ...) {
-  structure(
-    -object$fit$objective,
-    class = "logLik",
-    df = length(object$fit$par),
-    nobs = nrow(object$data)
-  )
-}
 
 #' @rdname logLik.dtametaTMB
 #' @export
@@ -69,6 +48,7 @@ logLik.Reitsma <- function(object, ...){
     df = length(object$glmmTMB$fit$par),
     nobs = nrow(object$data)
   )
+ 
 }
 
 #' @rdname logLik.dtametaTMB
@@ -82,51 +62,13 @@ logLik.ReitsmaSubgroup <- function(object, ...){
   )
 }
 
+#' @rdname logLik.dtametaTMB
+#' @export
+logLik.ReitsmaLCA <- logLik.DTAmodel
 
 #' @rdname logLik.dtametaTMB
 #' @export
-logLik.ReitsmaLCA <- function(object, ...) {
-  structure(
-    -object$fit$objective,
-    class = "logLik",
-    df = length(object$fit$par),
-    nobs = nrow(object$data)
-  )
-}
-
-#' @rdname logLik.dtametaTMB
-#' @export
-logLik.RutterGatsonisLCA <- function(object, ...) {
-  structure(
-    -object$fit$objective,
-    class = "logLik",
-    df = length(object$fit$par),
-    nobs = nrow(object$data)
-  )
-}
-
-#' @rdname logLik.dtametaTMB
-#' @export
-logLik.ReitsmaSubgroupLCA <- function(object, ...) {
-  structure(
-    -object$fit$objective,
-    class = "logLik",
-    df = length(object$fit$par),
-    nobs = nrow(object$data)
-  )
-}
-
-#' @rdname logLik.dtametaTMB
-#' @export
-logLik.RutterGatsonisSubgroupLCA <- function(object, ...) {
-  structure(
-    -object$fit$objective,
-    class = "logLik",
-    df = length(object$fit$par),
-    nobs = nrow(object$data)
-  )
-}
-
+logLik.ReitsmaSubgroupLCA <- logLik.DTAmodel
 
 
 #' @importFrom stats logLik pchisq
@@ -214,7 +156,6 @@ anova_lrt <- function(object, ..., test = "Chisq") {
 #'
 #' @name anova.dtametaTMB
 
-
 #' @rdname anova.dtametaTMB
 #' @export
 anova.Reitsma <- function(object, ..., test = "Chisq") {
@@ -223,50 +164,6 @@ anova.Reitsma <- function(object, ..., test = "Chisq") {
 
 #' @rdname anova.dtametaTMB
 #' @export
-anova.ReitsmaSubgroup <- function(object, ..., test = "Chisq") {
-  anova_lrt(object, ..., test = test)
-}
-
-#' @rdname anova.dtametaTMB
-#' @export
 anova.RutterGatsonis <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
-
-#' @rdname anova.dtametaTMB
-#' @export
-anova.RutterGatsonisSubgroup <- function(object, ..., test = "Chisq") {
-  anova_lrt(object, ..., test = test)
-}
-
-#' @rdname anova.dtametaTMB
-#' @export
-anova.RutterGatsonisReg <- function(object, ..., test = "Chisq") {
-  anova_lrt(object, ..., test = test)
-}
-
-#' @rdname anova.dtametaTMB
-#' @export
-anova.RutterGatsonisLCA <- function(object, ..., test = "Chisq") {
-  anova_lrt(object, ..., test = test)
-}
-
-#' @rdname anova.dtametaTMB
-#' @export
-anova.RutterGatsonisSubgroupLCA <- function(object, ..., test = "Chisq") {
-  anova_lrt(object, ..., test = test)
-}
-
-#' @rdname anova.dtametaTMB
-#' @export
-anova.ReitsmaLCA <- function(object, ..., test = "Chisq") {
-  anova_lrt(object, ..., test = test)
-}
-
-#' @rdname anova.dtametaTMB
-#' @export
-anova.ReitsmaSubgroupLCA <- function(object, ..., test = "Chisq") {
-  anova_lrt(object, ..., test = test)
-}
-
-

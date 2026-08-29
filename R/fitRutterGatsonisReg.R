@@ -273,7 +273,7 @@ fitRutterGatsonisReg <- function(data,
     sdreport2    = rep2,
     sensspec     = sesp  
   )
-  class(res) <- c("RutterGatsonisReg")
+  class(res) <- c("RutterGatsonisReg","RutterGatsonis","DTAmodel")
   return(res)
 }
 

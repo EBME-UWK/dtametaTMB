@@ -4,7 +4,13 @@
 \alias{forest.RutterGatsonisSubgroupLCA}
 \title{Coupled Forest plot for latent class diagnostic test accuracy meta-analysis}
 \usage{
-\method{forest}{RutterGatsonisSubgroupLCA}(x, conflevel = 0.95, subgroup_label = "Subgroup", ...)
+\method{forest}{RutterGatsonisSubgroupLCA}(
+  x,
+  conflevel = 0.95,
+  subgroup_label = "Subgroup",
+  order = c("study", "subgroup"),
+  ...
+)
 }
 \arguments{
 \item{x}{Object of class \code{"RutterGatsonisSubgroupLCA"}}
@@ -12,6 +18,12 @@
 \item{conflevel}{Confidence level for confidence intervals. Default is 0.95.}
 
 \item{subgroup_label}{Column name for the subgroup. Defaults to \code{"Subgroup"}.}
+
+\item{order}{Specifies the ordering of studies
+in the forest plot. Can be \code{"study"} (default), which orders
+observations by study identifier and then subgroup, or
+\code{"subgroup"}, which orders observations by subgroup and then
+study identifier.}
 
 \item{...}{Additional graphical arguments (not currently in use)}
 }

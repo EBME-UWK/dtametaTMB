@@ -1,0 +1,39 @@
+#' dementia dataset
+#'
+#' This is the dementia data set from Harrison et al. (2015) from a review of the Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE) for the diagnosis of dementia within a secondary care setting.
+#'
+#' @format A data frame with 37 rows and 7 variables:
+#' \describe{
+#'   \item{author}{Author of the study}
+#'   \item{year}{Year of the study}
+#'   \item{TP}{Number of true positives}
+#'   \item{FN}{Number of false negatives}
+#'   \item{FP}{Number of false positives}
+#'   \item{TN}{Number of true negatives}
+#'   \item{rob_PS}{Risk of bias: Patient selection}
+#'   \item{rob_IT}{Risk of bias: Index test}
+#'   \item{rob_RS}{Risk of bias: Reference standard}
+#'   \item{rob_FT}{Risk of bias: Flow and timing}
+#'   \item{ac_PS}{Applicability: Patient selection}
+#'   \item{ac_IT}{Applicability: Index test}
+#'   \item{ac_RS}{Applicability: Reference standard}
+#'   \item{Threshold.cat}{Threshold category}
+#'   \item{Country.cat}{Country category}
+#'   \item{IQCODE.cat}{Informant Questionnaire on Cognitive Decline in the Elderly category}
+#'   \item{reference.cat}{Reference category}
+#'
+#' }
+#' 
+#' @note
+#' The data was taken as provided from the MetaBayesDTA application.
+#' 
+#' @source Cerullo, E. et al. (2023).
+#' *MetaBayesDTA: codeless Bayesian meta-analysis of test accuracy, with or without a gold standard*
+#' BMC Medical Research Methodology 23(127).
+#' \doi{10.1186/s12874-023-01910-y}
+#' 
+#' @source Harrison, J. et al. (2015).
+#' *Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE) for the diagnosis of dementia within a secondary care setting.*.
+#' Cochrane Database of Systematic Reviews 3.
+#' \doi{10.1002/14651858.CD010772.pub2}
+"dementia"

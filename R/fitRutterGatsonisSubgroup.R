@@ -324,7 +324,7 @@ fitRutterGatsonisSubgroup <- function(data,
     constrain    = constrain,
     subgroups    = lsub
   )
-  class(res) <- c("RutterGatsonisSubgroup")
+  class(res) <- c("RutterGatsonisSubgroup","RutterGatsonis","DTAmodel")
   return(res)
 }
 

@@ -8,6 +8,11 @@
 #' @param x Object of class \code{"ReitsmaSubgroupLCA"}
 #' @param conflevel Confidence level for confidence intervals. Default is 0.95.
 #' @param subgroup_label Column name for the subgroup. Defaults to \code{"Subgroup"}.
+#' @param order Specifies the ordering of studies
+#'   in the forest plot. Can be `"study"` (default), which orders
+#'   observations by study identifier and then subgroup, or
+#'   `"subgroup"`, which orders observations by subgroup and then
+#'   study identifier.
 #' @param ... Additional graphical arguments (not currently in use)
 #'
 #' @method forest ReitsmaSubgroupLCA
@@ -18,11 +23,12 @@
 #' Invisibly returns a \code{forestploter} object. Users may further modify the plot
 #' using \code{forestploter} functions before printing or exporting.
 #' @export
-forest.ReitsmaSubgroupLCA <- function(x, conflevel=0.95, subgroup_label="Subgroup", ...) {
+forest.ReitsmaSubgroupLCA <- function(x, conflevel=0.95, subgroup_label="Subgroup", order=c("study","subgroup"), ...) {
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
       conflevel <= 0 || conflevel >= 1) {
     stop("conflevel must be a single number in (0, 1).")
   }
+  order <- match.arg(order)
   XP <- x$data
   alpha   <- 1 - conflevel
   qq      <- stats::qnorm(1-alpha/2)
@@ -43,7 +49,8 @@ forest.ReitsmaSubgroupLCA <- function(x, conflevel=0.95, subgroup_label="Subgrou
                                  sprintf("%.2f", Spec_LCI),", ",
                                  sprintf("%.2f", Spec_UCI),"]"))
   
-  XP <- XP[order(XP$study,XP$subgroup), ]
+  if(order == "study"){XP <- XP[order(XP$study, XP$subgroup), ]}
+  if(order == "subgroup"){XP <- XP[order(XP$subgroup, XP$study), ]}
   dt <- XP[,c("study","subgroup","y11","y10","y01","y00","senslabel","speclabel")]
   dt$" "    <- " "
   dt$fsens  <- paste(rep(" ",18),collapse=" ")

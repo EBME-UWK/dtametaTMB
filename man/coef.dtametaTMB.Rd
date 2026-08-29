@@ -2,25 +2,14 @@
 % Please edit documentation in R/coefvcov.R
 \name{coef.dtametaTMB}
 \alias{coef.dtametaTMB}
-\alias{coef.RutterGatsonis}
-\alias{coef.RutterGatsonisSubgroup}
-\alias{coef.RutterGatsonisReg}
-\alias{coef.HoyerAFT}
+\alias{coef.DTAmodel}
 \alias{coef.Reitsma}
 \alias{coef.ReitsmaSubgroup}
 \alias{coef.ReitsmaLCA}
-\alias{coef.RutterGatsonisLCA}
 \alias{coef.ReitsmaSubgroupLCA}
-\alias{coef.RutterGatsonisSubgroupLCA}
 \title{Extract model coefficients}
 \usage{
-\method{coef}{RutterGatsonis}(object, ...)
-
-\method{coef}{RutterGatsonisSubgroup}(object, ...)
-
-\method{coef}{RutterGatsonisReg}(object, ...)
-
-\method{coef}{HoyerAFT}(object, ...)
+\method{coef}{DTAmodel}(object, ...)
 
 \method{coef}{Reitsma}(object, ...)
 
@@ -28,11 +17,7 @@
 
 \method{coef}{ReitsmaLCA}(object, ...)
 
-\method{coef}{RutterGatsonisLCA}(object, ...)
-
 \method{coef}{ReitsmaSubgroupLCA}(object, ...)
-
-\method{coef}{RutterGatsonisSubgroupLCA}(object, ...)
 }
 \arguments{
 \item{object}{A fitted model object.}

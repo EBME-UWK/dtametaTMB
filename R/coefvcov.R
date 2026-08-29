@@ -19,25 +19,7 @@
 
 #' @rdname coef.dtametaTMB
 #' @export
-coef.RutterGatsonis <- function(object, ...) {
-  as.matrix(object$sdreport2)[,"Estimate"]
-}
-
-#' @rdname coef.dtametaTMB
-#' @export
-coef.RutterGatsonisSubgroup <- function(object, ...) {
-  as.matrix(object$sdreport2)[,"Estimate"]
-}
-
-#' @rdname coef.dtametaTMB
-#' @export
-coef.RutterGatsonisReg <- function(object, ...) {
-  as.matrix(object$sdreport2)[,"Estimate"]
-}
-
-#' @rdname coef.dtametaTMB
-#' @export
-coef.HoyerAFT <- function(object, ...) {
+coef.DTAmodel <- function(object, ...) {
   as.matrix(object$sdreport2)[,"Estimate"]
 }
 
@@ -55,28 +37,11 @@ coef.ReitsmaSubgroup <- function(object, ...){
 
 #' @rdname coef.dtametaTMB
 #' @export
-coef.ReitsmaLCA <- function(object, ...) {
-  as.matrix(object$sdreport2)[,"Estimate"]
-}
+coef.ReitsmaLCA <- coef.DTAmodel
 
 #' @rdname coef.dtametaTMB
 #' @export
-coef.RutterGatsonisLCA <- function(object, ...) {
-  as.matrix(object$sdreport2)[,"Estimate"]
-}
-
-#' @rdname coef.dtametaTMB
-#' @export
-coef.ReitsmaSubgroupLCA <- function(object, ...) {
-  as.matrix(object$sdreport2)[,"Estimate"]
-}
-
-#' @rdname coef.dtametaTMB
-#' @export
-coef.RutterGatsonisSubgroupLCA <- function(object, ...) {
-  as.matrix(object$sdreport2)[,"Estimate"]
-}
-
+coef.ReitsmaSubgroupLCA <- coef.DTAmodel
 
 #' Variance-covariance matrix
 #'
@@ -98,6 +63,13 @@ coef.RutterGatsonisSubgroupLCA <- function(object, ...) {
 #' [coef.dtametaTMB()]
 #' @name vcov.dtametaTMB
 
+#' @rdname vcov.dtametaTMB
+#' @export
+vcov.DTAmodel <- function(object, ...) {
+  vc <- object$sdreport$cov
+  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
+  vc
+}
 
 #' @rdname vcov.dtametaTMB
 #' @export
@@ -113,66 +85,9 @@ vcov.ReitsmaSubgroup <- function(object, ...) {
 
 #' @rdname vcov.dtametaTMB
 #' @export
-vcov.RutterGatsonis <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
+vcov.ReitsmaLCA         <- vcov.DTAmodel
 
 #' @rdname vcov.dtametaTMB
 #' @export
-vcov.RutterGatsonisSubgroup <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
-
-#' @rdname vcov.dtametaTMB
-#' @export
-vcov.RutterGatsonisReg <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
-
-#' @rdname vcov.dtametaTMB
-#' @export
-vcov.RutterGatsonisLCA <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
-
-#' @rdname vcov.dtametaTMB
-#' @export
-vcov.RutterGatsonisSubgroupLCA <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
-
-#' @rdname vcov.dtametaTMB
-#' @export
-vcov.ReitsmaLCA <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
-
-#' @rdname vcov.dtametaTMB
-#' @export
-vcov.ReitsmaSubgroupLCA <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
-
-
-#' @rdname vcov.dtametaTMB
-#' @export
-vcov.HoyerAFT <- function(object, ...) {
-  vc <- object$sdreport$cov
-  colnames(vc) <- rownames(vc) <- rownames(object$sdreport2)
-  vc
-}
+vcov.ReitsmaSubgroupLCA <- vcov.DTAmodel
 

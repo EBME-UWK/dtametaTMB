@@ -403,7 +403,7 @@ fitReitsmaSubgroupLCA <- function(data,
   )
   
   # Assign class
-  class(res) <- c("ReitsmaSubgroupLCA")
+  class(res) <- c("ReitsmaSubgroupLCA","Reitsma","DTAmodel")
   
   return(res)
 }

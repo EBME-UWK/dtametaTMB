@@ -324,7 +324,7 @@ fitReitsmaLCA <- function(data,
   )
   
   # Assign class
-  class(res) <- c("ReitsmaLCA")
+  class(res) <- c("ReitsmaLCA","Reitsma","DTAmodel")
   
   return(res)
 }
