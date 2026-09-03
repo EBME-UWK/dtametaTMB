@@ -26,9 +26,9 @@
 #'
 #' @export
 summary.RutterGatsonis <- function(object, ...) {
-  return(list(
-    estimates = object$sdreport2,
-    sensspec = object$sensspec,
-    Reitsma_recovered = object$Reitsma_recovered
-  ))
+  ret <- list(estimates = object$sdreport2,
+              sensspec = object$sensspec,
+              Reitsma_recovered = object$Reitsma_recovered)
+  class(ret) <- "summary.RutterGatsonis"
+  return(ret)
 }

@@ -23,10 +23,10 @@
 summary.ReitsmaSubgroup <- function(object, ...) {
   rnu <- grep("^nu_", rownames(object$estimates_nu))
   nu <- object$estimates_nu[rnu,]
-  return(list(
-    estimates = rbind(object$estimates_mu,nu),
-    sensspec = object$sensspec,
-    RutterGatsonis_recovered = object$RutterGatsonis_recovered,
-    subgroups = object$subgroups
-  ))
+  ret <- list(estimates = rbind(object$estimates_mu,nu),
+              sensspec = object$sensspec,
+              RutterGatsonis_recovered = object$RutterGatsonis_recovered,
+              subgroups = object$subgroups)
+  class(ret) <- "summary.ReitsmaSubgroup"
+  return(ret)
 }

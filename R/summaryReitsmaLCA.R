@@ -20,9 +20,9 @@
 #'
 #' @export
 summary.ReitsmaLCA <- function(object, ...) {
-  return(list(
-    estimates = object$sdreport2,
-    sensspec = object$sensspec,
-    RutterGatsonis_recovered = object$RutterGatsonis_recovered
-  ))
+  ret <- list(estimates = object$sdreport2,
+              sensspec = object$sensspec,
+              RutterGatsonis_recovered = object$RutterGatsonis_recovered)
+  class(ret) <- "summary.ReitsmaLCA"
+  return(ret)
 }

@@ -26,10 +26,10 @@
 #'
 #' @export
 summary.RutterGatsonisSubgroup <- function(object, ...) {
-  return(list(
-    estimates = object$sdreport2,
-    sensspec = object$sensspec,
-    Reitsma_recovered = object$Reitsma_recovered,
-    subgroups = object$subgroups
-  ))
+  ret <- list(estimates = object$sdreport2,
+              sensspec = object$sensspec,
+              Reitsma_recovered = object$Reitsma_recovered,
+              subgroups = object$subgroups)
+  class(ret) <- "summary.RutterGatsonisSubgroup"
+  return(ret)
 }

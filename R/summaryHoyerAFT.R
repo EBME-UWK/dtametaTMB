@@ -22,6 +22,8 @@
 #'
 #' @export
 summary.HoyerAFT <- function(object, ...) {
-  return(list(sdreport2=object$sdreport2,
-              sensspec=object$sensspec))
+  ret <- list(sdreport2=object$sdreport2,
+              sensspec=object$sensspec)
+  class(ret) <- "summary.HoyerAFT"
+  return(ret)
 }

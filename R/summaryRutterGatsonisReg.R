@@ -24,8 +24,8 @@
 #'
 #' @export
 summary.RutterGatsonisReg <- function(object, ...) {
-  return(list(
-    estimates = object$sdreport2,
-    sensspec = object$sensspec
-  ))
+  ret <- list(estimates = object$sdreport2,
+              sensspec = object$sensspec)
+  class(ret) <- "summary.RutterGatsonisReg"
+  return(ret)
 }

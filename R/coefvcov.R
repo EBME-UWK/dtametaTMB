@@ -85,7 +85,7 @@ vcov.ReitsmaSubgroup <- function(object, ...) {
 
 #' @rdname vcov.dtametaTMB
 #' @export
-vcov.ReitsmaLCA         <- vcov.DTAmodel
+vcov.ReitsmaLCA <- vcov.DTAmodel
 
 #' @rdname vcov.dtametaTMB
 #' @export

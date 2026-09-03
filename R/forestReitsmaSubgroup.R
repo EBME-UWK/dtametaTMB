@@ -27,24 +27,9 @@ forest.ReitsmaSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup",
     stop("conflevel must be a single number in (0, 1).")
   }
   order <- match.arg(order)
-  XP <- x$data
-  XP$FPR  <- 1 - XP$spec
-  alpha   <- 1 - conflevel
-  senslabel <-  paste0("Sensitivity (",round(100 * conflevel), "%-CI)")
-  speclabel <-  paste0("Specificity (",round(100 * conflevel), "%-CI)")
-  # How do I get Clopper-Pearson confidence limits for sensitivity and specificities?
-  XP$Sens_LCI  <- with(XP,stats::qbeta(p=alpha/2,  shape1=TP,  shape2=FN+1))
-  XP$Sens_UCI  <- with(XP,stats::qbeta(p=1-alpha/2,shape1=TP+1,shape2=FN))
-  XP$FPR_LCI   <- with(XP,stats::qbeta(p=alpha/2,  shape1=FP,  shape2=TN+1))
-  XP$FPR_UCI   <- with(XP,stats::qbeta(p=1-alpha/2,shape1=FP+1,shape2=TN))
-  # How do I create the forest plot?
-  XP$senslabel <- with(XP,paste0(sprintf("%.2f", sens)," [",
-                                 sprintf("%.2f", Sens_LCI),", ",
-                                 sprintf("%.2f", Sens_UCI),"]"))
-  XP$speclabel <- with(XP,paste0(sprintf("%.2f", spec)," [",
-                                 sprintf("%.2f", 1-FPR_UCI),", ",
-                                 sprintf("%.2f", 1-FPR_LCI),"]"))
+  ss <- getForestSensSpec(x=x,conflevel=conflevel)
   
+  XP <- ss$XP
   if(order=="study"){XP <- XP[order(XP$study,XP$subgroup), ]}
   if(order=="subgroup"){XP <- XP[order(XP$subgroup,XP$study), ]}
   dt <- XP[,c("study","subgroup","TP","FP","FN","TN","senslabel","speclabel")]
@@ -54,31 +39,9 @@ forest.ReitsmaSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup",
   dt$fspec  <- paste(rep(" ",18),collapse=" ")  
   cc <- colnames(dt) 
   colnames(dt) <- c("Study",subgroup_label,cc[3:6],
-                    senslabel,speclabel," ",senslabel," ",speclabel)
+                    ss$senslab,ss$speclab," ",ss$senslab," ",ss$speclab)
   
-  p <- forestploter::forest(dt,
-                            est = list(XP$sens,
-                                       XP$spec),
-                            lower = list(XP$Sens_LCI,
-                                         1-XP$FPR_UCI), 
-                            upper = list(XP$Sens_UCI,
-                                         1-XP$FPR_LCI),
-                            sizes = 0.75,
-                            ci_column = c(10,12),
-                            nudge_y=0.000001,
-                            xlim=c(0,1),
-                            ref_line = 3)
-  p <- forestploter::edit_plot(p,
-                               col = 3:8,
-                               which="text",
-                               hjust = grid::unit(1,"npc"),
-                               x = grid::unit(1,"npc"))
-  p <- forestploter::edit_plot(p,
-                               col = 3:12,
-                               part="header",
-                               hjust = grid::unit(1,"npc"),
-                               x = grid::unit(1,"npc"))
-  plot(p)
-  invisible(p)
+  getForestPlotSub(dt=dt,XP=XP)
+
 }
 

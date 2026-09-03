@@ -63,7 +63,7 @@
 #'   TN = TN,
 #'   study = study
 #' )
-#' fit$estimates
+#' summary(fit)
 #' 
 #'
 #' @references

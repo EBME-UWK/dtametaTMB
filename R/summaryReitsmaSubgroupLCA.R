@@ -20,9 +20,10 @@
 #'
 #' @export
 summary.ReitsmaSubgroupLCA <- function(object, ...) {
-  return(list(
-    estimates = object$sdreport2,
-    sensspec = object$sensspec,
-    RutterGatsonis_recovered = object$RutterGatsonis_recovered
-  ))
+  ret <- list(estimates = object$sdreport2,
+              sensspec = object$sensspec,
+              RutterGatsonis_recovered = object$RutterGatsonis_recovered,
+              subgroups = object$subgroups)
+  class(ret) <- "summary.ReitsmaSubgroupLCA"
+  return(ret)
 }
