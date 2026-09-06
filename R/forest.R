@@ -74,38 +74,6 @@ getForestSensSpecLCA <- function(x,conflevel){
 #' @importFrom grid unit
 #' @noRd
 
-getForestPlot <- function(dt,XP){
-  p <- forestploter::forest(dt,
-                            est = list(XP$sens,
-                                       XP$spec),
-                            lower = list(XP$Sens_LCI,
-                                         XP$Spec_LCI), 
-                            upper = list(XP$Sens_UCI,
-                                         XP$Spec_UCI),
-                            sizes = 0.75,
-                            ci_column = c(9,11),
-                            nudge_y=0.000001,
-                            xlim=c(0,1),
-                            ref_line = 3)
-  p <- forestploter::edit_plot(p,
-                               col = 2:7,
-                               which="text",
-                               hjust = grid::unit(1,"npc"),
-                               x = grid::unit(1,"npc"))
-  p <- forestploter::edit_plot(p,
-                               col = 2:11,
-                               part="header",
-                               hjust = grid::unit(1,"npc"),
-                               x = grid::unit(1,"npc"))
-  plot(p)
-  invisible(p)
-}
-
-#' @keywords internal
-#' @importFrom forestploter forest edit_plot
-#' @importFrom grid unit
-#' @noRd
-
 getForestPlot <- function(dt,XP,r=0,s=2){
   p <- forestploter::forest(dt,
                             est = list(XP$sens,
