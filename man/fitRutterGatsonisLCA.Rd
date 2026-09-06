@@ -68,7 +68,8 @@ An object of class \code{"RutterGatsonisLCA"} containing:
 \item{fit}{Optimization result from \code{nlminb}.}
 \item{sdreport}{TMB standard report.}
 \item{sdreport2}{Summary of reported parameters.}
-\item{sensspec}{Estimated sensitivity at given specificity with confidence intervals.}
+\item{sensspec}{Estimated index test sensitivity at given specificity with confidence intervals.}
+\item{prevref}{Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.}
 \item{Reitsma_recovered}{Recovered parameters in the Reitsma parameterization.}
 \item{constrain}{Parameters fixed at zero.}
 }

@@ -11,7 +11,8 @@
 #' @return A list with the following components:
 #' \itemize{
 #'   \item \code{estimates}: Parameter estimates with standard errors.
-#'   \item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals.
+#'   \item \code{sensspec}: Estimated index test sensitivity at the specified specificity, including confidence intervals.
+#'   \item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.
 #'   \item \code{Reitsma_recovered}: Recovered parameters in the Reitsma parameterization.
 #' }
 #'
@@ -22,6 +23,7 @@
 summary.RutterGatsonisSubgroupLCA <- function(object, ...) {
   ret <- list(estimates = object$sdreport2,
               sensspec = object$sensspec,
+              prevref = object$prevref,
               Reitsma_recovered = object$Reitsma_recovered,
               subgroups = object$subgroups)
   class(ret) <- "summary.RutterGatsonisSubgroupLCA"

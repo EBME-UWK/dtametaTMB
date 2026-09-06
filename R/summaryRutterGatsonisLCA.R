@@ -15,10 +15,10 @@
 #' @return
 #' A list containing the following components:
 #' \itemize{
-#'   \item \code{estimates} Parameter estimates with standard errors as returned from TMB reported parameters.
-#'   \item \code{sensspec} Estimated sensitivity at the specified
-#'     specificity, including confidence intervals.
-#'   \item \code{Reitsma_recovered} Recovered parameters in the Reitsma parameterization.
+#'   \item \code{estimates}: Parameter estimates with standard errors as returned from TMB reported parameters.
+#'   \item \code{sensspec}: Estimated index test sensitivity at the specified specificity, including confidence intervals.
+#'   \item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.
+#'   \item \code{Reitsma_recovered}: Recovered parameters in the Reitsma parameterization.
 #' }
 #'
 #' @seealso
@@ -28,6 +28,7 @@
 summary.RutterGatsonisLCA <- function(object, ...) {
   ret <- list(estimates = object$sdreport2,
               sensspec = object$sensspec,
+              prevref = object$prevref,
               Reitsma_recovered = object$Reitsma_recovered)
   class(ret) <- "summary.RutterGatsonisLCA"
   return(ret)

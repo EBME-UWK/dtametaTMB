@@ -18,7 +18,6 @@ forest <- function(x, ...) {
 #' @noRd
 getForestSensSpec <- function(x,conflevel){ 
   XP <- x$data
-  XP$FPR  <- 1 - XP$spec
   alpha   <- 1 - conflevel
   senslab <-  paste0("Sensitivity (",round(100 * conflevel), "%-CI)")
   speclab <-  paste0("Specificity (",round(100 * conflevel), "%-CI)")
@@ -107,7 +106,7 @@ getForestPlot <- function(dt,XP){
 #' @importFrom grid unit
 #' @noRd
 
-getForestPlotSub <- function(dt,XP,s=3){
+getForestPlot <- function(dt,XP,r=0,s=2){
   p <- forestploter::forest(dt,
                             est = list(XP$sens,
                                        XP$spec),
@@ -116,17 +115,17 @@ getForestPlotSub <- function(dt,XP,s=3){
                             upper = list(XP$Sens_UCI,
                                          XP$Spec_UCI),
                             sizes = 0.75,
-                            ci_column = c(10,12),
+                            ci_column = c(9+r,11+r),
                             nudge_y=0.000001,
                             xlim=c(0,1),
                             ref_line = 3)
   p <- forestploter::edit_plot(p,
-                               col = s:8,
+                               col = s:(7+r),
                                which="text",
                                hjust = grid::unit(1,"npc"),
                                x = grid::unit(1,"npc"))
   p <- forestploter::edit_plot(p,
-                               col = s:12,
+                               col = s:(11+r),
                                part="header",
                                hjust = grid::unit(1,"npc"),
                                x = grid::unit(1,"npc"))

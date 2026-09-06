@@ -36,6 +36,6 @@ forest.HoyerAFT <- function(x,conflevel=0.95, ...) {
   colnames(dt) <- c("Study","Threshold",cc[3:6],
                     ss$senslab,ss$speclab," ",ss$senslab," ",ss$speclab)
   
-  getForestPlotSub(dt=dt,XP=XP,s=2)
+  getForestPlot(dt=dt,XP=XP,r=1)
 }
 

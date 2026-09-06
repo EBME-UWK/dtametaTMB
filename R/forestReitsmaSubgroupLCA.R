@@ -43,6 +43,6 @@ forest.ReitsmaSubgroupLCA <- function(x, conflevel=0.95, subgroup_label="Subgrou
                     "+/+","+/-","-/+","-/-",
                     ss$senslab,ss$speclab," ",ss$senslab," ",ss$speclab)
   
-  getForestPlotSub(dt=dt,XP=XP)
+  getForestPlot(dt=dt,XP=XP,r=1,s=3)
 }
 

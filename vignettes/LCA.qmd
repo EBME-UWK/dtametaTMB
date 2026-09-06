@@ -2,9 +2,9 @@
 title: "Latent Class Meta-Analysis"
 subtitle: "Reitsma and Rutter-Gatsonis Models with an Imperfect Reference Standard"
 format: 
-  html:
-   toc: TRUE
-# pdf
+#  html:
+ #  toc: TRUE
+ pdf
 vignette: >
   %\VignetteIndexEntry{Latent Class Meta-Analysis}
   %\VignetteEngine{quarto::html}

@@ -60,8 +60,9 @@
 #'   \item{fit}{Optimization result from \code{nlminb}.}
 #'   \item{sdreport}{TMB standard report.}
 #'   \item{sdreport2}{Summary of reported subgroup-specific parameters.}
-#'   \item{sensspec}{Estimated subgroup-specific sensitivities at the given
+#'   \item{sensspec}{Estimated subgroup-specific index test sensitivities at the given
 #'   specificity value(s), with confidence intervals.}
+#'   \item{prevref}{Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.}
 #'   \item{constrain}{Constraints on parameters applied during model fitting.}
 #'   \item{subgroups}{The subgroup levels used in the model fit.}
 #' }
@@ -313,6 +314,19 @@ fitRutterGatsonisSubgroupLCA <- function(data,
   sesp$Sens         <- with(sesp,stats::plogis(logitsens))
   sesp$SensCI_Lower <- with(sesp,stats::plogis(CI_Lower))
   sesp$SensCI_Upper <- with(sesp,stats::plogis(CI_Upper))
+  ##
+  ### Prevalence
+  rlpr           <- paste0("mu_prev.",lsub)
+  prre           <- as.data.frame(rep2[c(rlpr,
+                                         "mu_A.ref",
+                                         "mu_B.ref"),])
+  prre$type      <- c(rep("Prev",llsub),"Sens","Spec")
+  prre$Orig      <- with(prre,stats::plogis(Estimate))
+  prre$conflevel <- conflevel
+  prre$CI_Lower  <- with(prre,stats::plogis(Estimate-qq*`Std. Error`))
+  prre$CI_Upper  <- with(prre,stats::plogis(Estimate+qq*`Std. Error`))
+  prre           <- prre[,c("type","Orig","conflevel","CI_Lower","CI_Upper")]
+  colnames(prre) <- c("type","Estimate","conflevel","CI_Lower","CI_Upper")
   ## Recover Reitsma parameters
   lamb <- paste0("Lambda_",lsub)
   thet <- paste0("Theta_",lsub)
@@ -373,6 +387,7 @@ fitRutterGatsonisSubgroupLCA <- function(data,
     sdreport     = rep,
     sdreport2    = rep2,
     sensspec     = sesp,
+    prevref      = prre,
     Reitsma_recovered = reit2,
     constrain    = constrain,
     subgroups    = lsub

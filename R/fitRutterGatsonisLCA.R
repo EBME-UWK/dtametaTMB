@@ -46,7 +46,8 @@
 #'   \item{fit}{Optimization result from \code{nlminb}.}
 #'   \item{sdreport}{TMB standard report.}
 #'   \item{sdreport2}{Summary of reported parameters.}
-#'   \item{sensspec}{Estimated sensitivity at given specificity with confidence intervals.}
+#'   \item{sensspec}{Estimated index test sensitivity at given specificity with confidence intervals.}
+#'   \item{prevref}{Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.}
 #'   \item{Reitsma_recovered}{Recovered parameters in the Reitsma parameterization.}
 #'   \item{constrain}{Parameters fixed at zero.}
 #' }
@@ -322,6 +323,17 @@ fitRutterGatsonisLCA <- function(data,
   sesp$Sens         <- with(sesp,stats::plogis(logitsens))
   sesp$SensCI_Lower <- with(sesp,stats::plogis(CI_Lower))
   sesp$SensCI_Upper <- with(sesp,stats::plogis(CI_Upper))
+  ### Prevalence and Reference standard
+  prre           <- as.data.frame(rep2[c("mu_prev",
+                                         "mu_A.ref",
+                                         "mu_B.ref"),])
+  prre$type      <- c("Prev","Sens","Spec")
+  prre$Orig      <- with(prre,stats::plogis(Estimate))
+  prre$conflevel <- conflevel
+  prre$CI_Lower  <- with(prre,stats::plogis(Estimate-qq*`Std. Error`))
+  prre$CI_Upper  <- with(prre,stats::plogis(Estimate+qq*`Std. Error`))
+  prre           <- prre[,c("type","Orig","conflevel","CI_Lower","CI_Upper")]
+  colnames(prre) <- c("type","Estimate","conflevel","CI_Lower","CI_Upper")
   # Result object
   res <- list(
     data         = X,
@@ -329,6 +341,7 @@ fitRutterGatsonisLCA <- function(data,
     sdreport     = rep,
     sdreport2    = rep2,
     sensspec     = sesp,
+    prevref      = prre,
     Reitsma_recovered = indexREIT,
     constrain    = constrain
   )

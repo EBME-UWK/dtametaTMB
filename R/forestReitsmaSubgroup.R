@@ -41,7 +41,7 @@ forest.ReitsmaSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup",
   colnames(dt) <- c("Study",subgroup_label,cc[3:6],
                     ss$senslab,ss$speclab," ",ss$senslab," ",ss$speclab)
   
-  getForestPlotSub(dt=dt,XP=XP)
+  getForestPlot(dt=dt,XP=XP,r=1,s=3)
 
 }
 
