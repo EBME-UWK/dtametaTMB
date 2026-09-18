@@ -177,6 +177,8 @@ test_that("common generic methods work across inheritance hierarchy", {
     expect_no_error(logLik(mod))
     expect_no_error(AIC(mod))
     expect_no_error(BIC(mod))
+    expect_no_error(summary(mod))
+    expect_no_error(print(summary(mod)))
     
     expect_true(length(coef(mod)) > 0)
     

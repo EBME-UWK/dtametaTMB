@@ -4,11 +4,13 @@
 \alias{print.summary.DTAmodel}
 \title{Print a diagnostic test accuracy model summary}
 \usage{
-\method{print}{summary.DTAmodel}(x, ...)
+\method{print}{summary.DTAmodel}(x, digits = max(8L, getOption("digits") - 8L), ...)
 }
 \arguments{
 \item{x}{A summary object inheriting from
 \code{"summary.DTAmodel"}.}
+
+\item{digits}{Number of significant digits used for printing.}
 
 \item{...}{Additional arguments passed to
 \code{print.default()}.}
