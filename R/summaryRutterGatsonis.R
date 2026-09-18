@@ -29,6 +29,6 @@ summary.RutterGatsonis <- function(object, ...) {
   ret <- list(estimates = object$sdreport2,
               sensspec = object$sensspec,
               Reitsma_recovered = object$Reitsma_recovered)
-  class(ret) <- "summary.RutterGatsonis"
+  class(ret) <- c("summary.RutterGatsonis","summary.DTAmodel")
   return(ret)
 }

@@ -35,7 +35,7 @@ rectangles representing study weights. Default is \code{0.02}.}
 }}
 
 \item{thresholdrange}{A numeric vector of length 2 giving the range of
-threshold over which sensitivities and specificities are predicted
+threshold over which sensitivities and specificities are predicted.
 If \code{NULL} (default), then the minimum and maximum thresholds
 from the data are used.}
 

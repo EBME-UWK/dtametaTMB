@@ -30,6 +30,6 @@ summary.RutterGatsonisSubgroup <- function(object, ...) {
               sensspec = object$sensspec,
               Reitsma_recovered = object$Reitsma_recovered,
               subgroups = object$subgroups)
-  class(ret) <- "summary.RutterGatsonisSubgroup"
+  class(ret) <- c("summary.RutterGatsonisSubgroup","summary.RutterGatonis","summary.DTAmodel")
   return(ret)
 }

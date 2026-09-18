@@ -24,6 +24,6 @@
 summary.HoyerAFT <- function(object, ...) {
   ret <- list(sdreport2=object$sdreport2,
               sensspec=object$sensspec)
-  class(ret) <- "summary.HoyerAFT"
+  class(ret) <- c("summary.HoyerAFT","summary.DTAmodel")
   return(ret)
 }

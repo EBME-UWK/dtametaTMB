@@ -91,3 +91,21 @@ vcov.ReitsmaLCA <- vcov.DTAmodel
 #' @export
 vcov.ReitsmaSubgroupLCA <- vcov.DTAmodel
 
+
+#' Print a diagnostic test accuracy model summary
+#'
+#' Prints summary objects returned by
+#' \code{summary()} methods for diagnostic
+#' test accuracy models.
+#'
+#' @param x A summary object inheriting from
+#'   \code{"summary.DTAmodel"}.
+#' @param ... Additional arguments passed to
+#'   \code{print.default()}.
+#'
+#' @return Invisibly returns \code{x}.
+#' @export
+print.summary.DTAmodel <- function(x, ...) {
+  print.default(unclass(x), ...)
+  invisible(x)
+}

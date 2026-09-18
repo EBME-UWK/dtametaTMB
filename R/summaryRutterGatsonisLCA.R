@@ -30,6 +30,6 @@ summary.RutterGatsonisLCA <- function(object, ...) {
               sensspec = object$sensspec,
               prevref = object$prevref,
               Reitsma_recovered = object$Reitsma_recovered)
-  class(ret) <- "summary.RutterGatsonisLCA"
+  class(ret) <- c("summary.RutterGatsonisLCA","summary.RutterGatsonis","summary.DTAmodel")
   return(ret)
 }
