@@ -89,6 +89,7 @@
 #'   \item \code{sdreport2}: parameter estimates with SE.
 #'   \item \code{vcov}: variance-covariance matrix.
 #'   \item \code{sensspec}: sensitivity and specificity estimates.
+#'   \item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.
 #'   \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
 #'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #'   \item \code{subgroups}: The subgroup levels used in the model fit.
@@ -352,10 +353,13 @@ fitReitsmaSubgroupLCA <- function(data,
   sesp           <- sesp[,c("Orig","conflevel","CI_Lower","CI_Upper")]
   colnames(sesp) <- c("Estimate","conflevel","CI_Lower","CI_Upper")
   sesp$type <- NA_character_
-  sesp$type[grepl("^mu_prev", rownames(sesp))] <- "Prev"
-  sesp$type[grepl("^mu_A",    rownames(sesp))] <- "Sens"
-  sesp$type[grepl("^mu_B",    rownames(sesp))] <- "Spec"
+  rn             <- rownames(sesp)
+  sesp$type[grepl("^mu_prev", rn)] <- "Prev"
+  sesp$type[grepl("^mu_A",    rn)] <- "Sens"
+  sesp$type[grepl("^mu_B",    rn)] <- "Spec"
   sesp           <- sesp[,c("type","Estimate","conflevel","CI_Lower","CI_Upper")]
+  sesp1          <- sesp[grepl("^mu_[AB]\\.index",rn),]
+  prevref        <- sesp[grepl("^mu_prev|^mu_A\\.ref|^mu_B\\.ref",rn),]
   ### Diagnostic odds ratios and Likelihood ratios
   lrdor2 <- data.frame()
   for(i in seq_along(lsub)){
@@ -394,7 +398,8 @@ fitReitsmaSubgroupLCA <- function(data,
     sdreport     = rep,
     sdreport2    = rep2,
     vcov         = vcov,
-    sensspec     = sesp,
+    sensspec     = sesp1,
+    prevref      = prevref,
     LRDOR        = lrdor2,
     RutterGatsonis_recovered = ruga2,
     subgroups    = lsub,

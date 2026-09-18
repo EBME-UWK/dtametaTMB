@@ -45,6 +45,7 @@
 #'   \item \code{sdreport2}: parameter estimates with SE.
 #'   \item \code{vcov}: variance-covariance matrix.
 #'   \item \code{sensspec}: sensitivity and specificity estimates.
+#'   \item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.
 #'   \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
 #'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #'   \item \code{constrain}: Random effects parameters fixed at zero.
@@ -301,6 +302,8 @@ fitReitsmaLCA <- function(data,
   sesp$CI_Upper  <- with(sesp,stats::plogis(Estimate+qq*`Std. Error`))
   sesp           <- sesp[,c("type","Orig","conflevel","CI_Lower","CI_Upper")]
   colnames(sesp) <- c("type","Estimate","conflevel","CI_Lower","CI_Upper")
+  sesp1          <- sesp[c("mu_A.index","mu_B.index"),]
+  prevref        <- sesp[c("mu_prev","mu_A.ref","mu_B.ref"),]
   ####
   # likelihood ratios
   lsens  <- rep2["mu_A.index","Estimate"]
@@ -317,7 +320,8 @@ fitReitsmaLCA <- function(data,
     sdreport     = rep,
     sdreport2    = rep2,
     vcov         = vcov,
-    sensspec     = sesp,
+    sensspec     = sesp1,
+    prevref      = prevref,
     LRDOR        = lrdor,
     RutterGatsonis_recovered = indexRUGA,
     constrain    = constrain

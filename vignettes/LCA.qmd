@@ -2,9 +2,9 @@
 title: "Latent Class Meta-Analysis"
 subtitle: "Reitsma and Rutter-Gatsonis Models with an Imperfect Reference Standard"
 format: 
-#  html:
- #  toc: TRUE
- pdf
+  html:
+   toc: TRUE
+#  pdf
 vignette: >
   %\VignetteIndexEntry{Latent Class Meta-Analysis}
   %\VignetteEngine{quarto::html}
@@ -504,9 +504,6 @@ while the random effects variances $\sigma^2_\alpha$ and $\sigma^2_\theta$ are a
 
 For convenience, subgroup differences relative to the reference subgroup are also reported through the parameters
 $$\nu_{g}, \quad \xi_{g}, \quad \gamma_{g}, \quad \delta_{g}. $$
-## 
-
-
 ## How do I fit the Reitsma subgroup latent class model?
 
 ```{r}
