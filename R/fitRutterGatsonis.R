@@ -257,12 +257,16 @@ fitRutterGatsonis <- function(data,
   rep2 <- summary(rep, select = "report")
   
   ### Recover Reitsma parameters
-  Lambda <- rep$par.fixed["Lambda"]
-  Theta  <- rep$par.fixed["Theta"]
-  beta   <- rep$par.fixed["beta"]
-  sigma2_alpha <- rep$value["sigma2_alpha"]
-  sigma2_theta <- rep$value["sigma2_theta"]
-  reit   <- getREIT(Lambda, Theta, beta, sigma2_alpha, sigma2_theta)
+  Lambda <- rep2["Lambda","Estimate"]
+  Theta  <- rep2["Theta","Estimate"]
+  beta   <- rep2["beta","Estimate"]
+  sigma2_alpha <- rep2["sigma2_alpha","Estimate"]
+  sigma2_theta <- rep2["sigma2_theta","Estimate"]
+  reit   <- getREIT(Lambda=Lambda, 
+                    Theta=Theta, 
+                    beta=beta, 
+                    sigma2_alpha=sigma2_alpha, 
+                    sigma2_theta=sigma2_theta)
   # How to get sensitivities
   qq   <- stats::qnorm(1-(1-conflevel)/2)
   rlse <- which(rownames(rep2)=="logitsens")
