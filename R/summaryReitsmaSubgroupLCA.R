@@ -8,7 +8,7 @@
 #'   \code{\link{fitReitsmaSubgroupLCA}}.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return A list with the following components:
+#' @return A list of class \code{"summary.ReitsmaSubgroupLCA"} with the following components:
 #' \itemize{
 #'   \item \code{estimates}: Parameter estimates with standard errors.
 #'   \item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals.

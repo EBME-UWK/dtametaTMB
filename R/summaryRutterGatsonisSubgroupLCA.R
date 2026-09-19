@@ -8,7 +8,7 @@
 #'   \code{\link{fitRutterGatsonisSubgroupLCA}}.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return A list with the following components:
+#' @return A list of class \code{"summary.RutterGatsonisSubgroupLCA"} with the following components:
 #' \itemize{
 #'   \item \code{estimates}: Parameter estimates with standard errors.
 #'   \item \code{sensspec}: Estimated index test sensitivity at the specified specificity, including confidence intervals.

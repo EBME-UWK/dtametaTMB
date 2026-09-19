@@ -13,7 +13,7 @@
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-A list containing the following components:
+A list of class \code{"summary.RutterGatsonisLCA"} containing the following components:
 \itemize{
 \item \code{estimates}: Parameter estimates with standard errors as returned from TMB reported parameters.
 \item \code{sensspec}: Estimated index test sensitivity at the specified specificity, including confidence intervals.

@@ -13,7 +13,7 @@
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-A list with the following components:
+A list of class \code{"summary.RutterGatsonisSubgroupLCA"} with the following components:
 \itemize{
 \item \code{estimates}: Parameter estimates with standard errors.
 \item \code{sensspec}: Estimated index test sensitivity at the specified specificity, including confidence intervals.

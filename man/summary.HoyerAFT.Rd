@@ -13,7 +13,7 @@ of a call to \code{\link{fitHoyerAFT}}.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-A list with two data frames containing summary statistics derived
+A list of class \code{"summary.HoyerAFT"} with two data frames containing summary statistics derived
 from the fitted model.
 \itemize{
 \item \code{sdreport2}: Parameter estimates with standard errors as returned from TMB reported parameters.

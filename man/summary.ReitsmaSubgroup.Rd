@@ -13,7 +13,7 @@
 \item{...}{Additional arguments (currently ignored).}
 }
 \value{
-A list with the following components:
+A list of class \code{"summary.ReitsmaSubgroup"} with the following components:
 \itemize{
 \item \code{estimates}: Parameter estimates with standard errors.
 \item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals.

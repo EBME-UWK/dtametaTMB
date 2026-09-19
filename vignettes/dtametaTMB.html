@@ -464,13 +464,30 @@ window.Quarto = {
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">TN =</span> TN,</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">study =</span> study,</span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">constrain =</span> <span class="st">"sigma_AB"</span>)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reitsmacons)<span class="sc">$</span>estimates</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Estimate Std_Error</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mu_A.sens     0.6585174 0.1294998</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mu_B.spec     3.1045241 0.1475005</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_A.sens 0.5601893 0.1530546</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_B.spec 0.5814819 0.1913425</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma_AB      0.0000000 0.0000000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reitsmacons)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Summary: Reitsma Model</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Parameter estimates</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -------------------</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                 Estimate  Std_Error</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mu_A.sens     0.65851744 0.12949978</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mu_B.spec     3.10452410 0.14750046</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_A.sens 0.56018928 0.15305457</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_B.spec 0.58148188 0.19134252</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma_AB      0.00000000 0.00000000</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sensitivity / specificity</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -------------------------</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        Estimate conflevel   CI_Lower   CI_Upper</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sens 0.65892727      0.95 0.59981697 0.71347719</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; spec 0.95707898      0.95 0.94350388 0.96750454</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Recovered HSROC parameters (Rutter-Gatsonis)</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                         Lambda      Theta        beta sigma2_alpha sigma2_theta</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Estimate (recovered) 3.7403928 -1.2055087 0.018652545    1.1414726   0.28536815</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>fixed the between-study random-effects covariance at zero. Other options include <code>constrain="sigma2_A"</code>, <code>"constrain=sigma2_B"</code>, or <code>"constrain=all"</code>.</p>
 <p>The Rutter and Gatsonis model allows for the constraint <span class="math inline">\(\sigma_\alpha^2=0\)</span>, <span class="math inline">\(\sigma_\theta^2=0\)</span> and/or <span class="math inline">\(\beta=0\)</span> (shape parameter). For example</p>
@@ -482,15 +499,33 @@ window.Quarto = {
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">TN =</span> TN,</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">study =</span> study,</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">constrain =</span> <span class="fu">c</span>(<span class="st">"sigma2_theta"</span>,<span class="st">"shape"</span>))</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ruttergatsoniscons)<span class="sc">$</span>estimates</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   Estimate Std. Error</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Lambda        2.474558e+00 0.16458526</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Theta        -4.756828e-01 0.02219305</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; beta          0.000000e+00 0.00000000</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_alpha  1.212172e+00 0.27567963</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_theta  4.930381e-32 0.00000000</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logitsens     6.002630e-01 0.16458526</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sens          6.457165e-01 0.03765163</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ruttergatsoniscons)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Summary: Rutter &amp; Gatsonis Model</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --------------------------------</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Parameter estimates</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -------------------</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                    Estimate  Std. Error</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Lambda        2.4745581e+00 0.164585260</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Theta        -4.7568280e-01 0.022193047</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; beta          0.0000000e+00 0.000000000</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_alpha  1.2121724e+00 0.275679630</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sigma2_theta  4.9303807e-32 0.000000000</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; logitsens     6.0026296e-01 0.164585260</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sens          6.4571647e-01 0.037651629</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sensitivity / specificity</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -------------------------</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         spec conflevel  logitsens  Std_Error   CI_Lower   CI_Upper       Sens</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.86695447      0.95 0.60026296 0.16458526 0.27768178 0.92284414 0.64571647</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   SensCI_Lower SensCI_Upper</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   0.56897779   0.71562126</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Recovered bivariate parameters (Reitsma)</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ----------------------------------------</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                      mu_A.sens mu_B.spec sigma2_A.sens sigma2_B.spec   sigma_AB</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Estimate (recovered)        NA        NA            NA            NA 0.30304311</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Note that we can also compare the constrained model with the full model using likelihood ratio tests.</p>
 <div class="cell">

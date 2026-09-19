@@ -212,7 +212,7 @@ reitsmacons <- fitReitsma(data = anticcp,
                           TN = TN,
                           study = study,
                           constrain = "sigma_AB")
-summary(reitsmacons)$estimates
+summary(reitsmacons)
 ```
 
 fixed the between-study random-effects covariance at zero.
@@ -230,7 +230,7 @@ ruttergatsoniscons <- fitRutterGatsonis(data = RF,
                                         TN = TN,
                                         study = study,
                                         constrain = c("sigma2_theta","shape"))
-summary(ruttergatsoniscons)$estimates
+summary(ruttergatsoniscons)
 ```
 
 Note that we can also compare the constrained model with the full model using likelihood ratio tests.

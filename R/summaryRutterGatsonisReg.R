@@ -12,7 +12,7 @@
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' A list containing the following components:
+#' A list of class \code{"summary.RutterGatsonisReg"} containing the following components:
 #' \itemize{
 #'   \item \code{estimates} Parameter estimates with standard errors as returned from TMB reported parameters.
 #'   \item \code{sensspec} Estimated sensitivity at the specified
