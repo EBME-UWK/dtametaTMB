@@ -12,8 +12,7 @@
 
 \item{digits}{Number of significant digits used for printing.}
 
-\item{...}{Additional arguments passed to
-\code{print.default()}.}
+\item{...}{Additional arguments passed to printing methods.}
 }
 \value{
 Invisibly returns \code{x}.

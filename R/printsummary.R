@@ -7,8 +7,7 @@
 #' @param x A summary object inheriting from
 #'   \code{"summary.DTAmodel"}.
 #' @param digits Number of significant digits used for printing.
-#' @param ... Additional arguments passed to
-#'   \code{print.default()}.
+#' @param ... Additional arguments passed to printing methods.
 #'
 #' @return Invisibly returns \code{x}.
 #' @export
@@ -16,6 +15,19 @@
 print.summary.DTAmodel <- function(x,
                                    digits = max(8L, getOption("digits") - 8L),
                                    ...) {
+  
+  mod <- c(
+    summary.HoyerAFT = "Summary: Hoyer Model",
+    summary.Reitsma = "Summary: Reitsma Model",
+    summary.ReitsmaLCA = "Summary: Reitsma LCA Model",
+    summary.ReitsmaSubgroup = "Summary: Reitsma Subgroup Model",
+    summary.ReitsmaSubgroupLCA = "Summary: Reitsma Subgroup LCA Model",
+    summary.RutterGatsonis = "Summary: Rutter & Gatsonis Model",
+    summary.RutterGatsonisReg = "Summary: Rutter & Gatsonis Regression Model",
+    summary.RutterGatsonisLCA = "Summary: Rutter & Gatsonis LCA Model",
+    summary.RutterGatsonisSubgroup = "Summary: Rutter & Gatsonis Subgroup Model",
+    summary.RutterGatsonisSubgroupLCA = "Summary: Rutter & Gatsonis Subgroup LCA Model"
+  )
   
   titles <- c(
     estimates                 = "Parameter estimates",
@@ -28,8 +40,7 @@ print.summary.DTAmodel <- function(x,
   )
   
   cl     <- class(x)[1]
-  model  <- sub("^summary\\.", "", cl)
-  header <- paste0("Summary: ", model, " Model")
+  header <- if (cl %in% names(mod)) mod[[cl]] else paste0("Summary: ", sub("^summary\\.", "", cl), " Model")
   
   cat("\n", header, "\n", sep = "")
   cat(strrep("-", nchar(header)), "\n", sep = "")
