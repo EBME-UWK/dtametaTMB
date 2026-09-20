@@ -180,8 +180,7 @@ fitReitsmaSubgroup <- function(data,
   }
   X <- X[stats::complete.cases(X), ]
 
-  
-  X$subgroup <- factor(X$subgroup)
+  X$subgroup <- droplevels(factor(X$subgroup))
   lsub       <- levels(X$subgroup)
   llsub      <- length(lsub)
   lsub_safe  <- make.names(lsub)

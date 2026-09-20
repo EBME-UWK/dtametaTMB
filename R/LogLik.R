@@ -48,7 +48,6 @@ logLik.Reitsma <- function(object, ...){
     df = length(object$glmmTMB$fit$par),
     nobs = nrow(object$data)
   )
- 
 }
 
 #' @rdname logLik.dtametaTMB

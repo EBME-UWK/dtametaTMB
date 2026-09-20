@@ -180,8 +180,7 @@ fitRutterGatsonisSubgroupLCA <- function(data,
   }
   X <- X[stats::complete.cases(X), ]
   
-  
-  X$subgroup <- factor(X$subgroup)
+  X$subgroup <- droplevels(factor(X$subgroup))
   lsub       <- levels(X$subgroup)
   n_study    <- nrow(X)
   llsub      <- length(lsub)

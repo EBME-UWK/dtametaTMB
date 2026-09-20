@@ -180,7 +180,7 @@ fitRutterGatsonisSubgroup <- function(data,
     )
   }
   X <- X[stats::complete.cases(X), ]
-  X$subgroup <- factor(X$subgroup)
+  X$subgroup <- droplevels(factor(X$subgroup))
   
   XP <- getXP(X=X)
   # Get starting values

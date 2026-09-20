@@ -64,9 +64,10 @@ at zero, resulting in a fixed-effects model.
 A list of class \code{"ReitsmaLCA"} with components:
 \itemize{
 \item \code{data}: the original data set with derived quantities.
-\item \code{sdreport}: fitted model object.
-\item \code{sdreport2}: parameter estimates with SE.
-\item \code{vcov}: variance-covariance matrix.
+\item \code{fit}: Optimization result from \code{nlminb}.
+\item \code{sdreport}: TMB standard report.
+\item \code{sdreport2}: Summary of reported parameters.
+\item \code{vcov}: variance-covariance matrix of reported parameters.
 \item \code{sensspec}: sensitivity and specificity estimates.
 \item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.
 \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
