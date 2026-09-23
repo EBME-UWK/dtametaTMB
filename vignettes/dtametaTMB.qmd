@@ -1,9 +1,9 @@
 ---
 title: "Introduction to dtametaTMB"
 format: 
- #  html:
-  #  toc: TRUE
-   pdf
+  html:
+   toc: TRUE
+#   pdf
 vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEncoding{UTF-8}

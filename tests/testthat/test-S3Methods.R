@@ -125,7 +125,7 @@ test_that("common generic methods work across inheritance hierarchy", {
   ## Hoyer ------------------------------------------------------
   
   data("diabetes", package = "dtametaTMB")
-  
+
   hoyer <- fitHoyer(
     data            = diabetes,
     TP              = TP,

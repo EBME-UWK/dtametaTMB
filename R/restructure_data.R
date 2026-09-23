@@ -170,15 +170,15 @@ restructure_data <- function(data,
   if (any(dat$threshold <= 0, na.rm = TRUE)) {
     stop("'threshold' must be positive.")
   }
-
-  if (!is.numeric(smallest) || smallest <= 0) {
-    stop("'smallest' must be positive.")
+  
+  if (!is.numeric(smallest) || length(smallest) != 1L || !is.finite(smallest) || smallest <= 0) {
+    stop("'smallest' must be a single positive finite number.")
   }
-
-  if (!is.numeric(largest) || largest <= 0) {
-    stop("'largest' must be positive.")
+  
+  if (!is.numeric(largest) || length(largest) != 1L || !is.finite(largest) || largest <= 0) {
+    stop("'largest' must be a single positive finite number.")
   }
-
+  
   if (smallest >= min(dat$threshold,na.rm=TRUE)){
     stop("'smallest' must be smaller than minimum threshold.")
   }
@@ -192,6 +192,25 @@ restructure_data <- function(data,
   # Derived totals
   dat$n1 <- dat$TP + dat$FN
   dat$n0 <- dat$TN + dat$FP
+  
+  # Check
+  dup <- duplicated(dat[c("study", "threshold")])
+  
+  if (any(dup)) {
+    duplicated_thresholds <- unique(dat[dup, c("study", "threshold")])
+    
+    details <- paste0(
+      "study ", duplicated_thresholds$study,
+      " (threshold ", duplicated_thresholds$threshold, ")"
+    )
+    
+    stop(
+      "Each threshold must be unique within a study. ",
+      "Duplicated thresholds found in: ",
+      paste(details, collapse = ", "),
+      "."
+    )
+  }
 
   check_consistency <- function(df) {
     if (length(unique(df$n1)) > 1) {

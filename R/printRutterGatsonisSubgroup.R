@@ -19,7 +19,6 @@ print.RutterGatsonisSubgroup <- function(x, ...) {
   
   n_study <- nrow(x$data)
   n_sub   <- length(x$subgroups)
-  n_study   <- nrow(x$data)
   converged <- x$fit$convergence == 0
   pdHess    <- x$sdreport$pdHess
   ll        <- logLik(x)

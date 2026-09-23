@@ -95,15 +95,15 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NULL, verbo
   if (!all(is.null(eval_threshold))) {
 
     if (!is.numeric(eval_threshold)) {
-      stop("'threshold' must be numeric.")
+      stop("'eval_threshold' must be numeric.")
     }
 
     if (any(!is.finite(eval_threshold))) {
-      stop("'threshold' must contain only finite values.")
+      stop("'eval_threshold' must contain only finite values.")
     }
 
     if (any(eval_threshold <= 0)) {
-      stop("'threshold' values must be positive.")
+      stop("'eval_threshold' values must be positive.")
     }
   }
   
