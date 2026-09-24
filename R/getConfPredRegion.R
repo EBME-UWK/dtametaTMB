@@ -8,9 +8,17 @@ getConfPredRegion <- function(muA,muB,
                               conflevel,
                               predlevel){  
   r       <- covAB / (seA*seB)
+  r       <- max(min(r,1),-1)
   sepredA <- sqrt(varA + seA**2)
   sepredB <- sqrt(varB + seB**2)
   rpredAB <- (sAB + covAB) / (sepredA*sepredB)
+  rpredAB <- max(min(rpredAB,1),-1)
+  if(nstudy <= 2){
+    warning(
+      "At least 3 studies are required to construct ",
+      "confidence and prediction regions."
+    )
+  }
   f_conf  <- stats::qf(conflevel, df1 = 2, df2 = nstudy - 2)
   f_pred  <- stats::qf(predlevel, df1 = 2, df2 = nstudy - 2)
   croot_conf <- sqrt(2 * f_conf)
