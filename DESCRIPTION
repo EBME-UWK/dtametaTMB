@@ -1,6 +1,6 @@
 Package: dtametaTMB
 Title: Diagnostic Test Accuracy Meta-Analysis using Template Model Builder
-Version: 0.1.2.9000
+Version: 0.1.3
 Authors@R:
     c(
       person("Claus", "Nowak",
