@@ -1,4 +1,4 @@
-#' Fit Reitsma Model
+#' Fit the Reitsma Model
 #'
 #' Fits the Reitsma bivariate random-effects model for diagnostic test accuracy (DTA)
 #' meta-analysis using a binomial-normal likelihood via \code{glmmTMB}.

@@ -1,4 +1,4 @@
-#' Fit Rutter and Gatsonis LCA Model
+#' Fit the Rutter and Gatsonis LCA Model
 #'
 #' Fits the Rutter and Gatsonis latent class model for diagnostic test accuracy (DTA),
 #' allowing for an imperfect reference standard under conditional independence.

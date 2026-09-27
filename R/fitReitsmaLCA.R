@@ -1,4 +1,4 @@
-#' Fit Reitsma LCA Model
+#' Fit the Reitsma LCA Model
 #'
 #' Fits the Reitsma latent class model for diagnostic test accuracy (DTA),
 #' allowing for an imperfect reference standard under conditional independence.

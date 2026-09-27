@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitRutterGatsonisLCA.R
 \name{fitRutterGatsonisLCA}
 \alias{fitRutterGatsonisLCA}
-\title{Fit Rutter and Gatsonis LCA Model}
+\title{Fit the Rutter and Gatsonis LCA Model}
 \usage{
 fitRutterGatsonisLCA(
   data,

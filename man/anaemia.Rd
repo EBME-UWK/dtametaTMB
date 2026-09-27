@@ -3,7 +3,7 @@
 \docType{data}
 \name{anaemia}
 \alias{anaemia}
-\title{Anaemia (Synthetic Dataset)}
+\title{Anaemia Synthetic Dataset}
 \format{
 A data frame with 81 rows and 11 variables:
 \describe{

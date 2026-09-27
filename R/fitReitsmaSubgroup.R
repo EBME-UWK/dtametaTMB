@@ -1,4 +1,4 @@
-#' Fit Reitsma Subgroup Model
+#' Fit the Reitsma Subgroup Model
 #'
 #' Fits the Reitsma bivariate random-effects model with a single categorical covariate
 #' for diagnostic test accuracy (DTA) meta-analysis using a binomial-normal 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitReitsma.R
 \name{fitReitsma}
 \alias{fitReitsma}
-\title{Fit Reitsma Model}
+\title{Fit the Reitsma Model}
 \usage{
 fitReitsma(data, TP, FP, FN, TN, study, constrain = NULL, conflevel = 0.95)
 }

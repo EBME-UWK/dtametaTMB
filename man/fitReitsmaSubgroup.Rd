@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitReitsmaSubgroup.R
 \name{fitReitsmaSubgroup}
 \alias{fitReitsmaSubgroup}
-\title{Fit Reitsma Subgroup Model}
+\title{Fit the Reitsma Subgroup Model}
 \usage{
 fitReitsmaSubgroup(
   data,

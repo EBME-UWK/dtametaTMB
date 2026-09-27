@@ -2,7 +2,7 @@
 % Please edit documentation in R/initHoyerAFT.R
 \name{initHoyerAFT}
 \alias{initHoyerAFT}
-\title{Compute Initial Parameter Values for Hoyer AFT Models}
+\title{Compute Initial Parameter Values for HoyerAFT Models}
 \usage{
 initHoyerAFT(restructured, dist = "loglogistic")
 }

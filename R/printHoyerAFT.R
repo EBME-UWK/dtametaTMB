@@ -1,4 +1,4 @@
-#' Print Hoyer AFT Model Object
+#' Print Method for HoyerAFT Objects
 #'
 #' Displays a concise summary of a fitted Hoyer AFT model, including
 #' distribution, number of studies, convergence status, and likelihood-based fit statistics.

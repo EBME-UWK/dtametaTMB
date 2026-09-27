@@ -1,4 +1,4 @@
-#' Anaemia (Synthetic Dataset)
+#' Anaemia Synthetic Dataset
 #' 
 #' This is a synthetic dataset where haemoglobin was measured 
 #' by a point-of-care device, with laboratory measurement acting as 

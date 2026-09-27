@@ -1,4 +1,4 @@
-#' Fit Threshold-Based Bivariate Time-to-Event Model (Hoyer AFT)
+#' Fit Threshold-Based Bivariate Time-to-Event Model (HoyerAFT)
 #'
 #' Fits a bivariate accelerated failure time (AFT) model for diagnostic
 #' test accuracy (DTA) data using interval-censored likelihoods as

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitReitsmaLCA.R
 \name{fitReitsmaLCA}
 \alias{fitReitsmaLCA}
-\title{Fit Reitsma LCA Model}
+\title{Fit the Reitsma LCA Model}
 \usage{
 fitReitsmaLCA(
   data,

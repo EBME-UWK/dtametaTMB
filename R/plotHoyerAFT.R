@@ -1,7 +1,7 @@
-#' Plot Results from a Hoyer Model
+#' Plot Results from a HoyerAFT Model
 #'
 #' Produces a hierarchical summary receiver operating characteristic
-#' (HSROC) plot from a fitted Hoyer AFT model. The plot shows
+#' (HSROC) plot from a fitted HoyerAFT model. The plot shows
 #' study-level sensitivity and specificity estimates together with the
 #' meta-analytic HSROC curve derived from the fitted model.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotHoyerAFT.R
 \name{plot.HoyerAFT}
 \alias{plot.HoyerAFT}
-\title{Plot Results from a Hoyer Model}
+\title{Plot Results from a HoyerAFT Model}
 \usage{
 \method{plot}{HoyerAFT}(
   x,
@@ -49,7 +49,7 @@ No return value. Called for its side effect of producing a plot.
 }
 \description{
 Produces a hierarchical summary receiver operating characteristic
-(HSROC) plot from a fitted Hoyer AFT model. The plot shows
+(HSROC) plot from a fitted HoyerAFT model. The plot shows
 study-level sensitivity and specificity estimates together with the
 meta-analytic HSROC curve derived from the fitted model.
 }

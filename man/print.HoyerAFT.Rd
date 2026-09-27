@@ -2,7 +2,7 @@
 % Please edit documentation in R/printHoyerAFT.R
 \name{print.HoyerAFT}
 \alias{print.HoyerAFT}
-\title{Print Hoyer AFT Model Object}
+\title{Print Method for HoyerAFT Objects}
 \usage{
 \method{print}{HoyerAFT}(x, ...)
 }

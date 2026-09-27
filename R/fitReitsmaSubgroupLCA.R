@@ -1,4 +1,4 @@
-#' Fit Reitsma Subgroup LCA Model
+#' Fit the Reitsma Subgroup LCA Model
 #'
 #' Fits the Reitsma latent class model with a single categorical covariate,
 #' allowing for an imperfect reference standard under conditional independence.

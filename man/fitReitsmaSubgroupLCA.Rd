@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitReitsmaSubgroupLCA.R
 \name{fitReitsmaSubgroupLCA}
 \alias{fitReitsmaSubgroupLCA}
-\title{Fit Reitsma Subgroup LCA Model}
+\title{Fit the Reitsma Subgroup LCA Model}
 \usage{
 fitReitsmaSubgroupLCA(
   data,
