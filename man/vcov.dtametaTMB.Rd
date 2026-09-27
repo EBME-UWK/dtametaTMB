@@ -7,7 +7,7 @@
 \alias{vcov.ReitsmaSubgroup}
 \alias{vcov.ReitsmaLCA}
 \alias{vcov.ReitsmaSubgroupLCA}
-\title{Variance-covariance matrix}
+\title{Extract Variance-Covariance Matrix}
 \usage{
 \method{vcov}{DTAmodel}(object, ...)
 

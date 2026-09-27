@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestReitsmaSubgroup.R
 \name{forest.ReitsmaSubgroup}
 \alias{forest.ReitsmaSubgroup}
-\title{Coupled Forest plot for diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Diagnostic Test Accuracy Meta-Analysis}
 \usage{
 \method{forest}{ReitsmaSubgroup}(
   x,

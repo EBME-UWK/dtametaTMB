@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestReitsma.R
 \name{forest.Reitsma}
 \alias{forest.Reitsma}
-\title{Coupled Forest plot for diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Diagnostic Test Accuracy Meta-Analysis}
 \usage{
 \method{forest}{Reitsma}(x, conflevel = 0.95, ...)
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{schuetz}
 \alias{schuetz}
-\title{Schuetz dataset}
+\title{Schuetz Dataset}
 \format{
 A data frame with 108 rows and 7 variables:
 \describe{
@@ -27,7 +27,7 @@ Annals of Internal Medicine, 152(3), 167-177.
 schuetz
 }
 \description{
-This is the schuetz data set from Schuetz (2010) from a meta-analysis of
+This is the schuetz dataset from Schuetz (2010) from a meta-analysis of
 non-invasive coronary angiography using computer tomography (CT) versus magnetic resonance imaging (MRI)
 }
 \keyword{datasets}

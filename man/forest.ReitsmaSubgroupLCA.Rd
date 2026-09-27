@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestReitsmaSubgroupLCA.R
 \name{forest.ReitsmaSubgroupLCA}
 \alias{forest.ReitsmaSubgroupLCA}
-\title{Coupled Forest plot for latent class diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Latent Class Diagnostic Test Accuracy Meta-Analysis}
 \usage{
 \method{forest}{ReitsmaSubgroupLCA}(
   x,

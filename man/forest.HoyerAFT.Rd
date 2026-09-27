@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestHoyerAFT.R
 \name{forest.HoyerAFT}
 \alias{forest.HoyerAFT}
-\title{Coupled Forest plot for diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Diagnostic Test Accuracy Meta-analysis}
 \usage{
 \method{forest}{HoyerAFT}(x, conflevel = 0.95, ...)
 }

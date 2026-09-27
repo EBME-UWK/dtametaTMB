@@ -1,6 +1,6 @@
-#' dementia dataset
+#' Dementia Dataset
 #'
-#' This is the dementia data set from Harrison et al. (2015) from a review of the Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE) for the diagnosis of dementia within a secondary care setting.
+#' This is the dementia dataset from Harrison et al. (2015) from a review of the Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE) for the diagnosis of dementia within a secondary care setting.
 #'
 #' @format A data frame with 37 rows and 7 variables:
 #' \describe{
@@ -25,7 +25,7 @@
 #' }
 #' 
 #' @note
-#' The data was taken as provided from the MetaBayesDTA application.
+#' The data were taken as provided from the MetaBayesDTA application.
 #' 
 #' @source Cerullo, E. et al. (2023).
 #' *MetaBayesDTA: codeless Bayesian meta-analysis of test accuracy, with or without a gold standard*

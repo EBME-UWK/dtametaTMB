@@ -2,7 +2,7 @@
 % Please edit documentation in R/printsummary.R
 \name{print.summary.DTAmodel}
 \alias{print.summary.DTAmodel}
-\title{Print a diagnostic test accuracy model summary}
+\title{Print a Diagnostic Test Accuracy Model Summary}
 \usage{
 \method{print}{summary.DTAmodel}(x, digits = max(8L, getOption("digits") - 8L), ...)
 }

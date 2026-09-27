@@ -1,6 +1,6 @@
-#' pap dataset
+#' Pap Dataset
 #'
-#' This is the pap data set from Fahey et al. (1995) from a meta-analysis 
+#' This is the pap dataset from Fahey et al. (1995) from a meta-analysis 
 #' comparing Papanicolaou (Pap) test results with histology for the diagnosis of cervical cancer.
 #' 
 #' @note The data set was reconstructed from the SAS code in the supplementary material from Liu et al. (2015).

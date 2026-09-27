@@ -7,7 +7,7 @@
 \alias{coef.ReitsmaSubgroup}
 \alias{coef.ReitsmaLCA}
 \alias{coef.ReitsmaSubgroupLCA}
-\title{Extract model coefficients}
+\title{Extract Model Coefficients}
 \usage{
 \method{coef}{DTAmodel}(object, ...)
 

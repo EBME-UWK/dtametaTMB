@@ -3,7 +3,7 @@
 \docType{data}
 \name{anaemia}
 \alias{anaemia}
-\title{Anaemia (synthetic data set)}
+\title{Anaemia (Synthetic Dataset)}
 \format{
 A data frame with 81 rows and 11 variables:
 \describe{
@@ -27,7 +27,7 @@ Synthetic dataset.
 anaemia
 }
 \description{
-This is a synthetic data set where haemoglobin was measured
+This is a synthetic dataset where haemoglobin was measured
 by a point-of-care device, with laboratory measurement acting as
 the reference standard. Lower values indicate disease (anaemia).
 }

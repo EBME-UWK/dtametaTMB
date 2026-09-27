@@ -2,7 +2,7 @@
 % Please edit documentation in R/forest.R
 \name{forest}
 \alias{forest}
-\title{Forest plot generic}
+\title{Coupled Forest Plot}
 \usage{
 forest(x, ...)
 }

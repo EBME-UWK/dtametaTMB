@@ -1,6 +1,6 @@
-#' Schuetz dataset
+#' Schuetz Dataset
 #'
-#' This is the schuetz data set from Schuetz (2010) from a meta-analysis of 
+#' This is the schuetz dataset from Schuetz (2010) from a meta-analysis of 
 #' non-invasive coronary angiography using computer tomography (CT) versus magnetic resonance imaging (MRI)
 #'
 #' @format A data frame with 108 rows and 7 variables:

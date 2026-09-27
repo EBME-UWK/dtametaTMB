@@ -1,4 +1,4 @@
-#' Forest plot generic
+#' Coupled Forest Plot
 #'
 #' Produces coupled forest plots.
 #'

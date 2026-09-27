@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestRutterGatsonis.R
 \name{forest.RutterGatsonis}
 \alias{forest.RutterGatsonis}
-\title{Coupled Forest plot for diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Diagnostic Test Accuracy Meta-Analysis}
 \usage{
 \method{forest}{RutterGatsonis}(x, conflevel = 0.95, ...)
 }

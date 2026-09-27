@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestRutterGatsonisSubgroup.R
 \name{forest.RutterGatsonisSubgroup}
 \alias{forest.RutterGatsonisSubgroup}
-\title{Coupled Forest plot for diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Diagnostic Test Accuracy Meta-Analysis}
 \usage{
 \method{forest}{RutterGatsonisSubgroup}(
   x,

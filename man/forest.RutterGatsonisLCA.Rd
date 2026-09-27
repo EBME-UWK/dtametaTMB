@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestRutterGatsonisLCA.R
 \name{forest.RutterGatsonisLCA}
 \alias{forest.RutterGatsonisLCA}
-\title{Coupled Forest plot for latent class diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Latent Class Diagnostic Test Accuracy Meta-Analysis}
 \usage{
 \method{forest}{RutterGatsonisLCA}(x, conflevel = 0.95, ...)
 }

@@ -1,4 +1,4 @@
-#' Coupled Forest plot for latent class diagnostic test accuracy meta-analysis
+#' Coupled Forest Plot for Latent Class Diagnostic Test Accuracy Meta-Analysis
 #'
 #' Study-specific sensitivities and specificities are empirical Bayes estimates
 #' derived from the fitted latent class model. Confidence intervals are based on 

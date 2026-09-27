@@ -3,7 +3,7 @@
 \docType{data}
 \name{pap}
 \alias{pap}
-\title{pap dataset}
+\title{Pap Dataset}
 \format{
 A data frame with 59 rows and 6 variables:
 \describe{
@@ -30,7 +30,7 @@ American Journal of Epidemiology, 141(7), 680-689.
 pap
 }
 \description{
-This is the pap data set from Fahey et al. (1995) from a meta-analysis
+This is the pap dataset from Fahey et al. (1995) from a meta-analysis
 comparing Papanicolaou (Pap) test results with histology for the diagnosis of cervical cancer.
 }
 \note{

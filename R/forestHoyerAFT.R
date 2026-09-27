@@ -1,4 +1,4 @@
-#' Coupled Forest plot for diagnostic test accuracy meta-analysis
+#' Coupled Forest Plot for Diagnostic Test Accuracy Meta-analysis
 #'
 #' Provides coupled forest plots of sensitivities and specificities
 #' with Clopper-Pearson confidence limits.

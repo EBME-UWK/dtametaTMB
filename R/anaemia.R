@@ -1,6 +1,6 @@
-#' Anaemia (synthetic data set)
+#' Anaemia (Synthetic Dataset)
 #' 
-#' This is a synthetic data set where haemoglobin was measured 
+#' This is a synthetic dataset where haemoglobin was measured 
 #' by a point-of-care device, with laboratory measurement acting as 
 #' the reference standard. Lower values indicate disease (anaemia).
 #'

@@ -1,4 +1,4 @@
-#' Fit the Rutter and Gatsonis (HSROC) model
+#' Fit the Rutter and Gatsonis (HSROC) Model
 #'
 #' Fits the hierarchical summary receiver operating characteristic (HSROC)
 #' model as proposed by Rutter and Gatsonis for meta-analysis of diagnostic

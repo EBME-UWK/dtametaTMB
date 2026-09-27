@@ -1,4 +1,4 @@
-#' Print a diagnostic test accuracy model summary
+#' Print a Diagnostic Test Accuracy Model Summary
 #'
 #' Prints summary objects returned by
 #' \code{summary()} methods for diagnostic

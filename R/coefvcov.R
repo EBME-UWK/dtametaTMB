@@ -1,4 +1,4 @@
-#' Extract model coefficients
+#' Extract Model Coefficients
 #'
 #' Returns the estimated model parameters.
 #'
@@ -43,7 +43,7 @@ coef.ReitsmaLCA <- coef.DTAmodel
 #' @export
 coef.ReitsmaSubgroupLCA <- coef.DTAmodel
 
-#' Variance-covariance matrix
+#' Extract Variance-Covariance Matrix
 #'
 #' Returns the variance-covariance matrix of the estimated model
 #' parameters.

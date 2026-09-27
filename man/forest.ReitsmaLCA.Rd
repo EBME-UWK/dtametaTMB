@@ -2,7 +2,7 @@
 % Please edit documentation in R/forestReitsmaLCA.R
 \name{forest.ReitsmaLCA}
 \alias{forest.ReitsmaLCA}
-\title{Coupled Forest plot for latent class diagnostic test accuracy meta-analysis}
+\title{Coupled Forest Plot for Latent Class Diagnostic Test Accuracy Meta-Analysis}
 \usage{
 \method{forest}{ReitsmaLCA}(x, conflevel = 0.95, ...)
 }

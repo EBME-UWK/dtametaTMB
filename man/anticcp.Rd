@@ -3,7 +3,7 @@
 \docType{data}
 \name{anticcp}
 \alias{anticcp}
-\title{Anticcp dataset}
+\title{Anticcp Dataset}
 \format{
 A data frame with 37 rows and 7 variables:
 \describe{
@@ -27,6 +27,6 @@ Annals of Internal Medicine, 146(11), 392-403.
 anticcp
 }
 \description{
-This is the anticcp data set from Nishimura (2007) from a review of anti-cyclic citrullinated peptide antibody (anti-ccp) to diagnose rheumatoid arthritis.
+This is the anticcp dataset from Nishimura (2007) from a review of anti-cyclic citrullinated peptide antibody (anti-ccp) to diagnose rheumatoid arthritis.
 }
 \keyword{datasets}

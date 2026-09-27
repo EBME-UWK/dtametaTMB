@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitRutterGatsonis.R
 \name{fitRutterGatsonis}
 \alias{fitRutterGatsonis}
-\title{Fit the Rutter and Gatsonis (HSROC) model}
+\title{Fit the Rutter and Gatsonis (HSROC) Model}
 \usage{
 fitRutterGatsonis(
   data,

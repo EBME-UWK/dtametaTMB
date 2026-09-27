@@ -3,7 +3,7 @@
 \docType{data}
 \name{diabetes}
 \alias{diabetes}
-\title{Diabetes dataset}
+\title{Diabetes Dataset}
 \format{
 A data frame with 124 rows and 9 variables
 \describe{
@@ -29,6 +29,6 @@ Research Synthesis Methods, 9(1), 62-72.
 diabetes
 }
 \description{
-This is the diabetes data set from the supplementary material in Hoyer (2018).
+This is the diabetes dataset from the supplementary material in Hoyer (2018).
 }
 \keyword{datasets}

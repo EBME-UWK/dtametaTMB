@@ -3,7 +3,7 @@
 \docType{data}
 \name{RF}
 \alias{RF}
-\title{RF dataset}
+\title{RF Dataset}
 \format{
 A data frame with 50 rows and 8 variables:
 \describe{
@@ -28,6 +28,6 @@ Annals of Internal Medicine, 146(11), 392-403.
 RF
 }
 \description{
-This is the RF data set from Nishimura (2007) from a review of rheumatoid factor (RF) to diagnose rheumatoid arthritis.
+This is the RF dataset from Nishimura (2007) from a review of rheumatoid factor (RF) to diagnose rheumatoid arthritis.
 }
 \keyword{datasets}

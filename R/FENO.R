@@ -1,6 +1,6 @@
-#' FENO dataset
+#' FENO Dataset
 #'
-#' This is the FENO data set from Schneider (2017) from a review of fractional exhaled nitric oxide (FeNO) for diagnosis of asthma.
+#' This is the FENO dataset from Schneider (2017) from a review of fractional exhaled nitric oxide (FeNO) for diagnosis of asthma.
 #' 
 #' @note The data are reproduced from the original source and the supplementary
 #' material accompanying the Cochrane Handbook. However, the study

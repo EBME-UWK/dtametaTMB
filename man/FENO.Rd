@@ -3,7 +3,7 @@
 \docType{data}
 \name{FENO}
 \alias{FENO}
-\title{FENO dataset}
+\title{FENO Dataset}
 \format{
 A data frame with 150 rows and 7 variables:
 \describe{
@@ -27,7 +27,7 @@ Journal of Clinical Epidemiology, 92, 69-78.
 FENO
 }
 \description{
-This is the FENO data set from Schneider (2017) from a review of fractional exhaled nitric oxide (FeNO) for diagnosis of asthma.
+This is the FENO dataset from Schneider (2017) from a review of fractional exhaled nitric oxide (FeNO) for diagnosis of asthma.
 }
 \note{
 The data are reproduced from the original source and the supplementary

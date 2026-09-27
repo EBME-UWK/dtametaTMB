@@ -3,7 +3,7 @@
 \docType{data}
 \name{tub}
 \alias{tub}
-\title{tub dataset}
+\title{Tub Dataset}
 \format{
 A data frame with 29 rows and 5 variables:
 \describe{
@@ -28,13 +28,13 @@ Cochrane Database of Systematic Reviews 2018, 8, CD012768.
 tub
 }
 \description{
-This is the tub data set from Kohli et al. (2018) from a meta-analysis
+This is the tub dataset from Kohli et al. (2018) from a meta-analysis
 examining the accuracy of the GeneXpert test for tuberculosis meningitis.
 In each study the index test was GeneXpert and the (imperfect) reference
 standard was culture.
 }
 \note{
-The data set was taken from the supplementary material of the Cochrane Handbook for
+The dataset was taken from the supplementary material of the Cochrane Handbook for
 Systematic Reviews of Diagnostic Test Accuracy Studies.
 }
 \keyword{datasets}
