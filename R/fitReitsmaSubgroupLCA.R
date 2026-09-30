@@ -191,7 +191,7 @@ fitReitsmaSubgroupLCA <- function(data,
   lsub       <- levels(X$subgroup)
   n_study    <- nrow(X)
   G          <- length(lsub)
-  X$n     <- with(X, y11+y10+y01+y00)
+  X$n        <- with(X, y11+y10+y01+y00)
 
   ### Get initial values
   init <- fitReitsmaLCA(data=X,
@@ -275,6 +275,27 @@ fitReitsmaSubgroupLCA <- function(data,
     }
   }
   
+  allowed_sensspec_constraints <- c(
+    "sens",
+    "spec"
+  )
+  
+  if (!is.null(sensspec_constrain)) {
+    if (!is.character(sensspec_constrain)) {
+      stop("'sensspec_constrain' must be a character vector or NULL.")
+    }
+    invalid_constraints <- setdiff(
+      sensspec_constrain,
+      allowed_sensspec_constraints
+    )
+    if(length(invalid_constraints) > 0){
+      stop(
+        "Unknown sensspec constraint(s): ",
+        paste(invalid_constraints, collapse=", ")
+      )
+    }
+  }
+  
   if (!is.null(sensspec_constrain)) {
     if ("sens" %in% sensspec_constrain) {
       map$mu_A_index <- factor(rep(1,G))
@@ -315,8 +336,7 @@ fitReitsmaSubgroupLCA <- function(data,
   rep  <- TMB::sdreport(obj)
   rep1 <- summary(rep, select = "report")
   rep2 <- rename_reitsubLCA_rows(rep1,lsub)
-  rep2
-  
+
   # Variance covariance matrix of fixed effects
   vcov <- rep$cov
   colnames(vcov) <- rownames(vcov) <- rownames(rep2)
