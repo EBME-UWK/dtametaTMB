@@ -12,6 +12,8 @@ getWEIGHTS <- function(xdata,size){
   if(size=="se"){
     sem1  <- xdata$sens*(1-xdata$sens)*xdata$n1 # inverse logit variance
     spm1  <- xdata$spec*(1-xdata$spec)*xdata$n0 # inverse logit variance
+    sem1[is.nan(sem1)] <- 0
+    spm1[is.nan(spm1)] <- 0
     se <- sqrt(sem1) / sum(sqrt(sem1))*100
     sp <- sqrt(spm1) / sum(sqrt(spm1))*100
   }

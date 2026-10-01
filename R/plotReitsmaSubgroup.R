@@ -97,6 +97,7 @@ plot.ReitsmaSubgroup <- function(x, scale=0.02,
   sub   <- levels(x$data$subgroup)
   subs  <- levels(x$data$subgroup_safe)
   nsub  <- length(sub)
+  warn_unestimable_sroc_points(x$data)
   if(!all(subs == make.names(sub))){
     stop("Object is corrupted. Please don't change object after running fitReitsmaSubgroup().")
   }

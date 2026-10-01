@@ -78,6 +78,7 @@ plot.RutterGatsonisSubgroup <- function(x,
    sub  <- x$subgroups
    nsub <- length(sub)
    nstudy <- nrow(x$data)
+   warn_unestimable_sroc_points(x$data)
    if(is.null(col)) col <- grDevices::rainbow(n=nsub)
    col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
    ##

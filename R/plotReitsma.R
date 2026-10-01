@@ -94,6 +94,7 @@ plot.Reitsma <- function(x, scale=0.02,
   }
   size    <- match.arg(size)
   nstudy  <- nrow(x$data)
+  warn_unestimable_sroc_points(x$data)
   # Confidence and prediction region
   muA     <- x$estimates["mu_A.sens","Estimate"]
   muB     <- x$estimates["mu_B.spec","Estimate"]
@@ -126,6 +127,7 @@ plot.Reitsma <- function(x, scale=0.02,
     XT_pw <- t(X_pw)
     Z <- diag(2*nstudy)
     invn <- 1/Y_pw$n
+    invn[!is.finite(invn)] <- 100000000000 
     A <- diag(invn)
     p_pw <- stats::predict(x$glmmTMB, type="response")
     var_pw <- p_pw*(1-p_pw)
@@ -174,6 +176,8 @@ plot.Reitsma <- function(x, scale=0.02,
   if(size=="se"){
     sem1  <- x$data$sens*(1-x$data$sens)*x$data$n1 # inverse logit variance
     spm1  <- x$data$spec*(1-x$data$spec)*x$data$n0 # inverse logit variance
+    sem1[is.nan(sem1)] <- 0
+    spm1[is.nan(spm1)] <- 0
     pctse <- sqrt(sem1) / sum(sqrt(sem1))*100
     pctsp <- sqrt(spm1) / sum(sqrt(spm1))*100
   }
@@ -184,7 +188,10 @@ plot.Reitsma <- function(x, scale=0.02,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pctsp,pctse)*scale,inches=FALSE,add=TRUE,fg="darkgray")
+  symbols(x=1-x$data$spec,
+          y=x$data$sens,
+          rectangles=cbind(pctsp,pctse)*scale,
+          inches=FALSE,add=TRUE,fg="darkgray")
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   if(HSROC==TRUE){

@@ -33,6 +33,14 @@ getForestSensSpec <- function(x,conflevel){
   XP$speclabel <- with(XP,paste0(sprintf("%.2f", spec)," [",
                                  sprintf("%.2f", Spec_LCI),", ",
                                  sprintf("%.2f", Spec_UCI),"]"))
+  
+  replace_not_estimable <- function(x) {
+    x[!is.na(x) & startsWith(x, "NaN")] <- "Not estimable"
+    x
+  }
+  XP$senslabel <- replace_not_estimable(XP$senslabel)
+  XP$speclabel <- replace_not_estimable(XP$speclabel)
+  
   return(list(XP=XP,
               senslab=senslab,
               speclab=speclab))

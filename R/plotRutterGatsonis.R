@@ -54,6 +54,7 @@ plot.RutterGatsonis <- function(x, scale=0.02,size=c("equal","sampsize","se"),
                                 specrange=c(0.7,0.995),
                                 main="Diagnostic Test Accuracy Meta-Analysis", ...) {
   size    <- match.arg(size)
+  warn_unestimable_sroc_points(x$data)
   Lambda  <- x$sdreport2["Lambda", "Estimate"]
   beta    <- x$sdreport2["beta","Estimate"]
   roc_points2 <- getROCpoints(Lambda,beta,specrange=specrange)
