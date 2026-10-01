@@ -164,6 +164,8 @@ plot.Reitsma <- function(x, scale=0.02,
       pctse[i] <- 100*(weight[1,1]/varb[1,1])
       pctsp[i] <- 100*(weight[2,2]/varb[2,2])
     }
+    pctse <- pmax(0,pctse)
+    pctsp <- pmax(0,pctsp)
   }
   if(size=="equal"){
     pctse <- rep(1,nrow(x$data))
