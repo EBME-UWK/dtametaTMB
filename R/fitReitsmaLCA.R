@@ -137,16 +137,7 @@ fitReitsmaLCA <- function(data,
     y00 = data[[y00_col]]
   )
   
-  excluded <- !stats::complete.cases(dat)
-  if (any(excluded)) {
-    removed_studies <- unique(dat$study[excluded])
-    message(
-      "Removed rows with missing values for studies: ",
-      paste(removed_studies, collapse = ", ")
-    )
-  }
-  X <- dat[stats::complete.cases(dat), ]
-  X <- check2_data(dat=X,conflevel=conflevel)
+  X <- check2_data(dat=dat,conflevel=conflevel)
   X$n     <- with(X, y11+y10+y01+y00)
   n_study <- nrow(X)
   

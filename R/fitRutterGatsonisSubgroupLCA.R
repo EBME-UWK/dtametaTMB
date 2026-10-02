@@ -170,15 +170,7 @@ fitRutterGatsonisSubgroupLCA <- function(data,
                   y00 = data[[y00_col]],
                   subgroup = data[[subgroup_col]])
   
-  excluded <- !stats::complete.cases(X)
-  if (any(excluded)) {
-    removed_studies <- unique(X$study[excluded])
-    message(
-      "Removed rows with missing values for studies: ",
-      paste(removed_studies, collapse = ", ")
-    )
-  }
-  X <- X[stats::complete.cases(X), ]
+  X <- check2_data(dat=X,conflevel=conflevel)
   
   X$subgroup <- droplevels(factor(X$subgroup))
   lsub       <- levels(X$subgroup)

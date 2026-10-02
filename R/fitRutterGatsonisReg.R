@@ -185,7 +185,7 @@ fitRutterGatsonisReg <- function(data,
     FP = data[[FP_col]],
     FN = data[[FN_col]])
   
-  X <- XP <- check_data(dat,
+  X <- XP <- check_data(dat=dat,
                         conflevel=conflevel)
   
   XP <- getXP(X)
