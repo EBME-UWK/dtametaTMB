@@ -8,8 +8,12 @@
 #'
 #' @param x An object of class \code{"Reitsma"}, as returned by
 #'   \code{\link{fitReitsma}}.
+#' @param symbol Character string specifying the symbol used for study-level
+#'   estimates. One of \code{"rectangle"}, \code{"ellipse"},
+#'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+#'   or \code{"star"}. The default is \code{"rectangle"}.
 #' @param scale A numeric scaling factor controlling the size of the
-#'   rectangles representing study weights. Default is \code{0.02}.
+#'   symbols representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
 #'  \describe{
 #'    \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default.}
@@ -35,8 +39,8 @@
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
-#' Study-specific estimates are shown as rectangles, where the size reflects
-#' approximate study weights derived from the Fisher information matrix.
+#' Study-specific estimates are shown as rectangles (default), where the size reflects
+#' approximate study weights derived from the Fisher information matrix (default).
 #'
 #' The following elements are displayed:
 #' \itemize{
@@ -77,13 +81,15 @@
 #' @importFrom stats qlogis plogis predict qf
 #' @method plot Reitsma
 #' @export
-plot.Reitsma <- function(x, scale=0.02, 
-                            size=c("fisher","equal","sampsize","se"), 
-                            main="Diagnostic Test Accuracy Meta-Analysis",
-                            HSROC=FALSE, 
-                            specrange=c(0.7,0.995),
-                            conflevel=0.95,
-                            predlevel=0.95, ...) {
+plot.Reitsma <- function(x, 
+                         scale=0.02, 
+                         symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
+                         size=c("fisher","equal","sampsize","se"), 
+                         main="Diagnostic Test Accuracy Meta-Analysis",
+                         HSROC=FALSE, 
+                         specrange=c(0.7,0.995),
+                         conflevel=0.95,
+                         predlevel=0.95, ...) {
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
       conflevel <= 0 || conflevel >= 1) {
     stop("conflevel must be a single number in (0, 1).")
@@ -92,6 +98,7 @@ plot.Reitsma <- function(x, scale=0.02,
       predlevel <= 0 || predlevel >= 1) {
     stop("predlevel must be a single number in (0, 1).")
   }
+  symbol  <- match.arg(symbol)
   size    <- match.arg(size)
   nstudy  <- nrow(x$data)
   warn_unestimable_sroc_points(x$data)
@@ -190,10 +197,14 @@ plot.Reitsma <- function(x, scale=0.02,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  symbols(x=1-x$data$spec,
-          y=x$data$sens,
-          rectangles=cbind(pctsp,pctse)*scale,
-          inches=FALSE,add=TRUE,fg="darkgray")
+  pointsXY(x=1-x$data$spec, 
+           y=x$data$sens, 
+           symbol = symbol, 
+           scale = scale*0.5,
+           cex.x = pctsp,
+           cex.y = pctse,
+           col="darkgray")
+  symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   if(HSROC==TRUE){
@@ -221,7 +232,7 @@ plot.Reitsma <- function(x, scale=0.02,
                       conf_lab,
                       pred_lab,
                       "Data"), 
-          pch = c(NA,NA,15,NA,NA,0), 
+          pch = c(NA,NA,15,NA,NA,symb), 
           lty = c(NA,1,NA,2,3,NA), 
           lwd = c(NA,2,NA,2,2,NA), 
           col = c(NA,"black","black","black","black","darkgray"))}
@@ -233,7 +244,7 @@ plot.Reitsma <- function(x, scale=0.02,
                       conf_lab,
                       pred_lab,
                       "Data"), 
-           pch = c(NA,15,NA,NA,0), 
+           pch = c(NA,15,NA,NA,symb), 
            lty = c(NA,NA,2,3,NA), 
            lwd = c(NA,NA,2,2,NA), 
            col = c(NA,"black","black","black","darkgray"))

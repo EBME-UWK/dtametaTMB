@@ -7,8 +7,12 @@
 #'
 #' @param x An object of class \code{"ReitsmaLCA"}, as returned by
 #'   \code{\link{fitReitsmaLCA}}.
+#' @param symbol Character string specifying the symbol used for study-level
+#'   estimates. One of \code{"rectangle"}, \code{"ellipse"},
+#'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+#'   or \code{"star"}. The default is \code{"rectangle"}.
 #' @param scale A numeric scaling factor controlling the size of the
-#'   rectangles representing study weights. Default is \code{0.02}.
+#'   symbols representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
 #'  \describe{
 #'    \item{"eb"}{Size proportional to the precision of the empirical Bayes estimates. Default.}
@@ -33,7 +37,7 @@
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
-#' Study-specific estimates are shown as rectangles.
+#' Study-specific estimates are shown as rectangles (default).
 #'
 #' The following elements are displayed:
 #' \itemize{
@@ -72,7 +76,9 @@
 #' @importFrom stats qlogis plogis predict qf
 #' @method plot ReitsmaLCA
 #' @export
-plot.ReitsmaLCA <- function(x, scale=0.02, 
+plot.ReitsmaLCA <- function(x,
+                            symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
+                            scale=0.02, 
                             size=c("eb","equal","sampsize"), 
                             main="Diagnostic Test Accuracy Meta-Analysis",
                             HSROC=FALSE, 
@@ -87,6 +93,7 @@ plot.ReitsmaLCA <- function(x, scale=0.02,
       predlevel <= 0 || predlevel >= 1) {
     stop("predlevel must be a single number in (0, 1).")
   }
+  symbol  <- match.arg(symbol)
   size    <- match.arg(size)
   nstudy  <- nrow(x$data)
   # Confidence and prediction region
@@ -113,7 +120,14 @@ plot.ReitsmaLCA <- function(x, scale=0.02,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  symbols(x=1-x$data$spec_eb,y=x$data$sens_eb,rectangles=cbind(pct$sp,pct$se)*scale,inches=FALSE,add=TRUE,fg="darkgray")
+  pointsXY(x=1-x$data$spec, 
+           y=x$data$sens, 
+           symbol = symbol, 
+           scale = scale*0.5,
+           cex.x = pct$sp,
+           cex.y = pct$se,
+           col="darkgray")
+  symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   if(HSROC==TRUE){
@@ -141,7 +155,7 @@ plot.ReitsmaLCA <- function(x, scale=0.02,
                       conf_lab,
                       pred_lab,
                       "Empirical Bayes estimates"), 
-           pch = c(NA,NA,15,NA,NA,0), 
+           pch = c(NA,NA,15,NA,NA,symb), 
            lty = c(NA,1,NA,2,3,NA), 
            lwd = c(NA,2,NA,2,2,NA), 
            col = c(NA,"black","black","black","black","darkgray"))}
@@ -153,7 +167,7 @@ plot.ReitsmaLCA <- function(x, scale=0.02,
                       conf_lab,
                       pred_lab,
                       "Empirical Bayes estimates"), 
-           pch = c(NA,15,NA,NA,0), 
+           pch = c(NA,15,NA,NA,symb), 
            lty = c(NA,NA,2,3,NA), 
            lwd = c(NA,NA,2,2,NA), 
            col = c(NA,"black","black","black","darkgray"))

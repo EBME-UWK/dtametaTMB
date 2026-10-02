@@ -6,6 +6,7 @@
 \usage{
 \method{plot}{ReitsmaLCA}(
   x,
+  symbol = c("rectangle", "ellipse", "diamond", "triangle", "cross", "plus", "star"),
   scale = 0.02,
   size = c("eb", "equal", "sampsize"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
@@ -20,8 +21,13 @@
 \item{x}{An object of class \code{"ReitsmaLCA"}, as returned by
 \code{\link{fitReitsmaLCA}}.}
 
+\item{symbol}{Character string specifying the symbol used for study-level
+estimates. One of \code{"rectangle"}, \code{"ellipse"},
+\code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+or \code{"star"}. The default is \code{"rectangle"}.}
+
 \item{scale}{A numeric scaling factor controlling the size of the
-rectangles representing study weights. Default is \code{0.02}.}
+symbols representing study weights. Default is \code{0.02}.}
 
 \item{size}{Character string controlling study weight display:
 \describe{
@@ -59,7 +65,7 @@ class model.
 The plot is constructed on the ROC scale with sensitivity on the y-axis
 and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 
-Study-specific estimates are shown as rectangles.
+Study-specific estimates are shown as rectangles (default).
 
 The following elements are displayed:
 \itemize{

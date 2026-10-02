@@ -6,6 +6,7 @@
 \usage{
 \method{plot}{RutterGatsonisSubgroupLCA}(
   x,
+  symbol = NULL,
   scale = 0.02,
   size = c("eb", "equal", "sampsize"),
   nudge_legend = -0.4,
@@ -19,6 +20,11 @@
 \arguments{
 \item{x}{An object of class \code{"RutterGatsonisSubgroupLCA"}, as returned by
 \code{\link{fitRutterGatsonisSubgroup}}.}
+
+\item{symbol}{Character vector specifying the symbols used for study-level
+estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
+\code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+or \code{"star"}. If \code{NULL}, symbols are generated automatically.}
 
 \item{scale}{A numeric scaling factor controlling the size of the
 rectangles representing study weights. Default is \code{0.02}.}
@@ -62,7 +68,7 @@ together with subgroup-specific HSROC (hierarchical summary ROC) curves.
 The plot is constructed on the ROC scale with sensitivity on the y-axis
 and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 
-Study-specific estimates are shown as rectangles, with subgroup-specific colours.
+Study-specific estimates are shown with subgroup-specific symbols and colours.
 
 The following elements are displayed:
 \itemize{

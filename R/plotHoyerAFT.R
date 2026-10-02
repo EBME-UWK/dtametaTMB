@@ -14,9 +14,12 @@
 #'     \item{distcode}{Distribution code (1 = Weibull,
 #'       2 = lognormal, 3 = loglogistic)}
 #'   }
-#'
+#' @param symbol Character string specifying the symbol used for study-level
+#'   estimates. One of \code{"rectangle"}, \code{"ellipse"},
+#'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+#'   or \code{"star"}. The default is \code{"rectangle"}.
 #' @param scale A numeric scaling factor controlling the size of the
-#'   rectangles representing study weights. Default is \code{0.02}.
+#'   symbols representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
 #'  \describe{
 #'    \item{"equal"}{All studies shown with equal size. Default}
@@ -60,10 +63,14 @@
 #' @importFrom stats plogis pnorm
 #' @method plot HoyerAFT
 #' @export
-plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
+plot.HoyerAFT <- function(x,
+                          symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
+                          scale=0.02, 
+                          size=c("equal","sampsize","se"),
                           thresholdrange=NULL,
                           main="Diagnostic Test Accuracy Meta-Analysis", ...) {
   size    <- match.arg(size)
+  symbol  <- match.arg(symbol)
   HH      <- x$data
   testdir <- unique(x$data$testdirection)
   if (length(testdir) != 1) stop("testdirection must be unique")
@@ -73,7 +80,15 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
   ### Plot coordinate system
   pct <- getWEIGHTS(HH,size)
   plot_SESPGRID(main=main)
-  symbols(x=x$data$fpr,y=x$data$sens,rectangles=cbind(pct$sp,pct$se)*scale,inches=FALSE,add=TRUE,fg="darkgray")
+  # Plot study level estimates 
+  pointsXY(x=1-x$data$spec, 
+           y=x$data$sens, 
+           symbol = symbol, 
+           scale = scale*0.5,
+           cex.x = pct$sp,
+           cex.y = pct$se,
+           col="darkgray")
+  symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
   # Add lines
   studies <- unique(HH$study)
   for(i in seq_along(studies)) {
@@ -130,7 +145,7 @@ plot.HoyerAFT <- function(x,scale=0.02, size=c("equal","sampsize","se"),
   legend("bottomright",
          bty ="n",
          legend = c(NA,"HSROC curve","Data"),
-         pch = c(NA,NA,0),
+         pch = c(NA,NA,symb),
          lty = c(NA,1,NA),
          lwd = c(NA,2,NA),
          col = c(NA,"black","darkgray"))

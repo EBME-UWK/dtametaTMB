@@ -7,6 +7,7 @@
 \method{plot}{Reitsma}(
   x,
   scale = 0.02,
+  symbol = c("rectangle", "ellipse", "diamond", "triangle", "cross", "plus", "star"),
   size = c("fisher", "equal", "sampsize", "se"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   HSROC = FALSE,
@@ -21,7 +22,12 @@
 \code{\link{fitReitsma}}.}
 
 \item{scale}{A numeric scaling factor controlling the size of the
-rectangles representing study weights. Default is \code{0.02}.}
+symbols representing study weights. Default is \code{0.02}.}
+
+\item{symbol}{Character string specifying the symbol used for study-level
+estimates. One of \code{"rectangle"}, \code{"ellipse"},
+\code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+or \code{"star"}. The default is \code{"rectangle"}.}
 
 \item{size}{Character string controlling study weight display:
 \describe{
@@ -61,8 +67,8 @@ HSROC (hierarchical summary ROC) curve can be overlaid.
 The plot is constructed on the ROC scale with sensitivity on the y-axis
 and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 
-Study-specific estimates are shown as rectangles, where the size reflects
-approximate study weights derived from the Fisher information matrix.
+Study-specific estimates are shown as rectangles (default), where the size reflects
+approximate study weights derived from the Fisher information matrix (default).
 
 The following elements are displayed:
 \itemize{

@@ -107,6 +107,8 @@ importFrom(graphics,
   lines,
   par,
   points,
+  polygon,
+  segments,
   symbols,
   title
 )

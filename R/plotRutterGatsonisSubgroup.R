@@ -7,6 +7,10 @@
 #'
 #' @param x An object of class \code{"RutterGatsonisSubgroup"}, as returned by
 #'   \code{\link{fitRutterGatsonisSubgroup}}.
+#' @param symbol Character vector specifying the symbols used for study-level
+#'   estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
+#'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+#'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
 #' @param scale A numeric scaling factor controlling the size of the
 #'   rectangles representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
@@ -34,7 +38,7 @@
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
-#' Study-specific estimates are shown as rectangles, with subgroup-specific colours.
+#' Study-specific estimates are shown with subgroup-specific symbols and colours.
 #'
 #' The following elements are displayed:
 #' \itemize{
@@ -61,6 +65,7 @@
 #' @importFrom grDevices adjustcolor rainbow
 #' @export
 plot.RutterGatsonisSubgroup <- function(x, 
+                                        symbol=NULL,
                                         scale=0.02,
                                         size=c("equal","sampsize","se"), 
                                         nudge_legend=-0.4,
@@ -81,6 +86,14 @@ plot.RutterGatsonisSubgroup <- function(x,
    warn_unestimable_sroc_points(x$data)
    if(is.null(col)) col <- grDevices::rainbow(n=nsub)
    col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
+   # symbols
+   if(is.null(symbol)) {
+     available_symbols <- c("rectangle","ellipse","diamond","triangle","cross","plus","star")
+     symbols2 <- rep(available_symbols,length.out=nsub)
+   } else {
+     symbols2 <- symbol
+   }
+   symb <- vector(mode="integer",length=nsub)
    ##
    oldpar <- par(no.readonly = TRUE)
    on.exit(par(oldpar))
@@ -89,16 +102,17 @@ plot.RutterGatsonisSubgroup <- function(x,
    plot_SESPGRID(main=main)
    # Data points
    pct <- getWEIGHTS(xdata=x$data,size=size)
-   for (i in seq_len(nsub)){
-     symbols(x=1-x$data$spec[x$data$subgroup==sub[i]],
-             y=x$data$sens[x$data$subgroup==sub[i]],
-             rectangles=cbind(pct$sp[x$data$subgroup==sub[i]],
-                              pct$se[x$data$subgroup==sub[i]])*scale,
-             inches=FALSE,
-             add=TRUE,
-             fg=col2[i])
+   for (i in seq_along(sub)){
+     pointsXY(x=1-x$data$spec[x$data$subgroup==sub[i]], 
+              y=x$data$sens[x$data$subgroup==sub[i]], 
+              symbol = symbols2[i], 
+              scale = scale*0.5,
+              cex.x = pct$sp[x$data$subgroup==sub[i]],
+              cex.y = pct$se[x$data$subgroup==sub[i]],
+              col=col2[i])
+     symb[i] <- switch(symbols2[i], rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
    }
-   
+   ###
    lamb <- paste0("Lambda_",sub)
    bet  <- paste0("beta_",sub)
   
@@ -127,7 +141,7 @@ plot.RutterGatsonisSubgroup <- function(x,
           inset = c(nudge_legend, 0),
           legend = sub,
           col    = col,
-          pch = 0,
+          pch = symb,
           xpd = TRUE,
           cex = 1.2,
           bty = "n")
@@ -137,7 +151,7 @@ plot.RutterGatsonisSubgroup <- function(x,
           legend = c(NA,
                      "HSROC curve",
                      "Data"), 
-          pch = c(NA,NA,0), 
+          pch = c(NA,NA,symb[1]), 
           lty = c(NA,1,NA), 
           lwd = c(NA,2,NA), 
           col = c(NA,"black","darkgray"))

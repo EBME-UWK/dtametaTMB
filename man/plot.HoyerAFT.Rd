@@ -6,6 +6,7 @@
 \usage{
 \method{plot}{HoyerAFT}(
   x,
+  symbol = c("rectangle", "ellipse", "diamond", "triangle", "cross", "plus", "star"),
   scale = 0.02,
   size = c("equal", "sampsize", "se"),
   thresholdrange = NULL,
@@ -24,8 +25,13 @@
 2 = lognormal, 3 = loglogistic)}
 }}
 
+\item{symbol}{Character string specifying the symbol used for study-level
+estimates. One of \code{"rectangle"}, \code{"ellipse"},
+\code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+or \code{"star"}. The default is \code{"rectangle"}.}
+
 \item{scale}{A numeric scaling factor controlling the size of the
-rectangles representing study weights. Default is \code{0.02}.}
+symbols representing study weights. Default is \code{0.02}.}
 
 \item{size}{Character string controlling study weight display:
 \describe{

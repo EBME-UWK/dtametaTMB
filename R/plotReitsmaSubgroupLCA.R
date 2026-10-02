@@ -7,8 +7,12 @@
 #'
 #' @param x An object of class \code{"ReitsmaSubgroupLCA"}, as returned by
 #'   \code{\link{fitReitsmaSubgroupLCA}}.
+#' @param symbol Character vector specifying the symbols used for study-level
+#'   estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
+#'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+#'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
 #' @param scale A numeric scaling factor controlling the size of the
-#'   rectangles representing study weights. Default is \code{0.02}.
+#'   symbols representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
 #'  \describe{
 #'    \item{"eb"}{Size proportional to the precision of the empirical Bayes estimates. Default.}
@@ -40,7 +44,7 @@
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
-#' Study-specific estimates are shown as rectangles.
+#' Study-specific estimates are shown with subgroup-specific symbols and colours.
 #'
 #' The following elements are displayed:
 #' \itemize{
@@ -80,17 +84,19 @@
 #' @method plot ReitsmaSubgroupLCA
 #' @importFrom grDevices adjustcolor rainbow
 #' @export
-plot.ReitsmaSubgroupLCA <- function(x, scale=0.02, 
-                                 size=c("eb","equal","sampsize"), 
-                                 main="Diagnostic Test Accuracy Meta-Analysis",
-                                 col=NULL,
-                                 nudge_legend=-0.4,
-                                 HSROC=FALSE,
-                                 specrange=c(0.7,0.995),
-                                 conflevel=0.95,
-                                 predlevel=0.95,
-                                 connectstudies=FALSE,
-                                 ...) {
+plot.ReitsmaSubgroupLCA <- function(x, 
+                                    symbol=NULL,
+                                    scale=0.02, 
+                                    size=c("eb","equal","sampsize"), 
+                                    main="Diagnostic Test Accuracy Meta-Analysis",
+                                    col=NULL,
+                                    nudge_legend=-0.4,
+                                    HSROC=FALSE,
+                                    specrange=c(0.7,0.995),
+                                    conflevel=0.95,
+                                    predlevel=0.95,
+                                    connectstudies=FALSE,
+                                    ...) {
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
       conflevel <= 0 || conflevel >= 1) {
     stop("conflevel must be a single number in (0, 1).")
@@ -110,6 +116,14 @@ plot.ReitsmaSubgroupLCA <- function(x, scale=0.02,
 
   if(is.null(col)) col <- grDevices::rainbow(n=nsub)
   col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
+  # symbols
+  if(is.null(symbol)) {
+    available_symbols <- c("rectangle","ellipse","diamond","triangle","cross","plus","star")
+    symbols2 <- rep(available_symbols,length.out=nsub)
+  } else {
+    symbols2 <- symbol
+  }
+  symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
   pct <- getWEIGHTSLCA(xdata=x$data,size=size)
   ####
@@ -121,13 +135,14 @@ plot.ReitsmaSubgroupLCA <- function(x, scale=0.02,
   plot_SESPGRID(main=main)
   # Plot study level estimates 
   for (i in seq_along(sub)){
-    symbols(x=1-x$data$spec_eb[x$data$subgroup==sub[i]],
-            y=x$data$sens_eb[x$data$subgroup==sub[i]],
-            rectangles=cbind(pct$sp[x$data$subgroup==sub[i]],
-                             pct$se[x$data$subgroup==sub[i]])*scale,
-            inches=FALSE,
-            add=TRUE,
-            fg=col2[i])
+    pointsXY(x=1-x$data$spec[x$data$subgroup==sub[i]], 
+             y=x$data$sens[x$data$subgroup==sub[i]], 
+             symbol = symbols2[i], 
+             scale = scale*0.5,
+             cex.x = pct$sp[x$data$subgroup==sub[i]],
+             cex.y = pct$se[x$data$subgroup==sub[i]],
+             col=col2[i])
+    symb[i] <- switch(symbols2[i], rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
   }
   # Add the ROC curve
   if(HSROC==TRUE){
@@ -196,7 +211,7 @@ plot.ReitsmaSubgroupLCA <- function(x, scale=0.02,
                       conf_lab,
                       pred_lab,
                       "Empirical Bayes estimates"), 
-           pch = c(NA,NA,15,NA,NA,0), 
+           pch = c(NA,NA,15,NA,symb[1]), 
            lty = c(NA,1,NA,2,3,NA), 
            lwd = c(NA,2,NA,2,2,NA), 
            col = c(NA,"black","black","black","black","darkgray"))}
@@ -208,7 +223,7 @@ plot.ReitsmaSubgroupLCA <- function(x, scale=0.02,
                       conf_lab,
                       pred_lab,
                       "Empirical Bayes estimates"), 
-           pch = c(NA,15,NA,NA,0), 
+           pch = c(NA,15,NA,NA,symb[1]), 
            lty = c(NA,NA,2,3,NA), 
            lwd = c(NA,NA,2,2,NA), 
            col = c(NA,"black","black","black","darkgray"))
@@ -217,7 +232,7 @@ plot.ReitsmaSubgroupLCA <- function(x, scale=0.02,
          inset = c(nudge_legend, 0),
          legend = sub,
          col    = col,
-         pch = 0,
+         pch = symb,
          xpd = TRUE,
          cex = 1.2,
          bty = "n")

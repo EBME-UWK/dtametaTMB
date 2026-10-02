@@ -6,6 +6,7 @@
 \usage{
 \method{plot}{ReitsmaSubgroupLCA}(
   x,
+  symbol = NULL,
   scale = 0.02,
   size = c("eb", "equal", "sampsize"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
@@ -23,8 +24,13 @@
 \item{x}{An object of class \code{"ReitsmaSubgroupLCA"}, as returned by
 \code{\link{fitReitsmaSubgroupLCA}}.}
 
+\item{symbol}{Character vector specifying the symbols used for study-level
+estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
+\code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+or \code{"star"}. If \code{NULL}, symbols are generated automatically.}
+
 \item{scale}{A numeric scaling factor controlling the size of the
-rectangles representing study weights. Default is \code{0.02}.}
+symbols representing study weights. Default is \code{0.02}.}
 
 \item{size}{Character string controlling study weight display:
 \describe{
@@ -73,7 +79,7 @@ class model.
 The plot is constructed on the ROC scale with sensitivity on the y-axis
 and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 
-Study-specific estimates are shown as rectangles.
+Study-specific estimates are shown with subgroup-specific symbols and colours.
 
 The following elements are displayed:
 \itemize{

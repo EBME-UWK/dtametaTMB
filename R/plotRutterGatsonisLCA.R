@@ -7,8 +7,12 @@
 #'
 #' @param x An object of class \code{"RutterGatsonisLCA"}, as returned by
 #'   \code{\link{fitRutterGatsonisLCA}}.
+#' @param symbol Character string specifying the symbol used for study-level
+#'   estimates. One of \code{"rectangle"}, \code{"ellipse"},
+#'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
+#'   or \code{"star"}. The default is \code{"rectangle"}.
 #' @param scale A numeric scaling factor controlling the size of the
-#'   rectangles representing study weights. Default is \code{0.02}.
+#'   symbols representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
 #'  \describe{
 #'    \item{"eb"}{Size proportional to the precision of the empirical Bayes estimates. Default.}
@@ -28,7 +32,7 @@
 #' The plot is constructed on the ROC scale with sensitivity on the y-axis
 #' and specificity on the x-axis (displayed as 1 - false positive rate on a reversed axis).
 #'
-#' Study-specific estimates are shown as rectangles.
+#' Study-specific estimates are shown as rectangles (default).
 #'
 #' The following elements are displayed:
 #' \itemize{
@@ -55,10 +59,13 @@
 #' @seealso \code{\link{fitRutterGatsonisLCA}}
 #' @method plot RutterGatsonisLCA
 #' @export
-plot.RutterGatsonisLCA <- function(x, scale=0.02,size=c("eb","equal","sampsize"), 
-                                specrange=c(0.7,0.995),
-                                main="Diagnostic Test Accuracy Meta-Analysis", ...) {
+plot.RutterGatsonisLCA <- function(x,
+                                   symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
+                                   scale=0.02,size=c("eb","equal","sampsize"), 
+                                   specrange=c(0.7,0.995),
+                                   main="Diagnostic Test Accuracy Meta-Analysis", ...) {
   size    <- match.arg(size)
+  symbol  <- match.arg(symbol)
   Lambda  <- x$sdreport2["Lambda", "Estimate"]
   beta    <- x$sdreport2["beta","Estimate"]
   roc_points2 <- getROCpoints(Lambda,beta,specrange=specrange)
@@ -70,7 +77,14 @@ plot.RutterGatsonisLCA <- function(x, scale=0.02,size=c("eb","equal","sampsize")
   plot_SESPGRID(main=main)
   # Plot study level estimates 
   pct <- getWEIGHTSLCA(x$data,size)
-  symbols(x=1-x$data$spec_eb,y=x$data$sens_eb,rectangles=cbind(pct$sp,pct$se)*scale,inches=FALSE,add=TRUE,fg="darkgray")
+  pointsXY(x=1-x$data$spec, 
+           y=x$data$sens, 
+           symbol = symbol, 
+           scale = scale*0.5,
+           cex.x = pct$sp,
+           cex.y = pct$se,
+           col="darkgray")
+  symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
   # Add the ROC curve
   points(roc_points2, type="l", lwd=2,ann=FALSE)###
@@ -80,7 +94,7 @@ plot.RutterGatsonisLCA <- function(x, scale=0.02,size=c("eb","equal","sampsize")
          legend = c(NA,
                     "HSROC curve",
                     "Empirical Bayes estimates"), 
-         pch = c(NA,NA,0), 
+         pch = c(NA,NA,symb), 
          lty = c(NA,1,NA), 
          lwd = c(NA,2,NA), 
          col = c(NA,"black","darkgray"))
