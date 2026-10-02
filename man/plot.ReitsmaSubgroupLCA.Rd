@@ -7,8 +7,8 @@
 \method{plot}{ReitsmaSubgroupLCA}(
   x,
   symbol = NULL,
-  scale = 0.02,
-  size = c("eb", "equal", "sampsize"),
+  scale = NULL,
+  size = c("eb", "equal", "sampsize", "eb_revman", "sampsize_revman"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   col = NULL,
   nudge_legend = -0.4,
@@ -30,13 +30,23 @@ estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
 or \code{"star"}. If \code{NULL}, symbols are generated automatically.}
 
 \item{scale}{A numeric scaling factor controlling the size of the
-symbols representing study weights. Default is \code{0.02}.}
+symbols representing study weights. Default is \code{0.02}.
+For the RevMan-style sizing option, the default is 1 which corresponds to the
+RevMan 100\% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel.
+Values below or above one decrease or increase all symbol dimensions proportionally.}
 
 \item{size}{Character string controlling study weight display:
 \describe{
 \item{"eb"}{Size proportional to the precision of the empirical Bayes estimates. Default.}
 \item{"equal"}{All studies shown with equal size}
 \item{"sampsize"}{Size proportional to sample size}
+\item{"eb_revman"}{RevMan-style graphical scaling applied to the precision of the empirical
+Bayes estimates. This option uses the RevMan-style fixed
+baseline and point-scaling constants but is not an original RevMan
+latent-class weighting method.}
+\item{"sampsize_revman"}{ RevMan-style graphical scaling based on total study sample size.
+The same transformed sample-size weight is used for the horizontal
+and vertical symbol dimensions.}
 }}
 
 \item{main}{Character string giving the main title of the plot.

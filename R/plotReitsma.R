@@ -14,13 +14,26 @@
 #'   or \code{"star"}. The default is \code{"rectangle"}.
 #' @param scale A numeric scaling factor controlling the size of the
 #'   symbols representing study weights. Default is \code{0.02}.
+#'   For the RevMan-compatible sizing options, the default is 1 which corresponds to the 
+#'   RevMan 100% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel. 
+#'   Values below or above one decrease or increase all symbol dimensions proportionally.
 #' @param size Character string controlling study weight display:
 #'  \describe{
 #'    \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default.}
 #'    \item{"equal"}{All studies shown with equal size}
 #'    \item{"sampsize"}{Size proportional to sample size}
 #'    \item{"se"}{Size proportional to precision on the logit scale}
-#'  }  
+#'    \item{"sampsize_revman"}{RevMan-style sample-size scaling. 
+#'    Horizontal and vertical symbol dimensions are proportional to
+#'    \eqn{4 + 0.64\sqrt{n_0}} and
+#'    \eqn{4 + 0.64\sqrt{n_1}}, respectively, where \eqn{n_0} and
+#'    \eqn{n_1} are the numbers of non-diseased and diseased participants.}
+#'    \item{"se_revman"}{RevMan-style inverse-standard-error scaling. 
+#'    Horizontal and vertical symbol dimensions are proportional to
+#'    \eqn{4 + 1.5\sqrt{n_0\widehat{Sp}(1-\widehat{Sp})}} and
+#'    \eqn{4 + 1.5\sqrt{n_1\widehat{Se}(1-\widehat{Se})}},
+#'    respectively.}
+#'  } 
 #' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
 #'   Default is \code{FALSE}.
 #' @param specrange A numeric vector of length 2 giving the range of
@@ -82,9 +95,9 @@
 #' @method plot Reitsma
 #' @export
 plot.Reitsma <- function(x, 
-                         scale=0.02, 
                          symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
-                         size=c("fisher","equal","sampsize","se"), 
+                         scale=NULL, 
+                         size=c("fisher","equal","sampsize","se","sampsize_revman","se_revman"), 
                          main="Diagnostic Test Accuracy Meta-Analysis",
                          HSROC=FALSE, 
                          specrange=c(0.7,0.995),
@@ -100,6 +113,9 @@ plot.Reitsma <- function(x,
   }
   symbol  <- match.arg(symbol)
   size    <- match.arg(size)
+  if (is.null(scale)) {
+    scale <- if (size %in% c("sampsize_revman","se_revman")) {1} else {0.02} 
+  }
   nstudy  <- nrow(x$data)
   warn_unestimable_sroc_points(x$data)
   # Confidence and prediction region
@@ -117,6 +133,13 @@ plot.Reitsma <- function(x,
                               nstudy=nstudy,
                               conflevel=conflevel,
                               predlevel=predlevel)
+  ####
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+  par(pty="s")
+  ### Plot coordinate system
+  plot_SESPGRID(main=main)
+  ###
   # Calculations for percentage weights
   if(size=="fisher"){
     X <- x$data
@@ -190,12 +213,18 @@ plot.Reitsma <- function(x,
     pctse <- sqrt(sem1) / sum(sqrt(sem1))*100
     pctsp <- sqrt(spm1) / sum(sqrt(spm1))*100
   }
-  ####
-  oldpar <- par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  par(pty="s")
-  ### Plot coordinate system
-  plot_SESPGRID(main=main)
+  if(size=="sampsize_revman"){
+    pctse  <- (4 + 0.64*sqrt(x$data$n1))/540
+    pctsp  <- (4 + 0.64*sqrt(x$data$n0))/540
+  }
+  if(size=="se_revman"){
+    sem1  <- x$data$sens*(1-x$data$sens)*x$data$n1 # inverse logit variance
+    spm1  <- x$data$spec*(1-x$data$spec)*x$data$n0 # inverse logit variance
+    sem1[is.nan(sem1)] <- 0
+    spm1[is.nan(spm1)] <- 0
+    pctse  <- (4 + 1.5*sqrt(sem1))/540
+    pctsp  <- (4 + 1.5*sqrt(spm1))/540
+  }
   # Plot study level estimates 
   pointsXY(x=1-x$data$spec, 
            y=x$data$sens, 

@@ -17,6 +17,18 @@ getWEIGHTS <- function(xdata,size){
     se <- sqrt(sem1) / sum(sqrt(sem1))*100
     sp <- sqrt(spm1) / sum(sqrt(spm1))*100
   }
+  if(size=="sampsize_revman"){
+    pctse  <- (4 + 0.64*sqrt(xdata$n1))/540
+    pctsp  <- (4 + 0.64*sqrt(xdata$n0))/540
+  }
+  if(size=="se_revman"){
+    sem1  <- xdata$sens*(1-xdata$sens)*xdata$n1 # inverse logit variance
+    spm1  <- xdata$spec*(1-xdata$spec)*xdata$n0 # inverse logit variance
+    sem1[is.nan(sem1)] <- 0
+    spm1[is.nan(spm1)] <- 0
+    pctse  <- (4 + 1.5*sqrt(sem1))/540
+    pctsp  <- (4 + 1.5*sqrt(spm1))/540
+  }
   pct <- data.frame(sp=sp,
                     se=se)
   return(pct)

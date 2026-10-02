@@ -13,12 +13,25 @@
 #'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
 #' @param scale A numeric scaling factor controlling the size of the
 #'   symbols representing study weights. Default is \code{0.02}.
+#'   For the RevMan-compatible sizing options, the default is 1 which corresponds to the 
+#'   RevMan 100% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel. 
+#'   Values below or above one decrease or increase all symbol dimensions proportionally.
 #' @param size Character string controlling study weight display:
-#'   \describe{
-#'     \item{"equal"}{All studies shown with equal size. Default.}
-#'     \item{"sampsize"}{Size proportional to sample size.}
-#'     \item{"se"}{Size proportional to precision on the logit scale.}
-#'   }
+#'  \describe{
+#'    \item{"equal"}{All studies shown with equal size}
+#'    \item{"sampsize"}{Size proportional to sample size}
+#'    \item{"se"}{Size proportional to precision on the logit scale}
+#'    \item{"sampsize_revman"}{RevMan-style sample-size scaling. 
+#'    Horizontal and vertical symbol dimensions are proportional to
+#'    \eqn{4 + 0.64\sqrt{n_0}} and
+#'    \eqn{4 + 0.64\sqrt{n_1}}, respectively, where \eqn{n_0} and
+#'    \eqn{n_1} are the numbers of non-diseased and diseased participants.}
+#'    \item{"se_revman"}{RevMan-style inverse-standard-error scaling. 
+#'    Horizontal and vertical symbol dimensions are proportional to
+#'    \eqn{4 + 1.5\sqrt{n_0\widehat{Sp}(1-\widehat{Sp})}} and
+#'    \eqn{4 + 1.5\sqrt{n_1\widehat{Se}(1-\widehat{Se})}},
+#'    respectively.}
+#'  } 
 #' @param col Vector of colours used for subgroup-specific HSROC curves
 #'   and study-level point estimates. If \code{NULL}, colours are generated automatically.
 #' @param specrange A numeric vector of length 2 giving the range of
@@ -66,7 +79,7 @@
 #' @export
 plot.RutterGatsonisSubgroup <- function(x, 
                                         symbol=NULL,
-                                        scale=0.02,
+                                        scale=NULL,
                                         size=c("equal","sampsize","se"), 
                                         nudge_legend=-0.4,
                                         specrange=c(0.7,0.995),
@@ -80,6 +93,9 @@ plot.RutterGatsonisSubgroup <- function(x,
      }
    }
    size <- match.arg(size)
+   if (is.null(scale)) {
+     scale <- if (size %in% c("sampsize_revman","se_revman")) {1} else {0.02} 
+   }
    sub  <- x$subgroups
    nsub <- length(sub)
    nstudy <- nrow(x$data)

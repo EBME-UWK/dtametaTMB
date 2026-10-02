@@ -6,9 +6,9 @@
 \usage{
 \method{plot}{Reitsma}(
   x,
-  scale = 0.02,
   symbol = c("rectangle", "ellipse", "diamond", "triangle", "cross", "plus", "star"),
-  size = c("fisher", "equal", "sampsize", "se"),
+  scale = NULL,
+  size = c("fisher", "equal", "sampsize", "se", "sampsize_revman", "se_revman"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   HSROC = FALSE,
   specrange = c(0.7, 0.995),
@@ -21,13 +21,16 @@
 \item{x}{An object of class \code{"Reitsma"}, as returned by
 \code{\link{fitReitsma}}.}
 
-\item{scale}{A numeric scaling factor controlling the size of the
-symbols representing study weights. Default is \code{0.02}.}
-
 \item{symbol}{Character string specifying the symbol used for study-level
 estimates. One of \code{"rectangle"}, \code{"ellipse"},
 \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 or \code{"star"}. The default is \code{"rectangle"}.}
+
+\item{scale}{A numeric scaling factor controlling the size of the
+symbols representing study weights. Default is \code{0.02}.
+For the RevMan-compatible sizing options, the default is 1 which corresponds to the
+RevMan 100\% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel.
+Values below or above one decrease or increase all symbol dimensions proportionally.}
 
 \item{size}{Character string controlling study weight display:
 \describe{
@@ -35,6 +38,16 @@ or \code{"star"}. The default is \code{"rectangle"}.}
 \item{"equal"}{All studies shown with equal size}
 \item{"sampsize"}{Size proportional to sample size}
 \item{"se"}{Size proportional to precision on the logit scale}
+\item{"sampsize_revman"}{RevMan-style sample-size scaling.
+Horizontal and vertical symbol dimensions are proportional to
+\eqn{4 + 0.64\sqrt{n_0}} and
+\eqn{4 + 0.64\sqrt{n_1}}, respectively, where \eqn{n_0} and
+\eqn{n_1} are the numbers of non-diseased and diseased participants.}
+\item{"se_revman"}{RevMan-style inverse-standard-error scaling.
+Horizontal and vertical symbol dimensions are proportional to
+\eqn{4 + 1.5\sqrt{n_0\widehat{Sp}(1-\widehat{Sp})}} and
+\eqn{4 + 1.5\sqrt{n_1\widehat{Se}(1-\widehat{Se})}},
+respectively.}
 }}
 
 \item{main}{Character string giving the main title of the plot.
