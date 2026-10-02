@@ -13,7 +13,7 @@
 #'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
 #' @param scale A numeric scaling factor controlling the size of the
 #'   symbols representing study weights. Default is \code{0.02}.
-#'   For the RevMan-compatible sizing options, the default is 1 which corresponds to the 
+#'   For the RevMan-style sizing options, the default is 1 which corresponds to the 
 #'   RevMan 100% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel. 
 #'   Values below or above one decrease or increase all symbol dimensions proportionally.
 #' @param size Character string controlling study weight display:
@@ -80,7 +80,7 @@
 plot.RutterGatsonisSubgroup <- function(x, 
                                         symbol=NULL,
                                         scale=NULL,
-                                        size=c("equal","sampsize","se"), 
+                                        size=c("equal","sampsize","se","sampsize_revman","se_revman"), 
                                         nudge_legend=-0.4,
                                         specrange=c(0.7,0.995),
                                         col=NULL,

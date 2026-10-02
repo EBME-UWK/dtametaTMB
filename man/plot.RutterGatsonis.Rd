@@ -8,7 +8,7 @@
   x,
   symbol = c("rectangle", "ellipse", "diamond", "triangle", "cross", "plus", "star"),
   scale = NULL,
-  size = c("equal", "sampsize", "se"),
+  size = c("equal", "sampsize", "se", "sampsize_revman", "se_revman"),
   specrange = c(0.7, 0.995),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   ...
@@ -25,7 +25,7 @@ or \code{"star"}. The default is \code{"rectangle"}.}
 
 \item{scale}{A numeric scaling factor controlling the size of the
 symbols representing study weights. Default is \code{0.02}.
-For the RevMan-compatible sizing options, the default is 1 which corresponds to the
+For the RevMan-style sizing options, the default is 1 which corresponds to the
 RevMan 100\% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel.
 Values below or above one decrease or increase all symbol dimensions proportionally.}
 

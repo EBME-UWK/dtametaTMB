@@ -7,7 +7,7 @@
 \method{plot}{RutterGatsonisSubgroupLCA}(
   x,
   symbol = NULL,
-  scale = 0.02,
+  scale = NULL,
   size = c("eb", "equal", "sampsize", "eb_revman", "sampsize_revman"),
   nudge_legend = -0.4,
   specrange = c(0.7, 0.995),
