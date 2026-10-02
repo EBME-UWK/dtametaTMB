@@ -26,7 +26,7 @@
 #'   specificities over which the HSROC curve is plotted.
 #'   Defaults to \code{c(0.7, 0.995)}.
 #' @param col Vector of colours used for subgroup-specific HSROC curves,
-#'   study-level rectangles, summary points, confidence and prediction region. 
+#'   study-level point estimates, summary points, confidence and prediction region. 
 #'   If \code{NULL}, colours are generated automatically.
 #' @param nudge_legend Numeric horizontal offset for the subgroup legend.
 #'   More negative values move the legend further right, outside the plotting area.
@@ -36,7 +36,7 @@
 #' 
 #' @param conflevel Confidence level for the confidence region. Default is \code{0.95}.
 #' @param predlevel Confidence level for the prediction region. Default is \code{0.95}.
-#' @param connectstudies Whether the point estimates (rectangles) of two subgroups 
+#' @param connectstudies Whether the point estimates of two subgroups 
 #'   within the same study should be connected. Defaults to \code{FALSE}.
 #'
 #' @param ... Additional graphical arguments passed to plotting functions.

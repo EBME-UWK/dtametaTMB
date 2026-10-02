@@ -2,7 +2,7 @@
 #'
 #' This is the dementia dataset from Harrison et al. (2015) from a review of the Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE) for the diagnosis of dementia within a secondary care setting.
 #'
-#' @format A data frame with 37 rows and 7 variables:
+#' @format A data frame with 13 rows and 17 variables:
 #' \describe{
 #'   \item{author}{Author of the study}
 #'   \item{year}{Year of the study}

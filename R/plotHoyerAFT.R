@@ -40,7 +40,7 @@
 #' The plot includes:
 #' \itemize{
 #'   \item Study-specific sensitivity and false positive rate estimates
-#'   \item Rectangular markers representing study observations
+#'   \item Symbols representing study observations, with size reflecting the selected study-weight measure.
 #'   \item Lines connecting thresholds within studies
 #'   \item A meta-analytic HSROC curve based on the fitted AFT model
 #' }

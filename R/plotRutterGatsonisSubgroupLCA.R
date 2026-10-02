@@ -12,7 +12,7 @@
 #'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 #'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
 #' @param scale A numeric scaling factor controlling the size of the
-#'   rectangles representing study weights. Default is \code{0.02}.
+#'   symbols representing study weights. Default is \code{0.02}.
 #' @param size Character string controlling study weight display:
 #'   \describe{
 #'     \item{"eb"}{Size proportional to the precision of the empirical Bayes estimates. Default.}
@@ -20,14 +20,14 @@
 #'     \item{"sampsize"}{Size proportional to sample size.}
 #'   }
 #' @param col Vector of colours used for subgroup-specific HSROC curves
-#'   and study-level rectangles. If \code{NULL}, colours are generated automatically.
+#'   and study-level point estimates. If \code{NULL}, colours are generated automatically.
 #' @param specrange A numeric vector of length 2 giving the range of
 #'   specificities over which the HSROC curve is plotted.
 #'   Defaults to \code{c(0.7, 0.995)}.
 #' @param nudge_legend Numeric horizontal offset for the subgroup legend.
 #'   More negative values move the legend further right, outside the plotting area.
 #'   Values closer to zero move it closer to the panel. Default is \code{-0.4}.
-#' @param connectstudies Whether the point estimates (rectangles) of two subgroups 
+#' @param connectstudies Whether the point estimates of two subgroups 
 #'   within the same study should be connected. Defaults to \code{FALSE}.
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
@@ -112,8 +112,8 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
   # Data points
   pct <- getWEIGHTSLCA(xdata=x$data,size=size)
   for (i in seq_along(sub)){
-    pointsXY(x=1-x$data$spec[x$data$subgroup==sub[i]], 
-             y=x$data$sens[x$data$subgroup==sub[i]], 
+    pointsXY(x=1-x$data$spec_eb[x$data$subgroup==sub[i]], 
+             y=x$data$sens_eb[x$data$subgroup==sub[i]], 
              symbol = symbols2[i], 
              scale = scale*0.5,
              cex.x = pct$sp[x$data$subgroup==sub[i]],

@@ -17,7 +17,7 @@ A list of class \code{"summary.RutterGatsonisSubgroupLCA"} with the following co
 \itemize{
 \item \code{estimates}: Parameter estimates with standard errors.
 \item \code{sensspec}: Estimated index test sensitivity at the specified specificity, including confidence intervals.
-\item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.
+\item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificity with confidence intervals.
 \item \code{Reitsma_recovered}: Recovered parameters in the Reitsma parameterization.
 }
 }

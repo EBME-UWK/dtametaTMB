@@ -43,7 +43,7 @@ symbols representing study weights. Default is \code{0.02}.}
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{col}{Vector of colours used for subgroup-specific HSROC curves,
-study-level rectangles, summary points, confidence and prediction region.
+study-level point estimates, summary points, confidence and prediction region.
 If \code{NULL}, colours are generated automatically.}
 
 \item{nudge_legend}{Numeric horizontal offset for the subgroup legend.
@@ -61,7 +61,7 @@ Defaults to \code{c(0.7, 0.995)}.}
 
 \item{predlevel}{Confidence level for the prediction region. Default is \code{0.95}.}
 
-\item{connectstudies}{Whether the point estimates (rectangles) of two subgroups
+\item{connectstudies}{Whether the point estimates of two subgroups
 within the same study should be connected. Defaults to \code{FALSE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}

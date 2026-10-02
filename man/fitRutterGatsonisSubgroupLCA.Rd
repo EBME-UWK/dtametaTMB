@@ -89,7 +89,7 @@ An object of class \code{"RutterGatsonisSubgroupLCA"} containing:
 \item{sdreport2}{Summary of reported subgroup-specific parameters.}
 \item{sensspec}{Estimated subgroup-specific index test sensitivities at the given
 specificity value(s), with confidence intervals.}
-\item{prevref}{Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.}
+\item{prevref}{Estimated (average) prevalence and reference standard sensitivity/specificity with confidence intervals.}
 \item{constrain}{Constraints on parameters applied during model fitting.}
 \item{subgroups}{The subgroup levels used in the model fit.}
 }

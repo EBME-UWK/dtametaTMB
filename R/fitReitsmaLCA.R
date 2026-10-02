@@ -46,7 +46,7 @@
 #'   \item \code{sdreport2}: Summary of reported parameters.
 #'   \item \code{vcov}: variance-covariance matrix of reported parameters.
 #'   \item \code{sensspec}: sensitivity and specificity estimates.
-#'   \item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificitiy with confidence intervals.
+#'   \item \code{prevref}: Estimated (average) prevalence and reference standard sensitivity/specificity with confidence intervals.
 #'   \item \code{LRDOR}: Diagnostic odds ratio and likelihood ratios.
 #'   \item \code{RutterGatsonis_recovered}: Recovered parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #'   \item \code{constrain}: Random effects parameters fixed at zero.

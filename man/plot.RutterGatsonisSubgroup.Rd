@@ -27,7 +27,7 @@ estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
 or \code{"star"}. If \code{NULL}, symbols are generated automatically.}
 
 \item{scale}{A numeric scaling factor controlling the size of the
-rectangles representing study weights. Default is \code{0.02}.}
+symbols representing study weights. Default is \code{0.02}.}
 
 \item{size}{Character string controlling study weight display:
 \describe{
@@ -45,12 +45,12 @@ specificities over which the HSROC curve is plotted.
 Defaults to \code{c(0.7, 0.995)}.}
 
 \item{col}{Vector of colours used for subgroup-specific HSROC curves
-and study-level rectangles. If \code{NULL}, colours are generated automatically.}
+and study-level point estimates. If \code{NULL}, colours are generated automatically.}
 
 \item{main}{Character string giving the main title of the plot.
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
-\item{connectstudies}{Whether the point estimates (rectangles) of two subgroups
+\item{connectstudies}{Whether the point estimates of two subgroups
 within the same study should be connected. Defaults to \code{FALSE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}

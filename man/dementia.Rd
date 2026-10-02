@@ -5,7 +5,7 @@
 \alias{dementia}
 \title{Dementia Dataset}
 \format{
-A data frame with 37 rows and 7 variables:
+A data frame with 13 rows and 17 variables:
 \describe{
 \item{author}{Author of the study}
 \item{year}{Year of the study}
