@@ -1,0 +1,546 @@
+---
+title: "RevMan-Style Study Markers in SROC Plots"
+format: 
+  html:
+   toc: TRUE
+#  pdf
+vignette: >
+  %\VignetteIndexEntry{RevMan-Style Study Markers in SROC Plots}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dtametaTMB)
+```
+
+## Overview
+
+Study estimates in a summary receiver operating characteristic (SROC) plot can be represented by symbols whose horizontal and vertical dimensions convey different information. In `dtametaTMB`, the horizontal dimension represents specificity-side information, whereas the vertical dimension represents sensitivity-side information.
+
+The package provides several study-symbol sizing methods, including equal sizing, relative sample-size sizing, approximate inverse-standard-error sizing, Fisher-information sizing for applicable models, and two RevMan-style methods:
+
+- `size = "sampsize_revman"`, based on the square roots of the numbers of non-diseased and diseased participants;
+- `size = "se_revman"`, based on approximate inverse standard errors of observed logit specificity and logit sensitivity.
+
+The formulas described in this vignette were inferred empirically from exported RevMan SROC graphics by using controlled datasets.
+
+The calculated dimensions are graphical sizing measures. They are not percentage contributions to the precision of the pooled estimate and should not be interpreted as conventional inverse-variance meta-analytic weights.
+
+## Notation
+
+For study $i$, let
+
+$$
+n_{1i} = TP_i + FN_i
+$$
+
+be the number of diseased participants and
+
+$$
+n_{0i} = FP_i + TN_i
+$$
+
+be the number of non-diseased participants. The observed sensitivity and specificity are
+
+$$
+\widehat{Se}_i = \frac{TP_i}{TP_i+FN_i}
+$$
+
+and
+
+$$
+\widehat{Sp}_i = \frac{TN_i}{TN_i+FP_i}.
+$$
+
+For each sizing method, $q_{Se,i}$ denotes the raw vertical sizing measure and $q_{Sp,i}$ denotes the raw horizontal sizing measure.
+
+## Analysis-specific normalization
+
+The two RevMan-style methods use one common normalization constant for the horizontal and vertical dimensions. First, define the larger raw sizing measure for each study as
+
+$$
+m_i = \max(q_{Se,i}, q_{Sp,i}).
+$$
+
+For $I$ studies, the analysis-specific constant is
+
+$$
+c =
+\frac{8}
+{\frac{1}{I}\sum_{i=1}^{k}m_i}
+=
+\frac{8I}
+{\sum_{i=1}^{I}\max(q_{Se,i},q_{Sp,i})}.
+$$
+
+The unrescaled full horizontal and vertical dimensions are then
+
+$$
+d_{Sp,i} = 4 + c q_{Sp,i}
+$$
+
+and
+
+$$
+d_{Se,i} = 4 + c q_{Se,i}.
+$$
+
+This normalization has two useful properties:
+
+1. the average larger variable-dimension component, $c m_i$, equals 8;
+2. the fixed baseline of 4 keeps a study marker visible when its raw sizing measure is zero in one direction.
+
+Because the normalization is based on the mean of study-level maxima, duplicating the complete set of studies does not change the resulting constant or relative marker dimensions.
+
+## RevMan-style sample-size scaling
+
+For `size = "sampsize_revman"`, the raw measures are
+
+$$
+q_{Se,i} = \sqrt{n_{1i}}
+$$
+
+and
+
+$$
+q_{Sp,i} = \sqrt{n_{0i}}.
+$$
+
+The analysis-specific sample-size constant is therefore
+
+$$
+c_{SS} =
+\frac{8}
+{\frac{1}{I}\sum_{i=1}^{I}
+\max\left(\sqrt{n_{1i}},\sqrt{n_{0i}}\right)}.
+$$
+
+The corresponding full dimensions are
+
+$$
+d_{Se,i} = 4 + c_{SS}\sqrt{n_{1i}}
+$$
+
+and
+
+$$
+d_{Sp,i} = 4 + c_{SS}\sqrt{n_{0i}}.
+$$
+
+Consequently, a study with more diseased than non-diseased participants is taller than it is wide, whereas a study with more non-diseased than diseased participants is wider than it is tall.
+
+## RevMan-style inverse-standard-error scaling
+
+For a binomial proportion $\widehat p_i$, the large-sample variance of its logit is approximately
+
+$$
+\operatorname{Var}\left\{\operatorname{logit}(\widehat p_i)\right\}
+\approx
+\frac{1}{n_i\widehat p_i(1-\widehat p_i)}.
+$$
+
+The corresponding approximate inverse standard error is
+
+$$
+\frac{1}
+{SE\left\{\operatorname{logit}(\widehat p_i)\right\}}
+\approx
+\sqrt{n_i\widehat p_i(1-\widehat p_i)}.
+$$
+
+For `size = "se_revman"`, the raw measures are therefore
+
+$$
+q_{Se,i} =
+\sqrt{n_{1i}\widehat{Se}_i(1-\widehat{Se}_i)}
+$$
+
+and
+
+$$
+q_{Sp,i} =
+\sqrt{n_{0i}\widehat{Sp}_i(1-\widehat{Sp}_i)}.
+$$
+
+Equivalently, when the relevant denominators are positive,
+
+$$
+q_{Se,i} =
+\sqrt{\frac{TP_iFN_i}{TP_i+FN_i}}
+$$
+
+and
+
+$$
+q_{Sp,i} =
+\sqrt{\frac{TN_iFP_i}{TN_i+FP_i}}.
+$$
+
+The analysis-specific constant is
+
+$$
+c_{SE} =
+\frac{8}
+{\frac{1}{I}\sum_{i=1}^{I}
+\max(q_{Se,i},q_{Sp,i})}.
+$$
+
+The full dimensions are
+
+$$
+d_{Se,i} = 4 + c_{SE}q_{Se,i}
+$$
+
+and
+
+$$
+d_{Sp,i} = 4 + c_{SE}q_{Sp,i}.
+$$
+
+`dtametaTMB` calculates these measures directly from the observed sensitivities, specificities, and denominators. No continuity correction is applied. A boundary estimate therefore contributes zero to the variable component in the corresponding direction, while the fixed baseline keeps the marker visible.
+
+## Package-specific graphical rescaling
+
+The dimensions above describe the recovered RevMan-style relative geometry. Before the dimensions are passed to the plotting routine, `dtametaTMB` divides them by 10:
+
+$$
+\widetilde d_{Sp,i} = \frac{4+cq_{Sp,i}}{10}
+$$
+
+and
+
+$$
+\widetilde d_{Se,i} = \frac{4+cq_{Se,i}}{10}.
+$$
+
+The divisor of 10 is a package-specific graphical rescaling constant. It places the symbols in a range compatible with the default graphical scale used by the other sizing methods. It does not alter relative widths, heights, or the ordering of study-symbol dimensions.
+
+The `scale` argument in the plotting methods multiplies all dimensions proportionally. Changing `scale` therefore changes the overall symbol size without changing the relative geometry among studies.
+
+## A controlled example
+
+The following dataset has sensitivity and specificity equal to 0.8 in every study, while the diseased and non-diseased sample sizes increase across studies.
+
+```{r}
+#| label: controlled-data
+
+controlled_data <- data.frame(
+  study = paste("Study", LETTERS[1:7]),
+  TP = c(20, 80, 320, 800, 1600, 4000, 16000),
+  FP = c(5, 20, 80, 200, 400, 1000, 4000),
+  FN = c(5, 20, 80, 200, 400, 1000, 4000),
+  TN = c(20, 80, 320, 800, 1600, 4000, 16000)
+)
+
+controlled_data$sens <- with(
+  controlled_data,
+  TP / (TP + FN)
+)
+
+controlled_data$spec <- with(
+  controlled_data,
+  TN / (TN + FP)
+)
+
+controlled_data
+```
+
+For every study in this example,
+
+$$
+\widehat{Se}_i = \widehat{Sp}_i = 0.8.
+$$
+
+The inverse-standard-error measure is therefore
+
+$$
+\sqrt{n_i(0.8)(0.2)}
+=
+0.4\sqrt{n_i}.
+$$
+
+The factor 0.4 is common to all raw horizontal and vertical measures. Because the analysis-specific normalization constant absorbs a common multiplicative factor, the sample-size and inverse-standard-error methods produce identical relative marker dimensions in this controlled example.
+
+The following code reproduces the calculations used by the plotting methods.
+
+```{r}
+#| label: controlled-calculations
+
+n1 <- with(controlled_data, TP + FN)
+n0 <- with(controlled_data, FP + TN)
+
+# Sample-size measures
+q_ss_se <- sqrt(n1)
+q_ss_sp <- sqrt(n0)
+c_ss <- 8 / mean(pmax(q_ss_se, q_ss_sp))
+
+# Inverse-standard-error measures
+q_ise_se <- with(
+  controlled_data,
+  sqrt(n1 * sens * (1 - sens))
+)
+
+q_ise_sp <- with(
+  controlled_data,
+  sqrt(n0 * spec * (1 - spec))
+)
+
+c_se <- 8 / mean(pmax(q_ise_se, q_ise_sp))
+
+comparison <- data.frame(
+  study = controlled_data$study,
+  sample_size_width = (4 + c_ss * q_ss_sp) / 10,
+  sample_size_height = (4 + c_ss * q_ss_se) / 10,
+  inverse_se_width = (4 + c_se * q_ise_sp) / 10,
+  inverse_se_height = (4 + c_se * q_ise_se) / 10
+)
+
+comparison
+```
+
+The two pairs of dimensions are equal in this example, apart from numerical rounding.
+
+## Using the sizing methods
+
+The RevMan-style methods are selected through the `size` argument of the applicable SROC plotting methods.
+
+```{r}
+#| label: fit-example
+#| eval: TRUE
+
+fit <- fitRutterGatsonis(
+  data = controlled_data,
+  TP = TP,
+  FP = FP,
+  FN = FN,
+  TN = TN,
+  study = study
+)
+fit
+```
+
+Use square-root sample-size scaling with:
+
+```{r}
+#| label: plot-sample-size
+#| fig.height: 8
+#| fig.width: 8
+#| eval: TRUE
+plot(fit,size = "sampsize_revman",specrange=c(0,0))
+```
+
+Use inverse-standard-error scaling with:
+
+```{r}
+#| label: plot-inverse-se
+#| fig.height: 8
+#| fig.width: 8
+#| eval: TRUE
+plot(fit,size = "se_revman",specrange=c(0,0))
+```
+
+The overall marker size can be adjusted without changing the relative dimensions:
+
+```{r}
+#| label: plot-scale
+#| fig.height: 8
+#| fig.width: 8
+#| eval: TRUE
+
+plot(fit,size = "se_revman",scale = 0.03,specrange=c(0,0))
+```
+
+## Relation to the other sizing methods
+
+The original `dtametaTMB` methods answer related but distinct graphical questions.
+
+- `size = "equal"` displays all studies with equal dimensions.
+- `size = "sampsize"` uses normalized relative diseased and non-diseased
+  sample sizes directly. For study $i$, the horizontal and vertical
+  sizing measures are
+
+  $$
+  w_{Sp,i}
+  =
+  100
+  \frac{n_{0i}}{\sum_{j=1}^{I} n_{0j}}
+  $$
+
+  and
+
+  $$
+  w_{Se,i}
+  =
+  100
+  \frac{n_{1i}}{\sum_{j=1}^{I} n_{1j}},
+  $$
+
+  where $n_{0i}=FP_i+TN_i$ and $n_{1i}=TP_i+FN_i$. Thus, the
+  horizontal and vertical measures each sum to 100 across studies.
+
+- `size = "se"` uses normalized approximate inverse standard errors on the
+  logit scale. The unnormalized specificity-side and sensitivity-side
+  measures are
+
+  $$
+  q_{Sp,i}
+  =
+  \sqrt{
+    n_{0i}\widehat{Sp}_i(1-\widehat{Sp}_i)
+  }
+  $$
+
+  and
+
+  $$
+  q_{Se,i}
+  =
+  \sqrt{
+    n_{1i}\widehat{Se}_i(1-\widehat{Se}_i)
+  }.
+  $$
+
+  The displayed horizontal and vertical sizing measures are then
+
+  $$
+  w_{Sp,i}
+  =
+  100
+  \frac{q_{Sp,i}}{\sum_{j=1}^{I}q_{Sp,j}}
+  $$
+
+  and
+
+  $$
+  w_{Se,i}
+  =
+  100
+  \frac{q_{Se,i}}{\sum_{j=1}^{I}q_{Se,j}}.
+  $$
+
+  These measures follow from the large-sample approximation
+
+  $$
+  \operatorname{Var}
+  \left\{
+    \operatorname{logit}(\widehat p_i)
+  \right\}
+  \approx
+  \frac{1}{
+    n_i\widehat p_i(1-\widehat p_i)
+  }.
+  $$
+- `size = "fisher"`, where available, uses study-specific contributions derived from a decomposition of the Fisher information matrix.
+- `size = "sampsize_revman"` and `size = "se_revman"` apply the fixed-baseline, analysis-normalized RevMan-style transformations described in this vignette.
+
+The choice of method affects the graphical interpretation of marker dimensions. None of these options changes the fitted meta-analytic model.
+
+## Latent-class extension
+
+In latent-class models, true disease status is unobserved. Separate observed diseased and non-diseased sample sizes are therefore unavailable.
+
+### Total sample-size scaling
+
+For `size = "sampsize_revman"`, the same total-sample-size measure is used in both directions:
+
+$$
+q_i = \sqrt{n_i}.
+$$
+
+Because the horizontal and vertical measures are identical, the normalization constant reduces to
+
+$$
+c_n = \frac{8}{\frac{1}{I}\sum_{i=1}^{I}\sqrt{n_i}}.
+$$
+
+The resulting marker is square, with package-rescaled dimension
+
+$$
+\widetilde d_i = \frac{4+c_n\sqrt{n_i}}{10}.
+$$
+
+### Empirical Bayes precision scaling
+
+For `size = "eb_revman"`, let \(V_{Se,i}\) and \(V_{Sp,i}\) denote the conditional posterior variances of the study-specific empirical Bayes logit-sensitivity and logit-specificity estimates. The raw measures are
+
+$$
+q_{Se,i} = \frac{1}{\sqrt{V_{Se,i}}}
+$$
+
+and
+
+$$
+q_{Sp,i} = \frac{1}{\sqrt{V_{Sp,i}}}.
+$$
+
+The analysis-specific constant is
+
+$$
+c_{EB} =
+\frac{8}
+{\frac{1}{I}\sum_{i=1}^{I}\max(q_{Se,i},q_{Sp,i})}.
+$$
+
+The package-rescaled dimensions are
+
+$$
+\widetilde d_{Se,i}
+=
+\frac{4+c_{EB}q_{Se,i}}{10}
+$$
+
+and
+
+$$
+\widetilde d_{Sp,i}
+=
+\frac{4+c_{EB}q_{Sp,i}}{10}.
+$$
+
+The empirical Bayes option applies the same graphical normalization principle to latent-class posterior precision. It is an extension developed for `dtametaTMB` and is not a latent-class sizing method defined by RevMan.
+
+## Interpretation and limitations
+
+The RevMan-style transformations were reconstructed from graphical output rather than from an official software specification. The controlled experiments strongly support the following features:
+
+- separate horizontal and vertical sizing measures;
+- square-root sample-size scaling;
+- approximate inverse-logit-standard-error scaling;
+- a fixed baseline full dimension of 4;
+- one analysis-specific constant shared by both directions;
+- normalization based on the mean study-level maximum raw measure;
+- proportional scaling of all marker dimensions through the plotting `scale` argument.
+
+Physical marker sizes can still differ across plotting devices, export formats, panel dimensions, line widths, and rendering systems. The implementation aims to reproduce the relative marker geometry and normalization rule, not identical device pixels under every graphical configuration.
+
+The formulas should therefore be understood as transparent RevMan-style graphical transformations. They do not alter parameter estimates, confidence regions, prediction regions, or the fitted SROC model.
+
+## Summary
+
+For both conventional RevMan-style sizing methods, `dtametaTMB` uses
+
+$$
+c =
+\frac{8}
+{\operatorname{mean}_i\left[\max(q_{Se,i},q_{Sp,i})\right]},
+$$
+
+followed by
+
+$$
+d_{Se,i}=4+cq_{Se,i}
+$$
+
+and
+
+$$
+d_{Sp,i}=4+cq_{Sp,i}.
+$$
+
+The sample-size method uses square-root diseased and non-diseased sample sizes. The inverse-standard-error method uses approximate inverse standard errors of observed logit sensitivity and specificity without a continuity correction. The latent-class extensions apply the same normalization principle to total sample size or empirical Bayes posterior precision.

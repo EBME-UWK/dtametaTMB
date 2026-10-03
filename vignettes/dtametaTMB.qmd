@@ -8,9 +8,6 @@ vignette: >
   %\VignetteIndexEntry{Introduction to dtametaTMB}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{quarto::html}
-editor: 
-  markdown: 
-    wrap: sentence
 ---
 
 ```{r, include = FALSE}

@@ -38,16 +38,20 @@ respectively.}
 Horizontal and vertical symbol dimensions are proportional to
 normalized approximate inverse standard errors of observed logit
 specificity and logit sensitivity, respectively.}
-\item{"sampsize_revman"}{RevMan-style sample-size scaling.
-Horizontal and vertical symbol dimensions are proportional to
-\eqn{4 + 0.64\sqrt{n_0}} and
-\eqn{4 + 0.64\sqrt{n_1}}, respectively, where \eqn{n_0} and
-\eqn{n_1} are the numbers of non-diseased and diseased participants.}
-\item{"se_revman"}{RevMan-style inverse-standard-error scaling.
-Horizontal and vertical symbol dimensions are proportional to
-\eqn{4 + 1.5\sqrt{n_0\widehat{Sp}(1-\widehat{Sp})}} and
-\eqn{4 + 1.5\sqrt{n_1\widehat{Se}(1-\widehat{Se})}},
-respectively.}
+\item{"sampsize_revman"}{
+RevMan-style sample-size scaling. Horizontal and vertical symbol
+dimensions are based on the square roots of the numbers of
+non-diseased and diseased participants, respectively. A common
+analysis-specific scaling constant is chosen so that the average
+larger dimension measure across studies equals eight before adding
+the fixed baseline dimension.}
+\item{"se_revman"}{
+RevMan-style inverse-standard-error scaling. Horizontal and
+vertical symbol dimensions are based on approximate inverse standard
+errors of observed logit specificity and logit sensitivity,
+respectively. A common analysis-specific scaling constant is chosen
+so that the average larger dimension measure across studies equals
+eight before adding the fixed baseline dimension.}
 }}
 
 \item{specrange}{A numeric vector of length 2 giving the range of

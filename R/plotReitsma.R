@@ -27,16 +27,20 @@
 #'       Horizontal and vertical symbol dimensions are proportional to
 #'       normalized approximate inverse standard errors of observed logit
 #'       specificity and logit sensitivity, respectively.}
-#'    \item{"sampsize_revman"}{RevMan-style sample-size scaling. 
-#'    Horizontal and vertical symbol dimensions are proportional to
-#'    \eqn{4 + 0.64\sqrt{n_0}} and
-#'    \eqn{4 + 0.64\sqrt{n_1}}, respectively, where \eqn{n_0} and
-#'    \eqn{n_1} are the numbers of non-diseased and diseased participants.}
-#'    \item{"se_revman"}{RevMan-style inverse-standard-error scaling. 
-#'    Horizontal and vertical symbol dimensions are proportional to
-#'    \eqn{4 + 1.5\sqrt{n_0\widehat{Sp}(1-\widehat{Sp})}} and
-#'    \eqn{4 + 1.5\sqrt{n_1\widehat{Se}(1-\widehat{Se})}},
-#'    respectively.}
+#'    \item{"sampsize_revman"}{
+#'       RevMan-style sample-size scaling. Horizontal and vertical symbol
+#'       dimensions are based on the square roots of the numbers of
+#'       non-diseased and diseased participants, respectively. A common
+#'       analysis-specific scaling constant is chosen so that the average
+#'       larger dimension measure across studies equals eight before adding
+#'       the fixed baseline dimension.}
+#'    \item{"se_revman"}{
+#'       RevMan-style inverse-standard-error scaling. Horizontal and
+#'       vertical symbol dimensions are based on approximate inverse standard
+#'       errors of observed logit specificity and logit sensitivity,
+#'       respectively. A common analysis-specific scaling constant is chosen
+#'       so that the average larger dimension measure across studies equals
+#'       eight before adding the fixed baseline dimension.}
 #'  } 
 #' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
 #'   Default is \code{FALSE}.
@@ -211,16 +215,22 @@ plot.Reitsma <- function(x,
     pctsp <- sqrt(spm1) / sum(sqrt(spm1))*100
   }
   if(size=="sampsize_revman"){
-    pctse  <- (4 + 0.64*sqrt(x$data$n1))/5 # revman_rescale: 5
-    pctsp  <- (4 + 0.64*sqrt(x$data$n0))/5 # revman_rescale: 5
+    q_se <- sqrt(x$data$n1)
+    q_sp <- sqrt(x$data$n0)
+    c_ss <- 8 / mean(pmax(q_se,q_sp))
+    pctse  <- (4 + c_ss*q_se)/10 # revman_scale: 10
+    pctsp  <- (4 + c_ss*q_sp)/10 # revman_scale: 10
   }
   if(size=="se_revman"){
     sem1  <- x$data$sens*(1-x$data$sens)*x$data$n1 # inverse logit variance
     spm1  <- x$data$spec*(1-x$data$spec)*x$data$n0 # inverse logit variance
     sem1[is.nan(sem1)] <- 0
     spm1[is.nan(spm1)] <- 0
-    pctse  <- (4 + 1.5*sqrt(sem1))/5 # revman_rescale: 5
-    pctsp  <- (4 + 1.5*sqrt(spm1))/5 # revman_rescale: 5
+    q_se  <- sqrt(sem1)
+    q_sp  <- sqrt(spm1)
+    c_se  <- 8/mean(pmax(q_se,q_sp))
+    pctse  <- (4 + c_se*q_se)/10 # revman_scale: 10
+    pctsp  <- (4 + c_se*q_sp)/10 # revman_scale: 10
   }
   # Plot study level estimates 
   pointsXY(x=1-x$data$spec, 

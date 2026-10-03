@@ -49,16 +49,18 @@ is used horizontally and vertically because true disease status
 is latent.
 }
 \item{\code{"eb_revman"}}{
-RevMan-style graphical scaling applied to the precision of the
-empirical Bayes estimates. This option uses the RevMan-style
-fixed baseline and point-scaling constants but is not an
-original RevMan latent-class weighting method.
-}
+RevMan-style graphical scaling applied to the inverse conditional
+posterior standard errors of the study-specific empirical Bayes
+logit-specificity and logit-sensitivity estimates. A common
+analysis-specific scaling constant is chosen so that the average
+larger dimension measure across studies equals eight before adding
+the fixed baseline dimension. This is an analogous graphical extension
+for latent-class models and is not an original Cochrane latent-class
+weighting method.}
 \item{\code{"sampsize_revman"}}{
 RevMan-style graphical scaling based on total study sample size.
-The same transformed sample-size measure is used for the
-horizontal and vertical symbol dimensions.
-}
+The same transformed total-sample-size measure is used horizontally
+and vertically.}
 }}
 
 \item{nudge_legend}{Numeric horizontal offset for the subgroup legend.
