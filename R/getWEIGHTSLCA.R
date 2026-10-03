@@ -18,12 +18,12 @@ getWEIGHTSLCA <- function(xdata,size){
   if(size=="eb_revman") {
     invse_sens <- 1 / sqrt(xdata$lsens_eb_var)
     invse_spec <- 1 / sqrt(xdata$lspec_eb_var)
-    pctse  <- (4 + 1.5*invse_sens)/540
-    pctsp  <- (4 + 1.5*invse_spec)/540
+    pctse  <- (4 + 1.5*invse_sens)/5 # revman_rescale: 5
+    pctsp  <- (4 + 1.5*invse_spec)/5 # revman_rescale: 5
   }
   if(size=="sampsize_revman"){
-    pctse  <- (4 + 0.64*sqrt(xdata$n))/540
-    pctsp  <- (4 + 0.64*sqrt(xdata$n))/540
+    pctse  <- (4 + 0.64*sqrt(xdata$n))/5 # revman_rescale: 5
+    pctsp  <- (4 + 0.64*sqrt(xdata$n))/5 # revman_rescale: 5
   }
   pct <- data.frame(sp=pctsp,
                     se=pctse)

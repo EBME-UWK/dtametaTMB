@@ -12,12 +12,9 @@
 #'   estimates. One of \code{"rectangle"}, \code{"ellipse"},
 #'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 #'   or \code{"star"}. The default is \code{"rectangle"}.
-#' @param scale Optional numeric scaling factor controlling study-symbol
-#'   dimensions. If \code{NULL} (default), \code{scale} is set to
-#'   \code{0.02} for the original sizing methods and to \code{1} for
-#'   RevMan-style sizing methods. For RevMan-style methods,
-#'   \code{scale = 1} corresponds to the 100 percent point-scaling
-#'   setting calibrated against a 540 by 540 SROC plotting panel.
+#' @param scale Numeric scaling factor controlling study-symbol dimensions.
+#' The default is \code{0.02}. Values below or above the default decrease
+#' or increase all symbol dimensions proportionally.
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
 #'    \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default.}
@@ -103,7 +100,7 @@
 #' @export
 plot.Reitsma <- function(x, 
                          symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
-                         scale=NULL, 
+                         scale=0.02, 
                          size=c("fisher","equal","sampsize","se","sampsize_revman","se_revman"), 
                          main="Diagnostic Test Accuracy Meta-Analysis",
                          HSROC=FALSE, 
@@ -120,9 +117,6 @@ plot.Reitsma <- function(x,
   }
   symbol  <- match.arg(symbol)
   size    <- match.arg(size)
-  if (is.null(scale)) {
-    scale <- if (size %in% c("sampsize_revman","se_revman")) {1} else {0.02} 
-  }
   nstudy  <- nrow(x$data)
   warn_unestimable_sroc_points(x$data)
   # Confidence and prediction region
@@ -186,10 +180,6 @@ plot.Reitsma <- function(x,
     # Get weights  
     for (i in seq_len(nstudy)){
       DM <- V
-      # DM2 <- diag(rep(100000000000),72)
-      # DM1 <- V[c(1:2),c(1:2)]
-      # VD1 <- Matrix::bdiag(DM1,DM2)
-      # invDM <- solve(VD1)
       DM[(i*2)-1, (i*2)-1] <- 100000000000
       DM[(i*2)-1, (i*2)] <- 0
       DM[(i*2), (i*2)-1] <- 0
@@ -221,16 +211,16 @@ plot.Reitsma <- function(x,
     pctsp <- sqrt(spm1) / sum(sqrt(spm1))*100
   }
   if(size=="sampsize_revman"){
-    pctse  <- (4 + 0.64*sqrt(x$data$n1))/540
-    pctsp  <- (4 + 0.64*sqrt(x$data$n0))/540
+    pctse  <- (4 + 0.64*sqrt(x$data$n1))/5 # revman_rescale: 5
+    pctsp  <- (4 + 0.64*sqrt(x$data$n0))/5 # revman_rescale: 5
   }
   if(size=="se_revman"){
     sem1  <- x$data$sens*(1-x$data$sens)*x$data$n1 # inverse logit variance
     spm1  <- x$data$spec*(1-x$data$spec)*x$data$n0 # inverse logit variance
     sem1[is.nan(sem1)] <- 0
     spm1[is.nan(spm1)] <- 0
-    pctse  <- (4 + 1.5*sqrt(sem1))/540
-    pctsp  <- (4 + 1.5*sqrt(spm1))/540
+    pctse  <- (4 + 1.5*sqrt(sem1))/5 # revman_rescale: 5
+    pctsp  <- (4 + 1.5*sqrt(spm1))/5 # revman_rescale: 5
   }
   # Plot study level estimates 
   pointsXY(x=1-x$data$spec, 

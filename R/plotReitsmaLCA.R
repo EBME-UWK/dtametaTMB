@@ -11,12 +11,9 @@
 #'   estimates. One of \code{"rectangle"}, \code{"ellipse"},
 #'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 #'   or \code{"star"}. The default is \code{"rectangle"}.
-#' @param scale Optional numeric scaling factor controlling study-symbol
-#'   dimensions. If \code{NULL} (default), \code{scale} is set to
-#'   \code{0.02} for the original sizing methods and to \code{1} for
-#'   RevMan-style sizing methods. For RevMan-style methods,
-#'   \code{scale = 1} corresponds to the 100 percent point-scaling
-#'   setting calibrated against a 540 by 540 SROC plotting panel.
+#' @param scale Numeric scaling factor controlling study-symbol dimensions.
+#' The default is \code{0.02}. Values below or above the default decrease
+#' or increase all symbol dimensions proportionally.
 #' @param size Character string controlling display of study-level
 #'   point estimates:
 #'   \describe{
@@ -106,7 +103,7 @@
 #' @export
 plot.ReitsmaLCA <- function(x,
                             symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
-                            scale=NULL, 
+                            scale=0.02, 
                             size=c("eb","equal","sampsize","eb_revman","sampsize_revman"), 
                             main="Diagnostic Test Accuracy Meta-Analysis",
                             HSROC=FALSE, 
@@ -123,9 +120,6 @@ plot.ReitsmaLCA <- function(x,
   }
   symbol  <- match.arg(symbol)
   size    <- match.arg(size)
-  if (is.null(scale)) {
-    scale <- if (size %in% c("eb_revman","sampsize_revman")) {1} else {0.02} 
-  }
   nstudy  <- nrow(x$data)
   # Confidence and prediction region
   muA     <- x$sdreport2["mu_A.index","Estimate"]

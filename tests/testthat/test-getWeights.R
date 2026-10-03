@@ -30,12 +30,12 @@ test_that("RevMan sample-size transformation is reproduced", {
   out <- getWEIGHTS(dat, "sampsize_revman")
   
   expect_equal(
-    out$se * 540,
+    out$se * 5,
     c(7.2, 10.4, 16.8)
   )
   
   expect_equal(
-    out$sp * 540,
+    out$sp * 5,
     c(7.2, 10.4, 16.8)
   )
 })
@@ -50,6 +50,6 @@ test_that("RevMan inverse-SE scaling retains baseline size", {
   
   out <- getWEIGHTS(dat, "se_revman")
   
-  expect_equal(out$se * 540, 4)
-  expect_equal(out$sp * 540, 4)
+  expect_equal(out$se * 5, 4)
+  expect_equal(out$sp * 5, 4)
 })

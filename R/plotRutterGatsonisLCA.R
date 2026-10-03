@@ -11,12 +11,9 @@
 #'   estimates. One of \code{"rectangle"}, \code{"ellipse"},
 #'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 #'   or \code{"star"}. The default is \code{"rectangle"}.
-#' @param scale Optional numeric scaling factor controlling study-symbol
-#'   dimensions. If \code{NULL} (default), \code{scale} is set to
-#'   \code{0.02} for the original sizing methods and to \code{1} for
-#'   RevMan-style sizing methods. For RevMan-style methods,
-#'   \code{scale = 1} corresponds to the 100 percent point-scaling
-#'   setting calibrated against a 540 by 540 SROC plotting panel.
+#' @param scale Numeric scaling factor controlling study-symbol dimensions.
+#' The default is \code{0.02}. Values below or above the default decrease
+#' or increase all symbol dimensions proportionally.
 #' @param size Character string controlling display of study-level
 #'   point estimates:
 #'   \describe{
@@ -89,15 +86,12 @@
 #' @export
 plot.RutterGatsonisLCA <- function(x,
                                    symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
-                                   scale=NULL,
+                                   scale=0.02,
                                    size=c("eb","equal","sampsize","eb_revman","sampsize_revman"), 
                                    specrange=c(0.7,0.995),
                                    main="Diagnostic Test Accuracy Meta-Analysis", ...) {
   size    <- match.arg(size)
   symbol  <- match.arg(symbol)
-  if (is.null(scale)) {
-    scale <- if (size %in% c("eb_revman","sampsize_revman")) {1} else {0.02} 
-  }
   Lambda  <- x$sdreport2["Lambda", "Estimate"]
   beta    <- x$sdreport2["beta","Estimate"]
   roc_points2 <- getROCpoints(Lambda,beta,specrange=specrange)

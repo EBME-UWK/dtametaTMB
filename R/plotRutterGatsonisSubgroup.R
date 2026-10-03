@@ -11,12 +11,9 @@
 #'   estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
 #'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 #'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
-#' @param scale Optional numeric scaling factor controlling study-symbol
-#'   dimensions. If \code{NULL} (default), \code{scale} is set to
-#'   \code{0.02} for the original sizing methods and to \code{1} for
-#'   RevMan-style sizing methods. For RevMan-style methods,
-#'   \code{scale = 1} corresponds to the 100 percent point-scaling
-#'   setting calibrated against a 540 by 540 SROC plotting panel.
+#' @param scale Numeric scaling factor controlling study-symbol dimensions.
+#' The default is \code{0.02}. Values below or above the default decrease
+#' or increase all symbol dimensions proportionally.
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
 #'    \item{"equal"}{All studies shown with equal size.}
@@ -86,7 +83,7 @@
 #' @export
 plot.RutterGatsonisSubgroup <- function(x, 
                                         symbol=NULL,
-                                        scale=NULL,
+                                        scale=0.02,
                                         size=c("equal","sampsize","se","sampsize_revman","se_revman"), 
                                         nudge_legend=-0.4,
                                         specrange=c(0.7,0.995),
@@ -100,9 +97,6 @@ plot.RutterGatsonisSubgroup <- function(x,
      }
    }
    size <- match.arg(size)
-   if (is.null(scale)) {
-     scale <- if (size %in% c("sampsize_revman","se_revman")) {1} else {0.02} 
-   }
    sub  <- x$subgroups
    nsub <- length(sub)
    nstudy <- nrow(x$data)
