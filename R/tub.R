@@ -21,7 +21,7 @@
 #' *Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy.*
 #' Version 2.0 (updated July 2023). Cochrane.
 #' 
-#' Kohli, M. et a. (2018).
+#' Kohli, M. et al. (2018).
 #' *Xpert MTB/RIF assay for extrapulmonary tuberculosis and rifampicin resistance*.
 #' Cochrane Database of Systematic Reviews 2018, 8, CD012768.
 #' \doi{10.1002/14651858.CD012768.pub2}

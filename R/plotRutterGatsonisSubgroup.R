@@ -11,16 +11,23 @@
 #'   estimates of the subgroups. One can choose \code{"rectangle"}, \code{"ellipse"},
 #'   \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 #'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
-#' @param scale A numeric scaling factor controlling the size of the
-#'   symbols representing study weights. Default is \code{0.02}.
-#'   For the RevMan-style sizing options, the default is 1 which corresponds to the 
-#'   RevMan 100% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel. 
-#'   Values below or above one decrease or increase all symbol dimensions proportionally.
-#' @param size Character string controlling study weight display:
+#' @param scale Optional numeric scaling factor controlling study-symbol
+#'   dimensions. If \code{NULL} (default), \code{scale} is set to
+#'   \code{0.02} for the original sizing methods and to \code{1} for
+#'   RevMan-style sizing methods. For RevMan-style methods,
+#'   \code{scale = 1} corresponds to the 100 percent point-scaling
+#'   setting calibrated against a 540 by 540 SROC plotting panel.
+#' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
-#'    \item{"equal"}{All studies shown with equal size}
-#'    \item{"sampsize"}{Size proportional to sample size}
-#'    \item{"se"}{Size proportional to precision on the logit scale}
+#'    \item{"equal"}{All studies shown with equal size.}
+#'    \item{"sampsize"}{
+#'     Horizontal and vertical symbol dimensions are proportional to the
+#'     relative numbers of non-diseased and diseased participants,
+#'     respectively.}
+#'    \item{"se"}{
+#'       Horizontal and vertical symbol dimensions are proportional to
+#'       normalized approximate inverse standard errors of observed logit
+#'       specificity and logit sensitivity, respectively.}
 #'    \item{"sampsize_revman"}{RevMan-style sample-size scaling. 
 #'    Horizontal and vertical symbol dimensions are proportional to
 #'    \eqn{4 + 0.64\sqrt{n_0}} and

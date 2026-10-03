@@ -20,5 +20,5 @@ including number of studies, convergence status, and
 likelihood-based fit statistics.
 }
 \seealso{
-\code{\link{summary.ReitsmaLCA}}
+\code{\link{summary.ReitsmaSubgroupLCA}}
 }

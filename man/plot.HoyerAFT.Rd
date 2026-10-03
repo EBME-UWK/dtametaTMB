@@ -18,7 +18,7 @@
 \item{x}{An object of class \code{"HoyerAFT"} as returned by
 \code{\link{fitHoyerAFT}}. Must contain:
 \describe{
-\item{original}{Original processed data including sensitivity
+\item{data}{Original processed data including sensitivity
 (\code{sens}) and false positive rate (\code{fpr})}
 \item{sdreport2}{Summary of model parameters}
 \item{distcode}{Distribution code (1 = Weibull,
@@ -30,17 +30,24 @@ estimates. One of \code{"rectangle"}, \code{"ellipse"},
 \code{"diamond"}, \code{"triangle"}, \code{"cross"}, \code{"plus"},
 or \code{"star"}. The default is \code{"rectangle"}.}
 
-\item{scale}{A numeric scaling factor controlling the size of the
-symbols representing study weights. Default is \code{0.02}.
-For the RevMan-style sizing options, the default is 1 which corresponds to the
-RevMan 100\% point-scaling setting, calibrated against a 540 × 540 SROC plotting panel.
-Values below or above one decrease or increase all symbol dimensions proportionally.}
+\item{scale}{Optional numeric scaling factor controlling study-symbol
+dimensions. If \code{NULL} (default), \code{scale} is set to
+\code{0.02} for the original sizing methods and to \code{1} for
+RevMan-style sizing methods. For RevMan-style methods,
+\code{scale = 1} corresponds to the 100 percent point-scaling
+setting calibrated against a 540 by 540 SROC plotting panel.}
 
-\item{size}{Character string controlling study weight display:
+\item{size}{Character string controlling display of study-level point estimates:
 \describe{
-\item{"equal"}{All studies shown with equal size}
-\item{"sampsize"}{Size proportional to sample size}
-\item{"se"}{Size proportional to precision on the logit scale}
+\item{"equal"}{All studies shown with equal size.}
+\item{"sampsize"}{
+Horizontal and vertical symbol dimensions are proportional to the
+relative numbers of non-diseased and diseased participants,
+respectively.}
+\item{"se"}{
+Horizontal and vertical symbol dimensions are proportional to
+normalized approximate inverse standard errors of observed logit
+specificity and logit sensitivity, respectively.}
 \item{"sampsize_revman"}{RevMan-style sample-size scaling.
 Horizontal and vertical symbol dimensions are proportional to
 \eqn{4 + 0.64\sqrt{n_0}} and
@@ -76,7 +83,7 @@ meta-analytic HSROC curve derived from the fitted model.
 The plot includes:
 \itemize{
 \item Study-specific sensitivity and false positive rate estimates
-\item Symbols representing study observations, with size reflecting the selected study-weight measure.
+\item Symbols representing study observations, with dimensions determined by the selected graphical sizing method.
 \item Lines connecting thresholds within studies
 \item A meta-analytic HSROC curve based on the fitted AFT model
 }

@@ -2,8 +2,8 @@
 #'
 #' Fits the Reitsma bivariate random-effects model with a single categorical covariate
 #' for diagnostic test accuracy (DTA) meta-analysis using a binomial-normal 
-#' likelihood via \code{glmmTMB}. The model is fitted twice, once with dummy/reference
-#' cell coding, and once with central-mean parameterization.
+#' likelihood via \code{glmmTMB}. The model is fitted twice, once using treatment-contrast 
+#' coding with a reference subgroup and once using the cell-means parameterization.
 #'
 #' @param data A data.frame containing study-level data.
 #' @param TP True positives (column name).
@@ -84,12 +84,12 @@
 #'
 #' @return A list of class \code{"ReitsmaSubgroup"} with components:
 #' \itemize{
-#'   \item \code{data}: the original data set with derived quantities
+#'   \item \code{data}: the original data set with derived quantities.
 #'   \item \code{glmmTMB_mu}: fitted model object with cell means parameterization.
 #'   \item \code{estimates_mu}: parameter estimates with SE with cell means parameterization.
 #'   \item \code{vcov_mu}: variance-covariance matrix with cell means parameterization.
 #'   \item \code{sensspec}: sensitivity and specificity estimates.
-#'   \item \code{glmmTMB_nu}: fitted model object with dummy/reference-cell parameterization
+#'   \item \code{glmmTMB_nu}: fitted model object with dummy/reference-cell parameterization.
 #'   \item \code{estimates_nu}: parameter estimates with SE with dummy/reference-cell parameterization.
 #'   \item \code{vcov_nu}: variance-covariance matrix with dummy/reference-cell parameterization.
 #'   \item \code{LRDOR}: Diagnostic odds ratios and likelihood ratios.

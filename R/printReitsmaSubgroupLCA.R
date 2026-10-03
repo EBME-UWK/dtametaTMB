@@ -7,7 +7,7 @@
 #' @param x An object of class \code{"ReitsmaSubgroupLCA"}.
 #' @param ... Additional arguments (unused).
 #'
-#' @seealso \code{\link{summary.ReitsmaLCA}}
+#' @seealso \code{\link{summary.ReitsmaSubgroupLCA}}
 #' @return
 #' Invisibly returns the input object. 
 #' @method print ReitsmaSubgroupLCA

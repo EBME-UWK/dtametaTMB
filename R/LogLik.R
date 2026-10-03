@@ -75,10 +75,10 @@ NULL
 
 anova_lrt <- function(object, ..., test = "Chisq") {
   models <- list(object, ...)
- 
   if (length(models) < 2) {
     stop("At least two fitted models are required.")
   }
+  test <- match.arg(test, "Chisq")
   ll          <- lapply(models, stats::logLik)
   logLik_vals <- sapply(ll, as.numeric)
   dfs         <- sapply(ll, attr, which = "df")

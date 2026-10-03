@@ -107,7 +107,6 @@ An object of class \code{"RutterGatsonisReg"} containing:
 \item{sdreport2}{Summary of reported model parameters and derived quantities.}
 \item{sensspec}{Estimated sensitivities at the specified specificity
 value(s), including confidence intervals.}
-\item{constrain}{Constraints on parameters applied during model fitting.}
 }
 }
 \description{

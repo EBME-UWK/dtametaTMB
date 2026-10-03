@@ -7,7 +7,7 @@
 #' @param x An object of class \code{"RutterGatsonisSubgroupLCA"}.
 #' @param ... Additional arguments (unused).
 #'
-#' @seealso \code{\link{summary.RutterGatsonisLCA}}
+#' @seealso \code{\link{summary.RutterGatsonisSubgroupLCA}}
 #' @return
 #' Invisibly returns the input object. 
 #' @method print RutterGatsonisSubgroupLCA
