@@ -33,29 +33,35 @@ RevMan-style sizing methods. For RevMan-style methods,
 \code{scale = 1} corresponds to the 100 percent point-scaling
 setting calibrated against a 540 by 540 SROC plotting panel.}
 
-\item{size}{Character string controlling display of study-level point estimates:
+\item{size}{Character string controlling display of study-level
+point estimates:
 \describe{
-\item{"eb"}{
+\item{\code{"eb"}}{
 Horizontal and vertical symbol dimensions are proportional to
-normalized inverse posterior standard errors of the study-specific
-empirical Bayes logit-specificity and logit-sensitivity estimates,
-respectively.}
-\item{"equal"}{All studies shown with equal size.}
-\item{"sampsize"}{
-Horizontal and vertical symbol dimensions are proportional to the
-relative numbers of non-diseased and diseased participants,
-respectively.}
-\item{"se"}{
-Horizontal and vertical symbol dimensions are proportional to
-normalized approximate inverse standard errors of observed logit
-specificity and logit sensitivity, respectively.}
-\item{"eb_revman"}{RevMan-style graphical scaling applied to the precision of the empirical
-Bayes estimates. This option uses the RevMan-style fixed
-baseline and point-scaling constants but is not an original RevMan
-latent-class weighting method.}
-\item{"sampsize_revman"}{RevMan-style graphical scaling based on total study sample size.
-The same transformed sample-size weight is used for the horizontal
-and vertical symbol dimensions.}
+normalized inverse posterior standard errors of the
+study-specific empirical Bayes logit-specificity and
+logit-sensitivity estimates, respectively.
+}
+\item{\code{"equal"}}{
+All studies are shown with equal size.
+}
+\item{\code{"sampsize"}}{
+Horizontal and vertical symbol dimensions are both proportional
+to relative total study sample size. The same dimension measure
+is used horizontally and vertically because true disease status
+is latent.
+}
+\item{\code{"eb_revman"}}{
+RevMan-style graphical scaling applied to the precision of the
+empirical Bayes estimates. This option uses the RevMan-style
+fixed baseline and point-scaling constants but is not an
+original RevMan latent-class weighting method.
+}
+\item{\code{"sampsize_revman"}}{
+RevMan-style graphical scaling based on total study sample size.
+The same transformed sample-size measure is used for the
+horizontal and vertical symbol dimensions.
+}
 }}
 
 \item{nudge_legend}{Numeric horizontal offset for the subgroup legend.
