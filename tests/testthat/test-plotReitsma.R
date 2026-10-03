@@ -112,3 +112,37 @@ test_that("plot.Reitsma errors on malformed input", {
   
   expect_error(plot(obj))
 })
+
+test_that("plot.Reitsma works with different symbols",{
+  data("anticcp")
+  fit <- fitReitsma(data=anticcp,
+                    TP=TP,
+                    FP=FP,
+                    FN=FN,
+                    TN=TN,
+                    study=study)
+  
+  expect_no_error(plot(fit, symbol = "ellipse"))
+  expect_no_error(plot(fit, symbol = "diamond"))
+  expect_no_error(plot(fit, symbol = "triangle"))
+  expect_no_error(plot(fit, symbol = "cross"))
+  expect_no_error(plot(fit, symbol = "plus"))
+  expect_no_error(plot(fit, symbol = "star"))
+})
+
+
+test_that("plot.Reitsma works with different size options",{
+  data("anticcp")
+  fit <- fitReitsma(data=anticcp,
+                    TP=TP,
+                    FP=FP,
+                    FN=FN,
+                    TN=TN,
+                    study=study)
+  expect_no_error(plot(fit, size = "fisher"))
+  expect_no_error(plot(fit, size = "sampsize"))
+  expect_no_error(plot(fit, size = "se"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
+  expect_no_error(plot(fit, size = "se_revman"))
+})
+

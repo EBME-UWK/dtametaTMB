@@ -118,3 +118,41 @@ test_that("plot does not permanently change par settings", {
   
   expect_equal(old_par$pty, new_par$pty)
 })
+
+
+test_that("all size options work", {
+  
+  fit <- fitRutterGatsonis(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study
+  )
+  
+  expect_no_error(plot(fit, size = "equal"))
+  expect_no_error(plot(fit, size = "sampsize"))
+  expect_no_error(plot(fit, size = "se"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
+  expect_no_error(plot(fit, size = "se_revman"))
+})
+
+test_that("all symbol options work", {
+  
+  fit <- fitRutterGatsonis(
+    data = RF,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study
+  )
+  
+  expect_no_error(plot(fit, symbol = "ellipse"))
+  expect_no_error(plot(fit, symbol = "diamond"))
+  expect_no_error(plot(fit, symbol = "triangle"))
+  expect_no_error(plot(fit, symbol = "cross"))
+  expect_no_error(plot(fit, symbol = "plus"))
+  expect_no_error(plot(fit, symbol = "star"))
+})

@@ -78,7 +78,7 @@ getForestSensSpecLCA <- function(x,conflevel){
 
 
 #' @keywords internal
-#' @importFrom forestploter forest edit_plot
+#' @importFrom forestploter forest edit_plot set_xaxis
 #' @importFrom grid unit
 #' @noRd
 
@@ -93,8 +93,9 @@ getForestPlot <- function(dt,XP,r=0,s=2){
                             sizes = 0.75,
                             ci_column = c(9+r,11+r),
                             nudge_y=0.000001,
-                            xlim=c(0,1),
                             ref_line = 3)
+  p <- forestploter::set_xaxis(p,
+                               xlim=c(0,1))
   p <- forestploter::edit_plot(p,
                                col = s:(7+r),
                                which="text",

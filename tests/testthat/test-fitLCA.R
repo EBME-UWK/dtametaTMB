@@ -974,3 +974,34 @@ test_that("schuetz produces two subgroup estimates", {
   )
   
 })
+
+
+test_that("fitReitsmaSubgroupLCA validates constrain argument", {
+  expect_error(
+    fitReitsmaSubgroupLCA(
+      data = anticcp,
+      y11 = TP,
+      y10 = FP,
+      y01 = FN,
+      y00 = TN,
+      study = study,
+      subgroup = generation,
+      constrain = "banana"
+    ),
+    "constrain"
+  )
+  
+  expect_error(
+    fitReitsmaSubgroupLCA(
+      data = anticcp,
+      y11 = TP,
+      y10 = FP,
+      y01 = FN,
+      y00 = TN,
+      study = study,
+      subgroup = generation,
+      constrain = c("sigma_AB.index", "all")
+    ),
+    "constrain"
+  )
+})

@@ -89,7 +89,8 @@ importFrom(TMB,
 )
 importFrom(forestploter,
   edit_plot,
-  forest
+  forest,
+  set_xaxis
 )
 importFrom(glmmTMB,
   fixef,

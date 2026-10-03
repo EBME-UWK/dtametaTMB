@@ -104,7 +104,7 @@ test_that("RutterGatsonisReg produces sensitivity estimates", {
 })
 
 
-test_that("RutterGatsonisReg fits with shape = FALSE", {
+test_that("RutterGatsonisReg fits", {
   
   data("RF")
   
@@ -119,26 +119,6 @@ test_that("RutterGatsonisReg fits with shape = FALSE", {
     TN = TN,
     study = study,
     Z = Z)
-  
-  expect_equal(fit$fit$convergence, 0)
-})
-
-test_that("RutterGatsonisReg fits with shape = TRUE", {
-  
-  data("RF")
-  
-  Z <- model.matrix(~ method, data = RF)
-  Z <- Z[rep(seq_len(nrow(Z)), each = 2), , drop = FALSE]
-  
-  fit <- fitRutterGatsonisReg(
-    data = RF,
-    TP = TP,
-    FP = FP,
-    FN = FN,
-    TN = TN,
-    study = study,
-    Z = Z,
-  )
   
   expect_equal(fit$fit$convergence, 0)
 })

@@ -48,6 +48,8 @@ test_that("all size options work", {
   expect_no_error(plot(fit, size = "eb"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
+  expect_no_error(plot(fit, size = "eb_revman"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
   
 })
 
@@ -298,6 +300,8 @@ test_that("all size options work", {
   expect_no_error(plot(fit, size = "eb"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
+  expect_no_error(plot(fit, size = "eb_revman"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
   
 })
 
@@ -464,6 +468,8 @@ test_that("all size options work", {
   expect_no_error(plot(fit,size="eb"))
   expect_no_error(plot(fit,size="equal"))
   expect_no_error(plot(fit,size="sampsize"))
+  expect_no_error(plot(fit,size="eb_revman"))
+  expect_no_error(plot(fit,size="sampsize_revman"))
   
 })
 
@@ -655,6 +661,8 @@ test_that("all size options work", {
   expect_no_error(plot(fit, size = "eb"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
+  expect_no_error(plot(fit, size = "eb_revman"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
   
 })
 

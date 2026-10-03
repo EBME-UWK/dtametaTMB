@@ -64,3 +64,33 @@ test_that("plot.HoyerAFT works for all distributions", {
   }
 })
 
+
+test_that("plot.HoyerAFT supports all size and symbol options", {
+  data("diabetes")
+  
+  fit <- fitHoyer(
+    data = diabetes,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    threshold = threshold,
+    study = study,
+    smallest = 2,
+    largest = 10
+  )
+  
+  expect_no_error(plot(fit, size = "equal"))
+  expect_no_error(plot(fit, size = "sampsize"))
+  expect_no_error(plot(fit, size = "se"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
+  expect_no_error(plot(fit, size = "se_revman"))
+  
+  expect_no_error(plot(fit, symbol = "rectangle"))
+  expect_no_error(plot(fit, symbol = "ellipse"))
+  expect_no_error(plot(fit, symbol = "diamond"))
+  expect_no_error(plot(fit, symbol = "triangle"))
+  expect_no_error(plot(fit, symbol = "plus"))
+  expect_no_error(plot(fit, symbol = "cross"))
+  expect_no_error(plot(fit, symbol = "star"))
+})

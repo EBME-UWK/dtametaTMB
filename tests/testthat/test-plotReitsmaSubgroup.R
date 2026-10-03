@@ -15,24 +15,6 @@ test_that("plot.ReitsmaSubgroup runs on Anti-CCP example", {
   )
 })
 
-test_that("plot.ReitsmaSubgroup works for unequal variances", {
-  
-  fit <- fitReitsmaSubgroup(
-    data = anticcp,
-    TP = TP,
-    FP = FP,
-    FN = FN,
-    TN = TN,
-    study = study,
-    subgroup = generation,
-    variances = "unequal"
-  )
-  
-  expect_silent(
-    plot(fit)
-  )
-})
-
 
 test_that("plot.ReitsmaSubgroup works for unequal variances", {
   
@@ -73,6 +55,25 @@ test_that("plot.ReitsmaSubgroup accepts custom colours", {
   )
 })
 
+test_that("all size options work", {
+  
+  fit <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation
+  )
+  
+  expect_no_error(plot(fit, size = "equal"))
+  expect_no_error(plot(fit, size = "sampsize"))
+  expect_no_error(plot(fit, size = "se"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
+  expect_no_error(plot(fit, size = "se_revman"))
+})
+
 
 test_that("plot.ReitsmaSubgroup connects paired studies", {
   
@@ -89,6 +90,8 @@ test_that("plot.ReitsmaSubgroup connects paired studies", {
   expect_silent(
     plot(
       fit,
+      symbol=c("diamond","triangle"),
+      scale=0.04,
       connectstudies = TRUE
     )
   )

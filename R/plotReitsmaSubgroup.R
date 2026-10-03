@@ -229,7 +229,7 @@ plot.ReitsmaSubgroup <- function(x,
                       conf_lab,
                       pred_lab,
                       "Data"), 
-           pch = c(NA,NA,15,NA,symb[1]), 
+           pch = c(NA,NA,15,NA,NA,symb[1]), 
            lty = c(NA,1,NA,2,3,NA), 
            lwd = c(NA,2,NA,2,2,NA), 
            col = c(NA,"black","black","black","black","darkgray"))}

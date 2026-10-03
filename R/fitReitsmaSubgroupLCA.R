@@ -155,6 +155,25 @@ fitReitsmaSubgroupLCA <- function(data,
     stop("'data' must be a data.frame.")
   }
   
+  allowed_constraints <- c(
+    "sigma_AB.index",
+    "sigma2_A.index",
+    "sigma2_B.index",
+    "all"
+  )
+  
+  if (!is.null(constrain)) {
+    if (!is.character(constrain) ||
+        length(constrain) != 1L ||
+        !constrain %in% allowed_constraints) {
+      stop(
+        "'constrain' must be one of: ",
+        paste(shQuote(allowed_constraints), collapse = ", "),
+        " or NULL."
+      )
+    }
+  }
+  
   if(variances=="unequal" &&
      !is.null(constrain)) {
     stop(

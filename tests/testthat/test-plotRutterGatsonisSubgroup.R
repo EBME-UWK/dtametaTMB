@@ -30,7 +30,7 @@ test_that("plot.RutterGatsonisSubgroup accepts user colours", {
   expect_no_error(
     plot(
       fit,
-      col = c("black", "red", "blue", "green")
+      col = c("black", "red", "blue", "green","orange")
     )
   )
 })
@@ -51,6 +51,8 @@ test_that("all size options work", {
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))
+  expect_no_error(plot(fit, size = "sampsize_revman"))
+  expect_no_error(plot(fit, size = "se_revman"))
 })
 
 
@@ -135,63 +137,6 @@ test_that("plot.RutterGatsonisSubgroup runs without error", {
   )
 })
 
-test_that("plot.RutterGatsonisSubgroup supports all size options", {
-  
-  fit <- fitRutterGatsonisSubgroup(
-    data = RF,
-    TP = TP,
-    FP = FP,
-    FN = FN,
-    TN = TN,
-    study = study,
-    subgroup = method
-  )
-  
-  expect_no_error(plot(fit, size = "equal"))
-  expect_no_error(plot(fit, size = "sampsize"))
-  expect_no_error(plot(fit, size = "se"))
-})
-
-test_that("plot.RutterGatsonisSubgroup accepts custom colours", {
-  
-  fit <- fitRutterGatsonisSubgroup(
-    data = RF,
-    TP = TP,
-    FP = FP,
-    FN = FN,
-    TN = TN,
-    study = study,
-    subgroup = method
-  )
-  
-  expect_no_error(
-    plot(
-      fit,
-      col = c("red", "blue", "green", "black")
-    )
-  )
-})
-
-test_that("plot.RutterGatsonisSubgroup accepts custom specrange", {
-  
-  fit <- fitRutterGatsonisSubgroup(
-    data = RF,
-    TP = TP,
-    FP = FP,
-    FN = FN,
-    TN = TN,
-    study = study,
-    subgroup = method
-  )
-  
-  expect_no_error(
-    plot(
-      fit,
-      specrange = c(0.8, 0.99)
-    )
-  )
-})
-
 
 test_that("plot.RutterGatsonisSubgroup accepts graphical options", {
   
@@ -267,9 +212,6 @@ test_that("plot.RutterGatsonisSubgroup restores graphics parameters", {
     oldpar$mar
   )
 })
-
-
-
 
 
 
