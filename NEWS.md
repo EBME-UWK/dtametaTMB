@@ -4,12 +4,17 @@
   markers to be drawn as rectangles, ellipses, diamonds, triangles,
   crosses, plus-signs, or stars.
 * Added `size = "sampsize_revman"` and `size = "se_revman"`,
-  `size = eb_revman` options, following RevMan-style symbol-sizing convention, 
+  `size = "eb_revman"` options, following RevMan-style symbol-sizing convention, 
   to support visual consistency with `as_revman()` exports.
-* Corrected bug `size = "fisher"` which the correct covariance now to construct 
+* Corrected bug in `size = "fisher"` in `plot.Reitsma` which now uses the correct covariance to construct 
   the matrix G for the SROC plots.
+* Added `size = "fisher"` option to `plot.RutterGatsonis()`, `plot.RutterGatsonisSubgroup()`,
+  and `plot.ReitsmaSubgroup()`.
+* Added `fitReitsmaTMB()` and `fitReitsmaSubgroupTMB()` which rely on custom TMB templates rather
+  than on glmmTMB and may offer improved numerical robustness in difficult or near-boundary cases.
 * Corrected bug in `plot` and `as_revman` methods for ReitsmaSubgroup models when 
   sensitivity and/or specificity are assumed common in subgroups.
+
 * Fixed manual page titles to consistently use title case.
 
 # dtametaTMB 0.1.3

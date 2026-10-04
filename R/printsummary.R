@@ -19,8 +19,10 @@ print.summary.DTAmodel <- function(x,
   mod <- c(
     summary.HoyerAFT = "Summary: Hoyer Model",
     summary.Reitsma = "Summary: Reitsma Model",
+    summary.ReitsmaTMB = "Summary: Reitsma TMB Model",
     summary.ReitsmaLCA = "Summary: Reitsma LCA Model",
     summary.ReitsmaSubgroup = "Summary: Reitsma Subgroup Model",
+    summary.ReitsmaSubgroupTMB = "Summary: Reitsma Subgroup TMB Model",
     summary.ReitsmaSubgroupLCA = "Summary: Reitsma Subgroup LCA Model",
     summary.RutterGatsonis = "Summary: Rutter & Gatsonis Model",
     summary.RutterGatsonisReg = "Summary: Rutter & Gatsonis Regression Model",
@@ -87,3 +89,51 @@ getdtaRoundNumeric <- function(val, digits) {
   }
   val
 }
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.HoyerAFT <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.Reitsma <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.ReitsmaTMB <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.ReitsmaLCA <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.ReitsmaSubgroup <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.ReitsmaSubgroupTMB <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.ReitsmaSubgroupLCA <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.RutterGatsonis <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.RutterGatsonisReg <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.RutterGatsonisLCA <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.RutterGatsonisSubgroup <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.RutterGatsonisSubgroupLCA <- print.summary.DTAmodel

@@ -131,6 +131,36 @@ forest(reitsma)
 as_revman(reitsma)
 ```
 
+## How do I fit the Reitsma model using the custom TMB backend?
+
+By default, `fitReitsma()` fits the Reitsma model using `glmmTMB`. The package
+also provides `fitReitsmaTMB()`, which fits the same binomial-normal model
+using a custom Template Model Builder (TMB) template.
+
+The custom TMB backend may offer improved numerical robustness in difficult
+or near-boundary cases.
+
+```{r}
+#| echo: TRUE
+data("anticcp")
+reitsmaTMB <- fitReitsmaTMB(data=anticcp,
+                            TP=TP,
+                            FP=FP,
+                            FN=FN,
+                            TN=TN,
+                            study=study)
+reitsmaTMB
+summary(reitsmaTMB)
+```
+
+```{r}
+#| fig.height: 8
+#| fig.width: 8
+#| echo: TRUE
+plot(reitsmaTMB,scale=0.01)
+```
+
+
 ## How do I use the Rutter and Gatsonis model?
 
 The number of diseased individuals from study $i$ who test positive is denoted by $y_{i1} \sim \mathcal{B}(n_{i1},\pi_{i1})$.

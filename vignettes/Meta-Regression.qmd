@@ -196,6 +196,41 @@ plot(heteroskedastic,
      col=c("black","red"))
 anova(reitsmasub,heteroskedastic)
 ```
+## How do I fit the Reitsma subgroup model using the custom TMB backend?
+
+By default, `fitReitsmaSubgroup()` fits the Reitsma model using `glmmTMB`. The package
+also provides `fitReitsmaSubgroupTMB()`, which fits the same binomial-normal model
+using a custom Template Model Builder (TMB) template. 
+
+The custom TMB backend may offer improved numerical robustness in difficult 
+or near-boundary cases.
+
+
+```{r}
+#| echo: TRUE
+data("anticcp")
+reitsmasubTMB <- fitReitsmaSubgroupTMB(data=anticcp,
+                                       TP=TP,
+                                       FP=FP,
+                                       FN=FN,
+                                       TN=TN,
+                                       study=study,
+                                       variances="unequal",
+                                       subgroup=generation)
+reitsmasubTMB
+summary(reitsmasubTMB)
+```
+
+```{r}
+#| fig.height: 7
+#| fig.width: 8
+#| echo: TRUE
+plot(reitsmasubTMB,
+     scale=0.01,
+     nudge_legend=-0.2,
+     size="se",
+     col=c("black","red"))
+```
 
 
 ## How do we include covariates in the Rutter and Gatsonis model?

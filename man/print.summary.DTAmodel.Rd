@@ -2,9 +2,45 @@
 % Please edit documentation in R/printsummary.R
 \name{print.summary.DTAmodel}
 \alias{print.summary.DTAmodel}
+\alias{print.summary.HoyerAFT}
+\alias{print.summary.Reitsma}
+\alias{print.summary.ReitsmaTMB}
+\alias{print.summary.ReitsmaLCA}
+\alias{print.summary.ReitsmaSubgroup}
+\alias{print.summary.ReitsmaSubgroupTMB}
+\alias{print.summary.ReitsmaSubgroupLCA}
+\alias{print.summary.RutterGatsonis}
+\alias{print.summary.RutterGatsonisReg}
+\alias{print.summary.RutterGatsonisLCA}
+\alias{print.summary.RutterGatsonisSubgroup}
+\alias{print.summary.RutterGatsonisSubgroupLCA}
 \title{Print a Diagnostic Test Accuracy Model Summary}
 \usage{
 \method{print}{summary.DTAmodel}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.HoyerAFT}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.Reitsma}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.ReitsmaTMB}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.ReitsmaLCA}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.ReitsmaSubgroup}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.ReitsmaSubgroupTMB}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.ReitsmaSubgroupLCA}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.RutterGatsonis}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.RutterGatsonisReg}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.RutterGatsonisLCA}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.RutterGatsonisSubgroup}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.RutterGatsonisSubgroupLCA}(x, digits = max(8L, getOption("digits") - 8L), ...)
 }
 \arguments{
 \item{x}{A summary object inheriting from

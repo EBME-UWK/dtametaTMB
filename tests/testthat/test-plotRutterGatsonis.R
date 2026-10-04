@@ -14,7 +14,7 @@ test_that("plot.RutterGatsonis runs without error", {
   
   class(obj) <- "RutterGatsonis"
   
-  expect_no_error(plot(obj))
+  expect_no_error(plot(obj,size="equal"))
 })
 
 test_that("plot.RutterGatsonis returns NULL invisibly", {
@@ -33,7 +33,7 @@ test_that("plot.RutterGatsonis returns NULL invisibly", {
   
   class(obj) <- "RutterGatsonis"
   
-  expect_null(plot(obj))
+  expect_null(plot(obj,size="equal"))
 })
 
 test_that("plot.RutterGatsonis works with multiple studies", {
@@ -52,7 +52,7 @@ test_that("plot.RutterGatsonis works with multiple studies", {
   
   class(obj) <- "RutterGatsonis"
   
-  expect_no_error(plot(obj))
+  expect_no_error(plot(obj,size="equal"))
 })
 
 test_that("plot.RutterGatsonis handles extreme values without crashing", {
@@ -71,7 +71,7 @@ test_that("plot.RutterGatsonis handles extreme values without crashing", {
   
   class(obj) <- "RutterGatsonis"
   
-  expect_no_error(plot(obj))
+  expect_no_error(plot(obj,size="equal"))
 })
 
 test_that("plot adjusts correctly when ROC subset is empty", {
@@ -91,7 +91,7 @@ test_that("plot adjusts correctly when ROC subset is empty", {
   
   class(obj) <- "RutterGatsonis"
   
-  expect_no_error(plot(obj))
+  expect_no_error(plot(obj,size="equal"))
 })
 
 test_that("plot does not permanently change par settings", {
@@ -112,7 +112,7 @@ test_that("plot does not permanently change par settings", {
   
   class(obj) <- "RutterGatsonis"
   
-  plot(obj)
+  plot(obj,size="equal")
   
   new_par <- par(no.readonly = TRUE)
   
@@ -121,7 +121,6 @@ test_that("plot does not permanently change par settings", {
 
 
 test_that("all size options work", {
-  
   fit <- fitRutterGatsonis(
     data = RF,
     TP = TP,
@@ -131,6 +130,7 @@ test_that("all size options work", {
     study = study
   )
   
+  expect_no_error(plot(fit, size = "fisher"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))
@@ -139,7 +139,6 @@ test_that("all size options work", {
 })
 
 test_that("all symbol options work", {
-  
   fit <- fitRutterGatsonis(
     data = RF,
     TP = TP,

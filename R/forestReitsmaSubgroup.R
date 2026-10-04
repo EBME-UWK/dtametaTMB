@@ -30,8 +30,8 @@ forest.ReitsmaSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup",
   ss <- getForestSensSpec(x=x,conflevel=conflevel)
   
   XP <- ss$XP
-  if(order=="study"){XP <- XP[order(XP$study,XP$subgroup), ]}
-  if(order=="subgroup"){XP <- XP[order(XP$subgroup,XP$study), ]}
+  if(order=="study"){XP <- XP[base::order(XP$study,XP$subgroup), ]}
+  if(order=="subgroup"){XP <- XP[base::order(XP$subgroup,XP$study), ]}
   dt <- XP[,c("study","subgroup","TP","FP","FN","TN","senslabel","speclabel")]
   dt$" "    <- " "
   dt$fsens  <- paste(rep(" ",18),collapse=" ")

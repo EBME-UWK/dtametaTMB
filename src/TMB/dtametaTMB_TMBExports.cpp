@@ -3,7 +3,9 @@
 #define TMB_LIB_INIT R_init_dtametaTMB_TMBExports
 #include <TMB.hpp>
 #include "Hoyer.hpp"
+#include "Reitsma.hpp"
 #include "ReitsmaLCA.hpp"
+#include "ReitsmaSubgroup.hpp"
 #include "ReitsmaSubgroupLCA.hpp"
 #include "RutterGatsonis.hpp"
 #include "RutterGatsonisLCA.hpp"
@@ -15,8 +17,12 @@ Type objective_function<Type>::operator() () {
   DATA_STRING(model);
   if(model == "Hoyer") {
     return Hoyer(this);
+  } else if(model == "Reitsma") {
+    return Reitsma(this);
   } else if(model == "ReitsmaLCA") {
     return ReitsmaLCA(this);
+  } else if(model == "ReitsmaSubgroup") {
+    return ReitsmaSubgroup(this);
   } else if(model == "ReitsmaSubgroupLCA") {
     return ReitsmaSubgroupLCA(this);
   } else if(model == "RutterGatsonis") {

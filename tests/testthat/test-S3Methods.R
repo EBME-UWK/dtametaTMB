@@ -13,6 +13,16 @@ test_that("common generic methods work across inheritance hierarchy", {
     study = study
   )
   
+  reitsmaTMB <- fitReitsmaTMB(
+    data  = anticcp,
+    TP    = TP,
+    FP    = FP,
+    FN    = FN,
+    TN    = TN,
+    study = study
+  )
+  
+  
   ## Reitsma subgroup -------------------------------------------
   
   data("RF", package = "dtametaTMB")
@@ -24,6 +34,16 @@ test_that("common generic methods work across inheritance hierarchy", {
   )
   
   reitsmaSub <- fitReitsmaSubgroup(
+    data     = RF2,
+    TP       = TP,
+    FP       = FP,
+    FN       = FN,
+    TN       = TN,
+    study    = study,
+    subgroup = method
+  )
+  
+  reitsmaSubTMB <- fitReitsmaSubgroupTMB(
     data     = RF2,
     TP       = TP,
     FP       = FP,
@@ -143,7 +163,9 @@ test_that("common generic methods work across inheritance hierarchy", {
   
   models <- list(
     reitsma,
+    reitsmaTMB,
     reitsmaSub,
+    reitsmaSubTMB,
     reitsmaLCA,
     reitsmaSubLCA,
     ruga,
