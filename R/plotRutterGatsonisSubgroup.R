@@ -18,7 +18,11 @@
 #' dimensions equal to 30 percent of the default.
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
-#'    \item{"equal"}{All studies shown with equal size.}
+#'    \item{"equal"}{All studies shown with equal size. Default.}
+#'    \item{"fisher"}{Displays parameter-specific percentage study 
+#'    contributions to the recovered subgroup-specific pooled logit sensitivity 
+#'    and logit specificity. Fisher sizing is available when HSROC accuracy and 
+#'    threshold parameters are subgroup-specific.}
 #'    \item{"sampsize"}{
 #'     Horizontal and vertical symbol dimensions are proportional to the
 #'     relative numbers of non-diseased and diseased participants,
@@ -90,7 +94,7 @@
 plot.RutterGatsonisSubgroup <- function(x, 
                                         symbol=NULL,
                                         scale=0.02,
-                                        size=c("equal","sampsize","se","sampsize_revman","se_revman"), 
+                                        size=c("equal","fisher","sampsize","se","sampsize_revman","se_revman"), 
                                         nudge_legend=-0.4,
                                         specrange=c(0.7,0.995),
                                         col=NULL,
@@ -103,6 +107,17 @@ plot.RutterGatsonisSubgroup <- function(x,
      }
    }
    size <- match.arg(size)
+   if (size == "fisher") {
+     if (any(c("accuracy", "threshold") %in% x$constrain)) {
+       stop(
+         "Fisher study contributions are not currently available when ",
+         "HSROC accuracy or threshold effects are constrained to be common ",
+         "across subgroups. These constraints induce shared nonlinear ",
+         "structure in the recovered logit-sensitivity and ",
+         "logit-specificity parameters."
+       )
+     }
+   }
    sub  <- x$subgroups
    nsub <- length(sub)
    nstudy <- nrow(x$data)
@@ -124,7 +139,94 @@ plot.RutterGatsonisSubgroup <- function(x,
        pty="s")   # enlarge right margin
    plot_SESPGRID(main=main)
    # Data points
-   pct <- getWEIGHTS(xdata=x$data,size=size)
+   if(size=="fisher"){
+     Y_pw  <- reshapeX_REIT(X=x$data)
+     X_pw <- matrix(0,nrow=2*nstudy,ncol=2*nsub)
+     col_names <- unlist(lapply(sub,function(sg) {c(paste0("mu_A.", sg),paste0("mu_B.", sg))}))
+     colnames(X_pw) <- col_names
+     se_index <- integer(nstudy)
+     sp_index <- integer(nstudy)
+     for (i in seq_len(nstudy)) {
+       sg <- as.character(x$data$subgroup[i])
+       g <- match(sg, sub)
+       row_se <- 2 * i - 1
+       row_sp <- 2 * i
+       se_index[i] <- 2 * g - 1
+       sp_index[i] <- 2 * g
+       X_pw[row_se, se_index[i]] <- 1
+       X_pw[row_sp, sp_index[i]] <- 1
+     }
+     XT_pw <- t(X_pw)
+     nstudy <- nrow(x$data)
+     Z <- diag(2*nstudy)
+     invn <- 1/Y_pw$n
+     invn[!is.finite(invn)] <- 100000000000 
+     A <- diag(invn)
+     ####
+     rn <- rownames(x$sdreport2)
+     Lambda <- x$sdreport2[paste0("Lambda_",sub),"Estimate"]
+     Theta  <- x$sdreport2[paste0("Theta_",sub),"Estimate"]
+     beta   <- x$sdreport2[paste0("beta_",sub),"Estimate"]
+     names(Lambda) <- sub("^Lambda\\_","",names(Lambda))
+     names(Theta)  <- sub("^Theta\\_","",names(Theta))
+     names(beta)   <- sub("^beta\\_","",names(beta))
+     Lambda2 <- Lambda[as.character(x$data$subgroup)]
+     Theta2  <- Theta[as.character(x$data$subgroup)]
+     beta2   <- beta[as.character(x$data$subgroup)]
+     random <- x$sdreport$par.random
+     alpha  <- random[names(random)=="alpha"]
+     theta  <- random[names(random)=="theta"]
+     lsens  <- (Theta2+theta+0.5*(Lambda2+alpha))*exp(-0.5*beta2)
+     lspec  <- -(Theta2+theta-0.5*(Lambda2+alpha))*exp(0.5*beta2)
+     p_pw   <- as.vector(rbind(stats::plogis(lsens),
+                               stats::plogis(lspec)))
+     ####
+     var_pw <- p_pw*(1-p_pw)
+     B <- diag(var_pw)
+     ####
+     G <- matrix(0,ncol=nstudy*2,nrow=nstudy*2)
+       for(i in 1:nstudy){
+         j       <- 2*i
+         sg      <- x$data$subgroup[i]
+         varA    <- as.numeric(x$Reitsma_recovered[sg,"sigma2_A.sens"])
+         varB    <- as.numeric(x$Reitsma_recovered[sg,"sigma2_B.spec"])
+         sAB     <- as.numeric(x$Reitsma_recovered[sg,"sigma_AB"])
+         G[(j-1):j,(j-1):j] <- matrix(c(varA,sAB,sAB,varB),2,2)
+       }
+     #inverse of B (required later on)
+     BI <- solve(B)
+     # Create variance matrix for observations
+     V <- (Z %*% G %*% t(Z)) + (A %*% BI)
+     # invert the variance matrix
+     invV <- solve(V)
+     # derive the fishers information matrix
+     fish <- XT_pw %*% invV %*% X_pw
+     # invert Fishers information to obtain Var Beta hat
+     varb   <- solve(fish)
+     pct <- data.frame(sp = numeric(nstudy),
+                       se = numeric(nstudy))
+     # Get weights  
+     for (i in seq_len(nstudy)){
+       DM <- V
+       DM[(i*2)-1, (i*2)-1] <- 100000000000
+       DM[(i*2)-1, (i*2)] <- 0
+       DM[(i*2), (i*2)-1] <- 0
+       DM[(i*2), (i*2)] <- 100000000000
+       invDM <- solve(DM)
+       fishD <- XT_pw %*% invDM %*% X_pw
+       fishI <- fish - fishD
+       weight <- varb %*% fishI %*% varb
+       se_idx  <- se_index[i]
+       sp_idx  <- sp_index[i]
+       pct$se[i] <- 100*(weight[se_idx,se_idx]/varb[se_idx,se_idx])
+       pct$sp[i] <- 100*(weight[sp_idx,sp_idx]/varb[sp_idx,sp_idx])
+     }
+     pct$se <- pmax(0,pct$se)
+     pct$sp <- pmax(0,pct$sp)
+     } else {
+    pct <- getWEIGHTS(xdata=x$data,size=size)
+   }
+   ###
    for (i in seq_along(sub)){
      pointsXY(x=1-x$data$spec[x$data$subgroup==sub[i]], 
               y=x$data$sens[x$data$subgroup==sub[i]], 

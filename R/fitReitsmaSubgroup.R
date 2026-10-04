@@ -237,7 +237,9 @@ fitReitsmaSubgroup <- function(data,
     "sens",
     "spec"
   )
-  
+  if (length(sensspec_constrain) == 0L) {
+    sensspec_constrain <- NULL
+  }
   if (!is.null(sensspec_constrain)) {
     if (!is.character(sensspec_constrain)) {
       stop("'sensspec_constrain' must be a character vector or NULL.")

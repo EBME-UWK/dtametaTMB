@@ -18,6 +18,8 @@
 #' dimensions equal to 30 percent of the default.
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
+#'    \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix 
+#'    with respect to the recovered pooled logit sensitivity and specificity. Default.}
 #'    \item{"equal"}{All studies shown with equal size.}
 #'    \item{"sampsize"}{
 #'     Horizontal and vertical symbol dimensions are proportional to the
@@ -80,13 +82,13 @@
 plot.RutterGatsonis <- function(x,
                                 symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
                                 scale=0.02,
-                                size=c("equal","sampsize","se","sampsize_revman","se_revman"), 
+                                size=c("fisher","equal","sampsize","se","sampsize_revman","se_revman"), 
                                 specrange=c(0.7,0.995),
                                 main="Diagnostic Test Accuracy Meta-Analysis", ...) {
   size    <- match.arg(size)
   symbol  <- match.arg(symbol)
   warn_unestimable_sroc_points(x$data)
-  Lambda  <- x$sdreport2["Lambda", "Estimate"]
+  Lambda  <- x$sdreport2["Lambda","Estimate"]
   beta    <- x$sdreport2["beta","Estimate"]
   roc_points2 <- getROCpoints(Lambda,beta,specrange=specrange)
   ####
@@ -96,7 +98,64 @@ plot.RutterGatsonis <- function(x,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  pct <- getWEIGHTS(x$data,size)
+  if(size=="fisher"){
+    Y_pw  <- reshapeX_REIT(X=x$data)
+    X_pw  <- cbind(Y_pw$sens,Y_pw$spec)
+    XT_pw <- t(X_pw)
+    nstudy <- nrow(x$data)
+    Z <- diag(2*nstudy)
+    invn <- 1/Y_pw$n
+    invn[!is.finite(invn)] <- 100000000000 
+    A <- diag(invn)
+    ####
+    Theta  <- x$sdreport2["Theta","Estimate"]
+    random <- x$sdreport$par.random
+    alpha  <- random[names(random)=="alpha"]
+    theta  <- random[names(random)=="theta"]
+    lsens  <- (Theta+theta+0.5*(Lambda+alpha))*exp(-0.5*beta)
+    lspec  <- -(Theta+theta-0.5*(Lambda+alpha))*exp(0.5*beta)
+    p_pw   <- as.vector(rbind(stats::plogis(lsens),
+                              stats::plogis(lspec)))
+    ####
+    var_pw <- p_pw*(1-p_pw)
+    B <- diag(var_pw)
+    ####
+    varA  <- as.numeric(x$Reitsma_recovered["sigma2_A.sens"])
+    varB  <- as.numeric(x$Reitsma_recovered["sigma2_B.spec"])
+    sAB   <- as.numeric(x$Reitsma_recovered["sigma_AB"])
+    G_one <- matrix(c(varA,sAB,sAB,varB),2,2)
+    G <- kronecker(diag(nstudy), G_one)
+    #inverse of B (required later on)
+    BI <- solve(B)
+    # Create variance matrix for observations
+    V <- (Z %*% G %*% t(Z)) + (A %*% BI)
+    # invert the variance matrix
+    invV <- solve(V)
+    # derive the fishers information matrix
+    fish <- XT_pw %*% invV %*% X_pw
+    # invert Fishers information to obtain Var Beta hat
+    varb   <- solve(fish)
+    pct <- data.frame(sp = numeric(nstudy),
+                      se = numeric(nstudy))
+    # Get weights  
+    for (i in seq_len(nstudy)){
+      DM <- V
+      DM[(i*2)-1, (i*2)-1] <- 100000000000
+      DM[(i*2)-1, (i*2)] <- 0
+      DM[(i*2), (i*2)-1] <- 0
+      DM[(i*2), (i*2)] <- 100000000000
+      invDM <- solve(DM)
+      fishD <- XT_pw %*% invDM %*% X_pw
+      fishI <- fish - fishD
+      weight <- varb %*% fishI %*% varb
+      pct$se[i] <- 100*(weight[1,1]/varb[1,1])
+      pct$sp[i] <- 100*(weight[2,2]/varb[2,2])
+    }
+    pct$se <- pmax(0,pct$se)
+    pct$sp <- pmax(0,pct$sp)
+  } else {
+    pct <- getWEIGHTS(xdata=x$data,size=size)
+  }
   # Plot study level estimates 
   pointsXY(x=1-x$data$spec, 
            y=x$data$sens, 

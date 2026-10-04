@@ -241,8 +241,6 @@ plot.ReitsmaSubgroup <- function(x,
       for(i in 1:nstudy){
         j       <- 2*i
         sg      <- x$data$subgroup_safe[i]
-        mu_A.sg <- paste0("mu_A.",sg)
-        mu_B.sg <- paste0("mu_B.",sg)
         if(x$variances=="unequal"){
           s2_A.sg <- paste0("sigma2_A.",sg)
           s2_B.sg <- paste0("sigma2_B.",sg)
