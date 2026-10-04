@@ -8,7 +8,7 @@
   x,
   symbol = NULL,
   scale = 0.02,
-  size = c("equal", "sampsize", "se", "sampsize_revman", "se_revman"),
+  size = c("fisher", "equal", "sampsize", "se", "sampsize_revman", "se_revman"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   col = NULL,
   nudge_legend = -0.4,
@@ -35,6 +35,9 @@ or increase all symbol dimensions proportionally.}
 
 \item{size}{Character string controlling display of study-level point estimates:
 \describe{
+\item{"fisher"}{Study-symbol dimensions represent percentage contributions
+to the estimated logit sensitivity and logit specificity of the study’s own subgroup.
+Weights sum to 100 separately within each subgroup and outcome dimension.}
 \item{"equal"}{All studies shown with equal size.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the
@@ -116,10 +119,25 @@ Confidence and prediction regions are derived using the delta method
 based on the estimated variance-covariance structure of the model.
 }
 \references{
+Freeman, S. C., Kerby, C. R., Patel, A., Cooper, N. J.,
+Quinn, T., & Sutton, A. J. (2019).
+Development of an interactive web-based tool to conduct
+and interrogate meta-analysis of diagnostic test accuracy studies:
+MetaDTA.
+\emph{BMC Medical Research Methodology}, 19, 81.
+\doi{10.1186/s12874-019-0724-x}
+
 Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
 A unification of models for meta-analysis of diagnostic accuracy studies.
 \emph{Biostatistics}, 8(2), 239--251.
 \doi{10.1093/biostatistics/kxl004}
+
+Riley, R. D., Ensor, J., Jackson, D., & Burke, D. L. (2018).
+Deriving percentage study weights in multi-parameter meta-analysis models:
+with application to meta-regression, network meta-analysis and one-stage
+individual participant data models.
+\emph{Statistical Methods in Medical Research}, 27(10), 2885--2905.
+\doi{10.1177/0962280216688033}
 }
 \seealso{
 \code{\link{fitReitsmaSubgroup}}

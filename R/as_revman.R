@@ -169,8 +169,16 @@ as_revman.ReitsmaSubgroup <- function(x, ...) {
   for(i in seq_along(subs)) {
     sg  <- subs[i]
     sg2 <- sub[i]
-    mu_A.sg <- paste0("mu_A.",sg)
-    mu_B.sg <- paste0("mu_B.",sg)
+    if("sens" %in% x$sensspec_constrain){
+      mu_A.sg <- paste0("mu_A.",subs[1])
+      } else {
+      mu_A.sg <- paste0("mu_A.",sg)
+    }
+    if("spec" %in% x$sensspec_constrain){
+      mu_B.sg <- paste0("mu_B.",subs[1])
+      } else {
+      mu_B.sg <- paste0("mu_B.",sg) 
+    }
     if(x$variances=="unequal"){
       s2_A.sg <- paste0("sigma2_A.",sg)
       s2_B.sg <- paste0("sigma2_B.",sg)

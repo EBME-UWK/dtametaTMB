@@ -62,7 +62,9 @@ For each sizing method, $q_{Se,i}$ denotes the raw vertical sizing measure and $
 
 ## Analysis-specific normalization
 
-The two RevMan-style methods use one common normalization constant for the horizontal and vertical dimensions. First, define the larger raw sizing measure for each study as
+Within an analysis, `dtametaTMB` uses one common normalization constant for
+the horizontal and vertical dimensions and for all studies displayed in
+the plot.
 
 $$
 m_i = \max(q_{Se,i}, q_{Sp,i}).
@@ -73,7 +75,7 @@ For $I$ studies, the analysis-specific constant is
 $$
 c =
 \frac{8}
-{\frac{1}{I}\sum_{i=1}^{k}m_i}
+{\frac{1}{I}\sum_{i=1}^{I}m_i}
 =
 \frac{8I}
 {\sum_{i=1}^{I}\max(q_{Se,i},q_{Sp,i})}.
@@ -436,7 +438,13 @@ The original `dtametaTMB` methods answer related but distinct graphical question
     n_i\widehat p_i(1-\widehat p_i)
   }.
   $$
-- `size = "fisher"`, where available, uses study-specific contributions derived from a decomposition of the Fisher information matrix.
+- `size = "fisher"`, where available, uses parameter-specific percentage
+   study contributions derived from a decomposition of the pseudo-linearized
+   Fisher information matrix. Horizontal and vertical dimensions represent
+   contributions toward pooled logit specificity and pooled logit
+   sensitivity, respectively. In subgroup models, these contributions are
+   calculated separately for each subgroup-specific summary parameter and
+   therefore sum to 100 within each subgroup.
 - `size = "sampsize_revman"` and `size = "se_revman"` apply the fixed-baseline, analysis-normalized RevMan-style transformations described in this vignette.
 
 The choice of method affects the graphical interpretation of marker dimensions. None of these options changes the fitted meta-analytic model.
@@ -517,9 +525,26 @@ The RevMan-style transformations were reconstructed from graphical output rather
 - normalization based on the mean study-level maximum raw measure;
 - proportional scaling of all marker dimensions through the plotting `scale` argument.
 
-Physical marker sizes can still differ across plotting devices, export formats, panel dimensions, line widths, and rendering systems. The implementation aims to reproduce the relative marker geometry and normalization rule, not identical device pixels under every graphical configuration.
+`dtametaTMB` applies the inverse-standard-error transformation directly to
+the uncorrected observed sensitivity and specificity estimates. No
+continuity correction is applied.
 
-The formulas should therefore be understood as transparent RevMan-style graphical transformations. They do not alter parameter estimates, confidence regions, prediction regions, or the fitted SROC model.
+For subgroup analyses, `dtametaTMB` calculates one common normalization
+constant across all studies displayed in the plot. This differs from RevMan,
+which applies the normalization separately within each subgroup. Global
+normalization preserves comparison across subgroups, so equal marker
+dimensions correspond to equal raw transformed sample-size or
+inverse-standard-error measures throughout the figure.
+
+Physical marker sizes can still differ across plotting devices, export
+formats, panel dimensions, line widths, and rendering systems. The
+implementation aims to reproduce the relative marker geometry and
+normalization principle, not identical device pixels under every graphical
+configuration.
+
+The formulas should therefore be understood as transparent RevMan-style
+graphical transformations. They do not alter parameter estimates,
+confidence regions, prediction regions, or the fitted SROC model.
 
 ## Summary
 

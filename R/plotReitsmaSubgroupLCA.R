@@ -193,7 +193,7 @@ plot.ReitsmaSubgroupLCA <- function(x,
   for(i in seq_along(sub)){
     sg      <- sub[i]
     mu_A.sg <- paste0("mu_A.index.",sg)
-    mu_B.sg <- paste0("mu_B.index.",sg)
+    mu_B.sg <- paste0("mu_B.index.",sg) 
     s2_A.sg <- paste0("sigma2_A.index.",sg)
     s2_B.sg <- paste0("sigma2_B.index.",sg)
     s_AB.sg <- paste0("sigma_AB.index.",sg)

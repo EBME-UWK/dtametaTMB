@@ -39,6 +39,7 @@ test_that("fitReitsmaSubgroup returns expected components", {
       "LRDOR",
       "RutterGatsonis_recovered",
       "constrain",
+      "sensspec_constrain",
       "subgroups",
       "variances"
     )

@@ -66,7 +66,8 @@ test_that("all size options work", {
     study = study,
     subgroup = generation
   )
-  
+
+  expect_no_error(plot(fit, size = "fisher"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))
@@ -112,5 +113,46 @@ test_that("plot.ReitsmaSubgroup rejects invalid size argument", {
   expect_error(
     plot(fit, size = "banana")
   )
+})
+
+
+test_that("all sensspec_constrain options work", {
+  
+  fit1 <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    sensspec_constrain = "sens"
+  )
+  
+  fit2 <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    sensspec_constrain = "spec"
+  )
+  
+  fit3 <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation,
+    sensspec_constrain = c("sens","spec")
+  )
+  
+  expect_no_error(plot(fit1, size = "fisher"))
+  expect_no_error(plot(fit2, size = "fisher"))
+  expect_no_error(plot(fit3, size = "fisher"))
 })
 

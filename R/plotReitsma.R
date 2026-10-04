@@ -167,7 +167,8 @@ plot.Reitsma <- function(x,
     p_pw <- stats::predict(x$glmmTMB, type="response")
     var_pw <- p_pw*(1-p_pw)
     B <- diag(var_pw)
-    G_one <- matrix(c(varA,covAB,covAB,varB),2,2)
+    #G_one <- matrix(c(varA,varAB,varAB,varB),2,2)
+    G_one <- matrix(c(varA,sAB,sAB,varB),2,2)
     G <- kronecker(diag(nstudy), G_one)
     #inverse of B (required later on)
     BI <- solve(B)
@@ -178,9 +179,9 @@ plot.Reitsma <- function(x,
     # derive the fishers information matrix
     fish <- XT_pw %*% invV %*% X_pw
     # invert Fishers information to obtain Var Beta hat
-    varb  <- solve(fish)
-    pctse <- vector(mode="numeric", length =nstudy)
-    pctsp <- vector(mode="numeric", length =nstudy)
+    varb   <- solve(fish)
+    pct <- data.frame(sp = numeric(nstudy),
+                      se = numeric(nstudy))
     # Get weights  
     for (i in seq_len(nstudy)){
       DM <- V
@@ -192,53 +193,21 @@ plot.Reitsma <- function(x,
       fishD <- XT_pw %*% invDM %*% X_pw
       fishI <- fish - fishD
       weight <- varb %*% fishI %*% varb
-      pctse[i] <- 100*(weight[1,1]/varb[1,1])
-      pctsp[i] <- 100*(weight[2,2]/varb[2,2])
+      pct$se[i] <- 100*(weight[1,1]/varb[1,1])
+      pct$sp[i] <- 100*(weight[2,2]/varb[2,2])
     }
-    pctse <- pmax(0,pctse)
-    pctsp <- pmax(0,pctsp)
-  }
-  if(size=="equal"){
-    pctse <- rep(1,nrow(x$data))
-    pctsp <- rep(1,nrow(x$data))
-  }
-  if(size=="sampsize"){
-    pctse <- x$data$n1 / sum(x$data$n1)*100
-    pctsp <- x$data$n0 / sum(x$data$n0)*100
-  }
-  if(size=="se"){
-    sem1  <- x$data$sens*(1-x$data$sens)*x$data$n1 # inverse logit variance
-    spm1  <- x$data$spec*(1-x$data$spec)*x$data$n0 # inverse logit variance
-    sem1[is.nan(sem1)] <- 0
-    spm1[is.nan(spm1)] <- 0
-    pctse <- sqrt(sem1) / sum(sqrt(sem1))*100
-    pctsp <- sqrt(spm1) / sum(sqrt(spm1))*100
-  }
-  if(size=="sampsize_revman"){
-    q_se <- sqrt(x$data$n1)
-    q_sp <- sqrt(x$data$n0)
-    c_ss <- 8 / mean(pmax(q_se,q_sp))
-    pctse  <- (4 + c_ss*q_se)/10 # revman_scale: 10
-    pctsp  <- (4 + c_ss*q_sp)/10 # revman_scale: 10
-  }
-  if(size=="se_revman"){
-    sem1  <- x$data$sens*(1-x$data$sens)*x$data$n1 # inverse logit variance
-    spm1  <- x$data$spec*(1-x$data$spec)*x$data$n0 # inverse logit variance
-    sem1[is.nan(sem1)] <- 0
-    spm1[is.nan(spm1)] <- 0
-    q_se  <- sqrt(sem1)
-    q_sp  <- sqrt(spm1)
-    c_se  <- 8/mean(pmax(q_se,q_sp))
-    pctse  <- (4 + c_se*q_se)/10 # revman_scale: 10
-    pctsp  <- (4 + c_se*q_sp)/10 # revman_scale: 10
+    pct$se <- pmax(0,pct$se)
+    pct$sp <- pmax(0,pct$sp)
+  } else {
+  pct <- getWEIGHTS(xdata=x$data,size=size)
   }
   # Plot study level estimates 
   pointsXY(x=1-x$data$spec, 
            y=x$data$sens, 
            symbol = symbol, 
            scale = scale*0.5,
-           cex.x = pctsp,
-           cex.y = pctse,
+           cex.x = pct$sp,
+           cex.y = pct$se,
            col="darkgray")
   symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
   #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)

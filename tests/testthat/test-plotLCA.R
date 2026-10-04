@@ -845,3 +845,62 @@ test_that("custom title works", {
   )
   
 })
+
+
+test_that("plot.ReitsmaSubgroup rejects invalid size argument", {
+  
+  fit <- fitReitsmaSubgroup(
+    data = anticcp,
+    TP = TP,
+    FP = FP,
+    FN = FN,
+    TN = TN,
+    study = study,
+    subgroup = generation
+  )
+  
+  expect_error(
+    plot(fit, size = "banana")
+  )
+})
+
+
+test_that("all sensspec_constrain options work", {
+  
+  fit1 <- fitReitsmaSubgroupLCA(
+    data = anticcp,
+    y11 = TP,
+    y10 = FP,
+    y01 = FN,
+    y00 = TN,
+    study = study,
+    subgroup = generation,
+    sensspec_constrain = "sens"
+  )
+  
+  fit2 <- fitReitsmaSubgroupLCA(
+    data = anticcp,
+    y11 = TP,
+    y10 = FP,
+    y01 = FN,
+    y00 = TN,
+    study = study,
+    subgroup = generation,
+    sensspec_constrain = "spec"
+  )
+  
+  fit3 <- fitReitsmaSubgroupLCA(
+    data = anticcp,
+    y11 = TP,
+    y10 = FP,
+    y01 = FN,
+    y00 = TN,
+    study = study,
+    subgroup = generation,
+    sensspec_constrain = c("sens","spec")
+  )
+  
+  expect_no_error(plot(fit1, size = "eb_revman"))
+  expect_no_error(plot(fit2, size = "eb_revman"))
+  expect_no_error(plot(fit3, size = "eb_revman"))
+})

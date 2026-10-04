@@ -17,11 +17,14 @@
 #' or increase all symbol dimensions proportionally.
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
+#'    \item{"fisher"}{Study-symbol dimensions represent percentage contributions 
+#'      to the estimated logit sensitivity and logit specificity of the study’s own subgroup.
+#'      Weights sum to 100 separately within each subgroup and outcome dimension.}
 #'    \item{"equal"}{All studies shown with equal size.}
 #'    \item{"sampsize"}{
-#'     Horizontal and vertical symbol dimensions are proportional to the
-#'     relative numbers of non-diseased and diseased participants,
-#'     respectively.}
+#'      Horizontal and vertical symbol dimensions are proportional to the
+#'      relative numbers of non-diseased and diseased participants,
+#'      respectively.}
 #'    \item{"se"}{
 #'       Horizontal and vertical symbol dimensions are proportional to
 #'       normalized approximate inverse standard errors of observed logit
@@ -81,10 +84,25 @@
 #' based on the estimated variance-covariance structure of the model.
 #' 
 #' @references
+#' Freeman, S. C., Kerby, C. R., Patel, A., Cooper, N. J.,
+#' Quinn, T., & Sutton, A. J. (2019).
+#' Development of an interactive web-based tool to conduct
+#' and interrogate meta-analysis of diagnostic test accuracy studies:
+#' MetaDTA.
+#' \emph{BMC Medical Research Methodology}, 19, 81.
+#' \doi{10.1186/s12874-019-0724-x}
+#'
 #' Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
 #' A unification of models for meta-analysis of diagnostic accuracy studies.
 #' \emph{Biostatistics}, 8(2), 239--251.
 #' \doi{10.1093/biostatistics/kxl004}
+#' 
+#' Riley, R. D., Ensor, J., Jackson, D., & Burke, D. L. (2018).
+#' Deriving percentage study weights in multi-parameter meta-analysis models:
+#' with application to meta-regression, network meta-analysis and one-stage
+#' individual participant data models.
+#' \emph{Statistical Methods in Medical Research}, 27(10), 2885--2905.
+#' \doi{10.1177/0962280216688033}
 #' 
 #' @return
 #' No return value. Called for its side effect of producing a plot.
@@ -96,7 +114,7 @@
 plot.ReitsmaSubgroup <- function(x,
                                  symbol=NULL,
                                  scale=0.02, 
-                                 size=c("equal","sampsize","se","sampsize_revman","se_revman"), 
+                                 size=c("fisher","equal","sampsize","se","sampsize_revman","se_revman"), 
                                  main="Diagnostic Test Accuracy Meta-Analysis",
                                  col=NULL,
                                  nudge_legend=-0.4,
@@ -141,7 +159,140 @@ plot.ReitsmaSubgroup <- function(x,
   }
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
+  if(size=="fisher"){
+    X <- x$data
+    nstudy  <- nrow(X)
+    X$n1    <- X$TP+X$FN
+    X$n0    <- X$FP+X$TN
+    X$true1 <- X$TP
+    X$true0 <- X$TN 
+    X$recordid <- seq_len(nrow(X))
+    Y_pw <- reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
+                    timevar="sens", times=c(1,0), v.names=c("n","true")) 
+    ##
+    Y_pw = Y_pw[order(Y_pw$id),]
+    Y_pw$spec <- 1-Y_pw$sens
+    if(is.null(x$sensspec_constrain)){
+      X_pw <- matrix(0,nrow=2*nstudy,ncol=2*nsub)
+      col_names <- unlist(lapply(subs,function(sg) {c(paste0("mu_A.", sg),paste0("mu_B.", sg))}))
+      colnames(X_pw) <- col_names
+      se_index <- integer(nstudy)
+      sp_index <- integer(nstudy)
+      for (i in seq_len(nstudy)) {
+        sg <- as.character(x$data$subgroup_safe[i])
+        g <- match(sg, subs)
+        row_se <- 2 * i - 1
+        row_sp <- 2 * i
+        se_index[i] <- 2 * g - 1
+        sp_index[i] <- 2 * g
+        X_pw[row_se, se_index[i]] <- 1
+        X_pw[row_sp, sp_index[i]] <- 1
+      }
+    }
+    if("sens" %in% x$sensspec_constrain & !("spec" %in% x$sensspec_constrain)){
+      X_pw <- matrix(0,nrow=2*nstudy,ncol=nsub+1)
+      colnames(X_pw) <- c("mu_A.common",paste0("mu_B.", subs))
+      se_index <- rep(1,nstudy)
+      sp_index <- integer(nstudy)
+      for (i in seq_len(nstudy)) {
+        sg <- as.character(x$data$subgroup_safe[i])
+        g  <- match(sg, subs)
+        row_se <- 2 * i - 1
+        row_sp <- 2 * i
+        sp_index[i] <- 1 + g
+        X_pw[row_se, se_index[i]] <- 1
+        X_pw[row_sp, sp_index[i]] <- 1
+      }
+    }
+    if("spec" %in% x$sensspec_constrain & !("sens" %in% x$sensspec_constrain)){
+      X_pw <- matrix(0,nrow=2*nstudy,ncol=nsub+1)
+      colnames(X_pw) <- c(paste0("mu_A.", subs),"mu_B.common")
+      se_index <- integer(nstudy)
+      sp_index <- rep(nsub+1,nstudy)
+      for (i in seq_len(nstudy)) {
+        sg <- as.character(x$data$subgroup_safe[i])
+        g  <- match(sg, subs)
+        row_se <- 2 * i - 1
+        row_sp <- 2 * i
+        se_index[i] <- g
+        X_pw[row_se, se_index[i]] <- 1
+        X_pw[row_sp, sp_index[i]] <- 1
+      }
+    }
+    if("sens" %in% x$sensspec_constrain & "spec" %in% x$sensspec_constrain){
+      X_pw <- matrix(0,nrow=2*nstudy,ncol=2)
+      colnames(X_pw) <- c("mu_A.common","mu_B.common")
+      se_index <- rep(1,nstudy)
+      sp_index <- rep(2,nstudy)
+      for (i in seq_len(nstudy)) {
+        row_se <- 2 * i - 1
+        row_sp <- 2 * i
+        X_pw[row_se, 1] <- 1
+        X_pw[row_sp, 2] <- 1
+      } 
+    }  
+    XT_pw <- t(X_pw)
+    Z <- diag(2*nstudy)
+    invn <- 1/Y_pw$n
+    invn[!is.finite(invn)] <- 100000000000 
+    A <- diag(invn)
+    p_pw <- stats::predict(x$glmmTMB_mu, type="response")
+    var_pw <- p_pw*(1-p_pw)
+    B <- diag(var_pw)
+    G <- matrix(0,ncol=nstudy*2,nrow=nstudy*2)
+      for(i in 1:nstudy){
+        j       <- 2*i
+        sg      <- x$data$subgroup_safe[i]
+        mu_A.sg <- paste0("mu_A.",sg)
+        mu_B.sg <- paste0("mu_B.",sg)
+        if(x$variances=="unequal"){
+          s2_A.sg <- paste0("sigma2_A.",sg)
+          s2_B.sg <- paste0("sigma2_B.",sg)
+          s_AB.sg <- paste0("sigma_AB.",sg)
+        }
+        if(x$variances=="common"){
+          s2_A.sg <- "sigma2_A.sens"
+          s2_B.sg <- "sigma2_B.spec"
+          s_AB.sg <- "sigma_AB"
+        }
+        varA    <- x$estimates_mu[s2_A.sg,"Estimate"]
+        varB    <- x$estimates_mu[s2_B.sg,"Estimate"]
+        sAB     <- x$estimates_mu[s_AB.sg,"Estimate"]
+        G[(j-1):j,(j-1):j] <- matrix(c(varA,sAB,sAB,varB),2,2)
+      }
+    #inverse of B (required later on)
+    BI <- solve(B)
+    # Create variance matrix for observations
+    V <- (Z %*% G %*% t(Z)) + (A %*% BI)
+    # invert the variance matrix
+    invV <- solve(V)
+    # derive the fishers information matrix
+    fish <- XT_pw %*% invV %*% X_pw
+    # invert Fishers information to obtain Var Beta hat
+    varb  <- solve(fish)
+    pct <- data.frame(sp = numeric(nstudy),
+                      se = numeric(nstudy))
+    # Get weights  
+    for (i in seq_len(nstudy)){
+      DM <- V
+      DM[(i*2)-1, (i*2)-1] <- 100000000000
+      DM[(i*2)-1, (i*2)] <- 0
+      DM[(i*2), (i*2)-1] <- 0
+      DM[(i*2), (i*2)] <- 100000000000
+      invDM <- solve(DM)
+      fishD <- XT_pw %*% invDM %*% X_pw
+      fishI <- fish - fishD
+      weight <- varb %*% fishI %*% varb
+      se_idx  <- se_index[i]
+      sp_idx  <- sp_index[i]
+      pct$se[i] <- 100*(weight[se_idx,se_idx]/varb[se_idx,se_idx])
+      pct$sp[i] <- 100*(weight[sp_idx,sp_idx]/varb[sp_idx,sp_idx])
+    }
+    pct$se <- pmax(0,pct$se)
+    pct$sp <- pmax(0,pct$sp)
+  } else {
   pct <- getWEIGHTS(xdata=x$data,size=size)
+  }
   ####
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar))
@@ -178,11 +329,20 @@ plot.ReitsmaSubgroup <- function(x,
                              x$sensspec[mu_A.sg,"Estimate"])
     points(mean_point, col=col[i], cex=1.5, pch=15)
   }
+  
   # Add confidence and prediction region
   for(i in seq_along(subs)){
     sg      <- subs[i]
-    mu_A.sg <- paste0("mu_A.",sg)
-    mu_B.sg <- paste0("mu_B.",sg)
+    if("sens" %in% x$sensspec_constrain){
+      mu_A.sg <- paste0("mu_A.",subs[1])
+      } else {
+      mu_A.sg <- paste0("mu_A.",sg)
+    }
+    if("spec" %in% x$sensspec_constrain){
+      mu_B.sg <- paste0("mu_B.",subs[1])
+      } else {
+      mu_B.sg <- paste0("mu_B.",sg) 
+    }
     if(x$variances=="unequal"){
       s2_A.sg <- paste0("sigma2_A.",sg)
       s2_B.sg <- paste0("sigma2_B.",sg)
