@@ -14,12 +14,20 @@
 #'   or \code{"star"}. If \code{NULL}, symbols are generated automatically.
 #' @param scale Numeric scaling factor controlling study-symbol dimensions.
 #' The default is \code{0.02}. Values below or above the default decrease
-#' or increase all symbol dimensions proportionally.
+#' or increase all symbol dimensions proportionally. Relative adjustments can be 
+#' specified directly, for example, \code{scale = 0.02 * 0.3} produces marker 
+#' dimensions equal to 30 percent of the default.
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
 #'    \item{"fisher"}{Study-symbol dimensions represent percentage contributions 
 #'      to the estimated logit sensitivity and logit specificity of the study’s own subgroup.
-#'      Weights sum to 100 separately within each subgroup and outcome dimension.}
+#'      Weights sum to 100 separately within each subgroup and outcome dimension. 
+#'      If \code{sensspec_constrain} is used in \code{\link{fitReitsmaSubgroup}} 
+#'      to constrain logit
+#'      sensitivity and/or logit specificity to a common value across
+#'      subgroups, weights for the constrained outcome dimension(s) instead
+#'      sum to 100 across all studies and subgroups combined, reflecting
+#'      that all studies then inform a single shared parameter. Default.}
 #'    \item{"equal"}{All studies shown with equal size.}
 #'    \item{"sampsize"}{
 #'      Horizontal and vertical symbol dimensions are proportional to the
@@ -160,18 +168,8 @@ plot.ReitsmaSubgroup <- function(x,
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
   if(size=="fisher"){
-    X <- x$data
-    nstudy  <- nrow(X)
-    X$n1    <- X$TP+X$FN
-    X$n0    <- X$FP+X$TN
-    X$true1 <- X$TP
-    X$true0 <- X$TN 
-    X$recordid <- seq_len(nrow(X))
-    Y_pw <- reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
-                    timevar="sens", times=c(1,0), v.names=c("n","true")) 
-    ##
-    Y_pw = Y_pw[order(Y_pw$id),]
-    Y_pw$spec <- 1-Y_pw$sens
+    nstudy<- nrow(x$data)
+    Y_pw  <- reshapeX_REIT(X=x$data)
     if(is.null(x$sensspec_constrain)){
       X_pw <- matrix(0,nrow=2*nstudy,ncol=2*nsub)
       col_names <- unlist(lapply(subs,function(sg) {c(paste0("mu_A.", sg),paste0("mu_B.", sg))}))

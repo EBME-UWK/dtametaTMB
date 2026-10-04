@@ -14,7 +14,9 @@
 #'   or \code{"star"}. The default is \code{"rectangle"}.
 #' @param scale Numeric scaling factor controlling study-symbol dimensions.
 #' The default is \code{0.02}. Values below or above the default decrease
-#' or increase all symbol dimensions proportionally.
+#' or increase all symbol dimensions proportionally. Relative adjustments can be 
+#' specified directly, for example, \code{scale = 0.02 * 0.3} produces marker 
+#' dimensions equal to 30 percent of the default.
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
 #'    \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default.}
@@ -147,18 +149,8 @@ plot.Reitsma <- function(x,
   ###
   # Calculations for percentage weights
   if(size=="fisher"){
-    X <- x$data
-    X$n1    <- X$TP+X$FN
-    X$n0    <- X$FP+X$TN
-    X$true1 <- X$TP
-    X$true0 <- X$TN 
-    X$recordid <- seq_len(nrow(X))
-    Y_pw <- reshape(X, direction="long", varying=list(c("n1", "n0"), c("true1", "true0")), 
-                    timevar="sens", times=c(1,0), v.names=c("n","true")) 
-    ##
-    Y_pw = Y_pw[order(Y_pw$id),]
-    Y_pw$spec <- 1-Y_pw$sens
-    X_pw <- cbind(Y_pw$sens, Y_pw$spec)
+    Y_pw  <- reshapeX_REIT(X=x$data)
+    X_pw  <- cbind(Y_pw$sens, Y_pw$spec)
     XT_pw <- t(X_pw)
     Z <- diag(2*nstudy)
     invn <- 1/Y_pw$n

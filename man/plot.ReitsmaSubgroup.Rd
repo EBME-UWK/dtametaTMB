@@ -31,13 +31,21 @@ or \code{"star"}. If \code{NULL}, symbols are generated automatically.}
 
 \item{scale}{Numeric scaling factor controlling study-symbol dimensions.
 The default is \code{0.02}. Values below or above the default decrease
-or increase all symbol dimensions proportionally.}
+or increase all symbol dimensions proportionally. Relative adjustments can be
+specified directly, for example, \code{scale = 0.02 * 0.3} produces marker
+dimensions equal to 30\% of the default.}
 
 \item{size}{Character string controlling display of study-level point estimates:
 \describe{
 \item{"fisher"}{Study-symbol dimensions represent percentage contributions
 to the estimated logit sensitivity and logit specificity of the study’s own subgroup.
-Weights sum to 100 separately within each subgroup and outcome dimension.}
+Weights sum to 100 separately within each subgroup and outcome dimension.
+If \code{sensspec_constrain} is used in \code{\link{fitReitsmaSubgroup}}
+to constrain logit
+sensitivity and/or logit specificity to a common value across
+subgroups, weights for the constrained outcome dimension(s) instead
+sum to 100 across all studies and subgroups combined, reflecting
+that all studies then inform a single shared parameter. Default.}
 \item{"equal"}{All studies shown with equal size.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the

@@ -28,7 +28,9 @@ or \code{"star"}. If \code{NULL}, symbols are generated automatically.}
 
 \item{scale}{Numeric scaling factor controlling study-symbol dimensions.
 The default is \code{0.02}. Values below or above the default decrease
-or increase all symbol dimensions proportionally.}
+or increase all symbol dimensions proportionally. Relative adjustments can be
+specified directly, for example, \code{scale = 0.02 * 0.3} produces marker
+dimensions equal to 30\% of the default.}
 
 \item{size}{Character string controlling display of study-level
 point estimates:

@@ -4,11 +4,12 @@
   markers to be drawn as rectangles, ellipses, diamonds, triangles,
   crosses, plus-signs, or stars.
 * Added `size = "sampsize_revman"` and `size = "se_revman"`,
-  `size = eb_revman` options, following RevMan-style symbol-sizing convention.
-* Corrected bug in `size = "fisher"` which used the wrong covariance to
-  construct the matrix G for the SROC plots
-* Corrected bug in `plot` and `as_revman` methods for ReitsmaSubgroup models 
-  when sensitivity and/or specificity are assumed common in subgroups.
+  `size = eb_revman` options, following RevMan-style symbol-sizing convention, 
+  to support visual consistency with `as_revman()` exports.
+* Corrected bug `size = "fisher"` which the correct covariance now to construct 
+  the matrix G for the SROC plots.
+* Corrected bug in `plot` and `as_revman` methods for ReitsmaSubgroup models when 
+  sensitivity and/or specificity are assumed common in subgroups.
 * Fixed manual page titles to consistently use title case.
 
 # dtametaTMB 0.1.3
