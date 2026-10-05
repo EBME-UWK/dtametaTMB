@@ -159,7 +159,7 @@ plot.Reitsma <- function(x,
     p_pw <- stats::predict(x$glmmTMB, type="response")
     var_pw <- p_pw*(1-p_pw)
     B <- diag(var_pw)
-    #G_one <- matrix(c(varA,varAB,varAB,varB),2,2)
+    #G_one <- matrix(c(varA,covAB,covAB,varB),2,2)
     G_one <- matrix(c(varA,sAB,sAB,varB),2,2)
     G <- kronecker(diag(nstudy), G_one)
     #inverse of B (required later on)

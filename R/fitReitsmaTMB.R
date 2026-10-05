@@ -276,7 +276,7 @@ fitReitsmaTMB <- function(data,
 
 #' Print Method for ReitsmaTMB Objects
 #'
-#' Displays a concise summary of a fitted Reitsma diagnostic test
+#' Displays a concise summary of a fitted ReitsmaTMB diagnostic test
 #' accuracy model, including number of studies, convergence status
 #' and likelihood-based fit statistics.
 #'
@@ -337,7 +337,7 @@ coef.ReitsmaTMB <- coef.DTAmodel
 #'   \code{\link{fitReitsmaTMB}}.
 #' @param ... Additional arguments (currently ignored).
 #'
-#' @return A list of class \code{"summary.Reitsma"} with the following components:
+#' @return A list of class \code{"summary.ReitsmaTMB"} with the following components:
 #' \itemize{
 #'   \item \code{estimates}: Parameter estimates with standard errors.
 #'   \item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals.
@@ -452,7 +452,7 @@ summary.ReitsmaTMB <- function(object, ...) {
 #'
 #' @return
 #' No return value. Called for its side effect of producing a plot.
-#' @seealso \code{\link{fitReitsma}}
+#' @seealso \code{\link{fitReitsmaTMB}}
 #' @importFrom stats qlogis plogis predict qf
 #' @method plot ReitsmaTMB
 #' @export

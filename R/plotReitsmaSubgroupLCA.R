@@ -142,16 +142,10 @@ plot.ReitsmaSubgroupLCA <- function(x,
   size  <- match.arg(size)
   sub   <- levels(x$data$subgroup)
   nsub  <- length(sub)
-
-  if(is.null(col)) col <- grDevices::rainbow(n=nsub)
-  col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
-  # symbols
-  if(is.null(symbol)) {
-    available_symbols <- c("rectangle","ellipse","diamond","triangle","cross","plus","star")
-    symbols2 <- rep(available_symbols,length.out=nsub)
-  } else {
-    symbols2 <- symbol
-  }
+  aes  <- validateSubgroupAesthetics(col=col,symbol=symbol,nsub=nsub)
+  col  <- aes$col
+  col2 <- aes$col2
+  symbols2 <- aes$symbols2
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
   pct <- getWEIGHTSLCA(xdata=x$data,size=size)

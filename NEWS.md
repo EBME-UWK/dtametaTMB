@@ -3,17 +3,20 @@
 * Added `symbol` argument to all `plot.*()` methods, allowing study-level
   markers to be drawn as rectangles, ellipses, diamonds, triangles,
   crosses, plus-signs, or stars.
+* Subgroup plots now distinguish subgroups by point symbol as well as colour
+  by default. The previous appearance, using rectangles for all subgroups, 
+  can be reproduced by setting `symbol = "rectangle"`.
 * Added `size = "sampsize_revman"` and `size = "se_revman"`,
   `size = "eb_revman"` options, following RevMan-style symbol-sizing convention, 
   to support visual consistency with `as_revman()` exports.
-* Corrected bug in `size = "fisher"` in `plot.Reitsma` which now uses the correct covariance to construct 
-  the matrix G for the SROC plots.
+* Corrected a bug in `plot.Reitsma()` with default `size = "fisher"`. 
+  The covariance used to construct the matrix G for the SROC plot is now calculated correctly.
 * Added `size = "fisher"` option to `plot.RutterGatsonis()`, `plot.RutterGatsonisSubgroup()`,
-  and `plot.ReitsmaSubgroup()`.
-* Added `fitReitsmaTMB()` and `fitReitsmaSubgroupTMB()` which rely on custom TMB templates rather
-  than on glmmTMB and may offer improved numerical robustness in difficult or near-boundary cases.
-* Corrected bug in `plot` and `as_revman` methods for ReitsmaSubgroup models when 
-  sensitivity and/or specificity are assumed common in subgroups.
+  and `plot.ReitsmaSubgroup()`, which is new default in `plot.RutterGatsonis()` and `plot.ReitsmaSubgroup()`.
+* Added `fitReitsmaTMB()` and `fitReitsmaSubgroupTMB()`, which rely on custom TMB templates rather
+  than on `glmmTMB` and may offer improved numerical robustness in difficult or near-boundary cases.
+* Corrected a bug in `plot` and `as_revman` methods for ReitsmaSubgroup models when 
+  sensitivity and/or specificity are constrained to be common across subgroups.
 
 * Fixed manual page titles to consistently use title case.
 

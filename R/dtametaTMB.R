@@ -12,21 +12,24 @@
 #'
 #' Main workflow
 #'
-#' * fitReitsma() -> plot() -> forest()
-#' * fitReitsmaSubgroup() -> plot() -> forest()
-#' * fitRutterGatsonis() -> plot() -> forest()
-#' * fitRutterGatsonisSubgroup() -> plot() -> forest()
-#' * fitHoyer() -> plot() -> forest()
-#' * fitReitsmaLCA() -> plot() -> forest()
-#' * fitReitsmaSubgroupLCA() -> plot() -> forest()
-#' * fitRutterGatsonisLCA() -> plot() -> forest()
-#' * fitRutterGatsonisSubgroupLCA() -> plot() -> forest()
+#' * fitReitsma() -> print() -> summary() -> plot() -> forest()
+#' * fitReitsmaTMB() -> print() -> summary() -> plot() -> forest()
+#' * fitReitsmaSubgroup() -> print() -> summary() -> plot() -> forest()
+#' * fitReitsmaSubgroupTMB() -> print() -> summary() -> plot() -> forest()
+#' * fitRutterGatsonis() -> print() -> summary() -> plot() -> forest()
+#' * fitRutterGatsonisSubgroup() -> print() -> summary() -> plot() -> forest()
+#' * fitHoyer() -> print() -> summary() -> plot() -> forest()
+#' * fitReitsmaLCA() -> print() -> summary() -> plot() -> forest()
+#' * fitReitsmaSubgroupLCA() -> print() -> summary() -> plot() -> forest()
+#' * fitRutterGatsonisLCA() -> print() -> summary() -> plot() -> forest()
+#' * fitRutterGatsonisSubgroupLCA() -> print() -> summary() -> plot() -> forest()
 #'
 #' Included datasets
 #'
 #' * anaemia
 #' * anticcp
 #' * diabetes
+#' * dementia
 #' * FENO
 #' * pap
 #' * RF

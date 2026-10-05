@@ -20,15 +20,17 @@ Implemented methods
 
 Main workflow
 \itemize{
-\item fitReitsma() -> plot() -> forest()
-\item fitReitsmaSubgroup() -> plot() -> forest()
-\item fitRutterGatsonis() -> plot() -> forest()
-\item fitRutterGatsonisSubgroup() -> plot() -> forest()
-\item fitHoyer() -> plot() -> forest()
-\item fitReitsmaLCA() -> plot() -> forest()
-\item fitReitsmaSubgroupLCA() -> plot() -> forest()
-\item fitRutterGatsonisLCA() -> plot() -> forest()
-\item fitRutterGatsonisSubgroupLCA() -> plot() -> forest()
+\item fitReitsma() -> print() -> summary() -> plot() -> forest()
+\item fitReitsmaTMB() -> print() -> summary() -> plot() -> forest()
+\item fitReitsmaSubgroup() -> print() -> summary() -> plot() -> forest()
+\item fitReitsmaSubgroupTMB() -> print() -> summary() -> plot() -> forest()
+\item fitRutterGatsonis() -> print() -> summary() -> plot() -> forest()
+\item fitRutterGatsonisSubgroup() -> print() -> summary() -> plot() -> forest()
+\item fitHoyer() -> print() -> summary() -> plot() -> forest()
+\item fitReitsmaLCA() -> print() -> summary() -> plot() -> forest()
+\item fitReitsmaSubgroupLCA() -> print() -> summary() -> plot() -> forest()
+\item fitRutterGatsonisLCA() -> print() -> summary() -> plot() -> forest()
+\item fitRutterGatsonisSubgroupLCA() -> print() -> summary() -> plot() -> forest()
 }
 
 Included datasets
@@ -36,6 +38,7 @@ Included datasets
 \item anaemia
 \item anticcp
 \item diabetes
+\item dementia
 \item FENO
 \item pap
 \item RF

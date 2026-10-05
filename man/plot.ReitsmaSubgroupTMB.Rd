@@ -75,7 +75,7 @@ eight before adding the fixed baseline dimension.}
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
 \item{col}{Vector of colours used for subgroup-specific HSROC curves,
-study-level rectangles, summary points, confidence and prediction region.
+study-level symbols, summary points, confidence and prediction region.
 If \code{NULL}, colours are generated automatically.}
 
 \item{nudge_legend}{Numeric horizontal offset for the subgroup legend.

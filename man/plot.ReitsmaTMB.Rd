@@ -119,5 +119,5 @@ A unification of models for meta-analysis of diagnostic accuracy studies.
 \doi{10.1093/biostatistics/kxl004}
 }
 \seealso{
-\code{\link{fitReitsma}}
+\code{\link{fitReitsmaTMB}}
 }

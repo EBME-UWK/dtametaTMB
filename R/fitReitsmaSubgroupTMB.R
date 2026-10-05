@@ -623,7 +623,7 @@ summary.ReitsmaSubgroupTMB <- function(object, ...) {
 #'   specificities over which the HSROC curve is plotted.
 #'   Defaults to \code{c(0.7, 0.995)}.
 #' @param col Vector of colours used for subgroup-specific HSROC curves,
-#'   study-level rectangles, summary points, confidence and prediction region. 
+#'   study-level symbols, summary points, confidence and prediction region. 
 #'   If \code{NULL}, colours are generated automatically.
 #' @param nudge_legend Numeric horizontal offset for the subgroup legend.
 #'   More negative values move the legend further right, outside the plotting area.
@@ -699,16 +699,10 @@ plot.ReitsmaSubgroupTMB <- function(x,
   sub    <- levels(x$data$subgroup)
   nsub   <- length(sub)
   warn_unestimable_sroc_points(x$data)
-
-  if(is.null(col)) col <- grDevices::rainbow(n=nsub)
-  col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
-  # symbols
-  if(is.null(symbol)) {
-    available_symbols <- c("rectangle","ellipse","diamond","triangle","cross","plus","star")
-    symbols2 <- rep(available_symbols,length.out=nsub)
-  } else {
-    symbols2 <- symbol
-  }
+  aes  <- validateSubgroupAesthetics(col=col,symbol=symbol,nsub=nsub)
+  col  <- aes$col
+  col2 <- aes$col2
+  symbols2 <- aes$symbols2
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
   if(size=="fisher"){
@@ -921,22 +915,24 @@ plot.ReitsmaSubgroupTMB <- function(x,
                       "HSROC curve",
                       "Summary estimate",
                       conf_lab,
-                      pred_lab), 
-           pch = c(NA,NA,15,NA,NA), 
-           lty = c(NA,1,NA,2,3), 
-           lwd = c(NA,2,NA,2,2), 
-           col = c(NA,"black","black","black","black"))}
+                      pred_lab,
+                      "Data"), 
+           pch = c(NA,NA,15,NA,NA,symb[1]), 
+           lty = c(NA,1,NA,2,3,NA), 
+           lwd = c(NA,2,NA,2,2,NA), 
+           col = c(NA,"black","black","black","black","darkgray"))}
   else{
     legend("bottomright", 
            bty ="n",
            legend = c(NA,
                       "Summary estimate",
                       conf_lab,
-                      pred_lab), 
-           pch = c(NA,15,NA,NA), 
-           lty = c(NA,NA,2,3), 
-           lwd = c(NA,NA,2,2), 
-           col = c(NA,"black","black","black"))
+                      pred_lab,
+                      "Data"), 
+           pch = c(NA,15,NA,NA,symb[1]), 
+           lty = c(NA,NA,2,3,NA), 
+           lwd = c(NA,NA,2,2,NA), 
+           col = c(NA,"black","black","black","darkgray"))
   }
   legend("right",
          inset = c(nudge_legend, 0),

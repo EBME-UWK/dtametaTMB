@@ -135,9 +135,9 @@ as_revman(reitsma)
 
 By default, `fitReitsma()` fits the Reitsma model using `glmmTMB`. The package
 also provides `fitReitsmaTMB()`, which fits the same binomial-normal model
-using a custom Template Model Builder (TMB) template.
+using a custom Template Model Builder (`TMB`) template.
 
-The custom TMB backend may offer improved numerical robustness in difficult
+The custom `TMB` backend may offer improved numerical robustness in difficult
 or near-boundary cases.
 
 ```{r}
@@ -159,6 +159,28 @@ summary(reitsmaTMB)
 #| echo: TRUE
 plot(reitsmaTMB,scale=0.01)
 ```
+
+### An example illustrating numerical behaviour near the boundary
+
+The custom `TMB` implementation can be useful in cases where optimization with the `glmmTMB` backend encounters convergence difficulties. The following small example illustrates such a case. The estimated between-study correlation of the dataset is close to the boundary.
+
+```{r}
+#| echo: TRUE
+edge_data_set <- data.frame(study=1:7,
+                            TP=c(18,27, 7, 5,28,14,48),
+                            FP=c(32, 7,11,11,35,12,20),
+                            FN=c( 3,12, 2, 2, 4, 8,23),
+                            TN=c(51, 6,41,28,53,48,51))
+glmmTMB <- fitReitsma(data=edge_data_set,
+                      TP=TP,FP=FP,FN=FN,TN=TN,study=study)
+glmmTMB
+summary(glmmTMB)
+TMB     <- fitReitsmaTMB(data=edge_data_set,
+                         TP=TP,FP=FP,FN=FN,TN=TN,study=study)
+TMB
+summary(TMB)
+```
+
 
 
 ## How do I use the Rutter and Gatsonis model?

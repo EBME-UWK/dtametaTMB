@@ -156,15 +156,10 @@ plot.ReitsmaSubgroup <- function(x,
   if(!all(x$data$subgroup_safe == make.names(x$data$subgroup))){
     stop("Object is corrupted. Please don't change object after running fitReitsmaSubgroup().")
   }
-  if(is.null(col)) col <- grDevices::rainbow(n=nsub)
-  col2 <- grDevices::adjustcolor(col,alpha.f=0.6)
-  # symbols
-  if(is.null(symbol)) {
-    available_symbols <- c("rectangle","ellipse","diamond","triangle","cross","plus","star")
-    symbols2 <- rep(available_symbols,length.out=nsub)
-  } else {
-    symbols2 <- symbol
-  }
+  aes  <- validateSubgroupAesthetics(col=col,symbol=symbol,nsub=nsub)
+  col  <- aes$col
+  col2 <- aes$col2
+  symbols2 <- aes$symbols2
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
   if(size=="fisher"){

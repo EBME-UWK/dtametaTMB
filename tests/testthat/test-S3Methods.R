@@ -178,7 +178,9 @@ test_that("common generic methods work across inheritance hierarchy", {
   
   models2 <- list(
     reitsma,
+    reitsmaTMB,
     reitsmaSub,
+    reitsmaSubTMB,
     reitsmaLCA,
     reitsmaSubLCA,
     ruga,
