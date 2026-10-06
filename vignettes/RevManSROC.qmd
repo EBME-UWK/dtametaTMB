@@ -26,9 +26,9 @@ Study estimates in a summary receiver operating characteristic (SROC) plot can b
 The package provides several study-symbol sizing methods, including equal sizing, relative sample-size sizing, approximate inverse-standard-error sizing, Fisher-information sizing for applicable models, and two RevMan-style methods:
 
 - `size = "sampsize_revman"`, based on the square roots of the numbers of non-diseased and diseased participants;
-- `size = "se_revman"`, based on approximate inverse standard errors of observed logit specificity and logit sensitivity.
+- `size = "se_revman"`, based on approximate inverse standard errors of empirical logit specificity and logit sensitivity.
 
-The formulas described in this vignette were inferred empirically from exported RevMan SROC graphics by using controlled datasets.
+The graphical normalization described in this vignette was reconstructed empirically from exported RevMan SROC graphics using controlled datasets. The raw sample-size and inverse-standard-error calculations, including their handling of zero dimensions and zero cells, were subsequently confirmed through information provided by the RevMan Development Team. `dtametaTMB` uses its own transparent final graphical rescaling and therefore does not aim to reproduce device pixels exactly.
 
 The calculated dimensions are graphical sizing measures. They are not percentage contributions to the precision of the pooled estimate and should not be interpreted as conventional inverse-variance meta-analytic weights.
 
@@ -84,18 +84,18 @@ $$
 The unrescaled full horizontal and vertical dimensions are then
 
 $$
-d_{Sp,i} = 4 + c q_{Sp,i}
+d_{Sp,i} = 4 + c \cdot q_{Sp,i}
 $$
 
 and
 
 $$
-d_{Se,i} = 4 + c q_{Se,i}.
+d_{Se,i} = 4 + c \cdot q_{Se,i}.
 $$
 
 This normalization has two useful properties:
 
-1. the average larger variable-dimension component, $c m_i$, equals 8;
+1. the average larger variable-dimension component, $c\cdot m_i$ equals 8;
 2. the fixed baseline of 4 keeps a study marker visible when its raw sizing measure is zero in one direction.
 
 Because the normalization is based on the mean of study-level maxima, duplicating the complete set of studies does not change the resulting constant or relative marker dimensions.
@@ -126,16 +126,18 @@ $$
 The corresponding full dimensions are
 
 $$
-d_{Se,i} = 4 + c_{SS}\sqrt{n_{1i}}
+d_{Se,i} = 4 + c_{SS}\cdot\sqrt{n_{1i}}
 $$
 
 and
 
 $$
-d_{Sp,i} = 4 + c_{SS}\sqrt{n_{0i}}.
+d_{Sp,i} = 4 + c_{SS}\cdot\sqrt{n_{0i}}.
 $$
 
 Consequently, a study with more diseased than non-diseased participants is taller than it is wide, whereas a study with more non-diseased than diseased participants is wider than it is tall.
+
+For graphical sample-size scaling, if either $n_{1i}$ or $n_{0i}$ is zero, one is added to both quantities before their square roots are calculated. This follows the RevMan calculation.
 
 ## RevMan-style inverse-standard-error scaling
 
@@ -170,7 +172,7 @@ q_{Sp,i} =
 \sqrt{n_{0i}\widehat{Sp}_i(1-\widehat{Sp}_i)}.
 $$
 
-Equivalently, when the relevant denominators are positive,
+When all four cell counts are positive, these raw measures can equivalently be written as
 
 $$
 q_{Se,i} =
@@ -196,29 +198,31 @@ $$
 The full dimensions are
 
 $$
-d_{Se,i} = 4 + c_{SE}q_{Se,i}
+d_{Se,i} = 4 + c_{SE}\cdot q_{Se,i}
 $$
 
 and
 
 $$
-d_{Sp,i} = 4 + c_{SE}q_{Sp,i}.
+d_{Sp,i} = 4 + c_{SE}\cdot q_{Sp,i}.
 $$
 
-`dtametaTMB` calculates these measures directly from the observed sensitivities, specificities, and denominators. No continuity correction is applied. A boundary estimate therefore contributes zero to the variable component in the corresponding direction, while the fixed baseline keeps the marker visible.
+For `size = "se_revman"`, if any of the four cell counts in a study is zero, 0.5 is added to all four counts before the raw horizontal and vertical measures are calculated. This follows the raw inverse-standard-error calculation used by RevMan. The correction is used solely for graphical sizing and does not alter the cell counts supplied to the fitted binomial likelihood.
+
+By contrast, `size = "se"` does not apply a continuity correction. A boundary estimate therefore contributes zero to the corresponding unnormalized inverse-standard-error measure.
 
 ## Package-specific graphical rescaling
 
 The dimensions above describe the recovered RevMan-style relative geometry. Before the dimensions are passed to the plotting routine, `dtametaTMB` divides them by 10:
 
 $$
-\widetilde d_{Sp,i} = \frac{4+cq_{Sp,i}}{10}
+\widetilde d_{Sp,i} = \frac{4+c\cdot q_{Sp,i}}{10}
 $$
 
 and
 
 $$
-\widetilde d_{Se,i} = \frac{4+cq_{Se,i}}{10}.
+\widetilde d_{Se,i} = \frac{4+c\cdot q_{Se,i}}{10}.
 $$
 
 The divisor of 10 is a package-specific graphical rescaling constant. It places the symbols in a range compatible with the default graphical scale used by the other sizing methods. It does not alter relative widths, heights, or the ordering of study-symbol dimensions.
@@ -355,7 +359,10 @@ The overall marker size can be adjusted without changing the relative dimensions
 #| fig.width: 8
 #| eval: TRUE
 
-plot(fit,size = "se_revman",scale = 0.03,specrange=c(0,0))
+plot(fit,
+     size = "se_revman",
+     scale = 0.02*1.5, # 50% larger than the default
+     specrange=c(0,0))
 ```
 
 ## Relation to the other sizing methods
@@ -470,12 +477,13 @@ $$
 The resulting marker is square, with package-rescaled dimension
 
 $$
-\widetilde d_i = \frac{4+c_n\sqrt{n_i}}{10}.
+\widetilde d_i = \frac{4+c_n\cdot\sqrt{n_i}}{10}.
 $$
+If the total sample size $n_i$ is zero, it is replaced by one for graphical sizing before taking the square root. This adjustment affects marker dimensions only.
 
 ### Empirical Bayes precision scaling
 
-For `size = "eb_revman"`, let \(V_{Se,i}\) and \(V_{Sp,i}\) denote the conditional posterior variances of the study-specific empirical Bayes logit-sensitivity and logit-specificity estimates. The raw measures are
+For `size = "eb_revman"`, let $V_{Se,i}$ and $V_{Sp,i}$ denote the conditional posterior variances of the study-specific empirical Bayes logit-sensitivity and logit-specificity estimates. The raw measures are
 
 $$
 q_{Se,i} = \frac{1}{\sqrt{V_{Se,i}}}
@@ -500,7 +508,7 @@ The package-rescaled dimensions are
 $$
 \widetilde d_{Se,i}
 =
-\frac{4+c_{EB}q_{Se,i}}{10}
+\frac{4+c_{EB}\cdot q_{Se,i}}{10}
 $$
 
 and
@@ -508,26 +516,29 @@ and
 $$
 \widetilde d_{Sp,i}
 =
-\frac{4+c_{EB}q_{Sp,i}}{10}.
+\frac{4+c_{EB}\cdot q_{Sp,i}}{10}.
 $$
 
 The empirical Bayes option applies the same graphical normalization principle to latent-class posterior precision. It is an extension developed for `dtametaTMB` and is not a latent-class sizing method defined by RevMan.
 
 ## Interpretation and limitations
 
-The RevMan-style transformations were reconstructed from graphical output rather than from an official software specification. The controlled experiments strongly support the following features:
+The final graphical normalization was reconstructed from exported RevMan output rather than from a complete official rendering specification. The raw sample-size and inverse-standard-error calculations, including the handling of zero dimensions and zero cells, were confirmed through information provided by the RevMan Development Team.
 
-- separate horizontal and vertical sizing measures;
-- square-root sample-size scaling;
-- approximate inverse-logit-standard-error scaling;
-- a fixed baseline full dimension of 4;
-- one analysis-specific constant shared by both directions;
-- normalization based on the mean study-level maximum raw measure;
-- proportional scaling of all marker dimensions through the plotting `scale` argument.
+Taken together, the controlled experiments and the information provided by
+the RevMan Development Team support the following features:
 
-`dtametaTMB` applies the inverse-standard-error transformation directly to
-the uncorrected observed sensitivity and specificity estimates. No
-continuity correction is applied.
+  -   separate horizontal and vertical sizing measures;
+  -   square-root sample-size scaling;
+  -   approximate inverse-logit-standard-error scaling;
+  -   a fixed baseline full dimension of 4;
+  -   one analysis-specific constant shared by both directions;
+  -   normalization based on the mean study-level maximum raw measure;
+  -   proportional scaling of all marker dimensions through the plotting `scale` argument.
+
+For `size = "se_revman"`, `dtametaTMB` follows the RevMan raw inverse-standard-error calculation by adding 0.5 to all four cells when any cell is zero. This adjustment affects marker dimensions only and does not alter the binomial likelihood or any fitted-model result.
+
+For `size = "se"`, no continuity correction is applied. Boundary sensitivity or specificity estimates therefore receive zero unnormalized inverse-standard-error information in the corresponding direction.
 
 For subgroup analyses, `dtametaTMB` calculates one common normalization
 constant across all studies displayed in the plot. This differs from RevMan,
@@ -556,16 +567,18 @@ c =
 {\operatorname{mean}_i\left[\max(q_{Se,i},q_{Sp,i})\right]},
 $$
 
-followed by
+followed by the unrescaled full dimensions
 
 $$
-d_{Se,i}=4+cq_{Se,i}
+d_{Se,i}=4+c \cdot q_{Se,i}
 $$
 
 and
 
 $$
-d_{Sp,i}=4+cq_{Sp,i}.
+d_{Sp,i}=4+c \cdot q_{Sp,i}.
 $$
 
-The sample-size method uses square-root diseased and non-diseased sample sizes. The inverse-standard-error method uses approximate inverse standard errors of observed logit sensitivity and specificity without a continuity correction. The latent-class extensions apply the same normalization principle to total sample size or empirical Bayes posterior precision.
+These dimensions are divided by 10 before being passed to the plotting routine.
+
+The sample-size method uses square-root diseased and non-diseased sample sizes. If either sample size is zero, one is added to both quantities for graphical sizing. The RevMan-style inverse-standard-error method uses approximate inverse standard errors of empirical logit sensitivity and specificity. If any cell count is zero, 0.5 is added to all four cells for graphical sizing. By contrast, the original `size = "se"` method does not apply a continuity correction. The latent-class extensions apply the same normalization principle to total sample size or empirical Bayes posterior precision.

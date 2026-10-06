@@ -64,7 +64,7 @@ test_that("common generic methods work across inheritance hierarchy", {
     y01   = y01,
     y00   = y00,
     study = id
-  )
+    )
   
   ## Reitsma subgroup LCA ---------------------------------------
   

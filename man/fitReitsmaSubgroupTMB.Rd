@@ -126,7 +126,8 @@ A list of class \code{"ReitsmaSubgroupTMB"} with components:
 \description{
 Fits the Reitsma bivariate random-effects model with a single categorical covariate
 for diagnostic test accuracy (DTA) meta-analysis using a binomial-normal
-likelihood via a custom \code{TMB} template.
+likelihood via a custom \code{TMB} template, which
+may offer improved numerical robustness in difficult or near-boundary cases.
 }
 \examples{
 data("anticcp")

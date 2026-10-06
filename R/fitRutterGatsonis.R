@@ -168,18 +168,25 @@ fitRutterGatsonis <- function(data,
   XP <- getXP(X=XP)
   
   ### Get initial values
+  #informative <- with(X,TP + FP + FN + TN > 0)
+  #X_init      <- X[informative, , drop = FALSE]
   logit_sens   <- stats::qlogis(pmin(pmax(XP$sens,0.005),0.995))
+  #logit_sens   <- with(X_init,log((TP+0.5)/(FN+0.5)))
   logit_spec   <- stats::qlogis(pmin(pmax(XP$spec,0.005),0.995))
+  #logit_spec   <- with(X_init,log((TN+0.5)/(FP+0.5)))
   muA_init     <- mean(logit_sens,na.rm=TRUE)
   muB_init     <- mean(logit_spec,na.rm=TRUE)
   sA_init      <- stats::sd(logit_sens,na.rm=TRUE)
+  if (!is.finite(sA_init)) {sA_init <- 0.5}
   sA_init      <- max(sA_init,1e-05)
   sB_init      <- stats::sd(logit_spec,na.rm=TRUE)
+  if (!is.finite(sB_init)) {sB_init <- 0.5}
   sB_init      <- max(sB_init,1e-05)
-  rAB_init     <- max(min(stats::cor(logit_sens,
-                                     logit_spec,
-                                     use="pairwise.complete.obs"),0.99),-0.99)
-  if(is.na(rAB_init)) rAB_init <- 0
+  rAB_init     <- suppressWarnings(stats::cor(logit_sens,
+                                              logit_spec,
+                                              use="pairwise.complete.obs"))
+  if (!is.finite(rAB_init)) {rAB_init <- 0}
+  rAB_init <- max(min(rAB_init, 0.99),-0.99)
   sAB_init     <- rAB_init*sA_init*sB_init
   init <- getRUGA(lsens    = muA_init,
                   lspec    = muB_init,

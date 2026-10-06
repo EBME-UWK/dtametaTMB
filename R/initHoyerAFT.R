@@ -74,7 +74,7 @@
 #' \doi{10.1002/jrsm.1273}
 #'
 #' @importFrom survival survreg Surv
-#' @importFrom stats aggregate cov cov2cor
+#' @importFrom stats aggregate sd cor weighted.mean
 #' @export
 initHoyerAFT <- function(restructured, dist="loglogistic") {
   # Check distribution
@@ -106,44 +106,77 @@ initHoyerAFT <- function(restructured, dist="loglogistic") {
   restructured$lowerB[restructured$ctype == 1] <- 1e-09
   restructured$upperB[restructured$ctype == 3] <- Inf
   
-  datfit0 <- restructured[restructured$events0!=0,]
-  datfit1 <- restructured[restructured$events1!=0,]
+  datfit0 <- restructured[restructured$events0>0,,drop=FALSE]
+  datfit1 <- restructured[restructured$events1>0,,drop=FALSE]
 
-  fit0 <- survival::survreg(Surv(lowerB, upperB, type = "interval2") ~ 1,
-                            data = datfit0,
-                            weights = datfit0$events0,
-                            dist = dist)
+  fit0 <- tryCatch(suppressWarnings(survival::survreg(survival::Surv(lowerB, upperB, type = "interval2") ~ 1,
+                                                      data = datfit0,
+                                                      weights = datfit0$events0,
+                                                      dist = dist)), error = function(e) NULL)
 
-  fit1 <- survival::survreg(Surv(lowerB, upperB, type = "interval2") ~ 1,
-                            data = datfit1,
-                            weights = datfit1$events1,
-                            dist = dist)
+  fit1 <- tryCatch(suppressWarnings(survival::survreg(survival::Surv(lowerB, upperB, type = "interval2") ~ 1,
+                                                      data = datfit1,
+                                                      weights = datfit1$events1,
+                                                      dist = dist)), error = function(e) NULL)
 
-  beta0_init   <- fit0$coefficients
-  lambda0_init <- max(fit0$scale,1e-5)
-  beta1_init   <- fit1$coefficients
-  lambda1_init <- max(fit1$scale,1e-5)
-
+  beta0_init   <- if(is.null(fit0)) { NA_real_ } else { unname(fit0$coefficients[1]) }
+  if (!is.finite(beta0_init)) { beta0_init <- stats::weighted.mean(restructured$lcutmean,w=restructured$events0,na.rm=TRUE) }
+  if (!is.finite(beta0_init)) { beta0_init <- 0 }
+  ##
+  lambda0_init <- if (is.null(fit0)) { NA_real_ } else { fit0$scale }
+  if (!is.finite(lambda0_init) || lambda0_init <= 0) { 
+    m0 <- stats::weighted.mean(restructured$lcutmean,w=restructured$events0,na.rm=TRUE)
+    x0 <- (restructured$lcutmean-m0)**2
+    lambda0_init <- sqrt(stats::weighted.mean(x0,w=restructured$events0,na.rm=TRUE)) }
+  if (!is.finite(lambda0_init) || lambda0_init <= 0) { lambda0_init <- 1 }
+  lambda0_init <- max(lambda0_init, 1e-5)
+  ##
+  beta1_init   <- if(is.null(fit1)) { NA_real_ } else { unname(fit1$coefficients[1]) }
+  if (!is.finite(beta1_init)) { beta1_init <- stats::weighted.mean(restructured$lcutmean,w=restructured$events1,na.rm=TRUE) }
+  if (!is.finite(beta1_init)) { beta1_init <- 0 }
+  ##
+  lambda1_init <- if (is.null(fit1)) { NA_real_ } else { fit1$scale }
+  if (!is.finite(lambda1_init) || lambda1_init <= 0) { 
+    m1 <- stats::weighted.mean(restructured$lcutmean,w=restructured$events1,na.rm=TRUE)
+    x1 <- (restructured$lcutmean-m1)**2
+    lambda1_init <- sqrt(stats::weighted.mean(x1,w=restructured$events1,na.rm=TRUE)) }
+  if (!is.finite(lambda1_init) || lambda1_init <= 0) { lambda1_init <- 1 }
+  lambda1_init <- max(lambda1_init, 1e-5)
   ## random effects
   lmeantest0 <- aggregate(cbind(lcutmean * restructured$events0, restructured$events0) ~ study,
                           data = restructured,
                           FUN = sum)
   lmeantest0$lmeantest0 <- lmeantest0[, 2] / lmeantest0[, 3]
+  lmeantest0 <- lmeantest0[is.finite(lmeantest0$lmeantest0),c("study", "lmeantest0"),drop = FALSE]
+  #
   lmeantest1 <- aggregate(cbind(lcutmean * restructured$events1, restructured$events1) ~ study,
                           data = restructured,
                           FUN = sum)
   lmeantest1$lmeantest1 <- lmeantest1[, 2] / lmeantest1[, 3]
-  meantest <- merge(lmeantest0[c("study", "lmeantest0")],
-                    lmeantest1[c("study", "lmeantest1")],
-                    by = "study")
-  ssc           <- stats::cov(meantest[, c("lmeantest0", "lmeantest1")])
-  su0_init      <- max(sqrt(ssc[1,1]),1e-5)
-  su1_init      <- max(sqrt(ssc[2,2]),1e-5)
-  coru0u1_init  <- min(max(cov2cor(ssc)[1,2],-0.99),0.99)
-  if(is.na(coru0u1_init)) coru0u1_init <- 0
-  if(dist=="weibull"){ distcode = 1 }
-  if(dist=="lognormal"){ distcode = 2 }
-  if(dist=="loglogistic"){ distcode = 3 }
+  lmeantest1 <- lmeantest1[is.finite(lmeantest1$lmeantest1),c("study", "lmeantest1"),drop = FALSE]
+  #
+  meantest <- merge(lmeantest0,lmeantest1,by="study", all=FALSE,sort=FALSE)
+  # Neutral fallbacks
+  su0_init <- 0.5
+  su1_init <- 0.5
+  coru0u1_init <- 0
+  #
+  if (nrow(meantest) >= 2L) { 
+    sd0 <- stats::sd(meantest$lmeantest0)
+    sd1 <- stats::sd(meantest$lmeantest1)
+    if (is.finite(sd0)) {su0_init <- max(sd0, 1e-5)}
+    if (is.finite(sd1)) {su1_init <- max(sd1, 1e-5)}
+  }
+  if (nrow(meantest) >= 3L) {
+    sd0 <- stats::sd(meantest$lmeantest0)
+    sd1 <- stats::sd(meantest$lmeantest1)
+    if (is.finite(sd0) && is.finite(sd1) && sd0 > sqrt(.Machine$double.eps) && sd1 > sqrt(.Machine$double.eps)) {
+      empirical_cor <- suppressWarnings(stats::cor(meantest$lmeantest0,meantest$lmeantest1))
+      if (is.finite(empirical_cor)) {coru0u1_init <- pmin(pmax(empirical_cor, -0.99),0.99)}
+    }
+  }
+  ###
+  distcode <- switch(dist,weibull = 1,lognormal = 2,loglogistic = 3)
   res           <- data.frame(beta0_init,
                               lambda0_init,
                               beta1_init,

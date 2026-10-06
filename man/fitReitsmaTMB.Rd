@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitReitsmaTMB.R
 \name{fitReitsmaTMB}
 \alias{fitReitsmaTMB}
-\title{Fit the ReitsmaTMB Model}
+\title{Fit the Reitsma TMB Model}
 \usage{
 fitReitsmaTMB(
   data,
@@ -80,7 +80,8 @@ A list of class \code{"ReitsmaTMB"} with components:
 }
 \description{
 Fits the Reitsma bivariate random-effects model for diagnostic test accuracy (DTA)
-meta-analysis using a binomial-normal likelihood via a custom \code{TMB} template.
+meta-analysis using a binomial-normal likelihood via a custom \code{TMB} template,
+which may offer improved numerical robustness in difficult or near-boundary cases.
 }
 \examples{
 data("anticcp")

@@ -149,8 +149,6 @@ importFrom(stats,
   binomial,
   complete.cases,
   cor,
-  cov,
-  cov2cor,
   logLik,
   median,
   model.matrix,
@@ -166,7 +164,8 @@ importFrom(stats,
   reshape,
   sd,
   var,
-  vcov
+  vcov,
+  weighted.mean
 )
 importFrom(survival,
   Surv,

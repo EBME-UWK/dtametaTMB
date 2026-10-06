@@ -2,7 +2,8 @@
 #'
 #' Fits the Reitsma bivariate random-effects model with a single categorical covariate
 #' for diagnostic test accuracy (DTA) meta-analysis using a binomial-normal 
-#' likelihood via a custom \code{TMB} template.
+#' likelihood via a custom \code{TMB} template, which 
+#' may offer improved numerical robustness in difficult or near-boundary cases.
 #'
 #' @param data A data.frame containing study-level data.
 #' @param TP True positives (column name).
@@ -209,15 +210,21 @@ fitReitsmaSubgroupTMB <- function(data,
                         constrain=NULL,
                         conflevel=conflevel)$sdreport2
   muA_init     <- init["mu_A.sens","Estimate"]
+  if (!is.finite(muA_init)) {muA_init <- 0}
   muB_init     <- init["mu_B.spec","Estimate"]
-  sA_init      <- sqrt(init["sigma2_A.sens","Estimate"])
+  if (!is.finite(muB_init)) {muB_init <- 0}
+  ##
+  sA_init      <- suppressWarnings(sqrt(init["sigma2_A.sens","Estimate"]))
+  if (!is.finite(sA_init)) {sA_init <- 0.5}
   sA_init      <- max(sA_init,1e-05)
-  sB_init      <- sqrt(init["sigma2_B.spec","Estimate"])
+  ##
+  sB_init      <- suppressWarnings(sqrt(init["sigma2_B.spec","Estimate"]))
+  if (!is.finite(sB_init)) {sB_init <- 0.5}
   sB_init      <- max(sB_init,1e-05)
-  sAB_init     <- init["sigma_AB","Estimate"]
-  rAB_init     <- sAB_init/(sA_init*sB_init)
+  ##
+  rAB_init     <- init["rho_AB","Estimate"]
+  if (!is.finite(rAB_init)) {rAB_init <- 0}
   rAB_init     <- max(min(rAB_init,0.99),-0.99)
-  if(is.na(rAB_init)) rAB_init <- 0
 
   ###
   parameters <- list(
