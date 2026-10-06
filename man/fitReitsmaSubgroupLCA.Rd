@@ -124,6 +124,7 @@ A list of class \code{"ReitsmaSubgroupLCA"} with components:
 \item \code{constrain}: Random effects parameters fixed at zero.
 \item \code{sensspec_constrain}: Whether sensitivities/specificities are assumed common across subgroups.
 \item \code{variances}: Variance structure used in the fitted model.
+\item \code{prev_variances}: Prevalence variance structure used in the fitted model.
 }
 }
 \description{

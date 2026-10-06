@@ -1,4 +1,4 @@
-#' Calculate graphical sizing measures for latent-class SROC plots
+#' Calculate Graphical Sizing Measures for Latent-Class SROC Plots
 #'
 #' Internal helper calculating horizontal specificity and vertical
 #' sensitivity dimension measures for study symbols in latent-class
@@ -51,8 +51,10 @@
 #' @param size A character string identifying the symbol-sizing method.
 #'
 #' @return A data frame with columns \code{sp} and \code{se}, containing
-#'   horizontal specificity and vertical sensitivity graphical dimensions,
-#'   respectively.
+#' horizontal specificity and vertical sensitivity graphical dimensions,
+#' respectively. These dimensions define the reference rectangular
+#' geometry used by the plotting routine. Closed non-rectangular symbols
+#' may subsequently be rescaled to preserve the same enclosed area.
 #'
 #' @keywords internal
 #' @noRd

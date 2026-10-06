@@ -92,6 +92,7 @@ specificity value(s), with confidence intervals.}
 \item{prevref}{Estimated (average) prevalence and reference standard sensitivity/specificity with confidence intervals.}
 \item{constrain}{Constraints on parameters applied during model fitting.}
 \item{subgroups}{The subgroup levels used in the model fit.}
+\item{prev_variances}{Prevalence variance structure used in the fitted model.}
 }
 }
 \description{

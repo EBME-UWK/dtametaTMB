@@ -165,7 +165,7 @@ constrainsens <- fitReitsmaSubgroup(data=anticcp,
 summary(constrainsens)
 ```
 assumes equal (logit) sensitivities in all subgroups.
-Note that you can also set `subgroup_constrain` to `"spec"` or `c("sens","spec")`. 
+Note that you can also set `sensspec_constrain` to `"spec"` or `c("sens","spec")`. 
 
 ## How can I compare `constrainsens` with the full model?
 

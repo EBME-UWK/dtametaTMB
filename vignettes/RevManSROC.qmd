@@ -28,9 +28,12 @@ The package provides several study-symbol sizing methods, including equal sizing
 - `size = "sampsize_revman"`, based on the square roots of the numbers of non-diseased and diseased participants;
 - `size = "se_revman"`, based on approximate inverse standard errors of empirical logit specificity and logit sensitivity.
 
-The graphical normalization described in this vignette was reconstructed empirically from exported RevMan SROC graphics using controlled datasets. The raw sample-size and inverse-standard-error calculations, including their handling of zero dimensions and zero cells, were subsequently confirmed through information provided by the RevMan Development Team. `dtametaTMB` uses its own transparent final graphical rescaling and therefore does not aim to reproduce device pixels exactly.
-
-The calculated dimensions are graphical sizing measures. They are not percentage contributions to the precision of the pooled estimate and should not be interpreted as conventional inverse-variance meta-analytic weights.
+The calculated dimensions are graphical sizing measures. They are not
+percentage contributions to the precision of the pooled estimate and should
+not be interpreted as conventional inverse-variance meta-analytic weights.
+For closed study symbols, `dtametaTMB` applies shape-specific adjustments so
+that rectangles, ellipses, diamonds, and triangles with the same calculated
+dimensions have equal enclosed graphical area.
 
 ## Notation
 
@@ -97,8 +100,6 @@ This normalization has two useful properties:
 
 1. the average larger variable-dimension component, $c\cdot m_i$ equals 8;
 2. the fixed baseline of 4 keeps a study marker visible when its raw sizing measure is zero in one direction.
-
-Because the normalization is based on the mean of study-level maxima, duplicating the complete set of studies does not change the resulting constant or relative marker dimensions.
 
 ## RevMan-style sample-size scaling
 
@@ -207,7 +208,7 @@ $$
 d_{Sp,i} = 4 + c_{SE}\cdot q_{Sp,i}.
 $$
 
-For `size = "se_revman"`, if any of the four cell counts in a study is zero, 0.5 is added to all four counts before the raw horizontal and vertical measures are calculated. This follows the raw inverse-standard-error calculation used by RevMan. The correction is used solely for graphical sizing and does not alter the cell counts supplied to the fitted binomial likelihood.
+For `size = "se_revman"`, if any of the four cell counts in a study is zero, 0.5 is added to all four counts before the raw horizontal and vertical measures are calculated. The correction is used solely for graphical sizing and does not alter the cell counts supplied to the fitted binomial likelihood.
 
 By contrast, `size = "se"` does not apply a continuity correction. A boundary estimate therefore contributes zero to the corresponding unnormalized inverse-standard-error measure.
 
@@ -225,9 +226,26 @@ $$
 \widetilde d_{Se,i} = \frac{4+c\cdot q_{Se,i}}{10}.
 $$
 
-The divisor of 10 is a package-specific graphical rescaling constant. It places the symbols in a range compatible with the default graphical scale used by the other sizing methods. It does not alter relative widths, heights, or the ordering of study-symbol dimensions.
+The divisor of 10 is a package-specific graphical rescaling constant. It places the symbols in a range compatible with the default graphical scale of 0.02 used by the other sizing methods. It does not alter relative widths, heights, or the ordering of study-symbol dimensions.
 
 The `scale` argument in the plotting methods multiplies all dimensions proportionally. Changing `scale` therefore changes the overall symbol size without changing the relative geometry among studies.
+
+## Symbol geometry and equal-area scaling
+
+The horizontal and vertical dimensions calculated by the selected sizing
+method define the geometry of a reference rectangle. The horizontal dimension
+represents specificity-side information, whereas the vertical dimension
+represents sensitivity-side information.
+
+For ellipses, diamonds, and triangles, `dtametaTMB` applies shape-specific
+scaling factors so that each closed symbol has the same enclosed area as the
+corresponding reference rectangle. In particular, the ellipse semiaxes are multiplied
+by $2/\sqrt{\pi}$, whereas the horizontal and vertical half-extents of
+diamonds and triangles are multiplied by $\sqrt{2}$.
+
+Because the line-based symbols `"plus"`, `"cross"`, and `"star"` do not enclose a
+two-dimensional area, they are drawn using the calculated
+horizontal and vertical extents without an equal-area adjustment.
 
 ## A controlled example
 
@@ -311,6 +329,10 @@ comparison
 ```
 
 The two pairs of dimensions are equal in this example, apart from numerical rounding.
+These dimensions define the reference rectangular geometry. If an ellipse,
+diamond, or triangle is selected instead, the shape-specific equal-area
+adjustment is applied during rendering. The underlying study-specific
+dimensions and their ordering remain unchanged.
 
 ## Using the sizing methods
 
@@ -338,7 +360,11 @@ Use square-root sample-size scaling with:
 #| fig.height: 8
 #| fig.width: 8
 #| eval: TRUE
-plot(fit,size = "sampsize_revman",specrange=c(0,0))
+plot(fit,
+     symbol = "rectangle",
+     size = "sampsize_revman",
+     scale = 0.02,
+     specrange=c(0,0))
 ```
 
 Use inverse-standard-error scaling with:
@@ -348,7 +374,11 @@ Use inverse-standard-error scaling with:
 #| fig.height: 8
 #| fig.width: 8
 #| eval: TRUE
-plot(fit,size = "se_revman",specrange=c(0,0))
+plot(fit,
+     symbol = "rectangle",
+     size = "se_revman",
+     scale = 0.02,
+     specrange=c(0,0))
 ```
 
 The overall marker size can be adjusted without changing the relative dimensions:
@@ -360,9 +390,17 @@ The overall marker size can be adjusted without changing the relative dimensions
 #| eval: TRUE
 
 plot(fit,
+     symbol = "rectangle",
      size = "se_revman",
      scale = 0.02*1.5, # 50% larger than the default
      specrange=c(0,0))
+
+plot(fit,
+     symbol = "triangle",
+     size = "se_revman",
+     scale = 0.02*1.5, # 50% larger than the default
+     specrange=c(0,0))
+
 ```
 
 ## Relation to the other sizing methods
@@ -451,7 +489,8 @@ The original `dtametaTMB` methods answer related but distinct graphical question
    contributions toward pooled logit specificity and pooled logit
    sensitivity, respectively. In subgroup models, these contributions are
    calculated separately for each subgroup-specific summary parameter and
-   therefore sum to 100 within each subgroup.
+   therefore sum to 100 within each subgroup, unless specificity and/or sensitivity
+   are constrained to be common in the subgroups.
 - `size = "sampsize_revman"` and `size = "se_revman"` apply the fixed-baseline, analysis-normalized RevMan-style transformations described in this vignette.
 
 The choice of method affects the graphical interpretation of marker dimensions. None of these options changes the fitted meta-analytic model.
@@ -474,7 +513,7 @@ $$
 c_n = \frac{8}{\frac{1}{I}\sum_{i=1}^{I}\sqrt{n_i}}.
 $$
 
-The resulting marker is square, with package-rescaled dimension
+The resulting horizontal and vertical dimensions are equal
 
 $$
 \widetilde d_i = \frac{4+c_n\cdot\sqrt{n_i}}{10}.
@@ -519,14 +558,11 @@ $$
 \frac{4+c_{EB}\cdot q_{Sp,i}}{10}.
 $$
 
-The empirical Bayes option applies the same graphical normalization principle to latent-class posterior precision. It is an extension developed for `dtametaTMB` and is not a latent-class sizing method defined by RevMan.
+The empirical Bayes option applies the same graphical normalization principle to latent-class posterior precision. 
 
 ## Interpretation and limitations
 
-The final graphical normalization was reconstructed from exported RevMan output rather than from a complete official rendering specification. The raw sample-size and inverse-standard-error calculations, including the handling of zero dimensions and zero cells, were confirmed through information provided by the RevMan Development Team.
-
-Taken together, the controlled experiments and the information provided by
-the RevMan Development Team support the following features:
+The final graphical normalization was mainly reconstructed from exported RevMan output rather than from a complete official rendering specification. The reconstructed implementation includes the following features:
 
   -   separate horizontal and vertical sizing measures;
   -   square-root sample-size scaling;
@@ -534,15 +570,15 @@ the RevMan Development Team support the following features:
   -   a fixed baseline full dimension of 4;
   -   one analysis-specific constant shared by both directions;
   -   normalization based on the mean study-level maximum raw measure;
+  -   equal-area rendering of rectangles, ellipses, diamonds, and triangles through shape-specific graphical adjustments;
   -   proportional scaling of all marker dimensions through the plotting `scale` argument.
 
-For `size = "se_revman"`, `dtametaTMB` follows the RevMan raw inverse-standard-error calculation by adding 0.5 to all four cells when any cell is zero. This adjustment affects marker dimensions only and does not alter the binomial likelihood or any fitted-model result.
+For `size = "se_revman"`, `dtametaTMB` follows the raw inverse-standard-error calculation by adding 0.5 to all four cells when any cell is zero. This adjustment affects marker dimensions only and does not alter the binomial likelihood or any fitted-model result.
 
 For `size = "se"`, no continuity correction is applied. Boundary sensitivity or specificity estimates therefore receive zero unnormalized inverse-standard-error information in the corresponding direction.
 
 For subgroup analyses, `dtametaTMB` calculates one common normalization
-constant across all studies displayed in the plot. This differs from RevMan,
-which applies the normalization separately within each subgroup. Global
+constant across all studies displayed in the plot. Global
 normalization preserves comparison across subgroups, so equal marker
 dimensions correspond to equal raw transformed sample-size or
 inverse-standard-error measures throughout the figure.
@@ -559,7 +595,8 @@ confidence regions, prediction regions, or the fitted SROC model.
 
 ## Summary
 
-For both conventional RevMan-style sizing methods, `dtametaTMB` uses
+The RevMan-style methods use separate horizontal and vertical sizing measures
+for specificity and sensitivity. For each analysis, `dtametaTMB` applies
 
 $$
 c =
@@ -567,18 +604,30 @@ c =
 {\operatorname{mean}_i\left[\max(q_{Se,i},q_{Sp,i})\right]},
 $$
 
-followed by the unrescaled full dimensions
+followed by the package-rescaled dimensions
 
 $$
-d_{Se,i}=4+c \cdot q_{Se,i}
+\widetilde d_{Se,i}
+=
+\frac{4+cq_{Se,i}}{10}
+\qquad\text{and}\qquad
+\widetilde d_{Sp,i}
+=
+\frac{4+cq_{Sp,i}}{10}.
 $$
 
-and
+For `size = "sampsize_revman"`, the raw measures are the square roots of
+the diseased and non-diseased sample sizes. For `size = "se_revman"`, they
+are approximate inverse standard errors of empirical logit sensitivity and
+specificity. Graphical adjustments for zero dimensions and zero cells are
+described above.
 
-$$
-d_{Sp,i}=4+c \cdot q_{Sp,i}.
-$$
+The calculated dimensions define a reference rectangle. Ellipses, diamonds,
+and triangles are rescaled to preserve the same enclosed area, while
+line-based symbols use the calculated horizontal and vertical extents
+directly.
 
-These dimensions are divided by 10 before being passed to the plotting routine.
-
-The sample-size method uses square-root diseased and non-diseased sample sizes. If either sample size is zero, one is added to both quantities for graphical sizing. The RevMan-style inverse-standard-error method uses approximate inverse standard errors of empirical logit sensitivity and specificity. If any cell count is zero, 0.5 is added to all four cells for graphical sizing. By contrast, the original `size = "se"` method does not apply a continuity correction. The latent-class extensions apply the same normalization principle to total sample size or empirical Bayes posterior precision.
+The latent-class extensions apply the same normalization principle to total
+sample size or empirical Bayes posterior precision. All calculations
+described in this vignette affect symbol rendering only and do not alter the
+fitted meta-analytic model.

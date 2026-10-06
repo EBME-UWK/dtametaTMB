@@ -97,6 +97,7 @@
 #'   \item \code{constrain}: Random effects parameters fixed at zero.
 #'   \item \code{sensspec_constrain}: Whether sensitivities/specificities are assumed common across subgroups.
 #'   \item \code{variances}: Variance structure used in the fitted model.
+#'   \item \code{prev_variances}: Prevalence variance structure used in the fitted model.
 #' }
 #'
 #' @examples
@@ -437,7 +438,8 @@ fitReitsmaSubgroupLCA <- function(data,
     subgroups    = lsub,
     constrain    = constrain,
     sensspec_constrain = sensspec_constrain,
-    variances    = variances
+    variances    = variances,
+    prev_variances = prev_variances
   )
   
   # Assign class

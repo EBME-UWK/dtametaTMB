@@ -65,6 +65,7 @@
 #'   \item{prevref}{Estimated (average) prevalence and reference standard sensitivity/specificity with confidence intervals.}
 #'   \item{constrain}{Constraints on parameters applied during model fitting.}
 #'   \item{subgroups}{The subgroup levels used in the model fit.}
+#'   \item{prev_variances}{Prevalence variance structure used in the fitted model.}
 #' }
 #'
 #' @importFrom TMB MakeADFun sdreport
@@ -381,7 +382,8 @@ fitRutterGatsonisSubgroupLCA <- function(data,
     prevref      = prre,
     Reitsma_recovered = reit2,
     constrain    = constrain,
-    subgroups    = lsub
+    subgroups    = lsub,
+    prev_variances = prev_variances
   )
   class(res) <- c("RutterGatsonisSubgroupLCA","RutterGatsonis","DTAmodel")
   return(res)

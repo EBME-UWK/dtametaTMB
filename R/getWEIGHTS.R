@@ -1,4 +1,4 @@
-#' Calculate graphical sizing measures for SROC study symbols
+#' Calculate Graphical Sizing Measures for SROC Study Symbols
 #'
 #' Internal helper calculating horizontal specificity and vertical
 #' sensitivity dimension measures for the supported symbol-sizing methods.
@@ -44,7 +44,9 @@
 #'
 #' @return A data frame with columns \code{sp} and \code{se}, containing
 #' horizontal specificity and vertical sensitivity graphical dimensions,
-#' respectively.
+#' respectively. These dimensions define the reference rectangular
+#' geometry used by the plotting routine. Closed non-rectangular symbols
+#' may subsequently be rescaled to preserve the same enclosed area.
 #'
 #' @keywords internal
 #' @noRd
