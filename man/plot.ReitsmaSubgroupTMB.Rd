@@ -8,7 +8,8 @@
   x,
   symbol = NULL,
   scale = 0.02,
-  size = c("fisher", "equal", "sampsize", "se", "sampsize_revman", "se_revman"),
+  size = c("fisher", "fisher_revman", "equal", "sampsize", "se", "sampsize_revman",
+    "se_revman"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   col = NULL,
   nudge_legend = -0.4,
@@ -46,6 +47,10 @@ sensitivity and/or logit specificity to a common value across
 subgroups, weights for the constrained outcome dimension(s) instead
 sum to 100 across all studies and subgroups combined, reflecting
 that all studies then inform a single shared parameter. Default.}
+\item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
+contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
+graphical normalization. Percentage contributions retain their original
+subgroup-specific or common-parameter interpretation.}
 \item{"equal"}{All studies shown with equal size.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the

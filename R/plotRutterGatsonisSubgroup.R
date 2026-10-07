@@ -23,6 +23,10 @@
 #'    contributions to the recovered subgroup-specific pooled logit sensitivity 
 #'    and logit specificity. Fisher sizing is available when HSROC accuracy and 
 #'    threshold parameters are subgroup-specific.}
+#'    \item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
+#'      contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
+#'      graphical normalization. Percentage contributions retain their original
+#'      interpretation.}
 #'    \item{"sampsize"}{
 #'     Horizontal and vertical symbol dimensions are proportional to the
 #'     relative numbers of non-diseased and diseased participants,
@@ -94,7 +98,7 @@
 plot.RutterGatsonisSubgroup <- function(x, 
                                         symbol=NULL,
                                         scale=0.02,
-                                        size=c("equal","fisher","sampsize","se","sampsize_revman","se_revman"), 
+                                        size=c("equal","fisher","fisher_revman","sampsize","se","sampsize_revman","se_revman"), 
                                         nudge_legend=-0.4,
                                         specrange=c(0.7,0.995),
                                         col=NULL,
@@ -107,14 +111,12 @@ plot.RutterGatsonisSubgroup <- function(x,
      }
    }
    size <- match.arg(size)
-   if (size == "fisher") {
+   if (size %in% c("fisher","fisher_revman")) {
      if (any(c("accuracy", "threshold") %in% x$constrain)) {
        stop(
          "Fisher study contributions are not currently available when ",
          "HSROC accuracy or threshold effects are constrained to be common ",
-         "across subgroups. These constraints induce shared nonlinear ",
-         "structure in the recovered logit-sensitivity and ",
-         "logit-specificity parameters."
+         "across subgroups."
        )
      }
    }
@@ -134,7 +136,7 @@ plot.RutterGatsonisSubgroup <- function(x,
        pty="s")   # enlarge right margin
    plot_SESPGRID(main=main)
    # Data points
-   if(size=="fisher"){
+   if(size %in% c("fisher","fisher_revman")){
      Y_pw  <- reshapeX_REIT(X=x$data)
      X_pw <- matrix(0,nrow=2*nstudy,ncol=2*nsub)
      col_names <- unlist(lapply(sub,function(sg) {c(paste0("mu_A.", sg),paste0("mu_B.", sg))}))
@@ -218,7 +220,12 @@ plot.RutterGatsonisSubgroup <- function(x,
      }
      pct$se <- pmax(0,pct$se)
      pct$sp <- pmax(0,pct$sp)
-     } else {
+     if(size=="fisher_revman"){
+       c_fisher <- 8/mean(pmax(pct$se,pct$sp))
+       pct$se   <- (4+c_fisher*pct$se)/10
+       pct$sp   <- (4+c_fisher*pct$sp)/10
+     }
+    } else {
     pct <- getWEIGHTS(xdata=x$data,size=size)
    }
    ###

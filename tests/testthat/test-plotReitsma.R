@@ -140,6 +140,7 @@ test_that("plot.Reitsma works with different size options",{
                     TN=TN,
                     study=study)
   expect_no_error(plot(fit, size = "fisher"))
+  expect_no_error(plot(fit, size = "fisher_revman"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))
   expect_no_error(plot(fit, size = "sampsize_revman"))
@@ -284,6 +285,7 @@ test_that("plot.ReitsmaTMB works with different size options",{
                     TN=TN,
                     study=study)
   expect_no_error(plot(fit, size = "fisher"))
+  expect_no_error(plot(fit, size = "fisher_revman"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))
   expect_no_error(plot(fit, size = "sampsize_revman"))

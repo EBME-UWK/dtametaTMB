@@ -491,6 +491,12 @@ The original `dtametaTMB` methods answer related but distinct graphical question
    calculated separately for each subgroup-specific summary parameter and
    therefore sum to 100 within each subgroup, unless specificity and/or sensitivity
    are constrained to be common in the subgroups.
+   
+- `size = "fisher_revman"`, where available, Uses the same parameter-specific percentage Fisher-information
+   contributions as `size = "fisher"`, but applies a fixed-baseline RevMan-style
+   graphical normalization. Percentage contributions retain their original
+   interpretation.
+   
 - `size = "sampsize_revman"` and `size = "se_revman"` apply the fixed-baseline, analysis-normalized RevMan-style transformations described in this vignette.
 
 The choice of method affects the graphical interpretation of marker dimensions. None of these options changes the fitted meta-analytic model.

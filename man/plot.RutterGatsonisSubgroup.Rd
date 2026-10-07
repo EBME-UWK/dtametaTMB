@@ -8,7 +8,8 @@
   x,
   symbol = NULL,
   scale = 0.02,
-  size = c("equal", "fisher", "sampsize", "se", "sampsize_revman", "se_revman"),
+  size = c("equal", "fisher", "fisher_revman", "sampsize", "se", "sampsize_revman",
+    "se_revman"),
   nudge_legend = -0.4,
   specrange = c(0.7, 0.995),
   col = NULL,
@@ -39,6 +40,10 @@ dimensions equal to 30 percent of the default.}
 contributions to the recovered subgroup-specific pooled logit sensitivity
 and logit specificity. Fisher sizing is available when HSROC accuracy and
 threshold parameters are subgroup-specific.}
+\item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
+contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
+graphical normalization. Percentage contributions retain their original
+interpretation.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the
 relative numbers of non-diseased and diseased participants,

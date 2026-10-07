@@ -8,7 +8,8 @@
   x,
   symbol = c("rectangle", "ellipse", "diamond", "triangle", "cross", "plus", "star"),
   scale = 0.02,
-  size = c("fisher", "equal", "sampsize", "se", "sampsize_revman", "se_revman"),
+  size = c("fisher", "fisher_revman", "equal", "sampsize", "se", "sampsize_revman",
+    "se_revman"),
   specrange = c(0.7, 0.995),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   ...
@@ -33,6 +34,10 @@ dimensions equal to 30 percent of the default.}
 \describe{
 \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix
 with respect to the recovered pooled logit sensitivity and specificity. Default.}
+\item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
+contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
+graphical normalization. Percentage contributions retain their original
+interpretation.}
 \item{"equal"}{All studies shown with equal size.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the

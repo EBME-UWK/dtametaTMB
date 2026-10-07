@@ -68,6 +68,7 @@ test_that("all size options work", {
   )
 
   expect_no_error(plot(fit, size = "fisher"))
+  expect_no_error(plot(fit, size = "fisher_revman"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))
@@ -92,7 +93,7 @@ test_that("plot.ReitsmaSubgroup connects paired studies", {
     plot(
       fit,
       symbol=c("diamond","triangle"),
-      scale=0.04,
+      scale=0.02*0.05,
       connectstudies = TRUE
     )
   )
@@ -197,7 +198,7 @@ test_that("plot.ReitsmaSubgroupTMB works for unequal variances", {
 
 test_that("plot.ReitsmaSubgroupTMB accepts custom colours", {
   
-  fit <- fitReitsmaSubgroup(
+  fit <- fitReitsmaSubgroupTMB(
     data = anticcp,
     TP = TP,
     FP = FP,
@@ -228,6 +229,7 @@ test_that("all size options work", {
   )
   
   expect_no_error(plot(fit, size = "fisher"))
+  expect_no_error(plot(fit, size = "fisher_revman"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))
@@ -311,7 +313,7 @@ test_that("all sensspec_constrain options work", {
     sensspec_constrain = c("sens","spec")
   )
   
-  expect_no_error(plot(fit1, size = "fisher"))
-  expect_no_error(plot(fit2, size = "fisher"))
-  expect_no_error(plot(fit3, size = "fisher"))
+  expect_no_error(plot(fit1, size = "fisher_revman"))
+  expect_no_error(plot(fit2, size = "fisher_revman"))
+  expect_no_error(plot(fit3, size = "fisher_revman"))
 })

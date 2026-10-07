@@ -600,6 +600,10 @@ summary.ReitsmaSubgroupTMB <- function(object, ...) {
 #'      subgroups, weights for the constrained outcome dimension(s) instead
 #'      sum to 100 across all studies and subgroups combined, reflecting
 #'      that all studies then inform a single shared parameter. Default.}
+#'    \item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
+#'      contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
+#'      graphical normalization. Percentage contributions retain their original
+#'      subgroup-specific or common-parameter interpretation.}
 #'    \item{"equal"}{All studies shown with equal size.}
 #'    \item{"sampsize"}{
 #'     Horizontal and vertical symbol dimensions are proportional to the
@@ -679,7 +683,7 @@ summary.ReitsmaSubgroupTMB <- function(object, ...) {
 plot.ReitsmaSubgroupTMB <- function(x,
                                     symbol=NULL,
                                     scale=0.02, 
-                                    size=c("fisher","equal","sampsize","se","sampsize_revman","se_revman"), 
+                                    size=c("fisher","fisher_revman","equal","sampsize","se","sampsize_revman","se_revman"), 
                                     main="Diagnostic Test Accuracy Meta-Analysis",
                                     col=NULL,
                                     nudge_legend=-0.4,
@@ -712,7 +716,7 @@ plot.ReitsmaSubgroupTMB <- function(x,
   symbols2 <- aes$symbols2
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
-  if(size=="fisher"){
+  if(size %in% c("fisher","fisher_revman")){
     nstudy<- nrow(x$data)
     Y_pw  <- reshapeX_REIT(X=x$data)
     if(is.null(x$sensspec_constrain)){
@@ -815,9 +819,9 @@ plot.ReitsmaSubgroupTMB <- function(x,
     # derive the fishers information matrix
     fish <- XT_pw %*% invV %*% X_pw
     # invert Fishers information to obtain Var Beta hat
-    varb  <- solve(fish)
-    pct <- data.frame(sp = numeric(nstudy),
-                      se = numeric(nstudy))
+    varb   <- solve(fish)
+    pct    <- data.frame(sp = numeric(nstudy),
+                         se = numeric(nstudy))
     # Get weights  
     for (i in seq_len(nstudy)){
       DM <- V
@@ -836,6 +840,11 @@ plot.ReitsmaSubgroupTMB <- function(x,
     }
     pct$se <- pmax(0,pct$se)
     pct$sp <- pmax(0,pct$sp)
+    if(size=="fisher_revman"){
+      c_fisher <- 8/mean(pmax(pct$se,pct$sp))
+      pct$se   <- (4+c_fisher*pct$se)/10
+      pct$sp   <- (4+c_fisher*pct$sp)/10
+    }
   } else {
     pct <- getWEIGHTS(xdata=x$data,size=size)
   }

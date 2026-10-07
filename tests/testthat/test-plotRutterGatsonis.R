@@ -131,6 +131,7 @@ test_that("all size options work", {
   )
   
   expect_no_error(plot(fit, size = "fisher"))
+  expect_no_error(plot(fit, size = "fisher_revman"))
   expect_no_error(plot(fit, size = "equal"))
   expect_no_error(plot(fit, size = "sampsize"))
   expect_no_error(plot(fit, size = "se"))

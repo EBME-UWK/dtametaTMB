@@ -20,6 +20,10 @@
 #' @param size Character string controlling display of study-level point estimates:
 #'  \describe{
 #'    \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default.}
+#'    \item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
+#'      contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
+#'      graphical normalization. Percentage contributions retain their original
+#'      interpretation.}
 #'    \item{"equal"}{All studies shown with equal size.}
 #'    \item{"sampsize"}{
 #'     Horizontal and vertical symbol dimensions are proportional to the
@@ -107,7 +111,7 @@
 plot.Reitsma <- function(x, 
                          symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
                          scale=0.02, 
-                         size=c("fisher","equal","sampsize","se","sampsize_revman","se_revman"), 
+                         size=c("fisher","fisher_revman","equal","sampsize","se","sampsize_revman","se_revman"), 
                          main="Diagnostic Test Accuracy Meta-Analysis",
                          HSROC=FALSE, 
                          specrange=c(0.7,0.995),
@@ -148,7 +152,7 @@ plot.Reitsma <- function(x,
   plot_SESPGRID(main=main)
   ###
   # Calculations for percentage weights
-  if(size=="fisher"){
+  if(size %in% c("fisher","fisher_revman")){
     Y_pw  <- reshapeX_REIT(X=x$data)
     X_pw  <- cbind(Y_pw$sens, Y_pw$spec)
     XT_pw <- t(X_pw)
@@ -190,6 +194,11 @@ plot.Reitsma <- function(x,
     }
     pct$se <- pmax(0,pct$se)
     pct$sp <- pmax(0,pct$sp)
+    if(size=="fisher_revman"){
+      c_fisher <- 8/mean(pmax(pct$se,pct$sp))
+      pct$se   <- (4+c_fisher*pct$se)/10
+      pct$sp   <- (4+c_fisher*pct$sp)/10
+    }
   } else {
   pct <- getWEIGHTS(xdata=x$data,size=size)
   }
