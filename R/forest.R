@@ -69,8 +69,24 @@ getForestSensSpecLCA <- function(x,conflevel){
   XP$speclabel <- with(XP,paste0(sprintf("%.2f", spec_eb)," [",
                                  sprintf("%.2f", Spec_LCI),", ",
                                  sprintf("%.2f", Spec_UCI),"]"))
+  
+  sens_estimable <- is.finite(XP$lsens_eb_var) & XP$lsens_eb_var >= 0
+  spec_estimable <- is.finite(XP$lspec_eb_var) & XP$lspec_eb_var >= 0
+  
+  XP$senslabel[!sens_estimable] <- "Not estimable"
+  XP$speclabel[!spec_estimable] <- "Not estimable"
+  
   XP$sens <- XP$sens_eb
   XP$spec <- XP$spec_eb
+  
+  XP$sens[!sens_estimable] <- NaN
+  XP$spec[!spec_estimable] <- NaN
+  
+  XP$Sens_LCI[!sens_estimable] <- 0
+  XP$Sens_UCI[!sens_estimable] <- 1
+  XP$Spec_LCI[!spec_estimable] <- 0
+  XP$Spec_UCI[!spec_estimable] <- 1
+
   return(list(XP=XP,
               senslab=senslab,
               speclab=speclab))

@@ -207,35 +207,59 @@ fitReitsmaSubgroupLCA <- function(data,
   X$n        <- with(X, y11+y10+y01+y00)
 
   ### Get initial values
-  init <- fitReitsmaLCA(data=X,
-                        y11=y11,
-                        y10=y10,
-                        y01=y01,
-                        y00=y00,
-                        study=study)
+  init <- tryCatch(fitReitsmaLCA(data=X,
+                                 y11=y11,
+                                 y10=y10,
+                                 y01=y01,
+                                 y00=y00,
+                                 study=study,
+                                 conflevel=conflevel,
+                                 constrain=NULL)$sdreport,
+                   error = function(e) NULL)
 
-  mu_prev        <- init$sdreport2["mu_prev","Estimate"]
-  mu_A.index     <- init$sdreport2["mu_A.index","Estimate"]
-  mu_B.index     <- init$sdreport2["mu_B.index","Estimate"]
-  sigma2_prev    <- init$sdreport2["sigma2_prev","Estimate"]
-  sigma2_A.index <- init$sdreport2["sigma2_A.index","Estimate"]
-  sigma2_B.index <- init$sdreport2["sigma2_B.index","Estimate"]
-  sigma_AB.index <- init$sdreport2["sigma_AB.index","Estimate"]
-  rho_AB.index   <- init$sdreport2["rho_AB.index","Estimate"]
-  mu_A.ref       <- init$sdreport2["mu_A.ref","Estimate"]
-  mu_B.ref       <- init$sdreport2["mu_B.ref","Estimate"]
+  muA_init <- NA_real_
+  muB_init <- NA_real_
+  lsA_init <- NA_real_
+  lsB_init <- NA_real_
+  thetaAB_init <- NA_real_
+  mup_init <- NA_real_
+  lsp_init <- NA_real_
+  muA_ref_init <- NA_real_
+  muB_ref_init <- NA_real_
   
+  if(!is.null(init)){
+    mup_init      <- init$par.fixed["mu_prev"]
+    muA_init      <- init$par.fixed["mu_A_index"]
+    muB_init      <- init$par.fixed["mu_B_index"]
+    lsp_init      <- init$par.fixed["log_sigma_prev"]
+    lsA_init      <- init$par.fixed["log_sigma_A_index"]
+    lsB_init      <- init$par.fixed["log_sigma_B_index"]
+    thetaAB_init  <- init$par.fixed["theta_AB_index"]
+    muA_ref_init  <- init$par.fixed["mu_A_ref"]
+    muB_ref_init  <- init$par.fixed["mu_B_ref"]
+  }
+  
+  if (!is.finite(muA_init)) {muA_init <- 0}
+  if (!is.finite(muB_init)) {muB_init <- 0}
+  if (!is.finite(lsA_init)) {lsA_init <- log(0.5)}
+  if (!is.finite(lsB_init)) {lsB_init <- log(0.5)}
+  if (!is.finite(thetaAB_init)) {thetaAB_init <- 0}
+  if (!is.finite(muA_ref_init)) {muA_ref_init <- stats::qlogis(mean(c(stats::plogis(muA_init),0.99)))}
+  if (!is.finite(muB_ref_init)) {muB_ref_init <- stats::qlogis(mean(c(stats::plogis(muB_init),0.99)))}
+  if (!is.finite(mup_init)) {mup_init <- 0}
+  if (!is.finite(lsp_init)) {lsp_init <- log(0.5)}
+
   parameters <- list(
-    mu_prev    = rep(mu_prev,G),
-    mu_A_index = rep(mu_A.index,G),
-    mu_B_index = rep(mu_B.index,G),
-    mu_A_ref   = mu_A.ref,
-    mu_B_ref   = mu_B.ref,
+    mu_prev    = rep(mup_init,G),
+    mu_A_index = rep(muA_init,G),
+    mu_B_index = rep(muB_init,G),
+    mu_A_ref   = muA_ref_init,
+    mu_B_ref   = muB_ref_init,
     
-    log_sigma_prev     = rep(0.5*log(sigma2_prev),G),
-    log_sigma_A_index  = rep(0.5*log(sigma2_A.index),G),
-    log_sigma_B_index  = rep(0.5*log(sigma2_B.index),G),
-    theta_AB_index     = rep(atanh(rho_AB.index),G),
+    log_sigma_prev     = rep(lsp_init,G),
+    log_sigma_A_index  = rep(lsA_init,G),
+    log_sigma_B_index  = rep(lsB_init,G),
+    theta_AB_index     = rep(thetaAB_init,G),
     
     prevu = rep(0,n_study),
     sensu = rep(0,n_study),

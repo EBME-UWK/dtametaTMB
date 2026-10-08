@@ -161,16 +161,18 @@ initHoyerAFT <- function(restructured, dist="loglogistic") {
   su1_init <- 0.5
   coru0u1_init <- 0
   #
-  if (nrow(meantest) >= 2L) { 
-    sd0 <- stats::sd(meantest$lmeantest0)
-    sd1 <- stats::sd(meantest$lmeantest1)
+  if (nrow(lmeantest0) >= 2L) { 
+    sd0 <- stats::sd(lmeantest0$lmeantest0)
     if (is.finite(sd0)) {su0_init <- max(sd0, 1e-5)}
+  }
+  if (nrow(lmeantest1) >= 2L) { 
+    sd1 <- stats::sd(lmeantest1$lmeantest1)
     if (is.finite(sd1)) {su1_init <- max(sd1, 1e-5)}
   }
   if (nrow(meantest) >= 3L) {
-    sd0 <- stats::sd(meantest$lmeantest0)
-    sd1 <- stats::sd(meantest$lmeantest1)
-    if (is.finite(sd0) && is.finite(sd1) && sd0 > sqrt(.Machine$double.eps) && sd1 > sqrt(.Machine$double.eps)) {
+    sd0_cor <- stats::sd(meantest$lmeantest0)
+    sd1_cor <- stats::sd(meantest$lmeantest1)
+    if (is.finite(sd0_cor) && is.finite(sd1_cor) && sd0_cor > sqrt(.Machine$double.eps) && sd1_cor > sqrt(.Machine$double.eps)) {
       empirical_cor <- suppressWarnings(stats::cor(meantest$lmeantest0,meantest$lmeantest1))
       if (is.finite(empirical_cor)) {coru0u1_init <- pmin(pmax(empirical_cor, -0.99),0.99)}
     }

@@ -154,46 +154,65 @@ fitRutterGatsonisLCA <- function(data,
   n_study <- nrow(X)
   
   ### Get initial values
-  init <- fitRutterGatsonis(data=X,
-                            TP=y11,
-                            FP=y10,
-                            FN=y01,
-                            TN=y00,
-                            study=study)
+  init <- tryCatch(fitRutterGatsonis(data=X,
+                                     TP=y11,
+                                     FP=y10,
+                                     FN=y01,
+                                     TN=y00,
+                                     study=study,
+                                     conflevel=conflevel,
+                                     constrain=NULL)$sdreport,
+                   error = function(e) NULL)
+  ###
+  Lambda_init  <- NA_real_
+  Theta_init   <- NA_real_
+  beta_init    <- NA_real_
+  lsalpha_init <- NA_real_
+  lstheta_init <- NA_real_
+  mup_init <- NA_real_
+  s2p_init <- NA_real_
+  muA_ref_init <- NA_real_
+  muB_ref_init <- NA_real_
+  if(!is.null(init)){
+    Lambda_init  <- init$par.fixed["Lambda"]
+    Theta_init   <- init$par.fixed["Theta"]
+    beta_init    <- init$par.fixed["beta"]
+    lsalpha_init <- init$par.fixed["log_sigma_alpha"]
+    lstheta_init <- init$par.fixed["log_sigma_theta"]
+  }
+  if(!is.finite(Lambda_init)){Lambda_init <- 0}
+  if(!is.finite(Theta_init)){Theta_init <- 0}
+  if(!is.finite(beta_init)){beta_init <- 0}
+  if(!is.finite(lsalpha_init)){lsalpha_init <- 0.5*log(0.5)}
+  if(!is.finite(lstheta_init)){lstheta_init <- 0.5*log(0.125)}
+
+  reit <- getREIT(Lambda=Lambda_init,Theta=Theta_init,beta=beta_init,sigma2_alpha=NA,sigma2_theta=NA)
+  muA_ref_init <- stats::qlogis(mean(c(stats::plogis(reit$mu_A.sens),0.99)))
+  muB_ref_init <- stats::qlogis(mean(c(stats::plogis(reit$mu_B.spec),0.99)))
   
-  Theta        <- init$sdreport2["Theta","Estimate"]
-  Lambda       <- init$sdreport2["Lambda","Estimate"]
-  beta         <- init$sdreport2["beta","Estimate"]
-  sigma2_alpha <- init$sdreport2["sigma2_alpha","Estimate"]
-  sigma2_theta <- init$sdreport2["sigma2_theta","Estimate"]
-  
-  mu_A.ref     <- stats::qlogis(mean(c(stats::plogis(as.numeric(init$Reitsma_recovered["mu_A.sens"])),0.99)))
-  mu_B.ref     <- stats::qlogis(mean(c(stats::plogis(as.numeric(init$Reitsma_recovered["mu_B.spec"])),0.99)))
-  
-  prev_i       <- with(X,(y11+y01+0.5)/(y11+y10+y01+y00+1))
-  mu_prev      <- mean(stats::qlogis(prev_i))
-  sigma2_prev  <- stats::var(stats::qlogis(prev_i))
-  
-  prevu        <- rep(0,n_study)
-  theta        <- rep(0,n_study)
-  alpha        <- rep(0,n_study)
+  lprev    <- stats::qlogis(with(X,(y11+y01+0.5)/(y11+y10+y01+y00+1)))
+  mup_init <- mean(lprev)
+  if (!is.finite(mup_init)) {mup_init <- 0}
+  s2p_init <- stats::var(lprev)
+  if (!is.finite(s2p_init) || s2p_init <= 0) {s2p_init <- 0.25}
+  s2p_init <- max(s2p_init,1e-10)
   
   parameters <- list(
-    mu_prev = mu_prev,
-    Lambda  = Lambda,
-    Theta   = Theta,
-    beta    = beta,
+    mu_prev = mup_init,
+    Lambda  = Lambda_init,
+    Theta   = Theta_init,
+    beta    = beta_init,
     
-    log_sigma_prev   = 0.5 * log(sigma2_prev),
-    log_sigma_alpha  = 0.5 * log(sigma2_alpha),
-    log_sigma_theta  = 0.5 * log(sigma2_theta),
+    log_sigma_prev   = 0.5 * log(s2p_init),
+    log_sigma_alpha  = lsalpha_init,
+    log_sigma_theta  = lstheta_init,
     
-    mu_A_ref = mu_A.ref,
-    mu_B_ref = mu_B.ref,
+    mu_A_ref = muA_ref_init,
+    mu_B_ref = muB_ref_init,
     
-    prevu = prevu,
-    theta = theta,
-    alpha = alpha
+    prevu = rep(0,n_study),
+    theta = rep(0,n_study),
+    alpha = rep(0,n_study)
   )
   
   dat2 <- list(
@@ -284,10 +303,21 @@ fitRutterGatsonisLCA <- function(data,
     cov_at  <- rep(0, n_study)
   } else {
     rep3    <- TMB::sdreport(obj,getJointPrecision=TRUE)$jointPrecision
-    idx_a   <- which(colnames(rep3)=="alpha")
-    idx_t   <- which(colnames(rep3)=="theta")
-    vcov    <- solve(as.matrix(rep3))[idx_a,idx_t]
-    cov_at  <- diag(vcov)
+    cov_at  <- tryCatch({
+      idx_a   <- which(colnames(rep3)=="alpha")
+      idx_t   <- which(colnames(rep3)=="theta")
+      vcov    <- solve(as.matrix(rep3))[idx_a,idx_t]
+      cov_at  <- diag(vcov)
+      cov_at}, error = function(e){
+        warning(
+          "The joint random-effects precision matrix could not be inverted. ",
+          "The conditional posterior covariance between the study-specific ",
+          "accuracy and threshold effects has been set to zero when ",
+          "calculating empirical Bayes sensitivity and specificity variances. ",
+          "Study-specific confidence intervals may be approximate. ",
+          "Original error: ",
+          conditionMessage(e))
+        rep(0,n_study)})
   }
 
   lsens_study <- (Theta + theta_i + (Lambda+alpha_i)/2)*exp(-beta/2)

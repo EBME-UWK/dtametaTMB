@@ -177,14 +177,14 @@ When all four cell counts are positive, these raw measures can equivalently be w
 
 $$
 q_{Se,i} =
-\sqrt{\frac{TP_iFN_i}{TP_i+FN_i}}
+\sqrt{\frac{TP_iFN_i}{TP_i+FN_i}}=\frac{1}{\sqrt{\frac{1}{TP_i}+\frac{1}{FN_i}}}
 $$
 
 and
 
 $$
 q_{Sp,i} =
-\sqrt{\frac{TN_iFP_i}{TN_i+FP_i}}.
+\sqrt{\frac{TN_iFP_i}{TN_i+FP_i}}=\frac{1}{\sqrt{\frac{1}{TN_i}+\frac{1}{FP_i}}}
 $$
 
 The analysis-specific constant is
@@ -492,10 +492,9 @@ The original `dtametaTMB` methods answer related but distinct graphical question
    therefore sum to 100 within each subgroup, unless specificity and/or sensitivity
    are constrained to be common in the subgroups.
    
-- `size = "fisher_revman"`, where available, Uses the same parameter-specific percentage Fisher-information
-   contributions as `size = "fisher"`, but applies a fixed-baseline RevMan-style
-   graphical normalization. Percentage contributions retain their original
-   interpretation.
+- `size = "fisher_revman"`, where available, uses the same parameter-specific percentage Fisher-information
+   contributions as `size = "fisher"`, but applies the fixed-baseline RevMan-style
+   graphical normalization as used in `size = "sampsize_revman"` and `size = "se_revman"`.
    
 - `size = "sampsize_revman"` and `size = "se_revman"` apply the fixed-baseline, analysis-normalized RevMan-style transformations described in this vignette.
 

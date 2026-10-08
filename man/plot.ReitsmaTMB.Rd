@@ -36,10 +36,13 @@ dimensions equal to 30 percent of the default.}
 \item{size}{Character string controlling display of study-level point estimates:
 \describe{
 \item{"fisher"}{Size proportional to a decomposition of Fisher's Information matrix. Default.}
-\item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
-contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
-graphical normalization. Percentage contributions retain their original
-interpretation.}
+\item{"fisher_revman"}{
+Horizontal and vertical symbol dimensions are based on the same
+per-study percentage contributions to the logit sensitivity and
+logit specificity Fisher information as \code{size = "fisher"}.
+These percentages are then converted to graphical dimensions
+using the same RevMan-style normalization applied under
+\code{"sampsize_revman"} and \code{"se_revman"}.}
 \item{"equal"}{All studies shown with equal size.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the

@@ -51,7 +51,11 @@ pointsXY <- function(x, y,
   
   stopifnot(length(x) == length(y) & 
             length(x) == length(cex.x) &
-            length(x) == length(cex.y))
+            length(x) == length(cex.y) &
+            length(scale) == 1L &
+            is.numeric(scale) &
+            is.finite(scale) &
+            scale > 0)
   
   for (i in seq_along(x)) {
     ## rx and ry define the half-width and half-height of the
@@ -124,7 +128,7 @@ pointsXY <- function(x, y,
       ## ELLIPSE -----------------------------------------------------
     } else if (symbol == "ellipse") {
       
-      theta <- seq(0, 2*pi, length.out = 100)
+      theta <- seq(0, 2*pi, length.out = 200)
       
       ## Preserve the area of the corresponding reference rectangle.
       shape_factor <- 2 / sqrt(pi)

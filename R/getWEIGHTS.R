@@ -95,7 +95,7 @@ getWEIGHTS <- function(xdata,size){
     TN[zero_cell] <- TN[zero_cell] + 0.5
     q_se <- 1 / sqrt( 1 / TP + 1 / FN)
     q_sp <- 1 / sqrt( 1 / TN + 1 / FP)
-    c_se <- 8 /  mean(pmax(q_se, q_sp))
+    c_se <- 8 / mean(pmax(q_se, q_sp))
     se <- ( 4 + c_se * q_se ) / 10 # revman_scale: 10
     sp <- ( 4 + c_se * q_sp ) / 10 # revman_scale: 10
   }

@@ -40,10 +40,13 @@ dimensions equal to 30 percent of the default.}
 contributions to the recovered subgroup-specific pooled logit sensitivity
 and logit specificity. Fisher sizing is available when HSROC accuracy and
 threshold parameters are subgroup-specific.}
-\item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
-contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
-graphical normalization. Percentage contributions retain their original
-interpretation.}
+\item{"fisher_revman"}{
+Horizontal and vertical symbol dimensions are based on the same
+per-study percentage contributions to the logit sensitivity and
+logit specificity Fisher information as \code{size = "fisher"}.
+These percentages are then converted to graphical dimensions
+using the same RevMan-style normalization applied under
+\code{"sampsize_revman"} and \code{"se_revman"}.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the
 relative numbers of non-diseased and diseased participants,

@@ -205,35 +205,37 @@ fitReitsmaSubgroupTMB <- function(data,
   XP <- getXP(X=X)
   
   ### Get initial values
-  init <- fitReitsmaTMB(data=X,
-                        TP=TP,FP=FP,FN=FN,TN=TN,study=study,
-                        constrain=NULL,
-                        conflevel=conflevel)$sdreport2
-  muA_init     <- init["mu_A.sens","Estimate"]
+  init <- tryCatch(fitReitsmaTMB(data=X,
+                                 TP=TP,FP=FP,FN=FN,TN=TN,study=study,
+                                 constrain=NULL,
+                                 conflevel=conflevel)$sdreport,
+                   error = function(e) NULL)
+  muA_init <- NA_real_
+  muB_init <- NA_real_
+  lsA_init <- NA_real_
+  lsB_init <- NA_real_
+  thetaAB_init <- NA_real_
+  if(!is.null(init)){
+    muA_init     <- init$par.fixed["mu_A"]
+    muB_init     <- init$par.fixed["mu_B"]
+    lsA_init     <- init$par.fixed["log_sigma_A"]
+    lsB_init     <- init$par.fixed["log_sigma_B"]
+    thetaAB_init <- init$par.fixed["theta_AB"]
+  }
   if (!is.finite(muA_init)) {muA_init <- 0}
-  muB_init     <- init["mu_B.spec","Estimate"]
   if (!is.finite(muB_init)) {muB_init <- 0}
-  ##
-  sA_init      <- suppressWarnings(sqrt(init["sigma2_A.sens","Estimate"]))
-  if (!is.finite(sA_init)) {sA_init <- 0.5}
-  sA_init      <- max(sA_init,1e-05)
-  ##
-  sB_init      <- suppressWarnings(sqrt(init["sigma2_B.spec","Estimate"]))
-  if (!is.finite(sB_init)) {sB_init <- 0.5}
-  sB_init      <- max(sB_init,1e-05)
-  ##
-  rAB_init     <- init["rho_AB","Estimate"]
-  if (!is.finite(rAB_init)) {rAB_init <- 0}
-  rAB_init     <- max(min(rAB_init,0.99),-0.99)
+  if (!is.finite(lsA_init)) {lsA_init <- log(0.5)}
+  if (!is.finite(lsB_init)) {lsB_init <- log(0.5)}
+  if (!is.finite(thetaAB_init)) {thetaAB_init <- 0}
 
   ###
   parameters <- list(
     mu_A = rep(muA_init,G),
     mu_B = rep(muB_init,G),
     
-    log_sigma_A  = rep(log(sA_init),G),
-    log_sigma_B  = rep(log(sB_init),G),
-    theta_AB     = rep(atanh(rAB_init),G),
+    log_sigma_A  = rep(lsA_init,G),
+    log_sigma_B  = rep(lsB_init,G),
+    theta_AB     = rep(thetaAB_init,G),
     
     sensu = rep(0,n_study),
     specu = rep(0,n_study)
@@ -600,10 +602,13 @@ summary.ReitsmaSubgroupTMB <- function(object, ...) {
 #'      subgroups, weights for the constrained outcome dimension(s) instead
 #'      sum to 100 across all studies and subgroups combined, reflecting
 #'      that all studies then inform a single shared parameter. Default.}
-#'    \item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
-#'      contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
-#'      graphical normalization. Percentage contributions retain their original
-#'      subgroup-specific or common-parameter interpretation.}
+#'    \item{"fisher_revman"}{
+#'       Horizontal and vertical symbol dimensions are based on the same
+#'       per-study percentage contributions to the logit sensitivity and
+#'       logit specificity Fisher information as \code{size = "fisher"}.
+#'       These percentages are then converted to graphical dimensions
+#'       using the same RevMan-style normalization applied under
+#'       \code{"sampsize_revman"} and \code{"se_revman"}.}
 #'    \item{"equal"}{All studies shown with equal size.}
 #'    \item{"sampsize"}{
 #'     Horizontal and vertical symbol dimensions are proportional to the

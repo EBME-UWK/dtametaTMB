@@ -3,6 +3,7 @@
 check2_data <- function(dat,conflevel){
   
   excluded <- !stats::complete.cases(dat)
+  
   if (any(excluded)) {
     removed_studies <- unique(dat$study[excluded])
     message(
@@ -12,6 +13,11 @@ check2_data <- function(dat,conflevel){
   }
   
   dat <- dat[stats::complete.cases(dat), ]
+  
+  if (nrow(dat) == 0L) {
+    stop("No complete studies remain after removing rows with missing values.")
+  }
+  
   # Validation
   numeric_cols <- c("y11", "y10", "y01", "y00")
   non_numeric <- numeric_cols[!sapply(dat[numeric_cols], is.numeric)]

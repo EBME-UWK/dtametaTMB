@@ -165,47 +165,35 @@ fitRutterGatsonis <- function(data,
   
   X <- XP <- check_data(dat=dat,
                         conflevel=conflevel)
-  XP <- getXP(X=XP)
+  XP <- getXP(X=X)
   
   ### Get initial values
-  #informative <- with(X,TP + FP + FN + TN > 0)
-  #X_init      <- X[informative, , drop = FALSE]
-  logit_sens   <- stats::qlogis(pmin(pmax(XP$sens,0.005),0.995))
-  #logit_sens   <- with(X_init,log((TP+0.5)/(FN+0.5)))
-  logit_spec   <- stats::qlogis(pmin(pmax(XP$spec,0.005),0.995))
-  #logit_spec   <- with(X_init,log((TN+0.5)/(FP+0.5)))
-  muA_init     <- mean(logit_sens,na.rm=TRUE)
-  muB_init     <- mean(logit_spec,na.rm=TRUE)
-  sA_init      <- stats::sd(logit_sens,na.rm=TRUE)
-  if (!is.finite(sA_init)) {sA_init <- 0.5}
-  sA_init      <- max(sA_init,1e-05)
-  sB_init      <- stats::sd(logit_spec,na.rm=TRUE)
-  if (!is.finite(sB_init)) {sB_init <- 0.5}
-  sB_init      <- max(sB_init,1e-05)
-  rAB_init     <- suppressWarnings(stats::cor(logit_sens,
-                                              logit_spec,
-                                              use="pairwise.complete.obs"))
-  if (!is.finite(rAB_init)) {rAB_init <- 0}
-  rAB_init <- max(min(rAB_init, 0.99),-0.99)
-  sAB_init     <- rAB_init*sA_init*sB_init
-  init <- getRUGA(lsens    = muA_init,
-                  lspec    = muB_init,
-                  sigma_a  = sA_init,
-                  sigma_b  = sB_init,
+  init <- initReitsma(X=X)
+  sAB_init <- init$rAB_init*init$sA_init*init$sB_init
+  init <- getRUGA(lsens    = init$muA_init,
+                  lspec    = init$muB_init,
+                  sigma_a  = init$sA_init,
+                  sigma_b  = init$sB_init,
                   sigma_ab = sAB_init)
-  init["sigma2_alpha"] <- max(init["sigma2_alpha"], 1e-10)
-  init["sigma2_theta"] <- max(init["sigma2_theta"], 1e-10)
-  
-  
+  if (!is.finite(init$Lambda)){init$Lambda <- 0}
+  if (!is.finite(init$Theta)){init$Theta <- 0}
+  if (!is.finite(init$beta)){init$beta <- 0}
+  if (!is.finite(init$sigma2_alpha) || init$sigma2_alpha <= 0){init$sigma2_alpha <- 0.5}
+  if (!is.finite(init$sigma2_theta) || init$sigma2_theta <= 0){init$sigma2_theta <- 0.125}
+  init$sigma2_alpha<-max(init$sigma2_alpha,1e-10)
+  init$sigma2_theta<-max(init$sigma2_theta,1e-10)
   ### How do I fit the model?
   n_study <- nrow(X)
   Y <- reshapeX_RUGA(X) 
-  
+  ## spec
+  if(is.null(spec)){spec <- stats::median(XP$spec)}
+  if(!is.finite(spec)){spec <- 0.8}
+
   dat2 <- list(
     y = Y$y,
     n = Y$n,
     x = Y$x,
-    spec = if (is.null(spec)) stats::median(XP$spec) else spec,
+    spec = spec,
     study = Y$recordid - 1  # 0-based
   )
   

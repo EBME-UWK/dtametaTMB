@@ -142,38 +142,54 @@ fitReitsmaLCA <- function(data,
   n_study <- nrow(X)
   
   ### Get initial values
-  init <- fitReitsma(data=X,
-                     TP=y11,
-                     FP=y10,
-                     FN=y01,
-                     TN=y00,
-                     study=study)
+  init <- tryCatch(fitReitsmaTMB(data=X,
+                                 TP=y11,FP=y10,FN=y01,TN=y00,study=study,
+                                 constrain=NULL,
+                                 conflevel=conflevel)$sdreport,
+                   error = function(e) NULL)
+  muA_init <- NA_real_
+  muB_init <- NA_real_
+  lsA_init <- NA_real_
+  lsB_init <- NA_real_
+  thetaAB_init <- NA_real_
+  mup_init <- NA_real_
+  s2p_init <- NA_real_
+  muA_ref_init <- NA_real_
+  muB_ref_init <- NA_real_
+  if(!is.null(init)){
+    muA_init     <- init$par.fixed["mu_A"]
+    muB_init     <- init$par.fixed["mu_B"]
+    lsA_init     <- init$par.fixed["log_sigma_A"]
+    lsB_init     <- init$par.fixed["log_sigma_B"]
+    thetaAB_init <- init$par.fixed["theta_AB"]
+  }
+  if (!is.finite(muA_init)) {muA_init <- 0}
+  if (!is.finite(muB_init)) {muB_init <- 0}
+  if (!is.finite(lsA_init)) {lsA_init <- log(0.5)}
+  if (!is.finite(lsB_init)) {lsB_init <- log(0.5)}
+  if (!is.finite(thetaAB_init)) {thetaAB_init <- 0}
   
-  mu_A.index     <- init$estimates["mu_A.sens","Estimate"]
-  mu_B.index     <- init$estimates["mu_B.spec","Estimate"]
-  sigma2_A.index <- init$estimates["sigma2_A.sens","Estimate"]
-  sigma2_B.index <- init$estimates["sigma2_B.spec","Estimate"]
-  sigma_AB.index <- init$estimates["sigma_AB","Estimate"]
-  rho_AB.index   <- sigma_AB.index/(sqrt(sigma2_A.index)*sqrt(sigma2_B.index))
+  muA_ref_init <- stats::qlogis(mean(c(stats::plogis(muA_init),0.99)))
+  muB_ref_init <- stats::qlogis(mean(c(stats::plogis(muB_init),0.99)))
   
-  mu_A.ref    <- stats::qlogis(mean(c(stats::plogis(mu_A.index),0.99)))
-  mu_B.ref    <- stats::qlogis(mean(c(stats::plogis(mu_B.index),0.99)))
-  
-  prev_i      <- with(X,(y11+y01+0.5)/(y11+y10+y01+y00+1))
-  mu_prev     <- mean(stats::qlogis(prev_i))
-  sigma2_prev <- stats::var(stats::qlogis(prev_i))
+  lprev    <- stats::qlogis(with(X,(y11+y01+0.5)/(y11+y10+y01+y00+1)))
+  mup_init <- mean(lprev)
+  if (!is.finite(mup_init)) {mup_init <- 0}
+  s2p_init <- stats::var(lprev)
+  if (!is.finite(s2p_init) || s2p_init <= 0) {s2p_init <- 0.25}
+  s2p_init <- max(s2p_init,1e-10)
   
   parameters <- list(
-    mu_A_index = mu_A.index,
-    mu_B_index = mu_B.index,
-    mu_A_ref   = mu_A.ref,
-    mu_B_ref   = mu_B.ref,
-    mu_prev    = mu_prev,
+    mu_A_index = muA_init,
+    mu_B_index = muB_init,
+    mu_A_ref   = muA_ref_init,
+    mu_B_ref   = muB_ref_init,
+    mu_prev    = mup_init,
     
-    log_sigma_prev     = 0.5*log(sigma2_prev),
-    log_sigma_A_index  = 0.5*log(sigma2_A.index),
-    log_sigma_B_index  = 0.5*log(sigma2_B.index),
-    theta_AB_index     = atanh(rho_AB.index),
+    log_sigma_prev     = 0.5*log(s2p_init),
+    log_sigma_A_index  = lsA_init,
+    log_sigma_B_index  = lsB_init,
+    theta_AB_index     = thetaAB_init,
     
     prevu = rep(0,n_study),
     sensu = rep(0,n_study),

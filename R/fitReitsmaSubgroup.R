@@ -182,33 +182,43 @@ fitReitsmaSubgroup <- function(data,
   XP <- getXP(X=X)
   
   ### Get initial values
-  init <- fitReitsma(data=X,
-                     TP=TP,FP=FP,FN=FN,TN=TN,study=study,
-                     constrain=NULL,
-                     conflevel=conflevel)$estimates
-  muA_init     <- init["mu_A.sens","Estimate"]
-  muB_init     <- init["mu_B.spec","Estimate"]
-  sA_init      <- sqrt(init["sigma2_A.sens","Estimate"])
-  sA_init      <- max(sA_init,1e-05)
-  sB_init      <- sqrt(init["sigma2_B.spec","Estimate"])
-  sB_init      <- max(sB_init,1e-05)
-  sAB_init     <- init["sigma_AB","Estimate"]
-  rAB_init     <- sAB_init/(sA_init*sB_init)
+  init <- tryCatch(fitReitsmaTMB(data=X,
+                        TP=TP,FP=FP,FN=FN,TN=TN,study=study,
+                        constrain=NULL,
+                        conflevel=conflevel)$sdreport,
+                   error = function(e) NULL)
+  muA_init <- NA_real_
+  muB_init <- NA_real_
+  lsA_init <- NA_real_
+  lsB_init <- NA_real_
+  rAB_init <- NA_real_
+  if(!is.null(init)){
+    muA_init     <- init$par.fixed["mu_A"]
+    muB_init     <- init$par.fixed["mu_B"]
+    lsA_init     <- init$par.fixed["log_sigma_A"]
+    lsB_init     <- init$par.fixed["log_sigma_B"]
+    rAB_init     <- 0.9999*tanh(init$par.fixed["theta_AB"])
+  }
+  if (!is.finite(muA_init)) {muA_init <- 0}
+  if (!is.finite(muB_init)) {muB_init <- 0}
+  if (!is.finite(lsA_init)) {lsA_init <- log(0.5)}
+  if (!is.finite(lsB_init)) {lsB_init <- log(0.5)}
+  if (!is.finite(rAB_init)) {rAB_init <- 0}
   rAB_init     <- max(min(rAB_init,0.99),-0.99)
   theta3_init  <- rAB_init/sqrt(1-rAB_init**2)
   ###
   if(variances=="common"){
   start_list_nu<- list(beta=c(muA_init,muB_init,rep(0,2*(llsub-1))),
-                       theta=c(log(sA_init),log(sB_init),theta3_init))
+                       theta=c(lsA_init,lsB_init,theta3_init))
   start_list_mu<- list(beta = rep(c(muA_init, muB_init),llsub), 
-                       theta=c(log(sA_init),log(sB_init),theta3_init))
+                       theta=c(lsA_init,lsB_init,theta3_init))
   }
   
   if(variances=="unequal"){
     start_list_nu<- list(beta=c(muA_init,muB_init,rep(0,2*(llsub-1))),
-                         theta=rep(c(log(sA_init),log(sB_init),theta3_init),llsub))
+                         theta=rep(c(lsA_init,lsB_init,theta3_init),llsub))
     start_list_mu<- list(beta = rep(c(muA_init, muB_init),llsub), 
-                         theta=rep(c(log(sA_init),log(sB_init),theta3_init),llsub))
+                         theta=rep(c(lsA_init,lsB_init,theta3_init),llsub))
   }
 
   ### Constraints

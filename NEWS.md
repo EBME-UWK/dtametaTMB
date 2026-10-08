@@ -17,7 +17,9 @@
   than on `glmmTMB` and may offer improved numerical robustness in difficult or near-boundary cases.
 * Corrected a bug in `plot` and `as_revman` methods for ReitsmaSubgroup models when 
   sensitivity and/or specificity are constrained to be common across subgroups.
-
+* Improved starting-value initialization across model families, providing robust 
+  finite fallbacks when preliminary model fits or empirical estimates are unavailable, 
+  including for sparse and degenerate datasets.
 * Fixed manual page titles to consistently use title case.
 
 # dtametaTMB 0.1.3

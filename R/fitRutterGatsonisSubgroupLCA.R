@@ -180,24 +180,48 @@ fitRutterGatsonisSubgroupLCA <- function(data,
   X$n        <- with(X, y11+y10+y01+y00)
   
   # Get starting values
-  init <- fitRutterGatsonisLCA(data=X,
-                               y11=y11,
-                               y10=y10,
-                               y01=y01,
-                               y00=y00,
-                               study=study,
-                               conflevel=conflevel,
-                               constrain=NULL)
+  init <- tryCatch(fitRutterGatsonisLCA(data=X,
+                                        y11=y11,
+                                        y10=y10,
+                                        y01=y01,
+                                        y00=y00,
+                                        study=study,
+                                        conflevel=conflevel,
+                                        constrain=NULL)$sdreport,
+                   error = function(e) NULL)
   
-  mu_prev  <- init$sdreport2["mu_prev","Estimate"]
-  Lambda   <- init$sdreport2["Lambda","Estimate"]
-  Theta    <- init$sdreport2["Theta","Estimate"]
-  beta     <- init$sdreport2["beta","Estimate"]
-  s2_prev  <- init$sdreport2["sigma2_prev","Estimate"]
-  s2_alpha <- init$sdreport2["sigma2_alpha","Estimate"]
-  s2_theta <- init$sdreport2["sigma2_theta","Estimate"]
-  mu_A_ref <- init$sdreport2["mu_A.ref","Estimate"]
-  mu_B_ref <- init$sdreport2["mu_B.ref","Estimate"]
+  Lambda_init <- NA_real_
+  Theta_init <- NA_real_
+  beta_init <- NA_real_
+  lsalpha_init <- NA_real_
+  lstheta_init <- NA_real_
+  mup_init <- NA_real_
+  lsp_init <- NA_real_
+  muA_ref_init <- NA_real_
+  muB_ref_init <- NA_real_
+  
+  if(!is.null(init)){
+    mup_init     <- init$par.fixed["mu_prev"]
+    Lambda_init  <- init$par.fixed["Lambda"]
+    Theta_init   <- init$par.fixed["Theta"]
+    beta_init    <- init$par.fixed["beta"]
+    lsp_init     <- init$par.fixed["log_sigma_prev"]
+    lsalpha_init <- init$par.fixed["log_sigma_alpha"]
+    lstheta_init <- init$par.fixed["log_sigma_theta"]
+    muA_ref_init <- init$par.fixed["mu_A_ref"]
+    muB_ref_init <- init$par.fixed["mu_B_ref"]
+  }
+  
+  if (!is.finite(Lambda_init)) {Lambda_init <- 0}
+  if (!is.finite(Theta_init)) {Theta_init <- 0}
+  if (!is.finite(beta_init)) {beta_init <- 0}
+  if (!is.finite(lsalpha_init)) {lsalpha_init <- 0.5*log(0.5)}
+  if (!is.finite(lstheta_init)) {lstheta_init <- 0.5*log(0.125)}
+  reit <- getREIT(Lambda=Lambda_init,Theta=Theta_init,beta=beta_init,sigma2_alpha=NA,sigma2_theta=NA)
+  if (!is.finite(muA_ref_init)) {muA_ref_init <- stats::qlogis(mean(c(stats::plogis(reit$mu_A.sens),0.99)))}
+  if (!is.finite(muB_ref_init)) {muB_ref_init <- stats::qlogis(mean(c(stats::plogis(reit$mu_B.spec),0.99)))}
+  if (!is.finite(mup_init)) {mup_init <- 0}
+  if (!is.finite(lsp_init)) {lsp_init <- log(0.5)}
 
   # Construct Z and Z_pred
   if(llsub== 1){
@@ -221,15 +245,15 @@ fitRutterGatsonisSubgroupLCA <- function(data,
   )
   
   parameters <- list(
-    prev_coef           = c(mu_prev,rep(0,ngroup-1)),
-    accuracy_coef       = c(Lambda, rep(0,ngroup-1)),
-    threshold_coef      = c(Theta,  rep(0,ngroup-1)),
-    shape_coef          = c(beta,   rep(0,ngroup-1)),
-    log_sigma_prev_coef = c(0.5*log(s2_prev),rep(0,ngroup-1)), 
-    log_sigma_alpha = 0.5*log(s2_alpha),
-    log_sigma_theta = 0.5*log(s2_theta),
-    mu_A_ref = mu_A_ref,
-    mu_B_ref = mu_B_ref,
+    prev_coef           = c(mup_init,    rep(0,ngroup-1)),
+    accuracy_coef       = c(Lambda_init, rep(0,ngroup-1)),
+    threshold_coef      = c(Theta_init,  rep(0,ngroup-1)),
+    shape_coef          = c(beta_init,   rep(0,ngroup-1)),
+    log_sigma_prev_coef = c(lsp_init,rep(0,ngroup-1)), 
+    log_sigma_alpha = lsalpha_init,
+    log_sigma_theta = lstheta_init,
+    mu_A_ref = muA_ref_init,
+    mu_B_ref = muB_ref_init,
     
     prevu = rep(0, n_study),
     alpha = rep(0, n_study),
@@ -357,11 +381,23 @@ fitRutterGatsonisSubgroupLCA <- function(data,
     cov_at  <- rep(0, n_study)
   } else {
     rep3    <- TMB::sdreport(obj,getJointPrecision=TRUE)$jointPrecision
-    idx_a   <- which(colnames(rep3)=="alpha")
-    idx_t   <- which(colnames(rep3)=="theta")
-    vcov    <- solve(as.matrix(rep3))[idx_a,idx_t]
-    cov_at  <- diag(vcov)
+    cov_at  <- tryCatch({
+      idx_a   <- which(colnames(rep3)=="alpha")
+      idx_t   <- which(colnames(rep3)=="theta")
+      vcov    <- solve(as.matrix(rep3))[idx_a,idx_t]
+      cov_at  <- diag(vcov)
+      cov_at}, error = function(e){
+        warning(
+          "The joint random-effects precision matrix could not be inverted. ",
+          "The conditional posterior covariance between the study-specific ",
+          "accuracy and threshold effects has been set to zero when ",
+          "calculating empirical Bayes sensitivity and specificity variances. ",
+          "Study-specific confidence intervals may be approximate. ",
+          "Original error: ",
+          conditionMessage(e))
+        rep(0,n_study)})
   }
+  
   
   lsens_study <-  (Theta[X$subgroup] + theta_i + (Lambda[X$subgroup]+alpha_i)/2)*exp(-beta[X$subgroup]/2)
   lspec_study <- -(Theta[X$subgroup] + theta_i - (Lambda[X$subgroup]+alpha_i)/2)*exp( beta[X$subgroup]/2)

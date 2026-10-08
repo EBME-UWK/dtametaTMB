@@ -213,8 +213,8 @@ fitRutterGatsonisReg <- function(data,
      accuracy_coef   = rep(0,ngroup),
      threshold_coef  = rep(0,ngroup),
      shape_coef      = rep(0,ngroup),
-     log_sigma_alpha = 0,
-     log_sigma_theta = 0,
+     log_sigma_alpha = 0.5 * log(0.5),
+     log_sigma_theta = 0.5 * log(0.125),
      alpha = rep(0, n_study),
      theta = rep(0, n_study)
     )

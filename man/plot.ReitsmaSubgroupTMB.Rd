@@ -47,10 +47,13 @@ sensitivity and/or logit specificity to a common value across
 subgroups, weights for the constrained outcome dimension(s) instead
 sum to 100 across all studies and subgroups combined, reflecting
 that all studies then inform a single shared parameter. Default.}
-\item{"fisher_revman"}{Uses the same parameter-specific percentage Fisher-information
-contributions as \code{size = "fisher"}, but applies a fixed-baseline RevMan-style
-graphical normalization. Percentage contributions retain their original
-subgroup-specific or common-parameter interpretation.}
+\item{"fisher_revman"}{
+Horizontal and vertical symbol dimensions are based on the same
+per-study percentage contributions to the logit sensitivity and
+logit specificity Fisher information as \code{size = "fisher"}.
+These percentages are then converted to graphical dimensions
+using the same RevMan-style normalization applied under
+\code{"sampsize_revman"} and \code{"se_revman"}.}
 \item{"equal"}{All studies shown with equal size.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the

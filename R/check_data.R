@@ -12,6 +12,11 @@ check_data <- function(dat,conflevel){
   }
 
   dat <- dat[stats::complete.cases(dat), ]
+  
+  if (nrow(dat) == 0L) {
+    stop("No complete studies remain after removing rows with missing values.")
+  }
+  
   # Validation
   numeric_cols <- c("TP", "TN", "FP", "FN")
   non_numeric <- numeric_cols[!sapply(dat[numeric_cols], is.numeric)]

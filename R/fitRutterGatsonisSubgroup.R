@@ -176,19 +176,33 @@ fitRutterGatsonisSubgroup <- function(data,
   
   XP <- getXP(X=X)
   # Get starting values
-  init <- fitRutterGatsonis(data=X,
-                            TP=TP,
-                            TN=TN,
-                            FN=FN,
-                            FP=FP,
-                            study=study,
-                            conflevel=conflevel,
-                            constrain=NULL)$sdreport
-  Lambda_init  <- init$par.fixed["Lambda"]
-  Theta_init   <- init$par.fixed["Theta"]
-  beta_init    <- init$par.fixed["beta"]
-  lsalpha_init <- init$par.fixed["log_sigma_alpha"]
-  lstheta_init <- init$par.fixed["log_sigma_theta"]
+  init <- tryCatch(fitRutterGatsonis(data=X,
+                                         TP=TP,
+                                         TN=TN,
+                                         FN=FN,
+                                         FP=FP,
+                                         study=study,
+                                         conflevel=conflevel,
+                                         constrain=NULL)$sdreport,
+                     error = function(e) NULL)
+  ###
+  Lambda_init  <- NA_real_
+  Theta_init   <- NA_real_
+  beta_init    <- NA_real_
+  lsalpha_init <- NA_real_
+  lstheta_init <- NA_real_
+  if(!is.null(init)){
+    Lambda_init  <- init$par.fixed["Lambda"]
+    Theta_init   <- init$par.fixed["Theta"]
+    beta_init    <- init$par.fixed["beta"]
+    lsalpha_init <- init$par.fixed["log_sigma_alpha"]
+    lstheta_init <- init$par.fixed["log_sigma_theta"]
+  }
+  if(!is.finite(Lambda_init)){Lambda_init <- 0}
+  if(!is.finite(Theta_init)){Theta_init <- 0}
+  if(!is.finite(beta_init)){beta_init <- 0}
+  if(!is.finite(lsalpha_init)){lsalpha_init <- 0.5*log(0.5)}
+  if(!is.finite(lstheta_init)){lstheta_init <- 0.5*log(0.125)}
   # Reshape data
   n_study <- nrow(X)
   Y       <- reshapeX_RUGA(X)
@@ -204,6 +218,9 @@ fitRutterGatsonisSubgroup <- function(data,
     Z_pred <- model.matrix(~ subgroup, data = sub)
   }
   ngroup <- ncol(Z)
+  # spec
+  if(is.null(spec)){spec <- stats::median(XP$spec)}
+  if(!is.finite(spec)){spec <- 0.8}
   
   dat2 <- list(
     y      = Y$y,
@@ -212,7 +229,7 @@ fitRutterGatsonisSubgroup <- function(data,
     Z      = Z,
     Z_pred = Z_pred,
     study  = Y$recordid - 1,  # 0-based
-    spec   = if (is.null(spec)) stats::median(XP$spec) else spec
+    spec   = spec
   )
   parameters <- list(
     accuracy_coef   = c(Lambda_init,rep(0,ngroup-1)),
