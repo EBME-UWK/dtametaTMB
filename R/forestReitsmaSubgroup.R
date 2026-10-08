@@ -26,12 +26,12 @@ forest.ReitsmaSubgroup <- function(x, conflevel=0.95, subgroup_label="Subgroup",
       conflevel <= 0 || conflevel >= 1) {
     stop("conflevel must be a single number in (0, 1).")
   }
-  order <- match.arg(order)
+  orderby <- match.arg(order)
   ss <- getForestSensSpec(x=x,conflevel=conflevel)
   
   XP <- ss$XP
-  if(order=="study"){XP <- XP[base::order(XP$study,XP$subgroup), ]}
-  if(order=="subgroup"){XP <- XP[base::order(XP$subgroup,XP$study), ]}
+  if(orderby=="study"){XP <- XP[base::order(XP$study,XP$subgroup), ]}
+  if(orderby=="subgroup"){XP <- XP[base::order(XP$subgroup,XP$study), ]}
   dt <- XP[,c("study","subgroup","TP","FP","FN","TN","senslabel","speclabel")]
   dt$" "    <- " "
   dt$fsens  <- paste(rep(" ",18),collapse=" ")

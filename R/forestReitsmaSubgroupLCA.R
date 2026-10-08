@@ -28,12 +28,12 @@ forest.ReitsmaSubgroupLCA <- function(x, conflevel=0.95, subgroup_label="Subgrou
       conflevel <= 0 || conflevel >= 1) {
     stop("conflevel must be a single number in (0, 1).")
   }
-  order <- match.arg(order)
+  orderby <- match.arg(order)
   ss <- getForestSensSpecLCA(x=x,conflevel=conflevel)
 
   XP <- ss$XP
-  if(order == "study"){XP <- XP[order(XP$study, XP$subgroup), ]}
-  if(order == "subgroup"){XP <- XP[order(XP$subgroup, XP$study), ]}
+  if(orderby == "study"){XP <- XP[base::order(XP$study, XP$subgroup), ]}
+  if(orderby == "subgroup"){XP <- XP[base::order(XP$subgroup, XP$study), ]}
   dt <- XP[,c("study","subgroup","y11","y10","y01","y00","senslabel","speclabel")]
   dt$" "    <- " "
   dt$fsens  <- paste(rep(" ",18),collapse=" ")
