@@ -29,7 +29,7 @@ forest.ReitsmaSubgroupLCA <- function(x, conflevel=0.95, subgroup_label="Subgrou
     stop("conflevel must be a single number in (0, 1).")
   }
   orderby <- match.arg(order)
-  ss <- getForestSensSpecLCA(x=x,conflevel=conflevel)
+  ss <- getForestSensSpecLCA(xdata=x$data,conflevel=conflevel)
 
   XP <- ss$XP
   if(orderby == "study"){XP <- XP[base::order(XP$study, XP$subgroup), ]}

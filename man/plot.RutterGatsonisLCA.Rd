@@ -11,6 +11,10 @@
   size = c("eb", "equal", "sampsize", "eb_revman", "sampsize_revman"),
   specrange = c(0.7, 0.995),
   main = "Diagnostic Test Accuracy Meta-Analysis",
+  HSROC = TRUE,
+  studyCI = FALSE,
+  conflevel = 0.95,
+  studylabels = FALSE,
   ...
 )
 }
@@ -68,6 +72,20 @@ Defaults to \code{c(0.7, 0.995)}.}
 
 \item{main}{Character string giving the main title of the plot.
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
+
+\item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.
+Default is \code{TRUE}.}
+
+\item{studyCI}{Whether study-level confidence
+intervals should be displayed for the observed sensitivity and
+specificity estimates. Defaults to \code{FALSE}.}
+
+\item{conflevel}{Confidence level for the study-level confidence
+intervals. Default is \code{0.95}.}
+
+\item{studylabels}{Whether study identifiers should
+be displayed next to the study-level estimates. Defaults to
+\code{FALSE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }

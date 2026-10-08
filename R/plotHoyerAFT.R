@@ -57,6 +57,16 @@
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
 #'   
+#' @param studyCI Whether study-level confidence
+#'   intervals should be displayed for the observed sensitivity and
+#'   specificity estimates. Defaults to \code{FALSE}.
+#' @param conflevel Confidence level for the study-level confidence 
+#'   intervals. Default is \code{0.95}.
+#'
+#' @param studylabels Whether study identifiers should
+#'   be displayed next to the study-level estimates. Defaults to
+#'   \code{FALSE}.
+#'   
 #' @param ... Additional graphical arguments (currently unused).
 #'
 #' @details
@@ -91,7 +101,11 @@ plot.HoyerAFT <- function(x,
                           scale=0.02, 
                           size=c("equal","sampsize","se","sampsize_revman","se_revman"),
                           thresholdrange=NULL,
-                          main="Diagnostic Test Accuracy Meta-Analysis", ...) {
+                          main="Diagnostic Test Accuracy Meta-Analysis",
+                          studyCI=FALSE,
+                          conflevel=0.95,
+                          studylabels=FALSE,
+                          ...) {
   size    <- match.arg(size)
   symbol  <- match.arg(symbol)
   HH      <- x$data
@@ -104,14 +118,41 @@ plot.HoyerAFT <- function(x,
   pct <- getWEIGHTS(HH,size)
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  pointsXY(x=1-x$data$spec, 
-           y=x$data$sens, 
+  pointsXY(x = 1-x$data$spec, 
+           y = x$data$sens, 
            symbol = symbol, 
            scale = scale*0.5,
            cex.x = pct$sp,
            cex.y = pct$se,
            col="darkgray")
   symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
+  if(studyCI==TRUE) {
+    forestci <- getForestSensSpec(xdata=x$data,
+                                  conflevel=conflevel)$XP[,c("sens",
+                                                             "spec",
+                                                             "Sens_LCI",
+                                                             "Sens_UCI",
+                                                             "Spec_LCI",
+                                                             "Spec_UCI")]
+    drawStudyPointCI(x = 1 - forestci$spec,
+                     y = forestci$sens,
+                     sens_lower = forestci$Sens_LCI,
+                     sens_upper = forestci$Sens_UCI,
+                     spec_lower = forestci$Spec_LCI,
+                     spec_upper = forestci$Spec_UCI,
+                     symbol = symbol,
+                     col = "darkgray",
+                     scale = scale * 0.5,
+                     cex.x = pct$sp,
+                     cex.y = pct$se)}
+  if(studylabels==TRUE){
+    graphics::text(x = 1-x$data$spec,
+                   y = x$data$sens,
+                   cex = 1,
+                   pos = 4,
+                   col = "darkgray",
+                   labels = x$data$study)
+  }
   # Add lines
   studies <- unique(HH$study)
   for(i in seq_along(studies)) {

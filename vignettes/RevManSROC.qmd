@@ -364,7 +364,7 @@ plot(fit,
      symbol = "rectangle",
      size = "sampsize_revman",
      scale = 0.02,
-     specrange=c(0,0))
+     HSROC = FALSE)
 ```
 
 Use inverse-standard-error scaling with:
@@ -378,7 +378,7 @@ plot(fit,
      symbol = "rectangle",
      size = "se_revman",
      scale = 0.02,
-     specrange=c(0,0))
+     HSROC = FALSE)
 ```
 
 The overall marker size can be adjusted without changing the relative dimensions:
@@ -393,14 +393,13 @@ plot(fit,
      symbol = "rectangle",
      size = "se_revman",
      scale = 0.02*1.5, # 50% larger than the default
-     specrange=c(0,0))
+     HSROC = FALSE)
 
 plot(fit,
      symbol = "triangle",
      size = "se_revman",
      scale = 0.02*1.5, # 50% larger than the default
-     specrange=c(0,0))
-
+     HSROC = FALSE)
 ```
 
 ## Relation to the other sizing methods

@@ -15,6 +15,8 @@
   specrange = c(0.7, 0.995),
   conflevel = 0.95,
   predlevel = 0.95,
+  studyCI = FALSE,
+  studylabels = FALSE,
   ...
 )
 }
@@ -71,7 +73,7 @@ eight before adding the fixed baseline dimension.}
 \item{main}{Character string giving the main title of the plot.
 Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.}
 
-\item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.
+\item{HSROC}{If \code{TRUE}, the HSROC curve is added to the plot.
 Default is \code{FALSE}.}
 
 \item{specrange}{A numeric vector of length 2 giving the range of
@@ -81,6 +83,14 @@ Defaults to \code{c(0.7, 0.995)}.}
 \item{conflevel}{Confidence level for the confidence region. Default is \code{0.95}.}
 
 \item{predlevel}{Confidence level for the prediction region. Default is \code{0.95}.}
+
+\item{studyCI}{Whether study-level confidence
+intervals should be displayed for the observed sensitivity and
+specificity estimates. Defaults to \code{FALSE}.}
+
+\item{studylabels}{Whether study identifiers should
+be displayed next to the study-level estimates. Defaults to
+\code{FALSE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }

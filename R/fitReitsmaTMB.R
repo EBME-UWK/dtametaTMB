@@ -401,7 +401,7 @@ summary.ReitsmaTMB <- function(object, ...) {
 #'       so that the average larger dimension measure across studies equals
 #'       eight before adding the fixed baseline dimension.}
 #'  } 
-#' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
+#' @param HSROC If \code{TRUE}, the HSROC curve is added to the plot.
 #'   Default is \code{FALSE}.
 #' @param specrange A numeric vector of length 2 giving the range of
 #'   specificities over which the HSROC curve is plotted.
@@ -412,6 +412,14 @@ summary.ReitsmaTMB <- function(object, ...) {
 #' 
 #' @param conflevel Confidence level for the confidence region. Default is \code{0.95}.
 #' @param predlevel Confidence level for the prediction region. Default is \code{0.95}.
+#' 
+#' @param studyCI Whether study-level confidence
+#'   intervals should be displayed for the observed sensitivity and
+#'   specificity estimates. Defaults to \code{FALSE}.
+#'
+#' @param studylabels Whether study identifiers should
+#'   be displayed next to the study-level estimates. Defaults to
+#'   \code{FALSE}.
 #'
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
@@ -461,7 +469,10 @@ plot.ReitsmaTMB <- function(x,
                             HSROC=FALSE, 
                             specrange=c(0.7,0.995),
                             conflevel=0.95,
-                            predlevel=0.95, ...) {
+                            predlevel=0.95, 
+                            studyCI=FALSE,
+                            studylabels=FALSE,
+                            ...) {
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
       conflevel <= 0 || conflevel >= 1) {
     stop("conflevel must be a single number in (0, 1).")
@@ -552,16 +563,41 @@ plot.ReitsmaTMB <- function(x,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  #symbols(x=1-x$data$spec,y=x$data$sens,rectangles=cbind(pct$sp,pct$se)*scale,inches=FALSE,add=TRUE,fg="darkgray")
-  pointsXY(x=1-x$data$spec, 
-           y=x$data$sens, 
+  pointsXY(x = 1-x$data$spec, 
+           y = x$data$sens, 
            symbol = symbol, 
            scale = scale*0.5,
            cex.x = pct$sp,
            cex.y = pct$se,
            col="darkgray")
   symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-  #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
+  if(studyCI==TRUE) {
+    forestci <- getForestSensSpec(xdata=x$data,
+                                  conflevel=conflevel)$XP[,c("sens",
+                                                             "spec",
+                                                             "Sens_LCI",
+                                                             "Sens_UCI",
+                                                             "Spec_LCI",
+                                                             "Spec_UCI")]
+    drawStudyPointCI(x = 1 - forestci$spec,
+                     y = forestci$sens,
+                     sens_lower = forestci$Sens_LCI,
+                     sens_upper = forestci$Sens_UCI,
+                     spec_lower = forestci$Spec_LCI,
+                     spec_upper = forestci$Spec_UCI,
+                     symbol = symbol,
+                     col = "darkgray",
+                     scale = scale * 0.5,
+                     cex.x = pct$sp,
+                     cex.y = pct$se)}
+  if(studylabels==TRUE){
+    graphics::text(x = 1-x$data$spec,
+                   y = x$data$sens,
+                   cex = 1,
+                   pos = 4,
+                   col = "darkgray",
+                   labels = x$data$study)
+  }
   # Add the ROC curve
   if(HSROC==TRUE){
     Lambda  <- x$RutterGatsonis_recovered$Lambda

@@ -18,6 +18,8 @@
   conflevel = 0.95,
   predlevel = 0.95,
   connectstudies = FALSE,
+  studyCI = FALSE,
+  studylabels = FALSE,
   ...
 )
 }
@@ -103,6 +105,14 @@ Defaults to \code{c(0.7, 0.995)}.}
 
 \item{connectstudies}{Whether the point estimates of two subgroups
 within the same study should be connected. Defaults to \code{FALSE}.}
+
+\item{studyCI}{Whether study-level confidence
+intervals should be displayed for the observed sensitivity and
+specificity estimates. Defaults to \code{FALSE}.}
+
+\item{studylabels}{Whether study identifiers should
+be displayed next to the study-level estimates. Defaults to
+\code{FALSE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }

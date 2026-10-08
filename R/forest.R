@@ -16,8 +16,8 @@ forest <- function(x, ...) {
 #' @keywords internal
 #' @importFrom stats qbeta
 #' @noRd
-getForestSensSpec <- function(x,conflevel){ 
-  XP <- x$data
+getForestSensSpec <- function(xdata,conflevel){ 
+  XP <- xdata
   alpha   <- 1 - conflevel
   senslab <-  paste0("Sensitivity (",round(100 * conflevel), "%-CI)")
   speclab <-  paste0("Specificity (",round(100 * conflevel), "%-CI)")
@@ -49,8 +49,8 @@ getForestSensSpec <- function(x,conflevel){
 #' @keywords internal
 #' @importFrom stats qnorm qlogis plogis
 #' @noRd
-getForestSensSpecLCA <- function(x,conflevel){ 
-  XP <- x$data
+getForestSensSpecLCA <- function(xdata,conflevel){ 
+  XP <- xdata
   alpha   <- 1 - conflevel
   qq      <- stats::qnorm(1-alpha/2)
   senslab <-  paste0("Sensitivity (",round(100 * conflevel), "%-CI)")

@@ -48,12 +48,26 @@
 #'       The same transformed total-sample-size measure is used horizontally
 #'       and vertically.}
 #'   }
+#'   
+#' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
+#'   Default is \code{TRUE}.
 #' @param specrange A numeric vector of length 2 giving the range of
 #'   specificities over which the HSROC curve is plotted.
 #'   Defaults to \code{c(0.7, 0.995)}.
 #'  
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
+#'   
+#' @param studyCI Whether study-level confidence
+#'   intervals should be displayed for the observed sensitivity and
+#'   specificity estimates. Defaults to \code{FALSE}.
+#'   
+#' @param conflevel Confidence level for the study-level confidence 
+#'   intervals. Default is \code{0.95}.
+#'
+#' @param studylabels Whether study identifiers should
+#'   be displayed next to the study-level estimates. Defaults to
+#'   \code{FALSE}.
 #'   
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
@@ -93,7 +107,12 @@ plot.RutterGatsonisLCA <- function(x,
                                    scale=0.02,
                                    size=c("eb","equal","sampsize","eb_revman","sampsize_revman"), 
                                    specrange=c(0.7,0.995),
-                                   main="Diagnostic Test Accuracy Meta-Analysis", ...) {
+                                   main="Diagnostic Test Accuracy Meta-Analysis",
+                                   HSROC=TRUE,
+                                   studyCI=FALSE,
+                                   conflevel=0.95,
+                                   studylabels=FALSE,
+                                   ...) {
   size    <- match.arg(size)
   symbol  <- match.arg(symbol)
   Lambda  <- x$sdreport2["Lambda", "Estimate"]
@@ -105,28 +124,56 @@ plot.RutterGatsonisLCA <- function(x,
   par(pty = "s")
   ### Plot coordinate system
   plot_SESPGRID(main=main)
-  # Plot study level estimates 
   pct <- getWEIGHTSLCA(x$data,size)
-  pointsXY(x=1-x$data$spec_eb, 
-           y=x$data$sens_eb, 
+  # Plot study level estimates 
+  pointsXY(x = 1-x$data$spec, 
+           y = x$data$sens, 
            symbol = symbol, 
            scale = scale*0.5,
            cex.x = pct$sp,
            cex.y = pct$se,
            col="darkgray")
   symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-  #points(x=XP$FPR,y=XP$sens,pch=0,col="darkgray",cex=2)
+  if(studyCI==TRUE) {
+    forestci <- getForestSensSpecLCA(xdata=x$data,
+                                     conflevel=conflevel)$XP[,c("sens",
+                                                                "spec",
+                                                                "Sens_LCI",
+                                                                "Sens_UCI",
+                                                                "Spec_LCI",
+                                                                "Spec_UCI")]
+    drawStudyPointCI(x = 1 - forestci$spec,
+                     y = forestci$sens,
+                     sens_lower = forestci$Sens_LCI,
+                     sens_upper = forestci$Sens_UCI,
+                     spec_lower = forestci$Spec_LCI,
+                     spec_upper = forestci$Spec_UCI,
+                     symbol = symbol,
+                     col = "darkgray",
+                     scale = scale * 0.5,
+                     cex.x = pct$sp,
+                     cex.y = pct$se)}
+  if(studylabels==TRUE){
+    graphics::text(x = 1-x$data$spec,
+                   y = x$data$sens,
+                   cex = 1,
+                   pos = 4,
+                   col = "darkgray",
+                   labels = x$data$study)
+  }
   # Add the ROC curve
-  points(roc_points2, type="l", lwd=2,ann=FALSE)###
-  # Add the legend 
-  legend("bottomright", 
-         bty ="n",
-         legend = c(NA,
-                    "HSROC curve",
-                    "Empirical Bayes estimates"), 
-         pch = c(NA,NA,symb), 
-         lty = c(NA,1,NA), 
-         lwd = c(NA,2,NA), 
-         col = c(NA,"black","darkgray"))
+  if(HSROC==TRUE){
+    points(roc_points2, type="l", lwd=2,ann=FALSE)###
+    # Add the legend 
+    legend("bottomright", 
+           bty ="n",
+           legend = c(NA,
+                      "HSROC curve",
+                      "Empirical Bayes estimates"), 
+           pch = c(NA,NA,symb), 
+           lty = c(NA,1,NA), 
+           lwd = c(NA,2,NA), 
+           col = c(NA,"black","darkgray"))
+  }
   invisible(NULL)
 }

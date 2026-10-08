@@ -55,6 +55,8 @@
 #'  } 
 #' @param col Vector of colours used for subgroup-specific HSROC curves
 #'   and study-level point estimates. If \code{NULL}, colours are generated automatically.
+#' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
+#'   Default is \code{TRUE}.
 #' @param specrange A numeric vector of length 2 giving the range of
 #'   specificities over which the HSROC curve is plotted.
 #'   Defaults to \code{c(0.7, 0.995)}.
@@ -65,7 +67,14 @@
 #'   within the same study should be connected. Defaults to \code{FALSE}.
 #' @param main Character string giving the main title of the plot.
 #'   Defaults to \code{"Diagnostic Test Accuracy Meta-Analysis"}.
-#'   
+#' @param studyCI Whether study-level confidence
+#'   intervals should be displayed for the observed sensitivity and
+#'   specificity estimates. Defaults to \code{FALSE}.
+#' @param conflevel Confidence level for the study-level confidence 
+#'   intervals. Default is \code{0.95}.
+#' @param studylabels Whether study identifiers should
+#'   be displayed next to the study-level estimates. Defaults to
+#'   \code{FALSE}.
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
 #' @details
@@ -106,7 +115,11 @@ plot.RutterGatsonisSubgroup <- function(x,
                                         specrange=c(0.7,0.995),
                                         col=NULL,
                                         main="Diagnostic Test Accuracy Meta-Analysis",
+                                        HSROC=TRUE,
                                         connectstudies=FALSE,
+                                        studyCI=FALSE,
+                                        conflevel=0.95,
+                                        studylabels=FALSE,
                                         ...){
    if(connectstudies) {
      if(length(unique(x$data$subgroup)) != 2) {
@@ -233,26 +246,63 @@ plot.RutterGatsonisSubgroup <- function(x,
    }
    ###
    for (i in seq_along(sub)){
-     pointsXY(x=1-x$data$spec[x$data$subgroup==sub[i]], 
-              y=x$data$sens[x$data$subgroup==sub[i]], 
+     sg    <- x$data$subgroup==sub[i]
+     xspec <- x$data$spec[sg]
+     xsens <- x$data$sens[sg]
+     pctsp <- pct$sp[sg]
+     pctse <- pct$se[sg]
+     xstud <- x$data$study[sg]
+     ####
+     pointsXY(x=1-xspec, 
+              y=xsens, 
               symbol = symbols2[i], 
               scale = scale*0.5,
-              cex.x = pct$sp[x$data$subgroup==sub[i]],
-              cex.y = pct$se[x$data$subgroup==sub[i]],
+              cex.x = pctsp,
+              cex.y = pctse,
               col=col2[i])
      symb[i] <- switch(symbols2[i], rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
+     ###
+     if(studyCI==TRUE) {
+       forestci <- getForestSensSpec(xdata=x$data[sg,],
+                                     conflevel=conflevel)$XP[,c("sens",
+                                                                "spec",
+                                                                "Sens_LCI",
+                                                                "Sens_UCI",
+                                                                "Spec_LCI",
+                                                                "Spec_UCI")]
+       drawStudyPointCI(x = 1 - forestci$spec,
+                        y = forestci$sens,
+                        sens_lower = forestci$Sens_LCI,
+                        sens_upper = forestci$Sens_UCI,
+                        spec_lower = forestci$Spec_LCI,
+                        spec_upper = forestci$Spec_UCI,
+                        symbol = symbols2[i],
+                        col = col2[i],
+                        scale = scale * 0.5,
+                        cex.x = pctsp,
+                        cex.y = pctse)}
+     if(studylabels==TRUE){
+       graphics::text(x = 1-xspec,
+                      y = xsens,
+                      cex = 1,
+                      pos = 4,
+                      col = col2[i],
+                      labels = xstud)
+     }
    }
-   ###
-   lamb <- paste0("Lambda_",sub)
-   bet  <- paste0("beta_",sub)
-  
-   Lambda <- x$sdreport2[lamb,]
-   beta   <- x$sdreport2[bet,]
-   for(i in seq_len(nsub)){
-      roc_points2 <- getROCpoints(Lambda[i,"Estimate"],
-                                  beta[i,"Estimate"],
-                                  specrange)
-      points(roc_points2, type="l", lwd=2,ann=FALSE,col=col[i])
+   # Add the ROC curve
+   if(HSROC==TRUE){
+     lamb <- paste0("Lambda_",sub)
+     bet  <- paste0("beta_",sub)
+     
+     Lambda <- x$sdreport2[lamb,]
+     beta   <- x$sdreport2[bet,]
+     for(i in seq_len(nsub)){
+       roc_points2 <- getROCpoints(Lambda[i,"Estimate"],
+                                   beta[i,"Estimate"],
+                                   specrange)
+       points(roc_points2, type="l", lwd=2,ann=FALSE,col=col[i])
+     }
    }
    ## Connect studies
    if(connectstudies){
@@ -275,15 +325,16 @@ plot.RutterGatsonisSubgroup <- function(x,
           xpd = TRUE,
           cex = 1.2,
           bty = "n")
-
-   legend("bottomright", 
-          bty ="n",
-          legend = c(NA,
-                     "HSROC curve",
-                     "Data"), 
-          pch = c(NA,NA,symb[1]), 
-          lty = c(NA,1,NA), 
-          lwd = c(NA,2,NA), 
-          col = c(NA,"black","darkgray"))
+   if(HSROC==TRUE){
+     legend("bottomright", 
+            bty ="n",
+            legend = c(NA,
+                       "HSROC curve",
+                       "Data"), 
+            pch = c(NA,NA,symb[1]), 
+            lty = c(NA,1,NA), 
+            lwd = c(NA,2,NA), 
+            col = c(NA,"black","darkgray"))
+   }
    invisible(NULL)
 }

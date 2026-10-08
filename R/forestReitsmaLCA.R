@@ -22,7 +22,7 @@ forest.ReitsmaLCA <- function(x,conflevel=0.95, ...) {
       conflevel <= 0 || conflevel >= 1) {
     stop("conflevel must be a single number in (0, 1).")
   }
-  ss <- getForestSensSpecLCA(x=x,conflevel=conflevel)
+  ss <- getForestSensSpecLCA(xdata=x$data,conflevel=conflevel)
   
   XP <- ss$XP
   XP <- XP[order(XP$study), ]

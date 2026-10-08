@@ -15,6 +15,8 @@
   specrange = c(0.7, 0.995),
   conflevel = 0.95,
   predlevel = 0.95,
+  studyCI = FALSE,
+  studylabels = FALSE,
   ...
 )
 }
@@ -81,6 +83,14 @@ Defaults to \code{c(0.7, 0.995)}.}
 \item{conflevel}{Confidence level for the confidence region. Default is \code{0.95}.}
 
 \item{predlevel}{Confidence level for the prediction region. Default is \code{0.95}.}
+
+\item{studyCI}{Whether study-level confidence
+intervals should be displayed for the observed sensitivity and
+specificity estimates. Defaults to \code{FALSE}.}
+
+\item{studylabels}{Whether study identifiers should
+be displayed next to the study-level estimates. Defaults to
+\code{FALSE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }
