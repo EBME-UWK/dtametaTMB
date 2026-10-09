@@ -1,4 +1,5 @@
 #' @keywords internal
+#' @importFrom graphics text
 #' @noRd
 
 plotStudyLevelEstimates <- function(xsens,

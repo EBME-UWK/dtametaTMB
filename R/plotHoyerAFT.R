@@ -126,7 +126,7 @@ plot.HoyerAFT <- function(x,
   pct <- getWEIGHTS(HH,size)
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  # Plot study level estimates 
+  warn_unestimable_sroc_points(data=x$data)
   xspec <- x$data$spec
   xsens <- x$data$sens
   pctsp <- pct$sp

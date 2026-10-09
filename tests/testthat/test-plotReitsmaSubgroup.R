@@ -93,7 +93,8 @@ test_that("plot.ReitsmaSubgroup connects paired studies", {
     plot(
       fit,
       symbol=c("diamond","triangle"),
-      scale=0.02*0.05,
+      size="sampsize_revman",
+      scale=0.02*1.5,
       connectstudies = TRUE
     )
   )

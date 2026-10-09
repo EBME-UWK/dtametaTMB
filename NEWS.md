@@ -17,8 +17,8 @@
   than on `glmmTMB` and may offer improved numerical robustness in difficult or near-boundary cases.
 * Corrected a bug in `plot` and `as_revman` methods for ReitsmaSubgroup models when 
   sensitivity and/or specificity are constrained to be common across subgroups.
-* Added optional study-level confidence intervals (studyCI = TRUE) and 
-  study labels (studylabels = TRUE) to SROC plotting methods.
+* Added optional study-level confidence intervals (`studyCI = TRUE`) and 
+  study labels (`studylabels = TRUE`) to SROC plotting methods.
 * Improved starting-value initialization across model families, providing robust 
   finite fallbacks when preliminary model fits or empirical estimates are unavailable, 
   including for sparse and degenerate datasets.

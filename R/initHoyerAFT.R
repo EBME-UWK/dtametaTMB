@@ -102,8 +102,18 @@ initHoyerAFT <- function(restructured, dist="loglogistic") {
   if (length(unique(restructured$study)) < 2) {
     warning("Only one study: random effects may be unstable.")
   }
-
-  restructured$lowerB[restructured$ctype == 1] <- 1e-09
+  
+  # 
+  bounds <- c(restructured$lowerB, restructured$upperB)
+  bounds <- bounds[is.finite(bounds) & bounds > 0]
+  
+  if (length(bounds) == 0L) {
+    stop("No finite positive interval bounds are available for initialization.")
+  }
+  
+  lowest <- min(bounds)
+  
+  restructured$lowerB[restructured$ctype == 1] <- lowest*1e-09
   restructured$upperB[restructured$ctype == 3] <- Inf
   
   datfit0 <- restructured[restructured$events0>0,,drop=FALSE]
