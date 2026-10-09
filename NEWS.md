@@ -12,11 +12,13 @@
 * Corrected a bug in `plot.Reitsma()` with default `size = "fisher"`. 
   The covariance used to construct the matrix G for the SROC plot is now calculated correctly.
 * Added `size = "fisher"` option to `plot.RutterGatsonis()`, `plot.RutterGatsonisSubgroup()`,
-  and `plot.ReitsmaSubgroup()`, which is new default in `plot.RutterGatsonis()` and `plot.ReitsmaSubgroup()`.
+  and `plot.ReitsmaSubgroup()`, which is new default in `plot.RutterGatsonis()`.
 * Added `fitReitsmaTMB()` and `fitReitsmaSubgroupTMB()`, which rely on custom TMB templates rather
   than on `glmmTMB` and may offer improved numerical robustness in difficult or near-boundary cases.
 * Corrected a bug in `plot` and `as_revman` methods for ReitsmaSubgroup models when 
   sensitivity and/or specificity are constrained to be common across subgroups.
+* Added optional study-level confidence intervals (studyCI = TRUE) and 
+  study labels (studylabels = TRUE) to SROC plotting methods.
 * Improved starting-value initialization across model families, providing robust 
   finite fallbacks when preliminary model fits or empirical estimates are unavailable, 
   including for sparse and degenerate datasets.

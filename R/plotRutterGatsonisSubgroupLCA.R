@@ -126,6 +126,10 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
                                            conflevel=0.95,
                                            studylabels=FALSE,
                                            ...){
+  if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+      conflevel <= 0 || conflevel >= 1) {
+    stop("conflevel must be a single number in (0, 1).")
+  }
   if(connectstudies) {
     if(length(unique(x$data$subgroup)) != 2) {
       warning("'connectstudies=TRUE' is only recommended for two-subgroup comparisons." )
@@ -148,50 +152,21 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
   plot_SESPGRID(main=main)
   # Data points
   pct <- getWEIGHTSLCA(xdata=x$data,size=size)
+  # Plot study level estimates 
   for (i in seq_along(sub)){
     sg    <- x$data$subgroup==sub[i]
-    xspec <- x$data$spec[sg]
-    xsens <- x$data$sens[sg]
+    xspec <- x$data$spec_eb[sg]
+    xsens <- x$data$sens_eb[sg]
     pctsp <- pct$sp[sg]
     pctse <- pct$se[sg]
     xstud <- x$data$study[sg]
+    xdata <- x$data[sg,]
     ####
-    pointsXY(x=1-xspec, 
-             y=xsens, 
-             symbol = symbols2[i], 
-             scale = scale*0.5,
-             cex.x = pctsp,
-             cex.y = pctse,
-             col=col2[i])
-    symb[i] <- switch(symbols2[i], rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-    ###
-    if(studyCI==TRUE) {
-      forestci <- getForestSensSpecLCA(xdata=x$data[sg,],
-                                       conflevel=conflevel)$XP[,c("sens",
-                                                                  "spec",
-                                                                  "Sens_LCI",
-                                                                  "Sens_UCI",
-                                                                  "Spec_LCI",
-                                                                  "Spec_UCI")]
-      drawStudyPointCI(x = 1 - forestci$spec,
-                       y = forestci$sens,
-                       sens_lower = forestci$Sens_LCI,
-                       sens_upper = forestci$Sens_UCI,
-                       spec_lower = forestci$Spec_LCI,
-                       spec_upper = forestci$Spec_UCI,
-                       symbol = symbols2[i],
-                       col = col2[i],
-                       scale = scale * 0.5,
-                       cex.x = pctsp,
-                       cex.y = pctse)}
-    if(studylabels==TRUE){
-      graphics::text(x = 1-xspec,
-                     y = xsens,
-                     cex = 1,
-                     pos = 4,
-                     col = col2[i],
-                     labels = xstud)
-    }
+    symb[i] <- plotStudyLevelEstimates(xsens=xsens,xspec=xspec,xstud=xstud,xdata=xdata,
+                                       symbol=symbols2[i],pctse=pctse,pctsp=pctsp,
+                                       scale=scale,col=col2[i],
+                                       conflevel=conflevel,studyCI=studyCI,
+                                       studylabels=studylabels,LCA=TRUE)
   }
   # Add the ROC curve
   if(HSROC==TRUE){
@@ -208,7 +183,7 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
     }
   }
   ## Connect studies
-  if(connectstudies){
+  if(isTRUE(connectstudies)){
     for(st in unique(x$data$study)){
       tmp <- x$data[x$data$study == st, ]
       tmp <- tmp[order(tmp$subgroup), ]
@@ -228,7 +203,7 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
          xpd = TRUE,
          cex = 1.2,
          bty = "n")
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     legend("bottomright", 
            bty ="n",
            legend = c(NA,

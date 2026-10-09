@@ -121,6 +121,10 @@ plot.RutterGatsonisSubgroup <- function(x,
                                         conflevel=0.95,
                                         studylabels=FALSE,
                                         ...){
+   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+       conflevel <= 0 || conflevel >= 1) {
+     stop("conflevel must be a single number in (0, 1).")
+   }
    if(connectstudies) {
      if(length(unique(x$data$subgroup)) != 2) {
        warning("'connectstudies=TRUE' is only recommended for two-subgroup comparisons." )
@@ -152,6 +156,7 @@ plot.RutterGatsonisSubgroup <- function(x,
        pty="s")   # enlarge right margin
    plot_SESPGRID(main=main)
    # Data points
+   tryCatch(
    if(size %in% c("fisher","fisher_revman")){
      Y_pw  <- reshapeX_REIT(X=x$data)
      X_pw <- matrix(0,nrow=2*nstudy,ncol=2*nsub)
@@ -241,10 +246,17 @@ plot.RutterGatsonisSubgroup <- function(x,
        pct$se   <- (4+c_fisher*pct$se)/10
        pct$sp   <- (4+c_fisher*pct$sp)/10
      }
-    } else {
-    pct <- getWEIGHTS(xdata=x$data,size=size)
+   }, error = function(e) {
+     warning(
+       "Fisher-information study sizing could not be calculated. ",
+       "Equal study-symbol sizing was used instead. Original error: ",
+       conditionMessage(e)) 
+     pct <- getWEIGHTS(xdata=x$data,size="equal")})
+   if(!size %in% c("fisher","fisher_revman")){
+     pct <- getWEIGHTS(xdata=x$data,size=size)
    }
    ###
+   # Plot study level estimates 
    for (i in seq_along(sub)){
      sg    <- x$data$subgroup==sub[i]
      xspec <- x$data$spec[sg]
@@ -252,46 +264,16 @@ plot.RutterGatsonisSubgroup <- function(x,
      pctsp <- pct$sp[sg]
      pctse <- pct$se[sg]
      xstud <- x$data$study[sg]
+     xdata <- x$data[sg,]
      ####
-     pointsXY(x=1-xspec, 
-              y=xsens, 
-              symbol = symbols2[i], 
-              scale = scale*0.5,
-              cex.x = pctsp,
-              cex.y = pctse,
-              col=col2[i])
-     symb[i] <- switch(symbols2[i], rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-     ###
-     if(studyCI==TRUE) {
-       forestci <- getForestSensSpec(xdata=x$data[sg,],
-                                     conflevel=conflevel)$XP[,c("sens",
-                                                                "spec",
-                                                                "Sens_LCI",
-                                                                "Sens_UCI",
-                                                                "Spec_LCI",
-                                                                "Spec_UCI")]
-       drawStudyPointCI(x = 1 - forestci$spec,
-                        y = forestci$sens,
-                        sens_lower = forestci$Sens_LCI,
-                        sens_upper = forestci$Sens_UCI,
-                        spec_lower = forestci$Spec_LCI,
-                        spec_upper = forestci$Spec_UCI,
-                        symbol = symbols2[i],
-                        col = col2[i],
-                        scale = scale * 0.5,
-                        cex.x = pctsp,
-                        cex.y = pctse)}
-     if(studylabels==TRUE){
-       graphics::text(x = 1-xspec,
-                      y = xsens,
-                      cex = 1,
-                      pos = 4,
-                      col = col2[i],
-                      labels = xstud)
-     }
+     symb[i] <- plotStudyLevelEstimates(xsens=xsens,xspec=xspec,xstud=xstud,xdata=xdata,
+                                        symbol=symbols2[i],pctse=pctse,pctsp=pctsp,
+                                        scale=scale,col=col2[i],
+                                        conflevel=conflevel,studyCI=studyCI,
+                                        studylabels=studylabels,LCA=FALSE)
    }
    # Add the ROC curve
-   if(HSROC==TRUE){
+   if(isTRUE(HSROC)){
      lamb <- paste0("Lambda_",sub)
      bet  <- paste0("beta_",sub)
      
@@ -305,7 +287,7 @@ plot.RutterGatsonisSubgroup <- function(x,
      }
    }
    ## Connect studies
-   if(connectstudies){
+   if(isTRUE(connectstudies)){
      for(st in unique(x$data$study)){
        tmp <- x$data[x$data$study == st, ]
        tmp <- tmp[order(tmp$subgroup), ]
@@ -325,7 +307,7 @@ plot.RutterGatsonisSubgroup <- function(x,
           xpd = TRUE,
           cex = 1.2,
           bty = "n")
-   if(HSROC==TRUE){
+   if(isTRUE(HSROC)){
      legend("bottomright", 
             bty ="n",
             legend = c(NA,

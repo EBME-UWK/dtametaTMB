@@ -111,6 +111,7 @@
 #' No return value. Called for its side effect of producing a plot.
 #' @seealso \code{\link{fitReitsmaLCA}}
 #' @importFrom stats qlogis plogis predict qf
+#' @importFrom graphics text
 #' @method plot ReitsmaLCA
 #' @export
 plot.ReitsmaLCA <- function(x,
@@ -160,44 +161,19 @@ plot.ReitsmaLCA <- function(x,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  # Plot study level estimates 
-  pointsXY(x = 1-x$data$spec, 
-           y = x$data$sens, 
-           symbol = symbol, 
-           scale = scale*0.5,
-           cex.x = pct$sp,
-           cex.y = pct$se,
-           col="darkgray")
-  symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-  if(studyCI==TRUE) {
-    forestci <- getForestSensSpecLCA(xdata=x$data,
-                                     conflevel=conflevel)$XP[,c("sens",
-                                                                "spec",
-                                                                "Sens_LCI",
-                                                                "Sens_UCI",
-                                                                "Spec_LCI",
-                                                                "Spec_UCI")]
-    drawStudyPointCI(x = 1 - forestci$spec,
-                     y = forestci$sens,
-                     sens_lower = forestci$Sens_LCI,
-                     sens_upper = forestci$Sens_UCI,
-                     spec_lower = forestci$Spec_LCI,
-                     spec_upper = forestci$Spec_UCI,
-                     symbol = symbol,
-                     col = "darkgray",
-                     scale = scale * 0.5,
-                     cex.x = pct$sp,
-                     cex.y = pct$se)}
-  if(studylabels==TRUE){
-    graphics::text(x = 1-x$data$spec,
-                   y = x$data$sens,
-                   cex = 1,
-                   pos = 4,
-                   col = "darkgray",
-                   labels = x$data$study)
-  }
+  xspec <- x$data$spec_eb
+  xsens <- x$data$sens_eb
+  pctsp <- pct$sp
+  pctse <- pct$se
+  xstud <- x$data$study
+  xdata <- x$data
+  symb <- plotStudyLevelEstimates(xsens=xsens,xspec=xspec,xstud=xstud,xdata=xdata,
+                                  symbol=symbol,pctse=pctse,pctsp=pctsp,
+                                  scale=scale,col="darkgray",
+                                  conflevel=conflevel,studyCI=studyCI,
+                                  studylabels=studylabels,LCA=TRUE)
   # Add the ROC curve
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     Lambda  <- x$RutterGatsonis_recovered$Lambda
     beta    <- x$RutterGatsonis_recovered$beta
     roc_points2 <- getROCpoints(Lambda,beta,specrange)
@@ -213,7 +189,7 @@ plot.ReitsmaLCA <- function(x,
   # Add the legend 
   conf_lab <- paste0(round(100 * conflevel), "% Confidence region")
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     legend("bottomright", 
            bty ="n",
            legend = c(NA,

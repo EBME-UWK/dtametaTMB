@@ -213,6 +213,7 @@ test_that("common generic methods work across inheritance hierarchy", {
   
   for(mod in models2){
     expect_no_error(as_revman(mod))
+    expect_no_error(plot(mod,studyCI=TRUE,studylabels=TRUE))
   }
-  
+  expect_no_error(plot(hoyer,studyCI=TRUE,studylabels=TRUE))
 })

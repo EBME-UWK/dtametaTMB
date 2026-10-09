@@ -64,7 +64,7 @@ for the AFT model. One of \code{"weibull"}, \code{"lognormal"}, or
 
 \item{verbose}{Whether TMB optimization output should be printed (default: FALSE).}
 
-\item{...}{Additional arguments passed to \code{\link{fitHoyerAFT}}.}
+\item{...}{Additional arguments (unused).}
 }
 \value{
 An object of class \code{"HoyerAFT"} as returned by

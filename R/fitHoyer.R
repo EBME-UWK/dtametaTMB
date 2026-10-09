@@ -54,7 +54,7 @@
 #' 
 #' @param verbose Whether TMB optimization output should be printed (default: FALSE).
 #'
-#' @param ... Additional arguments passed to \code{\link{fitHoyerAFT}}.
+#' @param ... Additional arguments (unused).
 #'
 #' @return
 #' An object of class \code{"HoyerAFT"} as returned by

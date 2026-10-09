@@ -49,6 +49,9 @@
 #'       so that the average larger dimension measure across studies equals
 #'       eight before adding the fixed baseline dimension.}
 #'  } 
+#'  
+#' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
+#'   Default is \code{TRUE}.
 #' @param thresholdrange A numeric vector of length 2 giving the range of
 #'   threshold over which sensitivities and specificities are predicted.
 #'   If \code{NULL} (default), then the minimum and maximum thresholds
@@ -92,7 +95,7 @@
 #' No return value. Called for its side effect of producing a plot.
 #'
 #' @seealso \code{\link{fitHoyerAFT}} \code{\link{fitHoyer}}
-#' @importFrom graphics abline axis legend lines par points symbols title
+#' @importFrom graphics abline axis legend lines par points title
 #' @importFrom stats plogis pnorm
 #' @method plot HoyerAFT
 #' @export
@@ -100,12 +103,17 @@ plot.HoyerAFT <- function(x,
                           symbol=c("rectangle","ellipse","diamond","triangle","cross","plus","star"),
                           scale=0.02, 
                           size=c("equal","sampsize","se","sampsize_revman","se_revman"),
+                          HSROC=TRUE,
                           thresholdrange=NULL,
                           main="Diagnostic Test Accuracy Meta-Analysis",
                           studyCI=FALSE,
                           conflevel=0.95,
                           studylabels=FALSE,
                           ...) {
+  if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+      conflevel <= 0 || conflevel >= 1) {
+    stop("conflevel must be a single number in (0, 1).")
+  }
   size    <- match.arg(size)
   symbol  <- match.arg(symbol)
   HH      <- x$data
@@ -118,41 +126,18 @@ plot.HoyerAFT <- function(x,
   pct <- getWEIGHTS(HH,size)
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  pointsXY(x = 1-x$data$spec, 
-           y = x$data$sens, 
-           symbol = symbol, 
-           scale = scale*0.5,
-           cex.x = pct$sp,
-           cex.y = pct$se,
-           col="darkgray")
-  symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-  if(studyCI==TRUE) {
-    forestci <- getForestSensSpec(xdata=x$data,
-                                  conflevel=conflevel)$XP[,c("sens",
-                                                             "spec",
-                                                             "Sens_LCI",
-                                                             "Sens_UCI",
-                                                             "Spec_LCI",
-                                                             "Spec_UCI")]
-    drawStudyPointCI(x = 1 - forestci$spec,
-                     y = forestci$sens,
-                     sens_lower = forestci$Sens_LCI,
-                     sens_upper = forestci$Sens_UCI,
-                     spec_lower = forestci$Spec_LCI,
-                     spec_upper = forestci$Spec_UCI,
-                     symbol = symbol,
-                     col = "darkgray",
-                     scale = scale * 0.5,
-                     cex.x = pct$sp,
-                     cex.y = pct$se)}
-  if(studylabels==TRUE){
-    graphics::text(x = 1-x$data$spec,
-                   y = x$data$sens,
-                   cex = 1,
-                   pos = 4,
-                   col = "darkgray",
-                   labels = x$data$study)
-  }
+  # Plot study level estimates 
+  xspec <- x$data$spec
+  xsens <- x$data$sens
+  pctsp <- pct$sp
+  pctse <- pct$se
+  xstud <- x$data$study
+  xdata <- x$data
+  symb <- plotStudyLevelEstimates(xsens=xsens,xspec=xspec,xstud=xstud,xdata=xdata,
+                                  symbol=symbol,pctse=pctse,pctsp=pctsp,
+                                  scale=scale,col="darkgray",
+                                  conflevel=conflevel,studyCI=studyCI,
+                                  studylabels=studylabels,LCA=FALSE)
   # Add lines
   studies <- unique(HH$study)
   for(i in seq_along(studies)) {
@@ -203,8 +188,8 @@ plot.HoyerAFT <- function(x,
     roc_points <- data.frame(fpr =1-stats::plogis((beta0-log(xx))/lambda0),
                              sens=1-stats::plogis((beta1-log(xx))/lambda1))}
   ##########
-  points(roc_points, type="l", lwd=2,ann=FALSE)###
-  # Add summary point
+  if(isTRUE(HSROC)){
+    points(roc_points, type="l", lwd=2,ann=FALSE)###
   # Add the legend
   legend("bottomright",
          bty ="n",
@@ -213,5 +198,6 @@ plot.HoyerAFT <- function(x,
          lty = c(NA,1,NA),
          lwd = c(NA,2,NA),
          col = c(NA,"black","darkgray"))
+  }
   invisible(NULL)
 }

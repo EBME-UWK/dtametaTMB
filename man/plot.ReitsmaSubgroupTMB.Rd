@@ -8,7 +8,7 @@
   x,
   symbol = NULL,
   scale = 0.02,
-  size = c("fisher", "fisher_revman", "equal", "sampsize", "se", "sampsize_revman",
+  size = c("equal", "fisher", "fisher_revman", "sampsize", "se", "sampsize_revman",
     "se_revman"),
   main = "Diagnostic Test Accuracy Meta-Analysis",
   col = NULL,
@@ -48,7 +48,7 @@ to constrain logit
 sensitivity and/or logit specificity to a common value across
 subgroups, weights for the constrained outcome dimension(s) instead
 sum to 100 across all studies and subgroups combined, reflecting
-that all studies then inform a single shared parameter. Default.}
+that all studies then inform a single shared parameter.}
 \item{"fisher_revman"}{
 Horizontal and vertical symbol dimensions are based on the same
 per-study percentage contributions to the logit sensitivity and
@@ -56,7 +56,7 @@ logit specificity Fisher information as \code{size = "fisher"}.
 These percentages are then converted to graphical dimensions
 using the same RevMan-style normalization applied under
 \code{"sampsize_revman"} and \code{"se_revman"}.}
-\item{"equal"}{All studies shown with equal size.}
+\item{"equal"}{All studies shown with equal size. Default.}
 \item{"sampsize"}{
 Horizontal and vertical symbol dimensions are proportional to the
 relative numbers of non-diseased and diseased participants,

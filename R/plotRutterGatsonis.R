@@ -106,6 +106,10 @@ plot.RutterGatsonis <- function(x,
                                 studyCI=FALSE,
                                 studylabels=FALSE,
                                 ...) {
+  if (!is.numeric(conflevel) || length(conflevel) != 1L ||
+      conflevel <= 0 || conflevel >= 1) {
+    stop("conflevel must be a single number in (0, 1).")
+  }
   size    <- match.arg(size)
   symbol  <- match.arg(symbol)
   warn_unestimable_sroc_points(x$data)
@@ -119,6 +123,7 @@ plot.RutterGatsonis <- function(x,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
+  tryCatch(
   if(size %in% c("fisher","fisher_revman")){
     Y_pw  <- reshapeX_REIT(X=x$data)
     X_pw  <- cbind(Y_pw$sens,Y_pw$spec)
@@ -179,47 +184,29 @@ plot.RutterGatsonis <- function(x,
       pct$se   <- (4+c_fisher*pct$se)/10
       pct$sp   <- (4+c_fisher*pct$sp)/10
     }
-  } else {
+  }, error = function(e) {
+    warning(
+      "Fisher-information study sizing could not be calculated. ",
+      "Equal study-symbol sizing was used instead. Original error: ",
+      conditionMessage(e)) 
+    pct <- getWEIGHTS(xdata=x$data,size="equal")})
+  if(!size %in% c("fisher","fisher_revman")){
     pct <- getWEIGHTS(xdata=x$data,size=size)
   }
   # Plot study level estimates 
-  # Plot study level estimates 
-  pointsXY(x = 1-x$data$spec, 
-           y = x$data$sens, 
-           symbol = symbol, 
-           scale = scale*0.5,
-           cex.x = pct$sp,
-           cex.y = pct$se,
-           col="darkgray")
-  symb <- switch(symbol, rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-  if(studyCI==TRUE) {
-    forestci <- getForestSensSpec(xdata=x$data,
-                                  conflevel=conflevel)$XP[,c("sens",
-                                                             "spec",
-                                                             "Sens_LCI",
-                                                             "Sens_UCI",
-                                                             "Spec_LCI",
-                                                             "Spec_UCI")]
-    drawStudyPointCI(x = 1 - forestci$spec,
-                     y = forestci$sens,
-                     sens_lower = forestci$Sens_LCI,
-                     sens_upper = forestci$Sens_UCI,
-                     spec_lower = forestci$Spec_LCI,
-                     spec_upper = forestci$Spec_UCI,
-                     symbol = symbol,
-                     col = "darkgray",
-                     scale = scale * 0.5,
-                     cex.x = pct$sp,
-                     cex.y = pct$se)}
-  if(studylabels==TRUE){
-    graphics::text(x = 1-x$data$spec,
-                   y = x$data$sens,
-                   cex = 1,
-                   pos = 4,
-                   col = "darkgray",
-                   labels = x$data$study)} 
+  xspec <- x$data$spec
+  xsens <- x$data$sens
+  pctsp <- pct$sp
+  pctse <- pct$se
+  xstud <- x$data$study
+  xdata <- x$data
+  symb <- plotStudyLevelEstimates(xsens=xsens,xspec=xspec,xstud=xstud,xdata=xdata,
+                                  symbol=symbol,pctse=pctse,pctsp=pctsp,
+                                  scale=scale,col="darkgray",
+                                  conflevel=conflevel,studyCI=studyCI,
+                                  studylabels=studylabels,LCA=FALSE)
   # Add the ROC curve
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     points(roc_points2, type="l", lwd=2,ann=FALSE)###
   # Add the legend 
     legend("bottomright", 

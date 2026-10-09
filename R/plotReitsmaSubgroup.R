@@ -27,7 +27,7 @@
 #'      sensitivity and/or logit specificity to a common value across
 #'      subgroups, weights for the constrained outcome dimension(s) instead
 #'      sum to 100 across all studies and subgroups combined, reflecting
-#'      that all studies then inform a single shared parameter. Default.}
+#'      that all studies then inform a single shared parameter.}
 #'    \item{"fisher_revman"}{
 #'       Horizontal and vertical symbol dimensions are based on the same
 #'       per-study percentage contributions to the logit sensitivity and
@@ -35,7 +35,7 @@
 #'       These percentages are then converted to graphical dimensions
 #'       using the same RevMan-style normalization applied under
 #'       \code{"sampsize_revman"} and \code{"se_revman"}.}
-#'    \item{"equal"}{All studies shown with equal size.}
+#'    \item{"equal"}{All studies shown with equal size. Default.}
 #'    \item{"sampsize"}{
 #'      Horizontal and vertical symbol dimensions are proportional to the
 #'      relative numbers of non-diseased and diseased participants,
@@ -136,7 +136,7 @@
 plot.ReitsmaSubgroup <- function(x,
                                  symbol=NULL,
                                  scale=0.02, 
-                                 size=c("fisher","fisher_revman","equal","sampsize","se","sampsize_revman","se_revman"), 
+                                 size=c("equal","fisher","fisher_revman","sampsize","se","sampsize_revman","se_revman"), 
                                  main="Diagnostic Test Accuracy Meta-Analysis",
                                  col=NULL,
                                  nudge_legend=-0.4,
@@ -178,6 +178,7 @@ plot.ReitsmaSubgroup <- function(x,
   symbols2 <- aes$symbols2
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
+  tryCatch(
   if(size %in% c("fisher","fisher_revman")){
     nstudy<- nrow(x$data)
     Y_pw  <- reshapeX_REIT(X=x$data)
@@ -302,8 +303,14 @@ plot.ReitsmaSubgroup <- function(x,
       pct$se   <- (4+c_fisher*pct$se)/10
       pct$sp   <- (4+c_fisher*pct$sp)/10
     }
-  } else {
-  pct <- getWEIGHTS(xdata=x$data,size=size)
+  }, error = function(e) {
+    warning(
+      "Fisher-information study sizing could not be calculated. ",
+      "Equal study-symbol sizing was used instead. Original error: ",
+      conditionMessage(e)) 
+    pct <- getWEIGHTS(xdata=x$data,size="equal")})
+  if(!size %in% c("fisher","fisher_revman")){
+    pct <- getWEIGHTS(xdata=x$data,size=size)
   }
   ####
   oldpar <- par(no.readonly = TRUE)
@@ -320,46 +327,16 @@ plot.ReitsmaSubgroup <- function(x,
     pctsp <- pct$sp[sg]
     pctse <- pct$se[sg]
     xstud <- x$data$study[sg]
+    xdata <- x$data[sg,]
     ####
-    pointsXY(x=1-xspec, 
-             y=xsens, 
-             symbol = symbols2[i], 
-             scale = scale*0.5,
-             cex.x = pctsp,
-             cex.y = pctse,
-             col=col2[i])
-    symb[i] <- switch(symbols2[i], rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-    ###
-    if(studyCI==TRUE) {
-      forestci <- getForestSensSpec(xdata=x$data[sg,],
-                                    conflevel=conflevel)$XP[,c("sens",
-                                                               "spec",
-                                                               "Sens_LCI",
-                                                               "Sens_UCI",
-                                                               "Spec_LCI",
-                                                               "Spec_UCI")]
-      drawStudyPointCI(x = 1 - forestci$spec,
-                       y = forestci$sens,
-                       sens_lower = forestci$Sens_LCI,
-                       sens_upper = forestci$Sens_UCI,
-                       spec_lower = forestci$Spec_LCI,
-                       spec_upper = forestci$Spec_UCI,
-                       symbol = symbols2[i],
-                       col = col2[i],
-                       scale = scale * 0.5,
-                       cex.x = pctsp,
-                       cex.y = pctse)}
-    if(studylabels==TRUE){
-      graphics::text(x = 1-xspec,
-                     y = xsens,
-                     cex = 1,
-                     pos = 4,
-                     col = col2[i],
-                     labels = xstud)
-    }
+    symb[i] <- plotStudyLevelEstimates(xsens=xsens,xspec=xspec,xstud=xstud,xdata=xdata,
+                                       symbol=symbols2[i],pctse=pctse,pctsp=pctsp,
+                                       scale=scale,col=col2[i],
+                                       conflevel=conflevel,studyCI=studyCI,
+                                       studylabels=studylabels,LCA=FALSE)
   }
   # Add the ROC curve
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     for(i in seq_along(sub)){
       roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered[sub[i],"Lambda"],
                                   beta=x$RutterGatsonis_recovered[sub[i],"beta"],
@@ -417,7 +394,7 @@ plot.ReitsmaSubgroup <- function(x,
     lines(region$pred, lty=3, lwd=2, col=col2[i])
   }
   ## Connect studies
-  if(connectstudies){
+  if(isTRUE(connectstudies)){
     for(st in unique(x$data$study)){
       tmp <- x$data[x$data$study == st, ]
       tmp <- tmp[order(tmp$subgroup), ]
@@ -431,7 +408,7 @@ plot.ReitsmaSubgroup <- function(x,
   # Add the legend 
   conf_lab <- paste0(round(100 * conflevel), "% Confidence region")
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     legend("bottomright", 
            bty ="n",
            legend = c(NA,

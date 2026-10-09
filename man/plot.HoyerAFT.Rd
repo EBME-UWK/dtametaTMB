@@ -9,6 +9,7 @@
   symbol = c("rectangle", "ellipse", "diamond", "triangle", "cross", "plus", "star"),
   scale = 0.02,
   size = c("equal", "sampsize", "se", "sampsize_revman", "se_revman"),
+  HSROC = TRUE,
   thresholdrange = NULL,
   main = "Diagnostic Test Accuracy Meta-Analysis",
   studyCI = FALSE,
@@ -65,6 +66,9 @@ respectively. A common analysis-specific scaling constant is chosen
 so that the average larger dimension measure across studies equals
 eight before adding the fixed baseline dimension.}
 }}
+
+\item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.
+Default is \code{TRUE}.}
 
 \item{thresholdrange}{A numeric vector of length 2 giving the range of
 threshold over which sensitivities and specificities are predicted.

@@ -168,51 +168,21 @@ plot.ReitsmaSubgroupLCA <- function(x,
   # Plot study level estimates 
   for (i in seq_along(sub)){
     sg    <- x$data$subgroup==sub[i]
-    xspec <- x$data$spec[sg]
-    xsens <- x$data$sens[sg]
+    xspec <- x$data$spec_eb[sg]
+    xsens <- x$data$sens_eb[sg]
     pctsp <- pct$sp[sg]
     pctse <- pct$se[sg]
     xstud <- x$data$study[sg]
+    xdata <- x$data[sg,]
     ####
-    pointsXY(x=1-xspec, 
-             y=xsens, 
-             symbol = symbols2[i], 
-             scale = scale*0.5,
-             cex.x = pctsp,
-             cex.y = pctse,
-             col=col2[i])
-    symb[i] <- switch(symbols2[i], rectangle = 0, plus = 3, cross = 4, star = 8, ellipse = 1, diamond = 5, triangle = 2)
-    ###
-    if(studyCI==TRUE) {
-      forestci <- getForestSensSpecLCA(xdata=x$data[sg,],
-                                       conflevel=conflevel)$XP[,c("sens",
-                                                                  "spec",
-                                                                  "Sens_LCI",
-                                                                  "Sens_UCI",
-                                                                  "Spec_LCI",
-                                                                  "Spec_UCI")]
-      drawStudyPointCI(x = 1 - forestci$spec,
-                       y = forestci$sens,
-                       sens_lower = forestci$Sens_LCI,
-                       sens_upper = forestci$Sens_UCI,
-                       spec_lower = forestci$Spec_LCI,
-                       spec_upper = forestci$Spec_UCI,
-                       symbol = symbols2[i],
-                       col = col2[i],
-                       scale = scale * 0.5,
-                       cex.x = pctsp,
-                       cex.y = pctse)}
-    if(studylabels==TRUE){
-      graphics::text(x = 1-xspec,
-                     y = xsens,
-                     cex = 1,
-                     pos = 4,
-                     col = col2[i],
-                     labels = xstud)
-    }
+    symb[i] <- plotStudyLevelEstimates(xsens=xsens,xspec=xspec,xstud=xstud,xdata=xdata,
+                                       symbol=symbols2[i],pctse=pctse,pctsp=pctsp,
+                                       scale=scale,col=col2[i],
+                                       conflevel=conflevel,studyCI=studyCI,
+                                       studylabels=studylabels,LCA=TRUE)
   }
   # Add the ROC curve
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     for(i in seq_along(sub)){
       roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered[sub[i],"Lambda"],
                                   beta=x$RutterGatsonis_recovered[sub[i],"beta"],
@@ -255,7 +225,7 @@ plot.ReitsmaSubgroupLCA <- function(x,
     lines(region$pred, lty=3, lwd=2, col=col2[i])
   }
   ## Connect studies
-  if(connectstudies){
+  if(isTRUE(connectstudies)){
     for(st in unique(x$data$study)){
       tmp <- x$data[x$data$study == st, ]
       tmp <- tmp[order(tmp$subgroup), ]
@@ -269,7 +239,7 @@ plot.ReitsmaSubgroupLCA <- function(x,
   # Add the legend 
   conf_lab <- paste0(round(100 * conflevel), "% Confidence region")
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
-  if(HSROC==TRUE){
+  if(isTRUE(HSROC)){
     legend("bottomright", 
            bty ="n",
            legend = c(NA,
