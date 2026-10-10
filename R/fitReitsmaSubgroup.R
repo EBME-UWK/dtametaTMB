@@ -406,6 +406,14 @@ fitReitsmaSubgroup <- function(data,
       "Consider checking starting values, model specification, or data quality."
     )
   }
+  
+  if (!MA_Y_nu$sdr$pdHess) {
+    warning(
+      "The Hessian matrix is not positive definite. ",
+      "Parameter estimates and standard errors may be unreliable. ",
+      "Consider checking model specification, data quality, or potential identifiability issues."
+    )
+  }
   ### SAS variance covariance matrix
   theta_nu   <- glmmTMB::getME(MA_Y_nu,"theta")
   beta_fix_nu<- glmmTMB::fixef(MA_Y_nu)$cond
@@ -474,6 +482,13 @@ fitReitsmaSubgroup <- function(data,
       "TMB optimization did not converge. ",
       "Estimates may be unreliable. ",
       "Consider checking starting values, model specification, or data quality."
+    )
+  }
+  if (!MA_Y_mu$sdr$pdHess) {
+    warning(
+      "The Hessian matrix is not positive definite. ",
+      "Parameter estimates and standard errors may be unreliable. ",
+      "Consider checking model specification, data quality, or potential identifiability issues."
     )
   }
   ### SAS variance covariance matrix ###

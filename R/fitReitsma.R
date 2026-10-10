@@ -178,6 +178,14 @@ fitReitsma <- function(data,
       "Consider checking starting values, model specification, or data quality."
     )
   }
+  
+  if (!MA_Y$sdr$pdHess) {
+    warning(
+      "The Hessian matrix is not positive definite. ",
+      "Parameter estimates and standard errors may be unreliable. ",
+      "Consider checking model specification, data quality, or potential identifiability issues."
+    )
+  }
   ma_Y      <- summary(MA_Y)
   qq        <- stats::qnorm(1-(1-conflevel)/2)
   ### Sensitivity and Specificity

@@ -245,6 +245,13 @@ fitRutterGatsonisReg <- function(data,
     )
   }
   
+  if (!sdreport(obj)$pdHess) {
+    warning(
+      "The Hessian matrix is not positive definite. ",
+      "Parameter estimates and standard errors may be unreliable. ",
+      "Consider checking model specification, data quality, or potential identifiability issues."
+    )
+  }
   # Standard errors
   rep  <- TMB::sdreport(obj) 
   rep2 <- summary(rep,select="report")

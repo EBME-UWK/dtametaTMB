@@ -160,6 +160,14 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NULL, verbo
     )
   }
   
+  if (!sdreport(obj)$pdHess) {
+    warning(
+      "The Hessian matrix is not positive definite. ",
+      "Parameter estimates and standard errors may be unreliable. ",
+      "Consider checking model specification, data quality, or potential identifiability issues."
+    )
+  }
+  
   # Reports
   rep  <- TMB::sdreport(obj)
   rep2 <- summary(rep, select = "report")
