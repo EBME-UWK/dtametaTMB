@@ -164,7 +164,7 @@ restructure_data <- function(data,
   count_cols <- c("TP", "TN", "FP", "FN")
   # Check for non-integers or negative values
   invalid_counts <- sapply(dat[count_cols], function(x) {
-    any(x < 0 | x != floor(x), na.rm = TRUE)
+    any(!is.finite(x) | x < 0 | x != floor(x), na.rm = TRUE)
   })
 
   if (any(invalid_counts)) {

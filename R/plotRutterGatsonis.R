@@ -123,8 +123,9 @@ plot.RutterGatsonis <- function(x,
   ### Plot coordinate system
   plot_SESPGRID(main=main)
   # Plot study level estimates 
-  tryCatch(
   if(size %in% c("fisher","fisher_revman")){
+  pct <- tryCatch(
+  {
     Y_pw  <- reshapeX_REIT(X=x$data)
     X_pw  <- cbind(Y_pw$sens,Y_pw$spec)
     XT_pw <- t(X_pw)
@@ -184,13 +185,15 @@ plot.RutterGatsonis <- function(x,
       pct$se   <- (4+c_fisher*pct$se)/10
       pct$sp   <- (4+c_fisher*pct$sp)/10
     }
+    if (!all(is.finite(as.matrix(pct)))) stop("non-finite Fisher weights")
+    pct
   }, error = function(e) {
     warning(
       "Fisher-information study sizing could not be calculated. ",
       "Equal study-symbol sizing was used instead. Original error: ",
       conditionMessage(e)) 
-    pct <- getWEIGHTS(xdata=x$data,size="equal")})
-  if(!size %in% c("fisher","fisher_revman")){
+    getWEIGHTS(xdata=x$data,size="equal")})
+  } else {
     pct <- getWEIGHTS(xdata=x$data,size=size)
   }
   # Plot study level estimates 

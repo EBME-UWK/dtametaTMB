@@ -156,8 +156,10 @@ plot.RutterGatsonisSubgroup <- function(x,
        pty="s")   # enlarge right margin
    plot_SESPGRID(main=main)
    # Data points
-   tryCatch(
+   
    if(size %in% c("fisher","fisher_revman")){
+   pct <- tryCatch(
+   {  
      Y_pw  <- reshapeX_REIT(X=x$data)
      X_pw <- matrix(0,nrow=2*nstudy,ncol=2*nsub)
      col_names <- unlist(lapply(sub,function(sg) {c(paste0("mu_A.", sg),paste0("mu_B.", sg))}))
@@ -246,13 +248,15 @@ plot.RutterGatsonisSubgroup <- function(x,
        pct$se   <- (4+c_fisher*pct$se)/10
        pct$sp   <- (4+c_fisher*pct$sp)/10
      }
+     if (!all(is.finite(as.matrix(pct)))) stop("non-finite Fisher weights")
+     pct
    }, error = function(e) {
      warning(
        "Fisher-information study sizing could not be calculated. ",
        "Equal study-symbol sizing was used instead. Original error: ",
        conditionMessage(e)) 
-     pct <- getWEIGHTS(xdata=x$data,size="equal")})
-   if(!size %in% c("fisher","fisher_revman")){
+     getWEIGHTS(xdata=x$data,size="equal")})
+   } else {
      pct <- getWEIGHTS(xdata=x$data,size=size)
    }
    ###

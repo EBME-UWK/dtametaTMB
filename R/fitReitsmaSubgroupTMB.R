@@ -731,8 +731,9 @@ plot.ReitsmaSubgroupTMB <- function(x,
   symbols2 <- aes$symbols2
   symb <- vector(mode="integer",length=nsub)
   # Calculations for percentage weights
-  tryCatch(
   if(size %in% c("fisher","fisher_revman")){
+  pct <- tryCatch(
+  {
     nstudy<- nrow(x$data)
     Y_pw  <- reshapeX_REIT(X=x$data)
     if(is.null(x$sensspec_constrain)){
@@ -861,13 +862,15 @@ plot.ReitsmaSubgroupTMB <- function(x,
       pct$se   <- (4+c_fisher*pct$se)/10
       pct$sp   <- (4+c_fisher*pct$sp)/10
     }
+    if (!all(is.finite(as.matrix(pct)))) stop("non-finite Fisher weights")
+    pct
   }, error = function(e) {
       warning(
         "Fisher-information study sizing could not be calculated. ",
         "Equal study-symbol sizing was used instead. Original error: ",
         conditionMessage(e)) 
-      pct <- getWEIGHTS(xdata=x$data,size="equal")})
-  if(!size %in% c("fisher","fisher_revman")){
+      getWEIGHTS(xdata=x$data,size="equal")})
+  } else {
     pct <- getWEIGHTS(xdata=x$data,size=size)
   }
   ####
