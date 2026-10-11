@@ -133,6 +133,28 @@ anova_lrt <- function(object, ..., test = "Chisq") {
 #' Warnings are issued when models have identical numbers of parameters or
 #' when the log-likelihood decreases for a more complex model, suggesting
 #' that the nesting assumptions may be violated.
+#' 
+#' @section Caution for variance-component tests:
+#'
+#' The usual chi-squared reference distribution requires appropriate
+#' regularity conditions. In particular, these conditions may not hold when
+#' the null hypothesis constrains one or more random-effects variance
+#' components to zero, because variances are non-negative and zero lies on
+#' the boundary of the parameter space.
+#'
+#' This issue can arise when comparing Reitsma models that constrain
+#' sigma2_A or sigma2_B, or Rutter-Gatsonis models that constrain
+#' sigma2_alpha or sigma2_theta. Tests involving multiple variance
+#' components constrained to zero may require additional care. In such
+#' cases, the asymptotic reference distribution may be a mixture of
+#' chi-squared distributions rather than a single chi-squared distribution.
+#' The appropriate distribution depends on the model and the constraints
+#' being tested.
+#'
+#' The implementation uses the ordinary chi-squared reference distribution
+#' and does not apply a boundary-adjusted reference distribution. Therefore,
+#' the reported p-values may not be appropriately calibrated for tests of
+#' variance components on the boundary.
 #'
 #' @param object A fitted model object.
 #' @param ... Additional fitted model objects to be compared.

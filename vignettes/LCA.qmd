@@ -581,6 +581,8 @@ forest(papLCA4)
 
 ## How do I apply these methods to the `schuetz` data set?
 
+Some models did not yield a positive-definite Hessian. Therefore, the results should be treated with caution.
+
 ```{r}
 #| echo: TRUE
 #| fig.height: 6
@@ -609,6 +611,8 @@ plot(schuetzLCA2,
      size="eb",
      col=c("red","black"))
 
+anova(schuetzLCA,schuetzLCA2)
+
 
 schuetzLCA3 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      y11=TP,
@@ -635,10 +639,7 @@ schuetzLCA4 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      variances="unequal",
                                      prev_variances="common",
                                      study=study)
-
-anova(schuetzLCA ,schuetzLCA2)
-anova(schuetzLCA2,schuetzLCA3)
-anova(schuetzLCA2,schuetzLCA4)
+schuetzLCA4
 
 schuetzLCA5 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      y11=TP,
@@ -651,7 +652,6 @@ schuetzLCA5 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      prev_variances="common",
                                      study=study)
 schuetzLCA5
-anova(schuetzLCA5,schuetzLCA4)
 
 schuetzLCA6 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      y11=TP,
@@ -664,7 +664,6 @@ schuetzLCA6 <- fitReitsmaSubgroupLCA(data=schuetz,
                                      prev_variances="common",
                                      study=study)
 schuetzLCA6
-anova(schuetzLCA6,schuetzLCA4)
 ```
 
 ## References

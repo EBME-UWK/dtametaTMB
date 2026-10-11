@@ -282,11 +282,11 @@ ruttergatsoniscons <- fitRutterGatsonis(data = RF,
 summary(ruttergatsoniscons)
 ```
 
-Note that we can also compare the constrained model with the full model using likelihood ratio tests.
+<!-- Note that we can also compare the constrained model with the full model using likelihood ratio tests. -->
 
-```{r}
-anova(ruttergatsoniscons,ruttergatsonis)
-```
+<!-- ```{r} -->
+<!-- anova(ruttergatsoniscons,ruttergatsonis) -->
+<!-- ``` -->
 
 ## How do I use the Hoyer model?
 
