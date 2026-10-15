@@ -13,15 +13,15 @@
 #' are converted to full graphical dimensions according to
 #'
 #' \deqn{
-#' d_{ij} = \frac{4 + c q_{ij}}{10},
+#' d_{ij} = \frac{3 + c q_{ij}}{10},
 #' }
 #'
 #' where a common multiplier \eqn{c} is chosen such that the mean
-#' study-level maximum of \eqn{c q_{ij}} is 8:
+#' study-level maximum of \eqn{c q_{ij}} is 9:
 #'
 #' \deqn{
 #' c =
-#' \frac{8}{
+#' \frac{9}{
 #' \operatorname{mean}_i
 #' \left\{
 #' \max(q_{i,\mathrm{sp}}, q_{i,\mathrm{se}})
@@ -86,18 +86,18 @@ getWEIGHTSLCA <- function(xdata,size){
     invvar_spec[!is.finite(invvar_spec) | invvar_spec < 0] <- 0
     invse_sens <- sqrt(invvar_sens)
     invse_spec <- sqrt(invvar_spec)
-    c_eb   <- 8/mean(pmax(invse_sens,invse_spec))
+    c_eb   <- 9/mean(pmax(invse_sens,invse_spec))
     if(!is.finite(c_eb)){c_eb <- 0}
-    se  <- (4 + c_eb*invse_sens)/10 # revman_rescale: 10
-    sp  <- (4 + c_eb*invse_spec)/10 # revman_rescale: 10
+    se  <- (3 + c_eb*invse_sens)/10 # revman_rescale: 10
+    sp  <- (3 + c_eb*invse_spec)/10 # revman_rescale: 10
   }
   if(size=="sampsize_revman"){
     n       <- xdata$n
     n[n==0] <- 1
     sn      <- sqrt(n)
-    c_sn    <- 8/mean(sn)
-    se   <- (4 + c_sn*sn)/10 # revman_rescale: 10
-    sp   <- (4 + c_sn*sn)/10 # revman_rescale: 10
+    c_sn    <- 9/mean(sn)
+    se   <- (3 + c_sn*sn)/10 # revman_rescale: 10
+    sp   <- (3 + c_sn*sn)/10 # revman_rescale: 10
   }
   pct <- data.frame(sp=sp,
                     se=se)

@@ -41,7 +41,7 @@
 #'       dimensions are based on the square roots of the numbers of
 #'       non-diseased and diseased participants, respectively. A common
 #'       analysis-specific scaling constant is chosen so that the average
-#'       larger dimension measure across studies equals eight before adding
+#'       larger dimension measure across studies equals nine before adding
 #'       the fixed baseline dimension.}
 #'    \item{"se_revman"}{
 #'       RevMan-style inverse-standard-error scaling. Horizontal and
@@ -49,7 +49,7 @@
 #'       errors of observed logit specificity and logit sensitivity,
 #'       respectively. A common analysis-specific scaling constant is chosen
 #'       so that the average larger dimension measure across studies equals
-#'       eight before adding the fixed baseline dimension.}
+#'       nine before adding the fixed baseline dimension.}
 #'  } 
 #' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
 #'   Default is \code{TRUE}.
@@ -181,9 +181,9 @@ plot.RutterGatsonis <- function(x,
     pct$se <- pmax(0,pct$se)
     pct$sp <- pmax(0,pct$sp)
     if(size=="fisher_revman"){
-      c_fisher <- 8/mean(pmax(pct$se,pct$sp))
-      pct$se   <- (4+c_fisher*pct$se)/10
-      pct$sp   <- (4+c_fisher*pct$sp)/10
+      c_fisher <- 9/mean(pmax(pct$se,pct$sp))
+      pct$se   <- (3+c_fisher*pct$se)/10
+      pct$sp   <- (3+c_fisher*pct$sp)/10
     }
     if (!all(is.finite(as.matrix(pct)))) stop("non-finite Fisher weights")
     pct

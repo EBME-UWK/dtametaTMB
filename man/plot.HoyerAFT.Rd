@@ -56,7 +56,7 @@ RevMan-style sample-size scaling. Horizontal and vertical symbol
 dimensions are based on the square roots of the numbers of
 non-diseased and diseased participants, respectively. A common
 analysis-specific scaling constant is chosen so that the average
-larger dimension measure across studies equals eight before adding
+larger dimension measure across studies equals nine before adding
 the fixed baseline dimension.}
 \item{"se_revman"}{
 RevMan-style inverse-standard-error scaling. Horizontal and
@@ -64,7 +64,7 @@ vertical symbol dimensions are based on approximate inverse standard
 errors of observed logit specificity and logit sensitivity,
 respectively. A common analysis-specific scaling constant is chosen
 so that the average larger dimension measure across studies equals
-eight before adding the fixed baseline dimension.}
+nine before adding the fixed baseline dimension.}
 }}
 
 \item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.

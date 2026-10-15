@@ -59,7 +59,7 @@ RevMan-style graphical scaling applied to the inverse conditional
 posterior standard errors of the study-specific empirical Bayes
 logit-specificity and logit-sensitivity estimates. A common
 analysis-specific scaling constant is chosen so that the average
-larger dimension measure across studies equals eight before adding
+larger dimension measure across studies equals nine before adding
 the fixed baseline dimension. This is an analogous graphical extension
 for latent-class models and is not an original Cochrane latent-class
 weighting method.}

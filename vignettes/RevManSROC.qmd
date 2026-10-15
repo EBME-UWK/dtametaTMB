@@ -77,29 +77,29 @@ For $I$ studies, the analysis-specific constant is
 
 $$
 c =
-\frac{8}
+\frac{9}
 {\frac{1}{I}\sum_{i=1}^{I}m_i}
 =
-\frac{8I}
+\frac{9I}
 {\sum_{i=1}^{I}\max(q_{Se,i},q_{Sp,i})}.
 $$
 
 The unrescaled full horizontal and vertical dimensions are then
 
 $$
-d_{Sp,i} = 4 + c \cdot q_{Sp,i}
+d_{Sp,i} = 3 + c \cdot q_{Sp,i}
 $$
 
 and
 
 $$
-d_{Se,i} = 4 + c \cdot q_{Se,i}.
+d_{Se,i} = 3 + c \cdot q_{Se,i}.
 $$
 
 This normalization has two useful properties:
 
-1. the average larger variable-dimension component, $c\cdot m_i$ equals 8;
-2. the fixed baseline of 4 keeps a study marker visible when its raw sizing measure is zero in one direction.
+1. the average larger variable-dimension component, $c\cdot m_i$ equals 9;
+2. the fixed baseline of 3 keeps a study marker visible when its raw sizing measure is zero in one direction.
 
 ## RevMan-style sample-size scaling
 
@@ -119,7 +119,7 @@ The analysis-specific sample-size constant is therefore
 
 $$
 c_{SS} =
-\frac{8}
+\frac{9}
 {\frac{1}{I}\sum_{i=1}^{I}
 \max\left(\sqrt{n_{1i}},\sqrt{n_{0i}}\right)}.
 $$
@@ -127,13 +127,13 @@ $$
 The corresponding full dimensions are
 
 $$
-d_{Se,i} = 4 + c_{SS}\cdot\sqrt{n_{1i}}
+d_{Se,i} = 3 + c_{SS}\cdot\sqrt{n_{1i}}
 $$
 
 and
 
 $$
-d_{Sp,i} = 4 + c_{SS}\cdot\sqrt{n_{0i}}.
+d_{Sp,i} = 3 + c_{SS}\cdot\sqrt{n_{0i}}.
 $$
 
 Consequently, a study with more diseased than non-diseased participants is taller than it is wide, whereas a study with more non-diseased than diseased participants is wider than it is tall.
@@ -191,7 +191,7 @@ The analysis-specific constant is
 
 $$
 c_{SE} =
-\frac{8}
+\frac{9}
 {\frac{1}{I}\sum_{i=1}^{I}
 \max(q_{Se,i},q_{Sp,i})}.
 $$
@@ -199,13 +199,13 @@ $$
 The full dimensions are
 
 $$
-d_{Se,i} = 4 + c_{SE}\cdot q_{Se,i}
+d_{Se,i} = 3 + c_{SE}\cdot q_{Se,i}
 $$
 
 and
 
 $$
-d_{Sp,i} = 4 + c_{SE}\cdot q_{Sp,i}.
+d_{Sp,i} = 3 + c_{SE}\cdot q_{Sp,i}.
 $$
 
 For `size = "se_revman"`, if any of the four cell counts in a study is zero, 0.5 is added to all four counts before the raw horizontal and vertical measures are calculated. The correction is used solely for graphical sizing and does not alter the cell counts supplied to the fitted binomial likelihood.
@@ -217,13 +217,13 @@ By contrast, `size = "se"` does not apply a continuity correction. A boundary es
 The dimensions above describe the recovered RevMan-style relative geometry. Before the dimensions are passed to the plotting routine, `dtametaTMB` divides them by 10:
 
 $$
-\widetilde d_{Sp,i} = \frac{4+c\cdot q_{Sp,i}}{10}
+\widetilde d_{Sp,i} = \frac{3+c\cdot q_{Sp,i}}{10}
 $$
 
 and
 
 $$
-\widetilde d_{Se,i} = \frac{4+c\cdot q_{Se,i}}{10}.
+\widetilde d_{Se,i} = \frac{3+c\cdot q_{Se,i}}{10}.
 $$
 
 The divisor of 10 is a package-specific graphical rescaling constant. It places the symbols in a range compatible with the default graphical scale of 0.02 used by the other sizing methods. It does not alter relative widths, heights, or the ordering of study-symbol dimensions.
@@ -302,7 +302,7 @@ n0 <- with(controlled_data, FP + TN)
 # Sample-size measures
 q_ss_se <- sqrt(n1)
 q_ss_sp <- sqrt(n0)
-c_ss <- 8 / mean(pmax(q_ss_se, q_ss_sp))
+c_ss <- 9 / mean(pmax(q_ss_se, q_ss_sp))
 
 # Inverse-standard-error measures
 q_ise_se <- with(
@@ -315,14 +315,14 @@ q_ise_sp <- with(
   sqrt(n0 * spec * (1 - spec))
 )
 
-c_se <- 8 / mean(pmax(q_ise_se, q_ise_sp))
+c_se <- 9 / mean(pmax(q_ise_se, q_ise_sp))
 
 comparison <- data.frame(
   study = controlled_data$study,
-  sample_size_width = (4 + c_ss * q_ss_sp) / 10,
-  sample_size_height = (4 + c_ss * q_ss_se) / 10,
-  inverse_se_width = (4 + c_se * q_ise_sp) / 10,
-  inverse_se_height = (4 + c_se * q_ise_se) / 10
+  sample_size_width = (3 + c_ss * q_ss_sp) / 10,
+  sample_size_height = (3 + c_ss * q_ss_se) / 10,
+  inverse_se_width = (3 + c_se * q_ise_sp) / 10,
+  inverse_se_height = (3 + c_se * q_ise_se) / 10
 )
 
 comparison
@@ -514,13 +514,13 @@ $$
 Because the horizontal and vertical measures are identical, the normalization constant reduces to
 
 $$
-c_n = \frac{8}{\frac{1}{I}\sum_{i=1}^{I}\sqrt{n_i}}.
+c_n = \frac{9}{\frac{1}{I}\sum_{i=1}^{I}\sqrt{n_i}}.
 $$
 
 The resulting horizontal and vertical dimensions are equal
 
 $$
-\widetilde d_i = \frac{4+c_n\cdot\sqrt{n_i}}{10}.
+\widetilde d_i = \frac{3+c_n\cdot\sqrt{n_i}}{10}.
 $$
 If the total sample size $n_i$ is zero, it is replaced by one for graphical sizing before taking the square root. This adjustment affects marker dimensions only.
 
@@ -542,7 +542,7 @@ The analysis-specific constant is
 
 $$
 c_{EB} =
-\frac{8}
+\frac{9}
 {\frac{1}{I}\sum_{i=1}^{I}\max(q_{Se,i},q_{Sp,i})}.
 $$
 
@@ -551,7 +551,7 @@ The package-rescaled dimensions are
 $$
 \widetilde d_{Se,i}
 =
-\frac{4+c_{EB}\cdot q_{Se,i}}{10}
+\frac{3+c_{EB}\cdot q_{Se,i}}{10}
 $$
 
 and
@@ -559,7 +559,7 @@ and
 $$
 \widetilde d_{Sp,i}
 =
-\frac{4+c_{EB}\cdot q_{Sp,i}}{10}.
+\frac{3+c_{EB}\cdot q_{Sp,i}}{10}.
 $$
 
 The empirical Bayes option applies the same graphical normalization principle to latent-class posterior precision. 
@@ -571,7 +571,7 @@ The final graphical normalization was mainly reconstructed from exported RevMan 
   -   separate horizontal and vertical sizing measures;
   -   square-root sample-size scaling;
   -   approximate inverse-logit-standard-error scaling;
-  -   a fixed baseline full dimension of 4;
+  -   a fixed baseline full dimension of 3;
   -   one analysis-specific constant shared by both directions;
   -   normalization based on the mean study-level maximum raw measure;
   -   equal-area rendering of rectangles, ellipses, diamonds, and triangles through shape-specific graphical adjustments;
@@ -585,7 +585,9 @@ For subgroup analyses, `dtametaTMB` calculates one common normalization
 constant across all studies displayed in the plot. Global
 normalization preserves comparison across subgroups, so equal marker
 dimensions correspond to equal raw transformed sample-size or
-inverse-standard-error measures throughout the figure.
+inverse-standard-error measures throughout the figure. This differs from 
+the current RevMan implementation, which calculates the normalization 
+separately within each subgroup.
 
 Physical marker sizes can still differ across plotting devices, export
 formats, panel dimensions, line widths, and rendering systems. The
@@ -604,7 +606,7 @@ for specificity and sensitivity. For each analysis, `dtametaTMB` applies
 
 $$
 c =
-\frac{8}
+\frac{9}
 {\operatorname{mean}_i\left[\max(q_{Se,i},q_{Sp,i})\right]},
 $$
 
@@ -613,11 +615,11 @@ followed by the package-rescaled dimensions
 $$
 \widetilde d_{Se,i}
 =
-\frac{4+cq_{Se,i}}{10}
+\frac{3+cq_{Se,i}}{10}
 \qquad\text{and}\qquad
 \widetilde d_{Sp,i}
 =
-\frac{4+cq_{Sp,i}}{10}.
+\frac{3+cq_{Sp,i}}{10}.
 $$
 
 For `size = "sampsize_revman"`, the raw measures are the square roots of

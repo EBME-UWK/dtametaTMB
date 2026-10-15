@@ -7,15 +7,15 @@
 #' are converted to full graphical dimensions according to
 #'
 #' \deqn{
-#' d_{ij} = \frac{4 + c q_{ij}}{10},
+#' d_{ij} = \frac{3 + c q_{ij}}{10},
 #' }
 #'
 #' where a common multiplier \eqn{c} is chosen such that the mean
-#' study-level maximum of \eqn{c q_{ij}} is 8:
+#' study-level maximum of \eqn{c q_{ij}} is 9.
 #'
 #' \deqn{
 #' c =
-#' \frac{8}{
+#' \frac{9}{
 #' \operatorname{mean}_i
 #' \left\{
 #' \max(q_{i,\mathrm{sp}}, q_{i,\mathrm{se}})
@@ -79,9 +79,9 @@ getWEIGHTS <- function(xdata,size){
     n0[zero_dimension] <- n0[zero_dimension] + 1
     q_se <- sqrt(n1)
     q_sp <- sqrt(n0)
-    c_ss <- 8 / mean(pmax(q_se, q_sp))
-    se <- ( 4 + c_ss * q_se ) / 10 # revman_scale: 10
-    sp <- ( 4 + c_ss * q_sp ) / 10 # revman_scale: 10
+    c_ss <- 9 / mean(pmax(q_se, q_sp))
+    se <- ( 3 + c_ss * q_se ) / 10 # revman_scale: 10
+    sp <- ( 3 + c_ss * q_sp ) / 10 # revman_scale: 10
   }
   if(size=="se_revman") {
     TP <- xdata$TP
@@ -95,9 +95,9 @@ getWEIGHTS <- function(xdata,size){
     TN[zero_cell] <- TN[zero_cell] + 0.5
     q_se <- 1 / sqrt( 1 / TP + 1 / FN)
     q_sp <- 1 / sqrt( 1 / TN + 1 / FP)
-    c_se <- 8 / mean(pmax(q_se, q_sp))
-    se <- ( 4 + c_se * q_se ) / 10 # revman_scale: 10
-    sp <- ( 4 + c_se * q_sp ) / 10 # revman_scale: 10
+    c_se <- 9 / mean(pmax(q_se, q_sp))
+    se <- ( 3 + c_se * q_se ) / 10 # revman_scale: 10
+    sp <- ( 3 + c_se * q_sp ) / 10 # revman_scale: 10
   }
   pct <- data.frame(sp=sp,
                     se=se)
