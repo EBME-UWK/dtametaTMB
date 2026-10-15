@@ -285,15 +285,16 @@ fitRutterGatsonisSubgroup <- function(data,
       "Consider checking starting values, model specification, or data quality."
     )
   }
-  if (!sdreport(obj)$pdHess) {
+
+  # Standard errors
+  rep  <- TMB::sdreport(obj) 
+  if(!rep$pdHess){
     warning(
       "The Hessian matrix is not positive definite. ",
       "Parameter estimates and standard errors may be unreliable. ",
       "Consider checking model specification, data quality, or potential identifiability issues."
     )
   }
-  # Standard errors
-  rep  <- TMB::sdreport(obj) 
   rep1 <- summary(rep,select="report")#p.value=TRUE)
   rep2 <- rename_hsroc_rows(rep1,lsub)
   

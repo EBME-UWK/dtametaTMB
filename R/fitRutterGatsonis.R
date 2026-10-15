@@ -247,15 +247,15 @@ fitRutterGatsonis <- function(data,
     )
   }
   
-  if (!sdreport(obj)$pdHess) {
+  # Reports
+  rep  <- TMB::sdreport(obj)
+  if(!rep$pdHess){
     warning(
       "The Hessian matrix is not positive definite. ",
       "Parameter estimates and standard errors may be unreliable. ",
       "Consider checking model specification, data quality, or potential identifiability issues."
     )
   }
-  # Reports
-  rep  <- TMB::sdreport(obj)
   rep2 <- summary(rep, select = "report")
   
   ### Recover Reitsma parameters

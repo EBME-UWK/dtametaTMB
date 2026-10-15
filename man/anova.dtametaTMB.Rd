@@ -75,6 +75,16 @@ the reported p-values may not be appropriately calibrated for tests of
 variance components on the boundary.
 }
 
+\references{
+Self, S. G. and Liang, K. Y. (1987).
+Asymptotic properties of maximum likelihood estimators and likelihood
+ratio tests under nonstandard conditions.
+\emph{Journal of the American Statistical Association}, 82, 605--610.
+
+Stram, D. O. and Lee, J. W. (1994).
+Variance components testing in the longitudinal mixed effects model.
+\emph{Biometrics}, 50, 1171--1177.
+}
 \seealso{
 \code{\link[=logLik]{logLik()}}, \code{\link[=anova]{anova()}}
 }

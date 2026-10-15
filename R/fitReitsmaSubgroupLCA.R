@@ -368,16 +368,16 @@ fitReitsmaSubgroupLCA <- function(data,
       "Consider checking starting values, model specification, or data quality."
     )
   }
-  if (!sdreport(obj)$pdHess) {
+  
+  # Reports
+  rep  <- TMB::sdreport(obj)
+  if(!rep$pdHess){
     warning(
       "The Hessian matrix is not positive definite. ",
       "Parameter estimates and standard errors may be unreliable. ",
       "Consider checking model specification, data quality, or potential identifiability issues."
     )
   }
-  
-  # Reports
-  rep  <- TMB::sdreport(obj)
   rep1 <- summary(rep, select = "report")
   rep2 <- rename_reitsubLCA_rows(rep1,lsub)
 
