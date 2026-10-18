@@ -100,6 +100,7 @@ anova_lrt <- function(object, ..., test = "Chisq") {
       "Models may not be nested."
     )
   }
+  
   `Pr(>Chisq)`<- c(NA,stats::pchisq(Chisq[-1], df = Df[-1], lower.tail = FALSE))
   out <- data.frame(Df      = dfs,
                     logLik  = logLik_vals,

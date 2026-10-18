@@ -193,7 +193,7 @@ plot.HoyerAFT <- function(x,
   # Add the legend
   legend("bottomright",
          bty ="n",
-         legend = c(NA,"HSROC curve","Data"),
+         legend = c(NA,"HSROC curve","Study estimates"),
          pch = c(NA,NA,symb),
          lty = c(NA,1,NA),
          lwd = c(NA,2,NA),
