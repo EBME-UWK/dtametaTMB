@@ -70,6 +70,8 @@
 #'   be displayed next to the study-level estimates. Defaults to
 #'   \code{FALSE}.
 #'   
+#' @param legend Whether a legend should be displayed. Default is \code{TRUE}.
+#'   
 #' @param ... Additional graphical arguments (currently unused).
 #'
 #' @details
@@ -109,6 +111,7 @@ plot.HoyerAFT <- function(x,
                           studyCI=FALSE,
                           conflevel=0.95,
                           studylabels=FALSE,
+                          legend=TRUE,
                           ...) {
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
       conflevel <= 0 || conflevel >= 1) {
@@ -191,13 +194,15 @@ plot.HoyerAFT <- function(x,
   if(isTRUE(HSROC)){
     points(roc_points, type="l", lwd=2,ann=FALSE)###
   # Add the legend
-  legend("bottomright",
-         bty ="n",
-         legend = c(NA,"HSROC curve","Study estimates"),
-         pch = c(NA,NA,symb),
-         lty = c(NA,1,NA),
-         lwd = c(NA,2,NA),
-         col = c(NA,"black","darkgray"))
+   if(isTRUE(legend)){
+    legend("bottomright",
+           bty ="n",
+           legend = c(NA,"HSROC curve","Study estimates"),
+           pch = c(NA,NA,symb),
+           lty = c(NA,1,NA),
+           lwd = c(NA,2,NA),
+           col = c(NA,"black","darkgray"))
+   }
   }
   invisible(NULL)
 }

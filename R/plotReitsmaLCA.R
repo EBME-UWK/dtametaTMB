@@ -67,6 +67,8 @@
 #' @param studylabels Whether study identifiers should
 #'   be displayed next to the study-level estimates. Defaults to
 #'   \code{FALSE}.
+#'   
+#' @param legend Whether a legend should be displayed. Default is \code{TRUE}.
 #'
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
@@ -125,6 +127,7 @@ plot.ReitsmaLCA <- function(x,
                             predlevel=0.95, 
                             studyCI=FALSE,
                             studylabels=FALSE,
+                            legend=TRUE,
                             ...) {
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
       conflevel <= 0 || conflevel >= 1) {
@@ -189,31 +192,33 @@ plot.ReitsmaLCA <- function(x,
   # Add the legend 
   conf_lab <- paste0(round(100 * conflevel), "% Confidence region")
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
-  if(isTRUE(HSROC)){
-    legend("bottomright", 
-           bty ="n",
-           legend = c(NA,
-                      "HSROC curve",
-                      "Summary estimate",
-                      conf_lab,
-                      pred_lab,
-                      "Empirical Bayes study estimates"), 
-           pch = c(NA,NA,15,NA,NA,symb), 
-           lty = c(NA,1,NA,2,3,NA), 
-           lwd = c(NA,2,NA,2,2,NA), 
-           col = c(NA,"black","black","black","black","darkgray"))}
-  else{
-    legend("bottomright", 
-           bty ="n",
-           legend = c(NA,
-                      "Summary estimate",
-                      conf_lab,
-                      pred_lab,
-                      "Empirical Bayes study estimates"), 
-           pch = c(NA,15,NA,NA,symb), 
-           lty = c(NA,NA,2,3,NA), 
-           lwd = c(NA,NA,2,2,NA), 
-           col = c(NA,"black","black","black","darkgray"))
+  if(isTRUE(legend)){
+    if(isTRUE(HSROC)){
+      legend("bottomright", 
+             bty ="n",
+             legend = c(NA,
+                        "HSROC curve",
+                        "Summary estimate",
+                        conf_lab,
+                        pred_lab,
+                        "Empirical Bayes study estimates"), 
+             pch = c(NA,NA,15,NA,NA,symb), 
+             lty = c(NA,1,NA,2,3,NA), 
+             lwd = c(NA,2,NA,2,2,NA), 
+             col = c(NA,"black","black","black","black","darkgray"))}
+    else{
+      legend("bottomright", 
+             bty ="n",
+             legend = c(NA,
+                        "Summary estimate",
+                        conf_lab,
+                        pred_lab,
+                        "Empirical Bayes study estimates"), 
+             pch = c(NA,15,NA,NA,symb), 
+             lty = c(NA,NA,2,3,NA), 
+             lwd = c(NA,NA,2,2,NA), 
+             col = c(NA,"black","black","black","darkgray"))
+    }
   }
   invisible(NULL)
 }

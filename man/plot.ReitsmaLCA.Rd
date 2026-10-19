@@ -16,6 +16,7 @@
   predlevel = 0.95,
   studyCI = FALSE,
   studylabels = FALSE,
+  legend = TRUE,
   ...
 )
 }
@@ -88,6 +89,8 @@ specificity estimates. Defaults to \code{FALSE}.}
 \item{studylabels}{Whether study identifiers should
 be displayed next to the study-level estimates. Defaults to
 \code{FALSE}.}
+
+\item{legend}{Whether a legend should be displayed. Default is \code{TRUE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }

@@ -70,6 +70,9 @@
 #' @param studylabels Whether study identifiers should
 #'   be displayed next to the study-level estimates. Defaults to
 #'   \code{FALSE}.
+#'   
+#' @param legend Whether a legend should be displayed. Default is \code{TRUE}.
+#' 
 #' @param ... Additional graphical arguments passed to plotting functions.
 #'
 #' @details
@@ -125,6 +128,7 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
                                            studyCI=FALSE,
                                            conflevel=0.95,
                                            studylabels=FALSE,
+                                           legend=TRUE,
                                            ...){
   if (!is.numeric(conflevel) || length(conflevel) != 1L ||
       conflevel <= 0 || conflevel >= 1) {
@@ -203,7 +207,7 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
          xpd = TRUE,
          cex = 1.2,
          bty = "n")
-  if(isTRUE(HSROC)){
+  if(isTRUE(HSROC)&isTRUE(legend)){
     legend("bottomright", 
            bty ="n",
            legend = c(NA,

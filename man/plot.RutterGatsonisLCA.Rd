@@ -15,6 +15,7 @@
   studyCI = FALSE,
   conflevel = 0.95,
   studylabels = FALSE,
+  legend = TRUE,
   ...
 )
 }
@@ -86,6 +87,8 @@ intervals. Default is \code{0.95}.}
 \item{studylabels}{Whether study identifiers should
 be displayed next to the study-level estimates. Defaults to
 \code{FALSE}.}
+
+\item{legend}{Whether a legend should be displayed. Default is \code{TRUE}.}
 
 \item{...}{Additional graphical arguments passed to plotting functions.}
 }
