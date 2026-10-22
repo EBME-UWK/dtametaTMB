@@ -199,7 +199,7 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
     }
   }
   ###
-  legend("right",
+  graphics::legend("right",
          inset = c(nudge_legend, 0),
          legend = sub,
          col    = col,
@@ -208,7 +208,7 @@ plot.RutterGatsonisSubgroupLCA <- function(x,
          cex = 1.2,
          bty = "n")
   if(isTRUE(HSROC)&isTRUE(legend)){
-    legend("bottomright", 
+    graphics::legend("bottomright", 
            bty ="n",
            legend = c(NA,
                       "HSROC curve",

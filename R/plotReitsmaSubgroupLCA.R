@@ -244,7 +244,7 @@ plot.ReitsmaSubgroupLCA <- function(x,
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
   if(isTRUE(legend)){
     if(isTRUE(HSROC)){
-      legend("bottomright", 
+      graphics::legend("bottomright", 
              bty ="n",
              legend = c(NA,
                         "HSROC curve",
@@ -257,7 +257,7 @@ plot.ReitsmaSubgroupLCA <- function(x,
              lwd = c(NA,2,NA,2,2,NA), 
              col = c(NA,"black","black","black","black","darkgray"))}
     else{
-      legend("bottomright", 
+      graphics::legend("bottomright", 
              bty ="n",
              legend = c(NA,
                         "Summary estimate",
@@ -270,7 +270,7 @@ plot.ReitsmaSubgroupLCA <- function(x,
              col = c(NA,"black","black","black","darkgray"))
     } 
   }
-  legend("right",
+  graphics::legend("right",
          inset = c(nudge_legend, 0),
          legend = sub,
          col    = col,

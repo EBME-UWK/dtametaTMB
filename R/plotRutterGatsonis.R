@@ -215,7 +215,7 @@ plot.RutterGatsonis <- function(x,
     points(roc_points2, type="l", lwd=2,ann=FALSE)###
   # Add the legend 
     if(isTRUE(legend)){
-      legend("bottomright", 
+      graphics::legend("bottomright", 
              bty ="n",
              legend = c(NA,
                         "HSROC curve",

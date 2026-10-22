@@ -612,7 +612,7 @@ plot.ReitsmaTMB <- function(x,
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
   if(isTRUE(legend)){
     if(isTRUE(HSROC)){
-      legend("bottomright", 
+      graphics::legend("bottomright", 
              bty ="n",
              legend = c(NA,
                         "HSROC curve",
@@ -625,7 +625,7 @@ plot.ReitsmaTMB <- function(x,
              lwd = c(NA,2,NA,2,2,NA), 
              col = c(NA,"black","black","black","black","darkgray"))}
     else{
-      legend("bottomright", 
+      graphics::legend("bottomright", 
              bty ="n",
              legend = c(NA,
                         "Summary estimate",
