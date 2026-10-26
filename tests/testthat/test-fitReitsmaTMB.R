@@ -1,8 +1,6 @@
 test_that("fitReitsmaTMB reproduces fitReitsma", {
   
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  skip_if_not_installed("TMB")
   
   data("anticcp", package = "dtametaTMB")
   

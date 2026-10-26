@@ -1,5 +1,7 @@
 test_that("common generic methods work across inheritance hierarchy", {
   
+  skip_on_cran()
+  
   ## Reitsma ----------------------------------------------------
   
   data("anticcp", package = "dtametaTMB")

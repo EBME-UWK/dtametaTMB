@@ -1,7 +1,5 @@
 test_that("common generic methods work with edge case data set", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  skip_if_not_installed("TMB")
   
   edge <- data.frame(study=1:5,
                      subgroup=c("A","A","A","B","B"),

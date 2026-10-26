@@ -1,4 +1,5 @@
 test_that("plot.ReitsmaSubgroup runs on Anti-CCP example", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroup(
     data = anticcp,
@@ -17,6 +18,7 @@ test_that("plot.ReitsmaSubgroup runs on Anti-CCP example", {
 
 
 test_that("plot.ReitsmaSubgroup works for unequal variances", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroup(
     data = anticcp,
@@ -36,6 +38,7 @@ test_that("plot.ReitsmaSubgroup works for unequal variances", {
 
 
 test_that("plot.ReitsmaSubgroup accepts custom colours", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroup(
     data = anticcp,
@@ -56,6 +59,7 @@ test_that("plot.ReitsmaSubgroup accepts custom colours", {
 })
 
 test_that("all size options work", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroup(
     data = anticcp,
@@ -78,6 +82,7 @@ test_that("all size options work", {
 
 
 test_that("plot.ReitsmaSubgroup connects paired studies", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroup(
     data = subset(schuetz, indirect == 0),
@@ -101,6 +106,7 @@ test_that("plot.ReitsmaSubgroup connects paired studies", {
 })
 
 test_that("plot.ReitsmaSubgroup rejects invalid size argument", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroup(
     data = anticcp,
@@ -119,6 +125,7 @@ test_that("plot.ReitsmaSubgroup rejects invalid size argument", {
 
 
 test_that("all sensspec_constrain options work", {
+  skip_on_cran()
   
   fit1 <- fitReitsmaSubgroup(
     data = anticcp,
@@ -161,6 +168,7 @@ test_that("all sensspec_constrain options work", {
 ###
 ###
 test_that("plot.ReitsmaSubgroupTMB runs on Anti-CCP example", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroupTMB(
     data = anticcp,
@@ -179,6 +187,7 @@ test_that("plot.ReitsmaSubgroupTMB runs on Anti-CCP example", {
 
 
 test_that("plot.ReitsmaSubgroupTMB works for unequal variances", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroupTMB(
     data = anticcp,
@@ -198,6 +207,7 @@ test_that("plot.ReitsmaSubgroupTMB works for unequal variances", {
 
 
 test_that("plot.ReitsmaSubgroupTMB accepts custom colours", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroupTMB(
     data = anticcp,
@@ -218,6 +228,7 @@ test_that("plot.ReitsmaSubgroupTMB accepts custom colours", {
 })
 
 test_that("all size options work", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroupTMB(
     data = anticcp,
@@ -240,6 +251,7 @@ test_that("all size options work", {
 
 
 test_that("plot.ReitsmaSubgroupTMB connects paired studies", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroupTMB(
     data = subset(schuetz, indirect == 0),
@@ -262,6 +274,7 @@ test_that("plot.ReitsmaSubgroupTMB connects paired studies", {
 })
 
 test_that("plot.ReitsmaSubgroupTMB rejects invalid size argument", {
+  skip_on_cran()
   
   fit <- fitReitsmaSubgroupTMB(
     data = anticcp,
@@ -280,6 +293,7 @@ test_that("plot.ReitsmaSubgroupTMB rejects invalid size argument", {
 
 
 test_that("all sensspec_constrain options work", {
+  skip_on_cran()
   
   fit1 <- fitReitsmaSubgroupTMB(
     data = anticcp,

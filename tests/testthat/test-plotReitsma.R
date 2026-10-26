@@ -1,7 +1,6 @@
 test_that("plot.Reitsma runs without error", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  
+
   dat <- data.frame(
     study = 1:5,
     TP = c(30, 25, 40, 35, 20),
@@ -17,8 +16,7 @@ test_that("plot.Reitsma runs without error", {
 
 test_that("plot.Reitsma returns NULL invisibly", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  
+
   dat <- data.frame(
     study = 1:4,
     TP = c(30, 25, 40, 35),
@@ -34,8 +32,7 @@ test_that("plot.Reitsma returns NULL invisibly", {
 
 test_that("plot.Reitsma works with HSROC = TRUE", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  
+
   dat <- data.frame(
     study = 1:5,
     TP = c(30, 25, 40, 35, 20),
@@ -51,8 +48,7 @@ test_that("plot.Reitsma works with HSROC = TRUE", {
 
 test_that("plot.Reitsma respects scale parameter", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  
+
   dat <- data.frame(
     study = 1:5,
     TP = c(30, 25, 40, 35, 20),
@@ -69,8 +65,7 @@ test_that("plot.Reitsma respects scale parameter", {
 
 test_that("plot.Reitsma handles extreme values", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  
+
   dat <- data.frame(
     study = 1:4,
     TP = c(1, 99, 40, 35),
@@ -86,8 +81,7 @@ test_that("plot.Reitsma handles extreme values", {
 
 test_that("plot.Reitsma does not permanently change par settings", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  
+
   dat <- data.frame(
     study = 1:4,
     TP = c(30, 25, 40, 35),
@@ -107,6 +101,7 @@ test_that("plot.Reitsma does not permanently change par settings", {
 
 
 test_that("plot.Reitsma errors on malformed input", {
+  skip_on_cran()
   obj <- list()
   class(obj) <- "Reitsma"
   
@@ -114,6 +109,7 @@ test_that("plot.Reitsma errors on malformed input", {
 })
 
 test_that("plot.Reitsma works with different symbols",{
+  skip_on_cran()
   data("anticcp")
   fit <- fitReitsma(data=anticcp,
                     TP=TP,
@@ -132,6 +128,7 @@ test_that("plot.Reitsma works with different symbols",{
 
 
 test_that("plot.Reitsma works with different size options",{
+  skip_on_cran()
   data("anticcp")
   fit <- fitReitsma(data=anticcp,
                     TP=TP,
@@ -166,8 +163,6 @@ test_that("plot.ReitsmaTMB runs without error", {
 
 test_that("plot.ReitsmaTMB returns NULL invisibly", {
   skip_on_cran()
-  skip_if_not_installed("glmmTMB")
-  
   dat <- data.frame(
     study = 1:4,
     TP = c(30, 25, 40, 35),
@@ -252,6 +247,7 @@ test_that("plot.ReitsmaTMB does not permanently change par settings", {
 
 
 test_that("plot.ReitsmaTMB errors on malformed input", {
+  skip_on_cran()
   obj <- list()
   class(obj) <- "ReitsmaTMB"
   
@@ -259,6 +255,7 @@ test_that("plot.ReitsmaTMB errors on malformed input", {
 })
 
 test_that("plot.ReitsmaTMB works with different symbols",{
+  skip_on_cran()
   data("anticcp")
   fit <- fitReitsmaTMB(data=anticcp,
                     TP=TP,
@@ -277,6 +274,7 @@ test_that("plot.ReitsmaTMB works with different symbols",{
 
 
 test_that("plot.ReitsmaTMB works with different size options",{
+  skip_on_cran()
   data("anticcp")
   fit <- fitReitsmaTMB(data=anticcp,
                     TP=TP,

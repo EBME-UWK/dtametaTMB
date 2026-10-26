@@ -2,6 +2,7 @@
 
 test_that("default ReitsmaLCA plot works", {
   
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -18,7 +19,7 @@ test_that("default ReitsmaLCA plot works", {
 })
 
 test_that("plot returns invisible NULL", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -35,7 +36,7 @@ test_that("plot returns invisible NULL", {
 })
 
 test_that("all size options work", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -55,7 +56,7 @@ test_that("all size options work", {
 
 
 test_that("HSROC overlay works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -72,7 +73,7 @@ test_that("HSROC overlay works", {
 })
 
 test_that("custom specificity range works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -96,7 +97,7 @@ test_that("custom specificity range works", {
 
 
 test_that("custom confidence and prediction levels work", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -119,7 +120,7 @@ test_that("custom confidence and prediction levels work", {
 })
 
 test_that("conflevel validation works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -143,7 +144,7 @@ test_that("conflevel validation works", {
 
 
 test_that("predlevel validation works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -167,7 +168,7 @@ test_that("predlevel validation works", {
 
 
 test_that("plot works for all supported constraints", {
-  
+  skip_on_cran()
   constraints <- list(
     NULL,
     "sigma_AB.index",
@@ -211,7 +212,7 @@ test_that("plot works for all supported constraints", {
 })
 
 test_that("plot does not modify fitted object", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -233,7 +234,7 @@ test_that("plot does not modify fitted object", {
 })
 
 test_that("plot works for fixed effects model", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -253,7 +254,7 @@ test_that("plot works for fixed effects model", {
 ## RutterGatsonisLCA
 
 test_that("default RutterGatsonisLCA plot works", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -270,7 +271,7 @@ test_that("default RutterGatsonisLCA plot works", {
 })
 
 test_that("plot returns invisible NULL", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -287,7 +288,7 @@ test_that("plot returns invisible NULL", {
 })
 
 test_that("all size options work", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -306,7 +307,7 @@ test_that("all size options work", {
 })
 
 test_that("custom specificity range works", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -328,7 +329,7 @@ test_that("custom specificity range works", {
 })
 
 test_that("custom title works", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -350,7 +351,7 @@ test_that("custom title works", {
 })
 
 test_that("plot works for shape constrained model", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -368,7 +369,7 @@ test_that("plot works for shape constrained model", {
 })
 
 test_that("plot works for sigma2_alpha constrained model", {
-  
+  skip_on_cran()
   fit <- suppressWarnings(
     fitRutterGatsonisLCA(
       data = pap,
@@ -388,7 +389,7 @@ test_that("plot works for sigma2_alpha constrained model", {
 })
 
 test_that("plot does not modify fitted object", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -418,7 +419,7 @@ test_that("plot does not modify fitted object", {
 ## ReitsmaSubgroupLCA
 
 test_that("default Reitsma subgroup plot works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -436,7 +437,7 @@ test_that("default Reitsma subgroup plot works", {
 })
 
 test_that("plot returns invisible NULL", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -454,7 +455,7 @@ test_that("plot returns invisible NULL", {
 })
 
 test_that("all size options work", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -474,7 +475,7 @@ test_that("all size options work", {
 })
 
 test_that("HSROC overlay works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -492,7 +493,7 @@ test_that("HSROC overlay works", {
 })
 
 test_that("custom colours work", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -515,7 +516,7 @@ test_that("custom colours work", {
 })
 
 test_that("conflevel validation works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -540,7 +541,7 @@ test_that("conflevel validation works", {
 
 
 test_that("predlevel validation works", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -565,7 +566,7 @@ test_that("predlevel validation works", {
 
 
 test_that("plot works for fixed effects model", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -584,7 +585,7 @@ test_that("plot works for fixed effects model", {
 })
 
 test_that("plot works with unequal variances", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -603,7 +604,7 @@ test_that("plot works with unequal variances", {
 })
 
 test_that("plot does not modify fitted object", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -629,7 +630,7 @@ test_that("plot does not modify fitted object", {
 ## RuterGatsonisSubgroupLCA
 
 test_that("default subgroup HSROC plot runs", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -647,7 +648,7 @@ test_that("default subgroup HSROC plot runs", {
 })
 
 test_that("all size options work", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -668,7 +669,7 @@ test_that("all size options work", {
 
 
 test_that("custom colours work", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -692,7 +693,7 @@ test_that("custom colours work", {
 
 
 test_that("custom specificity range works", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -715,7 +716,7 @@ test_that("custom specificity range works", {
 })
 
 test_that("connectstudies works for two subgroups", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -738,7 +739,7 @@ test_that("connectstudies works for two subgroups", {
 })
 
 test_that("connectstudies warns with more than two subgroups", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = RF,
     y11 = TP,
@@ -764,7 +765,7 @@ test_that("connectstudies warns with more than two subgroups", {
 
 
 test_that("plot returns invisible NULL", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -782,7 +783,7 @@ test_that("plot returns invisible NULL", {
 })
 
 test_that("plot does not modify fitted object", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -805,7 +806,7 @@ test_that("plot does not modify fitted object", {
 })
 
 test_that("plot works for shape_zero constrained models", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = RF,
     y11 = TP,
@@ -824,7 +825,7 @@ test_that("plot works for shape_zero constrained models", {
 })
 
 test_that("custom title works", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -848,7 +849,7 @@ test_that("custom title works", {
 
 
 test_that("plot.ReitsmaSubgroup rejects invalid size argument", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = anticcp,
     TP = TP,
@@ -866,7 +867,7 @@ test_that("plot.ReitsmaSubgroup rejects invalid size argument", {
 
 
 test_that("all sensspec_constrain options work", {
-  
+  skip_on_cran()
   fit1 <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,

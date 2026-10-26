@@ -1,4 +1,6 @@
 test_that("plot.HoyerAFT runs without error (greater)", {
+  
+  skip_on_cran()
   data("diabetes", package = "dtametaTMB")
   
   res <- restructure_data(
@@ -21,6 +23,8 @@ test_that("plot.HoyerAFT runs without error (greater)", {
 
 
 test_that("plot.HoyerAFT returns NULL invisibly", {
+  
+  skip_on_cran()
   data("diabetes", package = "dtametaTMB")
   
   res <- restructure_data(
@@ -43,6 +47,8 @@ test_that("plot.HoyerAFT returns NULL invisibly", {
 
 
 test_that("plot.HoyerAFT works for all distributions", {
+  
+  skip_on_cran()
   data("diabetes", package = "dtametaTMB")
   
   res <- restructure_data(
@@ -66,6 +72,8 @@ test_that("plot.HoyerAFT works for all distributions", {
 
 
 test_that("plot.HoyerAFT supports all size and symbol options", {
+  
+  skip_on_cran()
   data("diabetes")
   
   fit <- fitHoyer(
