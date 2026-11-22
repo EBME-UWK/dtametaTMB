@@ -142,7 +142,7 @@ fitHoyerAFT <- function(data, init, conflevel=0.95, eval_threshold = NULL, verbo
 
   # TMB objective
   obj <- TMB::MakeADFun(data=dat2,
-                        parameters,
+                        parameters=parameters,
                         random = c("u0", "u1"),
                         silent = !verbose,
                         DLL = "dtametaTMB_TMBExports")

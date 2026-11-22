@@ -1,6 +1,6 @@
 Package: dtametaTMB
 Title: Diagnostic Test Accuracy Meta-Analysis using Template Model Builder
-Version: 0.1.4
+Version: 0.1.4.9000
 Authors@R:
     c(
       person("Claus", "Nowak",
@@ -9,7 +9,8 @@ Authors@R:
     )
 Description: Fits the hierarchical summary receiver operating characteristic (HSROC) model of
     Rutter and Gatsonis (2001) <doi:10.1002/sim.942>, the bivariate binomial-normal model of
-    Reitsma et al. (2005) <doi:10.1016/j.jclinepi.2005.02.022>, the threshold-based bivariate
+    Reitsma et al. (2005) <doi:10.1016/j.jclinepi.2005.02.022>, the arm-based network
+    meta-analysis model of Nyaga et al. (2018) <doi:10.1177/0962280216669182>, the threshold-based bivariate
     time-to-event model of Hoyer et al. (2018) <doi:10.1002/jrsm.1273>, and the latent class
     extensions of Liu et al. (2015) <doi:10.1111/biom.12264> for diagnostic studies with an
     imperfect reference standard. Provides subgroup analyses, HSROC meta-regression,

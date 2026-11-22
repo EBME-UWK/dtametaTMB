@@ -267,8 +267,8 @@ fitRutterGatsonisSubgroup <- function(data,
     map$log_sigma_theta <- factor(NA)
   }
  
-  obj <- TMB::MakeADFun(dat2,
-                          parameters,
+  obj <- TMB::MakeADFun(data=dat2,
+                          parameters=parameters,
                           map=if(length(map) == 0) NULL else map,
                           random = c("alpha", "theta"),
                           silent=!verbose,

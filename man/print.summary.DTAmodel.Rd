@@ -14,6 +14,7 @@
 \alias{print.summary.RutterGatsonisLCA}
 \alias{print.summary.RutterGatsonisSubgroup}
 \alias{print.summary.RutterGatsonisSubgroupLCA}
+\alias{print.summary.Nyaga}
 \title{Print a Diagnostic Test Accuracy Model Summary}
 \usage{
 \method{print}{summary.DTAmodel}(x, digits = max(8L, getOption("digits") - 8L), ...)
@@ -41,6 +42,8 @@
 \method{print}{summary.RutterGatsonisSubgroup}(x, digits = max(8L, getOption("digits") - 8L), ...)
 
 \method{print}{summary.RutterGatsonisSubgroupLCA}(x, digits = max(8L, getOption("digits") - 8L), ...)
+
+\method{print}{summary.Nyaga}(x, digits = max(8L, getOption("digits") - 8L), ...)
 }
 \arguments{
 \item{x}{A summary object inheriting from

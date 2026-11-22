@@ -17,6 +17,7 @@ multiple-threshold models within a consistent interface.
 - Rutter and Gatsonis (HSROC) model
 - Hoyer multiple-threshold model
 - Latent class Reitsma and HSROC models for studies with an imperfect reference standard
+- Nyaga arm-based network meta-analysis model
 
 ### Extensions
 

@@ -200,3 +200,9 @@ anova.Reitsma <- function(object, ..., test = "Chisq") {
 anova.RutterGatsonis <- function(object, ..., test = "Chisq") {
   anova_lrt(object, ..., test = test)
 }
+
+#' @rdname anova.dtametaTMB
+#' @export
+anova.Nyaga <- function(object, ..., test = "Chisq") {
+  anova_lrt(object, ..., test = test)
+}

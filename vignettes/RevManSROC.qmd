@@ -21,7 +21,7 @@ library(dtametaTMB)
 
 ## Overview
 
-Study estimates in a summary receiver operating characteristic (SROC) plot can be represented by symbols whose horizontal and vertical dimensions convey different information. In `dtametaTMB`, the horizontal dimension represents specificity-side information, whereas the vertical dimension represents sensitivity-side information.
+Study estimates in a summary receiver operating characteristic (SROC) plot can be represented by symbols whose horizontal and vertical dimensions convey different information. In `dtametaTMB`, the horizontal dimension represents specificity information, whereas the vertical dimension represents sensitivity information.
 
 The package provides several study-symbol sizing methods, including equal sizing, relative sample-size sizing, approximate inverse-standard-error sizing, Fisher-information sizing for applicable models, and two RevMan-style methods:
 

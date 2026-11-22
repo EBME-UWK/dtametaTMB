@@ -226,8 +226,8 @@ fitRutterGatsonisReg <- function(data,
   dat2$model <- "RutterGatsonisReg"
 
   
-  obj <- TMB::MakeADFun(dat2,
-                        parameters,
+  obj <- TMB::MakeADFun(data=dat2,
+                        parameters=parameters,
                         map=if(is.null(map)) NULL else map,
                         random = c("alpha", "theta"),
                         silent=!verbose,

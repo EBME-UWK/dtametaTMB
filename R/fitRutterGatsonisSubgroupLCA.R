@@ -290,8 +290,8 @@ fitRutterGatsonisSubgroupLCA <- function(data,
   
   dat2$model <- "RutterGatsonisSubgroupLCA"
   ## Objective function ##
-  obj <- TMB::MakeADFun(dat2,
-                        parameters,
+  obj <- TMB::MakeADFun(data=dat2,
+                        parameters=parameters,
                         map=if(length(map) == 0) NULL else map,
                         random = c("prevu", "alpha", "theta"),
                         silent=!verbose,

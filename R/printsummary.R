@@ -28,7 +28,8 @@ print.summary.DTAmodel <- function(x,
     summary.RutterGatsonisReg = "Summary: Rutter & Gatsonis Regression Model",
     summary.RutterGatsonisLCA = "Summary: Rutter & Gatsonis LCA Model",
     summary.RutterGatsonisSubgroup = "Summary: Rutter & Gatsonis Subgroup Model",
-    summary.RutterGatsonisSubgroupLCA = "Summary: Rutter & Gatsonis Subgroup LCA Model"
+    summary.RutterGatsonisSubgroupLCA = "Summary: Rutter & Gatsonis Subgroup LCA Model",
+    summary.Nyaga = "Summary: Nyaga NMA Model"
   )
   
   titles <- c(
@@ -137,3 +138,7 @@ print.summary.RutterGatsonisSubgroup <- print.summary.DTAmodel
 #' @rdname print.summary.DTAmodel
 #' @export
 print.summary.RutterGatsonisSubgroupLCA <- print.summary.DTAmodel
+
+#' @rdname print.summary.DTAmodel
+#' @export
+print.summary.Nyaga <- print.summary.DTAmodel

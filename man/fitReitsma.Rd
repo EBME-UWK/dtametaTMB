@@ -96,6 +96,6 @@ A hierarchical regression approach to meta-analysis of diagnostic test accuracy 
 
 Harbord, R. M., Deeks, J. J., Egger, M., Whiting, P., & Sterne, J. A. C. (2007).
 A unification of models for meta-analysis of diagnostic accuracy studies.
-\emph{Biostatistics}, 8(2), 239--251.
+\emph{Biostatistics}, 8(2), 239-251.
 \doi{10.1093/biostatistics/kxl004}
 }

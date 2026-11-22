@@ -4,11 +4,14 @@
 \alias{anova.dtametaTMB}
 \alias{anova.Reitsma}
 \alias{anova.RutterGatsonis}
+\alias{anova.Nyaga}
 \title{Likelihood Ratio Tests for Diagnostic Test Accuracy Models}
 \usage{
 \method{anova}{Reitsma}(object, ..., test = "Chisq")
 
 \method{anova}{RutterGatsonis}(object, ..., test = "Chisq")
+
+\method{anova}{Nyaga}(object, ..., test = "Chisq")
 }
 \arguments{
 \item{object}{A fitted model object.}

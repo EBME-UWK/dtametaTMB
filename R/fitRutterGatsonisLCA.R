@@ -247,7 +247,7 @@ fitRutterGatsonisLCA <- function(data,
   
   # TMB Objective
   obj <- TMB::MakeADFun(data=dat2,
-                        parameters,
+                        parameters=parameters,
                         map = if(length(map) == 0) NULL else map,
                         random = c("prevu","alpha", "theta"),
                         silent = !verbose,
