@@ -39,7 +39,8 @@ print.summary.DTAmodel <- function(x,
     RutterGatsonis_recovered  = "Recovered HSROC parameters (Rutter-Gatsonis)",
     Reitsma_recovered         = "Recovered bivariate parameters (Reitsma)",
     prevref                   = "Prevalence and reference standard",
-    subgroups                 = "Subgroups"
+    subgroups                 = "Subgroups",
+    LRDOR                     = "Diagnostic odds ratio / likelihood ratios"
   )
   
   cl     <- class(x)[1]

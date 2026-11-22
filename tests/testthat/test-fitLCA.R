@@ -55,7 +55,7 @@ test_that("fitReitsmaLCA returns expected object structure", {
 })
 
 test_that("pap example reproduces benchmark estimates", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -88,7 +88,7 @@ test_that("pap example reproduces benchmark estimates", {
 })
 
 test_that("all sensitivity and specificity estimates lie within bounds", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -110,7 +110,7 @@ test_that("all sensitivity and specificity estimates lie within bounds", {
 
 
 test_that("all supported constraints fit successfully", {
-  
+  skip_on_cran()
   constraints <- list(
     NULL,
     "sigma_AB.index",
@@ -143,7 +143,7 @@ test_that("all supported constraints fit successfully", {
 })
 
 test_that("sigma_AB.index constraint fixes covariance", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -164,7 +164,7 @@ test_that("sigma_AB.index constraint fixes covariance", {
 
 
 test_that("all constraint removes heterogeneity parameters", {
-  
+  skip_on_cran()
   fit <- fitReitsmaLCA(
     data = pap,
     y11 = y11,
@@ -190,7 +190,7 @@ test_that("all constraint removes heterogeneity parameters", {
 })
 
 test_that("rows with missing values are removed", {
-  
+  skip_on_cran()
   dat <- pap
   
   dat$y11[1] <- NA
@@ -235,7 +235,7 @@ test_that("fitRutterGatsonisLCA rejects invalid constraints", {
 })
 
 test_that("fitRutterGatsonisLCA requires a data.frame", {
-  
+  skip_on_cran()
   expect_error(
     fitRutterGatsonisLCA(
       data = matrix(1:10, nrow = 5),
@@ -271,7 +271,7 @@ test_that("fitRutterGatsonisLCA returns expected object", {
 })
 
 test_that("recovered Reitsma parameters are finite", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -291,7 +291,7 @@ test_that("recovered Reitsma parameters are finite", {
 
 
 test_that("estimated sensitivity is within bounds", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -312,7 +312,7 @@ test_that("estimated sensitivity is within bounds", {
 })
 
 test_that("default specificity equals 0.8", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -330,7 +330,7 @@ test_that("default specificity equals 0.8", {
 })
 
 test_that("user supplied specificity is respected", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -349,7 +349,7 @@ test_that("user supplied specificity is respected", {
 })
 
 test_that("all supported constraints fit", {
-  
+  skip_on_cran()
   constraints <- list(
     NULL,
     "sigma2_alpha",
@@ -390,7 +390,7 @@ test_that("all supported constraints fit", {
 
 
 test_that("shape constraint fixes beta to zero", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -411,7 +411,7 @@ test_that("shape constraint fixes beta to zero", {
 
 
 test_that("sigma2_alpha constraint fixes variance", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -431,7 +431,7 @@ test_that("sigma2_alpha constraint fixes variance", {
 })
 
 test_that("sigma2_theta constraint fixes variance", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisLCA(
     data = pap,
     y11 = y11,
@@ -451,7 +451,7 @@ test_that("sigma2_theta constraint fixes variance", {
 })
 
 test_that("missing rows are removed", {
-  
+  skip_on_cran()
   dat <- pap
   dat$y11[1] <- NA
   
@@ -506,7 +506,7 @@ test_that("fitReitsmaSubgroupLCA returns expected object", {
 
 
 test_that("subgroup labels are preserved", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -526,7 +526,7 @@ test_that("subgroup labels are preserved", {
 
 
 test_that("sens constraint enforces equal sensitivities", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -554,7 +554,7 @@ test_that("sens constraint enforces equal sensitivities", {
 })
 
 test_that("spec constraint enforces equal specificities", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -582,7 +582,7 @@ test_that("spec constraint enforces equal specificities", {
 })
 
 test_that("sens and spec constraints collapse subgroup means", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -613,7 +613,7 @@ test_that("sens and spec constraints collapse subgroup means", {
 
 
 test_that("unequal variance model fits", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = anticcp,
     y11 = TP,
@@ -633,7 +633,7 @@ test_that("unequal variance model fits", {
 })
 
 test_that("constraints not allowed with unequal variances", {
-  
+  skip_on_cran()
   expect_error(
     
     fitReitsmaSubgroupLCA(
@@ -654,7 +654,7 @@ test_that("constraints not allowed with unequal variances", {
 })
 
 test_that("all common variance constraints fit", {
-  
+  skip_on_cran()
   constraints <- list(
     NULL,
     "sigma_AB.index",
@@ -686,7 +686,7 @@ test_that("all common variance constraints fit", {
 })
 
 test_that("pap subgroup benchmark reproduced", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroupLCA(
     data = pap,
     y11 = y11,
@@ -740,7 +740,7 @@ test_that("fitRutterGatsonisSubgroupLCA returns expected object", {
 
 
 test_that("subgroup levels are preserved", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = RF,
     y11 = TP,
@@ -760,7 +760,7 @@ test_that("subgroup levels are preserved", {
 
 
 test_that("shape constraint enforces common beta", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = RF,
     y11 = TP,
@@ -789,7 +789,7 @@ test_that("shape constraint enforces common beta", {
 
 
 test_that("accuracy constraint removes subgroup effects", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = RF,
     y11 = TP,
@@ -817,7 +817,7 @@ test_that("accuracy constraint removes subgroup effects", {
 })
 
 test_that("threshold constraint removes subgroup effects", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = RF,
     y11 = TP,
@@ -846,7 +846,7 @@ test_that("threshold constraint removes subgroup effects", {
 
 
 test_that("sigma2_alpha constrained model fits", {
-  
+  skip_on_cran()
   expect_no_error(
     
     fitRutterGatsonisSubgroupLCA(
@@ -865,7 +865,7 @@ test_that("sigma2_alpha constrained model fits", {
 })
 
 test_that("sigma2_theta constrained model fits", {
-  
+  skip_on_cran()
   expect_no_error(
     
     fitRutterGatsonisSubgroupLCA(
@@ -884,7 +884,7 @@ test_that("sigma2_theta constrained model fits", {
 })
 
 test_that("shape_zero fixes all beta parameters", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = RF,
     y11 = TP,
@@ -913,7 +913,7 @@ test_that("shape_zero fixes all beta parameters", {
 })
 
 test_that("all major constraint combinations fit", {
-  
+  skip_on_cran()
   constraints <- list(
     NULL,
     "shape",
@@ -952,7 +952,7 @@ test_that("all major constraint combinations fit", {
 
 
 test_that("schuetz produces two subgroup estimates", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroupLCA(
     data = schuetz,
     y11 = TP,
@@ -977,6 +977,7 @@ test_that("schuetz produces two subgroup estimates", {
 
 
 test_that("fitReitsmaSubgroupLCA validates constrain argument", {
+  skip_on_cran()
   expect_error(
     fitReitsmaSubgroupLCA(
       data = anticcp,

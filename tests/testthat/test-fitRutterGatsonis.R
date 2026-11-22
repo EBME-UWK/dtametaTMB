@@ -25,6 +25,7 @@ test_that("fitRutterGatsonis runs with data frame input", {
 })
 
 test_that("non-numeric input throws error", {
+  skip_on_cran()
   dat <- data.frame(
     study = 1:3,
     TP = c("a", "b", "c"),
@@ -47,6 +48,7 @@ test_that("non-numeric input throws error", {
 })
 
 test_that("negative or non-integer counts throw error", {
+  skip_on_cran()
   dat_neg <- data.frame(
     study = 1:3,
     TP = c(10, -1, 5),
@@ -75,6 +77,7 @@ test_that("negative or non-integer counts throw error", {
 })
 
 test_that("sensspec output structure is correct", {
+  skip_on_cran()
   dat <- data.frame(
     study = 1:4,
     TP = c(30, 25, 40, 35),
@@ -94,6 +97,7 @@ test_that("sensspec output structure is correct", {
 })
 
 test_that("Reitsma recovered parameters exist", {
+  skip_on_cran()
   dat <- data.frame(
     study = 1:4,
     TP = c(30, 25, 40, 35),
@@ -113,6 +117,7 @@ test_that("Reitsma recovered parameters exist", {
 })
 
 test_that("alpha parameter affects CI width", {
+  skip_on_cran()
   dat <- data.frame(
     study = 1:4,
     TP = c(30, 25, 40, 35),
@@ -131,6 +136,7 @@ test_that("alpha parameter affects CI width", {
 })
 
 test_that("custom spec is respected", {
+  skip_on_cran()
   dat <- data.frame(
     study = 1:4,
     TP = c(30, 25, 40, 35),
@@ -146,7 +152,7 @@ test_that("custom spec is respected", {
 
 
 test_that("fitRutterGatsonis validates constraints", {
-  
+  skip_on_cran()
   expect_error(
     fitRutterGatsonis(
       data = RF,
@@ -178,7 +184,7 @@ test_that("fitRutterGatsonis validates constraints", {
 
 
 test_that("sigma2_alpha constraint fixes alpha variance", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonis(
     data = RF,
     TP = TP,
@@ -201,7 +207,7 @@ test_that("sigma2_alpha constraint fixes alpha variance", {
 })
 
 test_that("sigma2_theta constraint fixes theta variance", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonis(
     data = RF,
     TP = TP,

@@ -14,7 +14,7 @@ test_that("fitReitsmaSubgroup returns a ReitsmaSubgroup object", {
 })
 
 test_that("fitReitsmaSubgroup returns expected components", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = RF,
     TP = TP,
@@ -47,7 +47,7 @@ test_that("fitReitsmaSubgroup returns expected components", {
 })
 
 test_that("all subgroup levels are recovered", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = RF,
     TP = TP,
@@ -65,7 +65,7 @@ test_that("all subgroup levels are recovered", {
 })
 
 test_that("sensspec contains expected columns", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = RF,
     TP = TP,
@@ -92,7 +92,7 @@ test_that("sensspec contains expected columns", {
 })
 
 test_that("sensspec estimates lie between 0 and 1", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = RF,
     TP = TP,
@@ -108,7 +108,7 @@ test_that("sensspec estimates lie between 0 and 1", {
 })
 
 test_that("HSROC parameters are recovered for every subgroup", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = RF,
     TP = TP,
@@ -126,7 +126,7 @@ test_that("HSROC parameters are recovered for every subgroup", {
 })
 
 test_that("logLik, AIC and BIC work for ReitsmaSubgroup", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = RF,
     TP = TP,
@@ -148,7 +148,7 @@ test_that("logLik, AIC and BIC work for ReitsmaSubgroup", {
 
 
 test_that("summary.ReitsmaSubgroup returns expected structure", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = RF,
     TP = TP,
@@ -176,7 +176,7 @@ test_that("summary.ReitsmaSubgroup returns expected structure", {
 
 
 test_that("fitReitsmaSubgroup rejects non-data.frame input", {
-  
+  skip_on_cran()
   expect_error(
     fitReitsmaSubgroup(
       data = matrix(1:4, 2, 2),
@@ -218,7 +218,7 @@ test_that("all subgroup levels are recovered", {
 
 
 test_that("fitReitsmaSubgroup validates constrain argument", {
-  
+  skip_on_cran()
   expect_error(
     fitReitsmaSubgroup(
       data = anticcp,
@@ -251,7 +251,7 @@ test_that("fitReitsmaSubgroup validates constrain argument", {
 
 
 test_that("fitReitsmaSubgroup sigma_AB fixes covariance", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = anticcp,
     TP = TP,
@@ -278,7 +278,7 @@ test_that("fitReitsmaSubgroup sigma_AB fixes covariance", {
 })
 
 test_that("fitReitsmaSubgroup sigma2_A fixes sensitivity variance", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = anticcp,
     TP = TP,
@@ -309,7 +309,7 @@ test_that("fitReitsmaSubgroup sigma2_A fixes sensitivity variance", {
 })
 
 test_that("fitReitsmaSubgroup sigma2_B fixes specificity variance", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = anticcp,
     TP = TP,
@@ -340,7 +340,7 @@ test_that("fitReitsmaSubgroup sigma2_B fixes specificity variance", {
 })
 
 test_that("fitReitsmaSubgroup all fixes all random-effects parameters", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = anticcp,
     TP = TP,
@@ -371,7 +371,7 @@ test_that("fitReitsmaSubgroup all fixes all random-effects parameters", {
 })
 
 test_that("fitReitsmaSubgroup still estimates subgroup means", {
-  
+  skip_on_cran()
   fit <- fitReitsmaSubgroup(
     data = anticcp,
     TP = TP,

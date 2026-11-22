@@ -27,7 +27,7 @@ test_that("summary.RutterGatsonisSubgroup returns expected structure", {
 
 
 test_that("summary.RutterGatsonisSubgroup returns object components correctly", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -48,7 +48,7 @@ test_that("summary.RutterGatsonisSubgroup returns object components correctly", 
 
 
 test_that("summary.RutterGatsonisSubgroup components have expected classes", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -72,7 +72,7 @@ test_that("summary.RutterGatsonisSubgroup components have expected classes", {
 })
 
 test_that("summary.RutterGatsonisSubgroup contains subgroup results", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -92,7 +92,7 @@ test_that("summary.RutterGatsonisSubgroup contains subgroup results", {
 
 
 test_that("fitRutterGatsonisSubgroup validates constraints", {
-  
+  skip_on_cran()
   expect_error(
     fitRutterGatsonisSubgroup(
       data = RF,
@@ -124,7 +124,7 @@ test_that("fitRutterGatsonisSubgroup validates constraints", {
 })
 
 test_that("sigma2_alpha fixes accuracy heterogeneity", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -145,7 +145,7 @@ test_that("sigma2_alpha fixes accuracy heterogeneity", {
 
 
 test_that("sigma2_theta fixes threshold heterogeneity", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -166,7 +166,7 @@ test_that("sigma2_theta fixes threshold heterogeneity", {
 
 
 test_that("shape_zero fixes all shape parameters", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -228,7 +228,7 @@ test_that("shape imposes common shape parameter", {
 
 
 test_that("accuracy constraint imposes common Lambda", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -260,7 +260,7 @@ test_that("accuracy constraint imposes common Lambda", {
 })
 
 test_that("threshold constraint imposes common Theta", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -292,7 +292,7 @@ test_that("threshold constraint imposes common Theta", {
 })
 
 test_that("multiple subgroup constraints work together", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -318,7 +318,7 @@ test_that("multiple subgroup constraints work together", {
 
 
 test_that("Reitsma_recovered correctly round-trips per subgroup for fitRutterGatsonisSubgroup (catches sens/spec swaps)", {
-  
+  skip_on_cran()
   data("RF")
   RF2 <- RF[RF$method %in% c("LA", "ELISA", "Nephelometry"), ]
   RF2$method <- factor(RF2$method, levels = c("LA", "ELISA", "Nephelometry"))

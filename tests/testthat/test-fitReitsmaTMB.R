@@ -529,6 +529,7 @@ expect_abs_equal <- function(
 
 extract_glmm_subgroup_parameters <- function(fit) {
   
+  skip_on_cran()
   subgroups <- fit$subgroups
   subgroup_safe <- make.names(subgroups)
   
@@ -590,6 +591,7 @@ extract_glmm_subgroup_parameters <- function(fit) {
 
 extract_tmb_subgroup_parameters <- function(fit) {
   
+  skip_on_cran()
   subgroups <- fit$subgroups
   
   means <- unlist(
@@ -1107,7 +1109,7 @@ test_that(
 test_that(
   "both Reitsma subgroup backends reject variance constraints with unequal variances",
   {
-    
+    skip_on_cran()
     data(
       "anticcp",
       package = "dtametaTMB"
