@@ -1,8 +1,8 @@
 #' Fit the Nyaga Arm-Based DTA Network Meta-Analysis Model
 #'
 #' Fits the reduced arm-based ANOVA model for network meta-analysis of
-#' diagnostic test accuracy proposed by Nyaga et al. The model uses
-#' a binomial-normal likelihood and is fitted by maximum likelihood using a
+#' diagnostic test accuracy proposed by Nyaga et al. The model uses a
+#' binomial-normal likelihood and is fitted by maximum likelihood using a
 #' custom \code{TMB} template and the Laplace approximation.
 #'
 #' The model permits multiple diagnostic tests to be evaluated within the
@@ -14,26 +14,29 @@
 #' For study \eqn{i} and test \eqn{k}, the model is
 #'
 #' \deqn{
-#' \mathrm{logit}(Se_{ik}) =
-#' \mu_{A,k} + u_{A,i} + \delta_{A,ik}
+#' \mathrm{logit}(Se_{ik})
+#' =
+#' \mu_{A,k}+u_{A,i}+\delta_{A,ik}
 #' }
 #'
 #' and
 #'
 #' \deqn{
-#' \mathrm{logit}(Sp_{ik}) =
-#' \mu_{B,k} + u_{B,i} + \delta_{B,ik},
+#' \mathrm{logit}(Sp_{ik})
+#' =
+#' \mu_{B,k}+u_{B,i}+\delta_{B,ik}.
 #' }
 #'
-#' where the study-level random effects
+#' The study-level random effects follow
 #'
 #' \deqn{
 #' (u_{A,i},u_{B,i})^\mathsf{T}
-#' \sim N(0,\Sigma)
+#' \sim
+#' N(0,\Sigma),
 #' }
 #'
-#' follow a common unstructured bivariate normal distribution. The
-#' arm-level effects are assumed independent, with
+#' where \eqn{\Sigma} is a common unstructured variance-covariance matrix.
+#' The arm-level effects are assumed independent, with
 #'
 #' \deqn{
 #' \delta_{A,ik}\sim N(0,\tau_A^2)
@@ -60,6 +63,62 @@
 #'   test.
 #' @param test Diagnostic test identifier (column name). At least two
 #'   diagnostic tests are required.
+#' @param constrain Optional character string specifying a simplified
+#'   covariance structure for the shared study-level random effects.
+#'
+#'   This can be useful for sparse networks, models with near-boundary
+#'   variance estimates, or sensitivity analyses using reduced
+#'   study-level heterogeneity structures.
+#'
+#'   Allowed values are:
+#'   \describe{
+#'     \item{\code{NULL}}{
+#'       The standard unstructured study-level variance-covariance matrix
+#'       is estimated. This is the default.
+#'     }
+#'     \item{\code{"sigma_AB"}}{
+#'       The study-level covariance between logit-sensitivity and
+#'       logit-specificity random effects is fixed at zero. The study-level
+#'       sensitivity and specificity random effects remain independent.
+#'     }
+#'     \item{\code{"sigma2_A"}}{
+#'       The study-level variance of logit-sensitivity is fixed at zero.
+#'       This also implies a zero study-level covariance.
+#'     }
+#'     \item{\code{"sigma2_B"}}{
+#'       The study-level variance of logit-specificity is fixed at zero.
+#'       This also implies a zero study-level covariance.
+#'     }
+#'     \item{\code{"all"}}{
+#'       Both study-level variances and their covariance are fixed at zero.
+#'       Arm-level heterogeneity remains in the model unless it is
+#'       separately removed using \code{tau_constrain}.
+#'     }
+#'   }
+#' @param tau_constrain Optional character vector specifying arm-level
+#'   variance components to be fixed at zero.
+#'
+#'   Allowed values are:
+#'   \describe{
+#'     \item{\code{NULL}}{
+#'       Both arm-level variance components, \eqn{\tau_A^2} and
+#'       \eqn{\tau_B^2}, are estimated. This is the default.
+#'     }
+#'     \item{\code{"tau2_A"}}{
+#'       The arm-level variance of logit-sensitivity,
+#'       \eqn{\tau_A^2}, is fixed at zero.
+#'     }
+#'     \item{\code{"tau2_B"}}{
+#'       The arm-level variance of logit-specificity,
+#'       \eqn{\tau_B^2}, is fixed at zero.
+#'     }
+#'   }
+#'
+#'   Both arm-level variance components may be fixed at zero by specifying
+#'   \code{tau_constrain = c("tau2_A", "tau2_B")}. In that case, all
+#'   residual heterogeneity among study-test arms is removed, while the
+#'   shared study-level variance-covariance structure remains unless it is
+#'   also restricted using \code{constrain}.
 #' @param sensspec_constrain Optional character vector specifying
 #'   restrictions on test-specific logit-sensitivity and/or
 #'   logit-specificity parameters.
@@ -90,7 +149,7 @@
 #'   summary sensitivity and summary specificity to be equal across tests.
 #' @param conflevel Confidence level for confidence intervals. The default
 #'   is \code{0.95}.
-#' @param verbose Logical indicating whether output from the inner
+#' @param verbose Whether output from the inner
 #'   \code{TMB} random-effects optimization should be printed. The default
 #'   is \code{FALSE}.
 #'
@@ -102,44 +161,16 @@
 #'
 #' The model estimates one common study-level variance-covariance matrix
 #' \eqn{\Sigma} across all diagnostic tests. Separate arm-level variance
-#' components \eqn{\tau_A^2} and \eqn{\tau_B^2} are estimated for
-#' logit-sensitivity and logit-specificity.
+#' components \eqn{\tau_A^2} and \eqn{\tau_B^2} describe residual
+#' heterogeneity in logit-sensitivity and logit-specificity among
+#' study-test arms.
 #'
-#' Test-specific mean parameters are reported as \code{mu_A} and
-#' \code{mu_B}. The first level of the test factor is treated as the
-#' reference test. The reported \code{nu_A} and \code{nu_B} parameters are
-#' logit-scale contrasts between each non-reference test and the reference:
-#'
-#' \deqn{
-#' \nu_{A,k}=\mu_{A,k}-\mu_{A,1}
-#' }
-#'
-#' and
-#'
-#' \deqn{
-#' \nu_{B,k}=\mu_{B,k}-\mu_{B,1}.
-#' }
-#'
-#' The test factor should therefore be releveled before fitting when a
-#' specific reference test is required.
-#'
-#' Initial values are obtained from
-#' \code{\link{fitReitsmaSubgroupTMB}} using a common variance-covariance
-#' structure. The estimated subgroup variances are divided between the
-#' study-level and arm-level random-effects components for initialization
-#' only. This allocation does not impose a restriction on the fitted Nyaga
-#' model.
-#'
-#' Summary sensitivities, specificities, positive and negative likelihood
-#' ratios, and diagnostic odds ratios are conditional summary measures
-#' derived from the test-specific fixed effects. Confidence intervals are
-#' based on Wald intervals on the corresponding model scale and are then
-#' transformed to the reported scale.
-#'
-#' Estimates of an arm-level variance component may occur at or near zero.
-#' In that situation, Wald standard errors for that variance component and
-#' related quantities may be unreliable, although inference for the
-#' test-specific fixed effects may remain usable.
+#' Estimates of a study-level or arm-level variance component may occur at
+#' or near zero. In that situation, Wald standard errors for that variance
+#' component and related quantities may be unreliable, although inference
+#' for test-specific fixed effects may remain usable. The constraint
+#' arguments allow reduced models to be fitted explicitly when supported by
+#' the data or required for sensitivity analyses.
 #'
 #' @return A list of class \code{"Nyaga"} and \code{"DTAmodel"} with
 #' components:
@@ -157,18 +188,18 @@
 #'   ratios and diagnostic odds ratios with confidence intervals.
 #'   \item \code{tests}: Diagnostic test levels used in the fitted model,
 #'   in model-matrix order. The first level is the reference test.
-#'   \item \code{reference}: The reference test used for logit-scale
-#'   contrasts.
-#'   \item \code{sensspec_constrain}: Constraints imposed on
-#'   test-specific sensitivity or specificity parameters.
-#'   \item \code{max_gradient}: Maximum absolute gradient component at the
-#'   reported optimum.
-#'   \item \code{variance_structure}: Description of the study-level and
-#'   arm-level random-effects covariance structures.
+#'   \item \code{constrain}: Study-level random-effects parameters fixed
+#'   at zero.
+#'   \item \code{tau_constrain}: Arm-level variance components fixed at
+#'   zero.
+#'   \item \code{sensspec_constrain}: Whether sensitivity and/or
+#'   specificity were constrained to be common across tests.
 #' }
 #'
 #' @examples
 #' \dontrun{
+#' data("HPV")
+#'
 #' fit <- fitNyaga(
 #'   data = HPV,
 #'   TP = TP,
@@ -178,6 +209,7 @@
 #'   study = StudyID,
 #'   test = Test
 #' )
+#'
 #' fit
 #' summary(fit)
 #' }
@@ -185,13 +217,13 @@
 #' @references
 #' Nyaga, V. N., Aerts, M., & Arbyn, M. (2018).
 #' ANOVA model for network meta-analysis of diagnostic test accuracy data.
-#' \emph{Statistical Methods in Medical Research}, 27(6), 1766-1784.
+#' \emph{Statistical Methods in Medical Research}, 27(6), 1766--1784.
 #' \doi{10.1177/0962280216669182}
 #'
-#' Nyaga, V. N., Arbyn, M., & Aerts, M. (2023).
-#' Comparison and validation of metadta for meta-analysis of diagnostic
-#' test accuracy studies.
-#' \emph{Research Synthesis Methods}, 14(3), 544-562.
+#' Nyaga, V. N., & Arbyn, M. (2023).
+#' Comparison and validation of \emph{metadta} for meta-analysis of
+#' diagnostic test accuracy studies.
+#' \emph{Research Synthesis Methods}, 14(3), 544--562.
 #' \doi{10.1002/jrsm.1634}
 #'
 #' @importFrom TMB MakeADFun sdreport
@@ -199,9 +231,14 @@
 #' @export
 
 fitNyaga <- function(data,
-                     TP, FP, FN, TN,
+                     TP, 
+                     FP, 
+                     FN, 
+                     TN,
                      study,
                      test,
+                     constrain=NULL,
+                     tau_constrain=NULL,
                      sensspec_constrain=NULL,
                      conflevel=0.95,
                      verbose=FALSE) {
@@ -225,6 +262,57 @@ fitNyaga <- function(data,
       stop(
         "Unknown sensspec constraint(s): ",
         paste(invalid_constraints, collapse=", ")
+      )
+    }
+  }
+  
+  ## Constraints ###
+  allowed_constraints <- c(
+    "sigma_AB",
+    "sigma2_A",
+    "sigma2_B",
+    "all"
+  )
+  
+  if (!is.null(constrain)) {
+    if (!is.character(constrain) ||
+        length(constrain) != 1 ||
+        !constrain %in% allowed_constraints) {
+      stop(
+        "'constrain' must be one of: ",
+        paste(shQuote(allowed_constraints), collapse = ", "),
+        " or NULL."
+      )
+    }
+  }
+  
+  allowed_tau_constraints <- c(
+    "tau2_A",
+    "tau2_B"
+  )
+  
+  if (length(tau_constrain) == 0L) {
+    tau_constrain <- NULL
+  }
+  
+  if (!is.null(tau_constrain)) {
+    if (!is.character(tau_constrain)) {
+      stop("'tau_constrain' must be a character vector or NULL."
+      )
+    }
+    
+    tau_constrain <- unique(tau_constrain)
+    
+    invalid_tau_constraints <- setdiff(
+      tau_constrain,
+      allowed_tau_constraints
+    )
+    
+    if (length(invalid_tau_constraints) > 0L) {
+      stop(
+        "Unknown arm-level variance constraint(s): ",
+        paste(invalid_tau_constraints, collapse = ", "),
+        ". Allowed values are 'tau2_A' and 'tau2_B'."
       )
     }
   }
@@ -340,6 +428,45 @@ fitNyaga <- function(data,
     }
   }
   
+  if(!is.null(constrain)){
+    if (constrain == "sigma_AB") {
+      parameters$theta_AB <- 0
+      map$theta_AB        <- factor(NA)
+    }
+    if (constrain == "sigma2_A") {
+      parameters$log_sigma_A <- log(.Machine$double.eps)
+      parameters$theta_AB    <- 0
+      map$log_sigma_A        <- factor(NA)
+      map$theta_AB           <- factor(NA)
+    }
+    if (constrain == "sigma2_B") {
+      parameters$log_sigma_B <- log(.Machine$double.eps)
+      parameters$theta_AB    <- 0
+      map$log_sigma_B        <- factor(NA)
+      map$theta_AB           <- factor(NA)
+    }
+    if (constrain == "all") {
+      parameters$log_sigma_A <- log(.Machine$double.eps)
+      parameters$log_sigma_B <- log(.Machine$double.eps)
+      parameters$theta_AB    <- 0
+      map$log_sigma_A        <- factor(NA)
+      map$log_sigma_B        <- factor(NA)
+      map$theta_AB           <- factor(NA)
+    }
+  }
+  
+  if (!is.null(tau_constrain)) {
+    if ("tau2_A" %in% tau_constrain) {
+      parameters$log_tau_A <- log(.Machine$double.eps)
+      map$log_tau_A        <- factor(NA)
+    }
+    if ("tau2_B" %in% tau_constrain) {
+      parameters$log_tau_B <- log(.Machine$double.eps)
+      map$log_tau_B        <- factor(NA)
+    }
+  }
+  
+  
   ###
   
   dat2$model = "Nyaga"
@@ -416,7 +543,10 @@ fitNyaga <- function(data,
               vcov         = vcov,
               sensspec     = sesp,
               LRDOR        = lrdor2,
-              tests        = ltest)
+              tests        = ltest,
+              constrain    = constrain,
+              tau_constrain=tau_constrain,
+              sensspec_constrain=sensspec_constrain)
   class(ret) <- c("Nyaga","DTAmodel")
   return(ret)
 }
@@ -511,7 +641,7 @@ print.Nyaga <- function(x, ...) {
 #' parameter estimates, sensitivity and specificity summaries.
 #'
 #' @param object An object of class \code{"Nyaga"} as returned by
-#'   \code{\link{Nyaga}}.
+#'   \code{\link{fitNyaga}}.
 #' @param ... Additional arguments (currently ignored).
 #'
 #' @return A list of class \code{"summary.Nyaga"} with the following components:

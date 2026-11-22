@@ -1,0 +1,673 @@
+---
+title: "Network Meta-Analysis"
+subtitle: "The Nyaga Arm-Based Model"
+format:
+  html:
+    toc: true
+# pdf
+vignette: >
+  %\VignetteIndexEntry{Network Meta-Analysis}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dtametaTMB)
+```
+
+## What is diagnostic test accuracy network meta-analysis?
+
+Diagnostic test accuracy network meta-analysis combines evidence on multiple diagnostic tests within a single statistical model. The evidence network may contain studies evaluating one test and comparative studies evaluating two or more tests.
+
+Studies evaluating several tests provide information about differences between tests under a shared study context. Because results from different tests evaluated in the same study may be statistically dependent, the arm-based model proposed by Nyaga et al. links these test arms through shared study-level random effects and includes:
+
+- test-specific mean logit sensitivities and specificities;
+- correlated study-level random effects shared by all tests evaluated in the same study; and
+- additional arm-level random effects for individual study-test combinations.
+
+> Nyaga, V. N., Aerts, M., & Arbyn, M. (2018). ANOVA model for network meta-analysis of diagnostic test accuracy data. *Statistical Methods in Medical Research*, 27(6), 1766--1784.
+
+## How must the data be structured?
+
+The input data must be in arm-based long format. Each row represents one diagnostic test evaluated in one study and contains a complete $2 \times 2$ table:
+
+- true positives (`TP`);
+- false positives (`FP`);
+- false negatives (`FN`); and
+- true negatives (`TN`).
+
+A study evaluating several diagnostic tests therefore contributes several rows with the same study identifier.
+
+Consider a study evaluating tests $A$, $B$, and $C$. The study contributes three rows:
+
+| Study | Test | TP | FP | FN | TN |
+|:------|:-----|---:|---:|---:|---:|
+| Study 1 | A | ... | ... | ... | ... |
+| Study 1 | B | ... | ... | ... | ... |
+| Study 1 | C | ... | ... | ... | ... |
+
+Each study-test combination must occur only once. Duplicate rows should be aggregated to one $2 \times 2$ table before fitting the model.
+
+## Which model does `fitNyaga()` fit?
+
+For study $i$ and diagnostic test $k$, let $Se_{ik}$ and $Sp_{ik}$ denote sensitivity and specificity, respectively.
+
+The sensitivity model is
+
+$$
+\operatorname{logit}(Se_{ik})
+=
+\mu_{A,k}
++
+u_{A,i}
++
+\delta_{A,ik},
+$$
+
+and the specificity model is
+
+$$
+\operatorname{logit}(Sp_{ik})
+=
+\mu_{B,k}
++
+u_{B,i}
++
+\delta_{B,ik}.
+$$
+
+The parameters
+
+$$
+\mu_{A,k}
+\quad\text{and}\quad
+\mu_{B,k}
+$$
+
+are the mean logit sensitivity and specificity of test $k$.
+
+The study-level random effects are shared by all diagnostic tests evaluated in study $i$:
+
+$$
+\begin{pmatrix}
+u_{A,i}\\
+u_{B,i}
+\end{pmatrix}
+\sim
+\mathcal{N}
+\left(
+\begin{pmatrix}
+0\\
+0
+\end{pmatrix},
+\Sigma
+\right),
+\quad
+\text{with}
+\quad
+\Sigma
+=
+\begin{pmatrix}
+\sigma_A^2 &
+\sigma_{AB}\\
+\sigma_{AB} &
+\sigma_B^2
+\end{pmatrix}.
+$$
+
+## What are the arm-level random effects?
+
+The terms
+
+$$
+\delta_{A,ik}
+\quad\text{and}\quad
+\delta_{B,ik}
+$$
+
+describe residual heterogeneity for individual study-test arms after accounting for the shared study effects.
+
+The model fitted by `fitNyaga()` assumes
+
+$$
+\delta_{A,ik}
+\sim
+\mathcal{N}(0,\tau_A^2)
+\quad
+\text{and}
+\quad
+\delta_{B,ik}
+\sim
+\mathcal{N}(0,\tau_B^2).
+$$
+
+The arm-level sensitivity and specificity effects are assumed independent.
+
+## How are the observed data modelled?
+
+For study-test arm $ik$, the diseased and non-diseased sample sizes are
+
+$$
+n_{1,ik}=TP_{ik}+FN_{ik}
+$$
+
+and
+
+$$
+n_{0,ik}=TN_{ik}+FP_{ik}.
+$$
+
+Conditional on the random effects,
+
+$$
+TP_{ik}
+\sim
+\operatorname{Binomial}
+\left(
+n_{1,ik},
+Se_{ik}
+\right),
+$$
+
+and
+
+$$
+TN_{ik}
+\sim
+\operatorname{Binomial}
+\left(
+n_{0,ik},
+Sp_{ik}
+\right).
+$$
+
+The random effects are integrated from the likelihood using the Laplace approximation implemented in Template Model Builder.
+
+## How are summary sensitivity and specificity defined?
+
+For test $k$, `fitNyaga()` reports the conditional summary sensitivity and specificity
+
+$$
+Se_k
+=
+\operatorname{logit}^{-1}(\mu_{A,k})
+$$
+
+and
+
+$$
+Sp_k
+=
+\operatorname{logit}^{-1}(\mu_{B,k}).
+$$
+
+These quantities represent the estimated accuracy of test $k$ when the study-level and arm-level random effects equal zero.
+
+Confidence intervals are first constructed on the logit scale:
+
+$$
+\widehat{\mu}_{A,k}
+\pm
+z_{1-\alpha/2}
+SE(\widehat{\mu}_{A,k})
+$$
+
+and
+
+$$
+\widehat{\mu}_{B,k}
+\pm
+z_{1-\alpha/2}
+SE(\widehat{\mu}_{B,k}),
+$$
+
+and are subsequently transformed using the inverse-logit function.
+
+This reporting convention is consistent with the Reitsma models in **dtametaTMB**.
+
+## How are contrasts between diagnostic tests reported?
+
+The first level of the test factor is treated as the reference test.
+
+For each non-reference test $k$, `fitNyaga()` reports the logit-scale contrasts
+
+$$
+\nu_{A,k}
+=
+\mu_{A,k}
+-
+\mu_{A,1}
+\quad
+\text{and}
+\quad
+\nu_{B,k}
+=
+\mu_{B,k}
+-
+\mu_{B,1}.
+$$
+
+A positive value of $\nu_{A,k}$ indicates that test $k$ has a higher mean logit sensitivity than the reference test. A positive value of $\nu_{B,k}$ indicates a higher mean logit specificity.
+
+The covariance between the test-specific estimates is incorporated when calculating the standard errors of these contrasts.
+
+The test factor should be releveled before fitting when a particular reference test is required.
+
+## Which additional summary measures are reported?
+
+For each diagnostic test, `fitNyaga()` calculates:
+
+### Positive likelihood ratio
+
+$$
+LR_k^+
+=
+\frac{Se_k}{1-Sp_k}.
+$$
+
+### Negative likelihood ratio
+
+$$
+LR_k^-
+=
+\frac{1-Se_k}{Sp_k}.
+$$
+
+### Diagnostic odds ratio
+
+$$
+DOR_k
+=
+\frac{LR_k^+}{LR_k^-}.
+$$
+
+Because
+
+$$
+\operatorname{logit}(Se_k)
+=
+\mu_{A,k}
+$$
+
+and
+
+$$
+\operatorname{logit}(Sp_k)
+=
+\mu_{B,k},
+$$
+
+the log diagnostic odds ratio is
+
+$$
+\log(DOR_k)
+=
+\mu_{A,k}
++
+\mu_{B,k}.
+$$
+
+Confidence intervals for likelihood ratios and diagnostic odds ratios are constructed on the logarithmic scale using the delta method and the estimated covariance between $\widehat{\mu}_{A,k}$ and $\widehat{\mu}_{B,k}$.
+
+## How is the total heterogeneity defined?
+
+For a future study-test arm, the total latent sensitivity variance is
+
+$$
+\sigma_A^2+\tau_A^2,
+$$
+
+and the total latent specificity variance is
+
+$$
+\sigma_B^2+\tau_B^2.
+$$
+
+Because the arm-level sensitivity and specificity effects are independent, their covariance remains
+
+$$
+\sigma_{AB}.
+$$
+
+The total predictive covariance matrix is therefore
+
+$$
+\Omega
+=
+\begin{pmatrix}
+\sigma_A^2+\tau_A^2 &
+\sigma_{AB}\\
+\sigma_{AB} &
+\sigma_B^2+\tau_B^2
+\end{pmatrix}.
+$$
+
+The corresponding total latent correlation is
+
+$$
+\rho_{\mathrm{total}}
+=
+\frac{
+\sigma_{AB}
+}{
+\sqrt{
+(\sigma_A^2+\tau_A^2)
+(\sigma_B^2+\tau_B^2)
+}
+}.
+$$
+
+## What are the intra-study correlations?
+
+Two sensitivity estimates from different test arms in the same study share the study-level sensitivity effect $u_{A,i}$. Their latent intra-study correlation is
+
+$$
+ICC_A
+=
+\frac{
+\sigma_A^2
+}{
+\sigma_A^2+\tau_A^2
+}.
+$$
+
+Similarly, the latent intra-study correlation between specificity estimates is
+
+$$
+ICC_B
+=
+\frac{
+\sigma_B^2
+}{
+\sigma_B^2+\tau_B^2
+}.
+$$
+
+Values close to one indicate that most heterogeneity is attributable to the shared study context. Values close to zero indicate that most heterogeneity occurs at the individual study-test-arm level.
+
+## How are confidence and prediction regions constructed?
+
+For test $k$, the confidence region is based on the estimated covariance matrix of
+
+$$
+\begin{pmatrix}
+\widehat{\mu}_{A,k}\\
+\widehat{\mu}_{B,k}
+\end{pmatrix}.
+$$
+
+The prediction region additionally incorporates the total latent covariance matrix
+
+$$
+\Omega
+=
+\Sigma
++
+\begin{pmatrix}
+\tau_A^2 & 0\\
+0 & \tau_B^2
+\end{pmatrix}.
+$$
+
+Prediction regions therefore describe the estimated distribution of the true latent sensitivity and specificity of a future study-test arm rather than the distribution of future observed proportions.
+
+The plotting method uses the finite-sample \(F\)-based contour convention employed by other plotting methods in **dtametaTMB**.
+
+## How are starting values obtained?
+
+`fitNyaga()` obtains initial values from `fitReitsmaSubgroupTMB()` using the diagnostic test as a categorical subgroup variable and a common variance-covariance structure.
+
+For initialization only, the subgroup heterogeneity variances are divided between the study-level and arm-level components.
+
+## The HPV dataset
+
+The `HPV` dataset contains 36 study-test arms from 17 studies evaluating:
+
+- conventional cytology (`CC`);
+- Hybrid Capture 2 (`HC2`); and
+- liquid-based cytology (`LBC`).
+
+Each row represents one observed study-test combination.
+
+```{r}
+#| echo: TRUE
+
+data("HPV")
+head(HPV)
+table(HPV$Test)
+length(unique(HPV$StudyID))
+```
+
+## How do I select the reference test?
+
+The first factor level is used as the reference category for the reported $\nu_A$ and $\nu_B$ contrasts.
+
+To use HC2 as the reference test:
+
+```{r}
+#| echo: TRUE
+
+HPV$Test <- factor(HPV$Test,levels = c("HC2", "CC", "LBC"))
+levels(HPV$Test)
+```
+
+Changing the reference level changes the reported contrasts but does not change the fitted test-specific mean sensitivities and specificities or the maximized likelihood.
+
+## How do I fit the Nyaga model?
+
+```{r}
+#| echo: TRUE
+
+nyaga <- fitNyaga(data = HPV,
+                  TP = TP,
+                  FP = FP,
+                  FN = FN,
+                  TN = TN,
+                  study = StudyID,
+                  test = Test)
+nyaga
+summary(nyaga)
+```
+
+## How do I interpret the heterogeneity parameters?
+
+The model separates heterogeneity into two components.
+
+The study-level covariance matrix is
+
+$$
+\Sigma
+=
+\begin{pmatrix}
+\sigma_A^2 & \sigma_{AB}\\
+\sigma_{AB} & \sigma_B^2
+\end{pmatrix}.
+$$
+
+This component represents differences in study contexts that affect all diagnostic tests evaluated in the same study.
+
+The arm-level variances
+
+$$
+\tau_A^2
+\quad\text{and}\quad
+\tau_B^2
+$$
+
+represent residual variation between individual study-test arms.
+
+The total heterogeneity of a future test arm is determined by
+
+$$
+\sigma_A^2+\tau_A^2
+$$
+
+for sensitivity and
+
+$$
+\sigma_B^2+\tau_B^2
+$$
+
+for specificity.
+
+An arm-level variance may be estimated at or near zero. In such cases, Wald standard errors for that variance component and related quantities may be unreliable, although inference for test-specific fixed effects can remain usable.
+
+## How do I obtain a summary ROC plot?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 8
+#| fig.width: 10
+
+plot(nyaga,size="se_revman",nudge_legend = -0.25)
+```
+
+## How do I obtain a coupled forest plot?
+
+```{r}
+#| echo: TRUE
+#| fig.height: 11
+#| fig.width: 13
+
+forest(nyaga,order = "test")
+```
+
+
+*Note:* Rendering forest plots may take longer in an interactive R session due to the underlying grid graphics. Performance is typically faster when knitting the vignette (e.g. via RMarkdown or Quarto).
+
+## How can I constrain sensitivity across tests?
+
+By default, `fitNyaga()` estimates separate mean logit sensitivities and specificities for every diagnostic test.
+
+To fit a reduced model in which sensitivity is assumed equal across tests:
+
+```{r}
+#| echo: TRUE
+
+nyaga_common_sens <- fitNyaga(data = HPV,
+                              TP = TP,
+                              FP = FP,
+                              FN = FN,
+                              TN = TN,
+                              study = StudyID,
+                              test = Test,
+                              sensspec_constrain = "sens")
+
+nyaga_common_sens
+```
+
+To assume equal specificity:
+
+```{r}
+#| echo: TRUE
+
+nyaga_common_spec <- fitNyaga(data = HPV,
+                              TP = TP,
+                              FP = FP,
+                              FN = FN,
+                              TN = TN,
+                              study = StudyID,
+                              test = Test,
+                              sensspec_constrain = "spec")
+
+nyaga_common_spec
+```
+
+Both may be constrained simultaneously:
+
+```{r}
+#| echo: TRUE
+
+nyaga_common_both <- fitNyaga(data = HPV,
+                              TP = TP,
+                              FP = FP,
+                              FN = FN,
+                              TN = TN,
+                              study = StudyID,
+                              test = Test,
+                              sensspec_constrain = c("sens","spec"))
+
+nyaga_common_both
+```
+
+## How can I compare constrained models?
+
+The constrained models are nested within the unrestricted model and can be compared using likelihood-ratio tests:
+
+```{r}
+#| echo: TRUE
+
+anova(nyaga_common_sens,nyaga)
+anova(nyaga_common_spec,nyaga)
+anova(nyaga_common_both,nyaga)
+```
+
+## How does `fitNyaga()` differ from `fitReitsmaSubgroup()`?
+
+`fitReitsmaSubgroup()`/`fitReitsmaSubgroupTMB()` can use diagnostic test as a categorical subgroup variable and estimate different mean sensitivities and specificities across tests.
+
+However, a conventional subgroup model does not explicitly represent the dependence created when multiple tests are evaluated within the same study.
+
+`fitNyaga()` introduces a shared study-level random effect:
+
+$$
+\begin{pmatrix}
+u_{A,i}\\
+u_{B,i}
+\end{pmatrix},
+$$
+
+which is common to all tests evaluated in study $i$. It also includes residual study-test-arm effects:
+
+$$
+\delta_{A,ik}
+\quad\text{and}\quad
+\delta_{B,ik}.
+$$
+
+The Nyaga model is therefore particularly relevant when the evidence contains a mixture of:
+
+- studies evaluating a single diagnostic test;
+- studies comparing two tests; and
+- studies evaluating several tests.
+
+A Reitsma subgroup or meta-regression analysis remains useful as a conventional analysis of test differences, especially when each study contributes one primary test result. The models answer related but not identical questions.
+
+## What are the current model limitations?
+
+The `fitNyaga()` implementation assumes:
+
+- one common unstructured study-level covariance matrix across tests;
+- separate but test-common arm-level sensitivity and specificity variances;
+- independent sensitivity and specificity arm-level deviations;
+- one $2 \times 2$ table per study-test combination; and
+- a connected network of diagnostic tests.
+
+The current implementation does not estimate:
+
+- test-specific study-level covariance matrices;
+- test-specific arm-level variances;
+- correlation between sensitivity and specificity arm-level effects;
+- additional categorical or continuous covariates;
+- network inconsistency parameters; or
+- latent-class extensions for an imperfect reference standard.
+
+The model is based on aggregate $2\times2$ tables and does not distinguish between paired multi-test designs and studies in which separate participant groups receive different index tests.
+
+## How was the implementation validated?
+
+The TMB implementation was compared with the original Bayesian Stan implementation using the Nyaga demonstration data from <https://github.com/VNyaga/NMADAS/tree/master/data>. The test-specific logit means and study-level covariance estimates were closely comparable. Differences were concentrated in arm-level variance components, particularly where the maximum-likelihood estimate occurred near the boundary and the Bayesian prior retained a positive posterior distribution.
+
+The implementation was also tested on larger connected diagnostic test networks to assess numerical stability and model behaviour.
+
+## References
+
+Nyaga, V. N., Aerts, M., & Arbyn, M. (2018). ANOVA model for network meta-analysis of diagnostic test accuracy data. *Statistical Methods in Medical Research*, 27(6), 1766-1784.
+
+Nyaga, V. N., & Arbyn, M. (2023). Comparison and validation of *metadta* for meta-analysis of diagnostic test accuracy studies. *Research Synthesis Methods*, 14(3), 544-562. 
+
+Reitsma, J. B., Glas, A. S., Rutjes, A. W. S., Scholten, R. J. P. M., Bossuyt, P. M., & Zwinderman, A. H. (2005). Bivariate analysis of sensitivity and specificity produces informative summary measures in diagnostic reviews. *Journal of Clinical Epidemiology*, 58(10), 982-990.

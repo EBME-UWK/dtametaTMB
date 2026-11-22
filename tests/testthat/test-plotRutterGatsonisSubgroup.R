@@ -1,5 +1,5 @@
 test_that("plot.RutterGatsonisSubgroup runs without error", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -16,7 +16,7 @@ test_that("plot.RutterGatsonisSubgroup runs without error", {
 })
 
 test_that("plot.RutterGatsonisSubgroup accepts user colours", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -60,7 +60,7 @@ test_that("all size options work", {
 
 
 test_that("custom specrange works", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -81,7 +81,7 @@ test_that("custom specrange works", {
 
 
 test_that("custom title works", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -101,7 +101,7 @@ test_that("custom title works", {
 })
 
 test_that("plot dispatches correctly", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -123,7 +123,7 @@ test_that("plot dispatches correctly", {
 })
 
 test_that("plot.RutterGatsonisSubgroup runs without error", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -141,7 +141,7 @@ test_that("plot.RutterGatsonisSubgroup runs without error", {
 
 
 test_that("plot.RutterGatsonisSubgroup accepts graphical options", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -162,7 +162,7 @@ test_that("plot.RutterGatsonisSubgroup accepts graphical options", {
 })
 
 test_that("plot.RutterGatsonisSubgroup rejects invalid size", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,
@@ -182,7 +182,7 @@ test_that("plot.RutterGatsonisSubgroup rejects invalid size", {
 })
 
 test_that("plot dispatches correctly for RutterGatsonisSubgroup", {
-  
+  skip_on_cran()
   expect_true(
     is.function(
     getS3method(
@@ -194,7 +194,7 @@ test_that("plot dispatches correctly for RutterGatsonisSubgroup", {
 })
 
 test_that("plot.RutterGatsonisSubgroup restores graphics parameters", {
-  
+  skip_on_cran()
   fit <- fitRutterGatsonisSubgroup(
     data = RF,
     TP = TP,

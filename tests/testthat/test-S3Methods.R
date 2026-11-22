@@ -163,6 +163,18 @@ test_that("common generic methods work across inheritance hierarchy", {
     eval_threshold  = c(5, 6, 7)
   )
   
+  ## Nyaga ------------------------------------------------------
+  
+  data("HPV", package = "dtametaTMB")
+  
+  nyaga <- fitNyaga(data=HPV,
+                    TP=TP,
+                    FP=FP,
+                    FN=FN,
+                    TN=TN,
+                    study=StudyID,
+                    test=Test)
+  
   models <- list(
     reitsma,
     reitsmaTMB,
@@ -175,7 +187,8 @@ test_that("common generic methods work across inheritance hierarchy", {
     rugaReg,
     rugaLCA,
     rugaSubLCA,
-    hoyer
+    hoyer,
+    nyaga
   )
   
   models2 <- list(
@@ -220,5 +233,6 @@ test_that("common generic methods work across inheritance hierarchy", {
   }
   expect_no_error(plot(hoyer,studyCI=TRUE,studylabels=TRUE))
   expect_no_error(plot(hoyer,legend=FALSE))
+  expect_no_error(plot(nyaga,legend=FALSE))
   
 })

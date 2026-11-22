@@ -8,7 +8,7 @@
 }
 \arguments{
 \item{object}{An object of class \code{"Nyaga"} as returned by
-\code{\link{Nyaga}}.}
+\code{\link{fitNyaga}}.}
 
 \item{...}{Additional arguments (currently ignored).}
 }
