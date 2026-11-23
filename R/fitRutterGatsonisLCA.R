@@ -154,14 +154,15 @@ fitRutterGatsonisLCA <- function(data,
   n_study <- nrow(X)
   
   ### Get initial values
-  init <- tryCatch(fitRutterGatsonis(data=X,
+  init <- tryCatch(suppressWarnings(
+                   fitRutterGatsonis(data=X,
                                      TP=y11,
                                      FP=y10,
                                      FN=y01,
                                      TN=y00,
                                      study=study,
                                      conflevel=conflevel,
-                                     constrain=NULL)$sdreport,
+                                     constrain=NULL)$sdreport),
                    error = function(e) NULL)
   ###
   Lambda_init  <- NA_real_

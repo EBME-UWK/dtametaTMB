@@ -9,7 +9,6 @@
 \alias{coef.ReitsmaLCA}
 \alias{coef.ReitsmaSubgroupLCA}
 \alias{coef.Nyaga}
-\alias{vcov.Nyaga}
 \alias{coef.ReitsmaSubgroupTMB}
 \alias{coef.ReitsmaTMB}
 \title{Extract Model Coefficients}
@@ -25,8 +24,6 @@
 \method{coef}{ReitsmaSubgroupLCA}(object, ...)
 
 \method{coef}{Nyaga}(object, ...)
-
-\method{vcov}{Nyaga}(object, ...)
 
 \method{coef}{ReitsmaSubgroupTMB}(object, ...)
 

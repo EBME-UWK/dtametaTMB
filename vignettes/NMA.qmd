@@ -3,7 +3,7 @@ title: "Network Meta-Analysis"
 subtitle: "The Nyaga Arm-Based Model"
 format:
   html:
-    toc: true
+   toc: true
 # pdf
 vignette: >
   %\VignetteIndexEntry{Network Meta-Analysis}
@@ -530,6 +530,7 @@ plot(nyaga,size="se_revman",nudge_legend = -0.25)
 
 ```{r}
 #| echo: TRUE
+#| eval: FALSE
 #| fig.height: 11
 #| fig.width: 13
 
@@ -645,7 +646,7 @@ The `fitNyaga()` implementation assumes:
 - separate but test-common arm-level sensitivity and specificity variances;
 - independent sensitivity and specificity arm-level deviations;
 - one $2 \times 2$ table per study-test combination; and
-- a connected network of diagnostic tests.
+- exchangeability of the study-level effects
 
 The current implementation does not estimate:
 

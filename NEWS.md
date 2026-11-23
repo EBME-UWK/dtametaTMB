@@ -1,4 +1,4 @@
-# dtametaTMB 0.1.5.
+# dtametaTMB 0.1.5
 
 * fitNyaga() implements the reduced arm-based diagnostic test accuracy network meta-analysis model of 
   Nyaga, Aerts, and Arbyn (2018). The model jointly analyzes single-test and multi-test studies.

@@ -144,8 +144,9 @@ anova_lrt <- function(object, ..., test = "Chisq") {
 #' the boundary of the parameter space.
 #'
 #' This issue can arise when comparing Reitsma models that constrain
-#' sigma2_A or sigma2_B, or Rutter-Gatsonis models that constrain
-#' sigma2_alpha or sigma2_theta. Tests involving multiple variance
+#' sigma2_A or sigma2_B, Rutter-Gatsonis models that constrain
+#' sigma2_alpha or sigma2_theta, or Nyaga models that constrain
+#' sigma2_A, sigma2_B, tau2_A, or tau2_B. Tests involving multiple variance
 #' components constrained to zero may require additional care. In such
 #' cases, the asymptotic reference distribution may be a mixture of
 #' chi-squared distributions rather than a single chi-squared distribution.

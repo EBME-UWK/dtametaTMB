@@ -468,6 +468,7 @@ plot(papLCA2,specrange=c(0.3,0.995))
 
 ```{r}
 #| echo: TRUE
+#| eval: FALSE
 #| fig.height: 17
 #| fig.width: 11
 forest(papLCA2)
@@ -535,6 +536,7 @@ plot(papLCA3,
 
 ```{r}
 #| echo: TRUE
+#| eval: FALSE
 #| fig.height: 17
 #| fig.width: 13
 forest(papLCA3)
@@ -574,6 +576,7 @@ plot(papLCA4,
 
 ```{r}
 #| echo: TRUE
+#| eval: FALSE
 #| fig.height: 17
 #| fig.width: 13
 forest(papLCA4)

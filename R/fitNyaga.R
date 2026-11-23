@@ -350,7 +350,8 @@ fitNyaga <- function(data,
   XP <- getXP(X=X)
   
   ### Get initial values
-  init <- tryCatch(fitReitsmaSubgroupTMB(data=X,
+  init <- tryCatch(suppressWarnings(
+                   fitReitsmaSubgroupTMB(data=X,
                                          TP=TP,
                                          FP=FP,
                                          FN=FN,
@@ -358,7 +359,8 @@ fitNyaga <- function(data,
                                          study=study,
                                          subgroup=test,
                                          conflevel=conflevel,
-                                         constrain=NULL)$sdreport,
+                                         variances="common",
+                                         constrain=NULL)$sdreport),
                    error = function(e) NULL)
   
   muA_init <- rep(NA_real_,n_test)
@@ -589,7 +591,7 @@ logLik.Nyaga <- logLik.DTAmodel
 #' @export
 coef.Nyaga <- coef.DTAmodel
 
-#' @rdname coef.dtametaTMB
+#' @rdname vcov.dtametaTMB
 #' @export
 vcov.Nyaga <- vcov.DTAmodel
 

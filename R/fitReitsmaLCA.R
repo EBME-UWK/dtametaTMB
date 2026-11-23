@@ -142,10 +142,11 @@ fitReitsmaLCA <- function(data,
   n_study <- nrow(X)
   
   ### Get initial values
-  init <- tryCatch(fitReitsmaTMB(data=X,
+  init <- tryCatch(suppressWarnings(
+                   fitReitsmaTMB(data=X,
                                  TP=y11,FP=y10,FN=y01,TN=y00,study=study,
                                  constrain=NULL,
-                                 conflevel=conflevel)$sdreport,
+                                 conflevel=conflevel)$sdreport),
                    error = function(e) NULL)
   muA_init <- NA_real_
   muB_init <- NA_real_

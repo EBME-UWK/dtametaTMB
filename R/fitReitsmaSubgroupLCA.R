@@ -207,14 +207,15 @@ fitReitsmaSubgroupLCA <- function(data,
   X$n        <- with(X, y11+y10+y01+y00)
 
   ### Get initial values
-  init <- tryCatch(fitReitsmaLCA(data=X,
+  init <- tryCatch(suppressWarnings(
+                   fitReitsmaLCA(data=X,
                                  y11=y11,
                                  y10=y10,
                                  y01=y01,
                                  y00=y00,
                                  study=study,
                                  conflevel=conflevel,
-                                 constrain=NULL)$sdreport,
+                                 constrain=NULL)$sdreport),
                    error = function(e) NULL)
 
   muA_init <- NA_real_

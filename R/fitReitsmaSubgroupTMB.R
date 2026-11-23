@@ -205,10 +205,11 @@ fitReitsmaSubgroupTMB <- function(data,
   XP <- getXP(X=X)
   
   ### Get initial values
-  init <- tryCatch(fitReitsmaTMB(data=X,
+  init <- tryCatch(suppressWarnings(
+                   fitReitsmaTMB(data=X,
                                  TP=TP,FP=FP,FN=FN,TN=TN,study=study,
                                  constrain=NULL,
-                                 conflevel=conflevel)$sdreport,
+                                 conflevel=conflevel)$sdreport),
                    error = function(e) NULL)
   muA_init <- NA_real_
   muB_init <- NA_real_

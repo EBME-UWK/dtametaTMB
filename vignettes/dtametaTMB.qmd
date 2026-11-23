@@ -243,6 +243,7 @@ Performance is typically faster when knitting the vignette (e.g. via RMarkdown o
 #| fig.height: 14
 #| fig.width: 13
 #| echo: TRUE
+#| eval: FALSE
 forest(ruttergatsonis)
 ```
 
@@ -442,10 +443,6 @@ summary(hoyer)
 #| fig.height: 8
 #| fig.width: 8
 plot(hoyer,
-     main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
-plot(hoyer,size="sampsize",scale=0.025,
-     main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
-plot(hoyer,size="se",scale=0.025,
      main="Diagnostic Test Accuracy Meta-Analysis\nLoglogistic Model")
 ```
 

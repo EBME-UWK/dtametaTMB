@@ -180,14 +180,15 @@ fitRutterGatsonisSubgroupLCA <- function(data,
   X$n        <- with(X, y11+y10+y01+y00)
   
   # Get starting values
-  init <- tryCatch(fitRutterGatsonisLCA(data=X,
+  init <- tryCatch(suppressWarnings(
+                   fitRutterGatsonisLCA(data=X,
                                         y11=y11,
                                         y10=y10,
                                         y01=y01,
                                         y00=y00,
                                         study=study,
                                         conflevel=conflevel,
-                                        constrain=NULL)$sdreport,
+                                        constrain=NULL)$sdreport),
                    error = function(e) NULL)
   
   Lambda_init <- NA_real_

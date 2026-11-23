@@ -176,14 +176,15 @@ fitRutterGatsonisSubgroup <- function(data,
   
   XP <- getXP(X=X)
   # Get starting values
-  init <- tryCatch(fitRutterGatsonis(data=X,
+  init <- tryCatch(suppressWarnings(
+                       fitRutterGatsonis(data=X,
                                          TP=TP,
                                          TN=TN,
                                          FN=FN,
                                          FP=FP,
                                          study=study,
                                          conflevel=conflevel,
-                                         constrain=NULL)$sdreport,
+                                         constrain=NULL)$sdreport),
                      error = function(e) NULL)
   ###
   Lambda_init  <- NA_real_
