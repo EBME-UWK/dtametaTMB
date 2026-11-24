@@ -17,6 +17,7 @@ A list of class \code{"summary.Nyaga"} with the following components:
 \itemize{
 \item \code{estimates}: Parameter estimates with standard errors.
 \item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals.
+\item \code{LRDOR}: Estimated diagnostic odds ratio and likelihood ratios with confidence intervals.
 \item \code{tests}: Test names.
 }
 }

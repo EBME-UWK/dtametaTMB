@@ -650,6 +650,7 @@ print.Nyaga <- function(x, ...) {
 #' \itemize{
 #'   \item \code{estimates}: Parameter estimates with standard errors.
 #'   \item \code{sensspec}: Estimated sensitivity and specificity with confidence intervals.
+#'   \item \code{LRDOR}: Estimated diagnostic odds ratio and likelihood ratios with confidence intervals.
 #'   \item \code{tests}: Test names.
 #' }
 #'
@@ -723,8 +724,8 @@ summary.Nyaga <- function(object, ...) {
 #' 
 #' @param conflevel Confidence level for the confidence region. Default is \code{0.95}.
 #' @param predlevel Confidence level for the prediction region. Default is \code{0.95}.
-#' @param connectstudies Whether the point estimates of two subgroups 
-#'   within the same study should be connected. Defaults to \code{FALSE}.
+#' @param connectstudies Whether the point estimates of two diagnostic
+#'   tests evaluated within the same study should be connected.
 #'   
 #' @param studyCI Whether study-level confidence
 #'   intervals should be displayed for the observed sensitivity and

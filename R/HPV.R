@@ -8,7 +8,7 @@
 #'   \item{StudyID}{Study identifier}
 #'   \item{Year}{Year of publication or study}
 #'   \item{Age}{Age range of the study population}
-#'   \item{Location}{Geogarphical location of the study}
+#'   \item{Location}{Geographical location of the study}
 #'   \item{Test}{Which test was used, Hybrid capture 2 (HC2), liquid-based cytology (LBC), or conventional cytology (CC)}
 #'   \item{TP}{Number of true positives}
 #'   \item{FP}{Number of false positives}

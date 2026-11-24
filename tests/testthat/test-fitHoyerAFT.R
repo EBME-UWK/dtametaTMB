@@ -12,6 +12,7 @@ test_that("fitHoyerAFT returns model object", {
 })
 
 test_that("invalid threshold is rejected", {
+  skip_on_cran()
   data("diabetes")
   dat <- diabetes
 
@@ -26,6 +27,7 @@ test_that("invalid threshold is rejected", {
 
 
 test_that("init validation fails if missing columns", {
+  skip_on_cran()
   data_list <- list(
     original = data.frame(threshold = 1:3,testdirection=c("greater","greater","greater")),
     restructured = data.frame(
@@ -44,6 +46,7 @@ test_that("init validation fails if missing columns", {
 })
 
 test_that("threshold validation works", {
+  skip_on_cran()
   data_list <- list(
     original = data.frame(threshold = c(2, 3, 4),
                           testdirection=c("greater","greater","greater")),

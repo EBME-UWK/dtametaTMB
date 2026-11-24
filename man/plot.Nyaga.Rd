@@ -78,8 +78,8 @@ Values closer to zero move it closer to the panel. Default is \code{-0.4}.}
 
 \item{predlevel}{Confidence level for the prediction region. Default is \code{0.95}.}
 
-\item{connectstudies}{Whether the point estimates of two subgroups
-within the same study should be connected. Defaults to \code{FALSE}.}
+\item{connectstudies}{Whether the point estimates of two diagnostic
+tests evaluated within the same study should be connected.}
 
 \item{studyCI}{Whether study-level confidence
 intervals should be displayed for the observed sensitivity and
