@@ -12,6 +12,8 @@
   main = "Diagnostic Test Accuracy Network Meta-Analysis",
   col = NULL,
   nudge_legend = -0.4,
+  HSROC = FALSE,
+  specrange = c(0.7, 0.995),
   conflevel = 0.95,
   predlevel = 0.95,
   connectstudies = FALSE,
@@ -73,6 +75,13 @@ If \code{NULL}, colours are generated automatically.}
 \item{nudge_legend}{Numeric horizontal offset for the test legend.
 More negative values move the legend further right, outside the plotting area.
 Values closer to zero move it closer to the panel. Default is \code{-0.4}.}
+
+\item{HSROC}{if \code{TRUE}, the HSROC curve is added to the plot.
+Default is \code{FALSE}.}
+
+\item{specrange}{A numeric vector of length 2 giving the range of
+specificities over which the HSROC curve is plotted.
+Defaults to \code{c(0.7, 0.995)}.}
 
 \item{conflevel}{Confidence level for the confidence region. Default is \code{0.95}.}
 

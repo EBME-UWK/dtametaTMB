@@ -171,6 +171,12 @@
 #' for test-specific fixed effects may remain usable. The constraint
 #' arguments allow reduced models to be fitted explicitly when supported by
 #' the data or required for sensitivity analyses.
+#' 
+#' For Nyaga models, the nobs attribute of the log-likelihood is the number of 
+#' observed study-test arms. Each arm contributes one sensitivity and one 
+#' specificity binomial likelihood component. Because arms from the same study 
+#' are dependent, BIC should be interpreted as a 
+#' conventional model-comparison measure.
 #'
 #' @return A list of class \code{"Nyaga"} and \code{"DTAmodel"} with
 #' components:
@@ -186,6 +192,7 @@
 #'   specificity estimates with confidence intervals.
 #'   \item \code{LRDOR}: Test-specific positive and negative likelihood
 #'   ratios and diagnostic odds ratios with confidence intervals.
+#'   \item \code{RutterGatsonis_recovered}: Recovered study-level parameters in the Rutter-Gatsonis (HSROC) parameterization.
 #'   \item \code{tests}: Diagnostic test levels used in the fitted model,
 #'   in model-matrix order. The first level is the reference test.
 #'   \item \code{constrain}: Study-level random-effects parameters fixed
@@ -536,6 +543,23 @@ fitNyaga <- function(data,
     rownames(lrdor) <- paste0(ltest[i],": ",rownames(lrdor))
     lrdor2  <- rbind(lrdor2,lrdor)
   }
+  ### Recover HSROC parameters
+  ruga2 <- data.frame()
+  for(i in seq_along(ltest)){
+    sg      <- ltest[i]
+    mu_A.sg <- paste0("mu_A.",sg)
+    mu_B.sg <- paste0("mu_B.",sg)
+    s2_A.sg <- "sigma2_A"
+    s2_B.sg <- "sigma2_B"
+    s_AB.sg <- "sigma_AB"
+    ruga <- getRUGA(lsens=rep2[mu_A.sg,"Estimate"],
+                    lspec=rep2[mu_B.sg,"Estimate"],
+                    sigma_a=sqrt(rep2[s2_A.sg,"Estimate"]),
+                    sigma_b=sqrt(rep2[s2_B.sg,"Estimate"]),
+                    sigma_ab=rep2[s_AB.sg,"Estimate"])
+    ruga2 <- rbind(ruga2,ruga)
+  }
+  rownames(ruga2) <- ltest
   
   ##
   ret <- list(data         = XP,
@@ -545,6 +569,7 @@ fitNyaga <- function(data,
               vcov         = vcov,
               sensspec     = sesp,
               LRDOR        = lrdor2,
+              RutterGatsonis_recovered = ruga2,
               tests        = ltest,
               constrain    = constrain,
               tau_constrain=tau_constrain,
@@ -581,6 +606,7 @@ rename_nyaga_rows <- function(ss, ltest) {
   rownames(ss) <- rn
   ss
 }
+
 
 
 #' @rdname logLik.dtametaTMB
@@ -661,6 +687,7 @@ summary.Nyaga <- function(object, ...) {
   ret <- list(estimates = object$sdreport2,
               sensspec = object$sensspec,
               LRDOR = object$LRDOR,
+              RutterGatsonis_recovered=object$RutterGatsonis_recovered,
               tests = object$tests)
   class(ret) <- c("summary.Nyaga","summary.DTAmodel")
   return(ret)
@@ -713,6 +740,11 @@ summary.Nyaga <- function(object, ...) {
 #'       so that the average larger dimension measure across studies equals
 #'       nine before adding the fixed baseline dimension.}
 #'  } 
+#' @param HSROC if \code{TRUE}, the HSROC curve is added to the plot.
+#'   Default is \code{FALSE}.
+#' @param specrange A numeric vector of length 2 giving the range of
+#'   specificities over which the HSROC curve is plotted.
+#'   Defaults to \code{c(0.7, 0.995)}.
 #' @param col Vector of colours used for test-specific
 #'   study-level symbols, summary points, confidence and prediction region. 
 #'   If \code{NULL}, colours are generated automatically.
@@ -771,6 +803,8 @@ plot.Nyaga <- function(x,
                        main="Diagnostic Test Accuracy Network Meta-Analysis",
                        col=NULL,
                        nudge_legend=-0.4,
+                       HSROC=FALSE,
+                       specrange=c(0.7,0.995),
                        conflevel=0.95,
                        predlevel=0.95,
                        connectstudies=FALSE,
@@ -825,6 +859,15 @@ plot.Nyaga <- function(x,
                                        conflevel=conflevel,studyCI=studyCI,
                                        studylabels=studylabels,LCA=FALSE)
   }
+  # Add the ROC curve
+  if(isTRUE(HSROC)){
+    for(i in seq_along(test)){
+      roc_points2 <- getROCpoints(Lambda=x$RutterGatsonis_recovered[test[i],"Lambda"],
+                                  beta=x$RutterGatsonis_recovered[test[i],"beta"],
+                                  specrange)
+      points(roc_points2, type="l", lwd=2,ann=FALSE,col=col[i])
+    }
+  } 
   # Add summary point
   for (i in seq_along(test)){
     sg      <- test[i]
@@ -875,6 +918,20 @@ plot.Nyaga <- function(x,
   conf_lab <- paste0(round(100 * conflevel), "% Confidence region")
   pred_lab <- paste0(round(100 * predlevel), "% Prediction region")
   if(isTRUE(legend)){
+    if(isTRUE(HSROC)){
+      graphics::legend("bottomright", 
+                       bty ="n",
+                       legend = c(NA,
+                                  "HSROC curve",
+                                  "Summary estimate",
+                                  conf_lab,
+                                  pred_lab,
+                                  "Study estimates"), 
+                       pch = c(NA,NA,15,NA,NA,symb[1]), 
+                       lty = c(NA,1,NA,2,3,NA), 
+                       lwd = c(NA,2,NA,2,2,NA), 
+                       col = c(NA,"black","black","black","black","darkgray"))}
+    else{
       graphics::legend("bottomright", 
                        bty ="n",
                        legend = c(NA,
@@ -886,6 +943,7 @@ plot.Nyaga <- function(x,
                        lty = c(NA,NA,2,3,NA), 
                        lwd = c(NA,NA,2,2,NA), 
                        col = c(NA,"black","black","black","darkgray"))
+    }
   }
   graphics::legend("right",
                    inset = c(nudge_legend, 0),

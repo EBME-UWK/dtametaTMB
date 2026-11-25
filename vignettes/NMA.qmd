@@ -438,8 +438,6 @@ Each row represents one observed study-test combination.
 
 data("HPV")
 head(HPV)
-table(HPV$Test)
-length(unique(HPV$StudyID))
 ```
 
 ## How do I select the reference test?
@@ -663,7 +661,12 @@ The model is based on aggregate $2\times2$ tables and does not distinguish betwe
 
 The TMB implementation was compared with the original Bayesian Stan implementation using the Nyaga demonstration data from <https://github.com/VNyaga/NMADAS/tree/master/data>. The test-specific logit means and study-level covariance estimates were closely comparable. Differences were concentrated in arm-level variance components, particularly where the maximum-likelihood estimate occurred near the boundary and the Bayesian prior retained a positive posterior distribution.
 
-The implementation was also tested on larger connected diagnostic test networks to assess numerical stability and model behaviour.
+The HPV data were also fitted using the arm-based network model in
+Stata `metadta`. The test-specific logit sensitivity and specificity
+estimates and their standard errors were closely comparable with
+`fitNyaga()`. However, the Stata fit estimated the
+study-level correlation at the boundary of -1, and Stata reported that the 
+required curvature condition for the maximized log likelihood was not satisfied.
 
 ## References
 

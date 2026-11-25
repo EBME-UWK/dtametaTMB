@@ -147,6 +147,7 @@ parameters with test-specific row names.
 specificity estimates with confidence intervals.
 \item \code{LRDOR}: Test-specific positive and negative likelihood
 ratios and diagnostic odds ratios with confidence intervals.
+\item \code{RutterGatsonis_recovered}: Recovered study-level parameters in the Rutter-Gatsonis (HSROC) parameterization.
 \item \code{tests}: Diagnostic test levels used in the fitted model,
 in model-matrix order. The first level is the reference test.
 \item \code{constrain}: Study-level random-effects parameters fixed
@@ -228,6 +229,12 @@ component and related quantities may be unreliable, although inference
 for test-specific fixed effects may remain usable. The constraint
 arguments allow reduced models to be fitted explicitly when supported by
 the data or required for sensitivity analyses.
+
+For Nyaga models, the nobs attribute of the log-likelihood is the number of
+observed study-test arms. Each arm contributes one sensitivity and one
+specificity binomial likelihood component. Because arms from the same study
+are dependent, BIC should be interpreted as a
+conventional model-comparison measure.
 }
 \examples{
 \dontrun{
