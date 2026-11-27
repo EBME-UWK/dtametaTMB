@@ -2,8 +2,8 @@
 title: "Network Meta-Analysis"
 subtitle: "The Nyaga Arm-Based Model"
 format:
-  html:
-   toc: true
+ html:
+  toc: true
 # pdf
 vignette: >
   %\VignetteIndexEntry{Network Meta-Analysis}
