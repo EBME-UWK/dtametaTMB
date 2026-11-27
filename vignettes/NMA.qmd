@@ -655,7 +655,7 @@ The current implementation does not estimate:
 - network inconsistency parameters; or
 - latent-class extensions for an imperfect reference standard.
 
-The model is based on aggregate $2\times2$ tables and does not distinguish between paired multi-test designs and studies in which separate participant groups receive different index tests.
+The model is based on aggregate $2\times2$ tables and does not distinguish between paired multi-test designs and studies in which separate participant groups receive different index tests. Shared study-level random effects represent dependence arising from a common study context, but the conditional binomial likelihood does not model within-person association between paired test results. A full paired-data likelihood would require joint cross-classifications of the index tests within disease strata, which cannot generally be reconstructed from their marginal $2\times2$ tables.
 
 ## How was the implementation validated?
 
