@@ -199,6 +199,10 @@ fitRutterGatsonisReg <- function(data,
     )
   }
   
+  if (is.null(spec)) {
+    sm <- stats::median(XP$spec, na.rm = TRUE)
+    spec <- if (is.finite(sm)) sm else 0.8 }
+  
   dat2 <- list(
     y      = Y$y,
     n      = Y$n,
@@ -206,7 +210,7 @@ fitRutterGatsonisReg <- function(data,
     Z      = Z,
     Z_pred = Z_pred,
     study  = Y$recordid - 1,  # 0-based
-    spec   = if (is.null(spec)) stats::median(XP$spec) else spec
+    spec   = spec
   )
   if(is.null(init)){
    parameters <- list(

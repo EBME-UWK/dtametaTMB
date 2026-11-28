@@ -88,7 +88,8 @@ test_that("common generic methods work across inheritance hierarchy", {
     FP    = FP,
     FN    = FN,
     TN    = TN,
-    study = study
+    study = study,
+    spec  = c(0.6,0.7,1)
   )
   
   ## Rutter-Gatsonis subgroup ----------------------------------
@@ -100,6 +101,7 @@ test_that("common generic methods work across inheritance hierarchy", {
     FN        = FN,
     TN        = TN,
     study     = study,
+    spec      = c(0.6,0.7),
     subgroup  = method,
     constrain = "shape"
   )
@@ -129,6 +131,7 @@ test_that("common generic methods work across inheritance hierarchy", {
     y10   = y10,
     y01   = y01,
     y00   = y00,
+    spec  = c(0.6,0.7),
     study = id
   )
   
@@ -141,6 +144,7 @@ test_that("common generic methods work across inheritance hierarchy", {
     y01      = y01,
     y00      = y00,
     study    = id,
+    spec     = c(0.6,0.7),
     subgroup = type
   )
   

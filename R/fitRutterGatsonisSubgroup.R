@@ -220,8 +220,9 @@ fitRutterGatsonisSubgroup <- function(data,
   }
   ngroup <- ncol(Z)
   # spec
-  if(is.null(spec)){spec <- stats::median(XP$spec)}
-  if(!is.finite(spec)){spec <- 0.8}
+  if (is.null(spec)) {
+    sm <- stats::median(XP$spec, na.rm = TRUE)
+    spec <- if (is.finite(sm)) sm else 0.8 }
   
   dat2 <- list(
     y      = Y$y,
